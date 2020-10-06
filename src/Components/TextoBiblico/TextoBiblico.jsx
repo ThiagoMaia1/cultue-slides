@@ -3,9 +3,11 @@ import React, { Component } from 'react';
 import livros from './Livros.json';
 import versoes from './Versoes.json';
 // import './style.css';
+import { bcv_parser as leitorDeRef } from "bible-passage-reference-parser/js/pt_bcv_parser"
 
 const url = 'https://bibleapi.co/api';
 const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IlR1ZSBPY3QgMDYgMjAyMCAwMzoxMDo1MCBHTVQrMDAwMC50dGhpYWdvcG1haWFAZ21haWwuY29tIiwiaWF0IjoxNjAxOTUzODUwfQ.J9CusTS1g3uJObw6Hb4da0K4ZmXZgeMKG8QUSH0E4sI"
+var leitor = new leitorDeRef;
 
 class TextoBiblico extends Component {
 
@@ -44,17 +46,8 @@ class TextoBiblico extends Component {
                     (v, j) => (j >= referencia.versInicial && (j <= referencia.versFinal || referencia.versFinal == -1)))
             ]
             versiculos = versiculos.concat(...arrays.filter(Array.isArray));
-            
+            //Mandar esperar requisição.
             console.log(versiculos);
-                    // this.setState({opcoes: bibleApi.response.response.docs.map(mus => (
-            //     <option key={mus.id} value={mus.title}>{mus.band}</option>
-            // ))})
-            // for (var i of bibleApi.response.response.docs) {
-            //     if (termo === i.title) {
-            //         this.setState({visivel: true})
-            //         break;
-            //     }
-            // }
         })
         
         var i = referencia.capInicial;
@@ -75,82 +68,80 @@ class TextoBiblico extends Component {
 
     }
 
-    // onClick() {
-    //     //Criar evento pra inserir a música
-    //     //Limpar valor do texto
-    //     //this.setState({opcoes: []});
-    //     console.log("Música Incluída!");
-    //     //document.getElementById()
-    // }
+    onClick() {
+        //Criar evento pra inserir o texto bíblico
+        console.log("Texto Incluído!");
+    }
 
     buscarReferencia(e) {
-        
-        if (e.key === 'Enter') {
-            var refer = this.referenciaValida(e.target.value);
-            if (refer != null) {
-                this.requestVersos(refer);
-            }
-        }
+        console.log(leitor.parse(e.target.value).entities[0].passages);
+
+        // if (e.key === 'Enter') {
+        //     var refer = this.referenciaValida(e.target.value);
+        //     if (refer != null) {
+        //         this.requestVersos(refer);
+        //     }
+        // }
     }
 
-    referenciaValida(referencia) {
-        //Limpa a string da referência.
-        var livro;     
-        referencia = referencia.toLowerCase(); 
-        referencia = referencia.replace("ª","").replace("º","");  
-        referencia = referencia.replace(/[a-z](?=[0-9])/g,'$& ');
-        referencia = referencia.replace(/(?<=[0-9])\s(?=[a-z])/g,'');
-        referencia = referencia.trim();
-        referencia = referencia.replace(/\s+/g, ' ');
-        referencia = referencia.replace('.',':');
-        referencia = referencia.replace(', ',',');
-        var arr = referencia.split(" ");
+    // referenciaValida(referencia) {
         
-        //Encontra o livro
-        for (var item of livros) {
-            if (item.abbrev.filter(a=>(arr[0].localeCompare(a)==0)).length > 0) {
-                livro = item;
-                break;
-            }
-        }
-        if (livro == null)
-            return null;
-        //Se campo é só o nome do livro, retorna o livro.
+    //     function capVerso(refStr) {
+    //         return refStr.split(":");
+    //     };
+
+    //     //Limpa a string da referência.
+    //     var livro;     
+    //     referencia = referencia.trim().toLowerCase().replace('.',':').replace(';',',');
+    //     referencia = referencia.replace(/[^a-z0-9:\-,]/g,"");
+    //     referencia = referencia.replace(/[a-z](?=[0-9])/g,'$& ');
+    //     var arr = referencia.split(" ");
         
-        if (arr.length == 1)
-            return {livro};
+    //     //Encontra o livro
+    //     for (var item of livros) {
+    //         if (item.abbrev.filter(a=>(arr[0].localeCompare(a)==0)).length > 0) {
+    //             livro = item;
+    //             break;
+    //         }
+    //     }
+    //     if (livro == null)
+    //         return null;
+    //     //Se campo é só o nome do livro, retorna o livro.
         
-        var inicial = [];
-        var final = [];
+    //     if (arr.length == 1)
+    //         return {livro};
+        
+    //     var inicial = [];
+    //     var final = [];
 
-        if (arr[1].search("-") > -1) {
-        //Quebra as referências aos capítulos em inicial e final.
-            var numeros = arr[1].split('-');
-            inicial = numeros[0].split(':');
-            if (numeros[1].search(":") == -1) {
-                final[0] = inicial[0];
-                final[1] = numeros[1];
-            } else {
-                final = numeros[1].split('-');
-            }
+    //     if (arr[1].search("-") > -1) {
+    //     //Quebra as referências aos capítulos em inicial e final.
+    //         var numeros = arr[1].split('-');
+    //         inicial = numeros[0].split(':');
+    //         if (numeros[1].search(":") == -1) {
+    //             final[0] = inicial[0];
+    //             final[1] = numeros[1];
+    //         } else {
+    //             final = numeros[1].split('-');
+    //         }
 
-        } else if (!isNaN(arr[1])) {
-            inicial[0] = arr[1];
-            inicial[1] = 1;
-            final = [arr[1], -1];
-        } else if (arr[1].search(":") > -1) {
-            inicial = arr[1].split(":");            
-        }
+    //     } else if (!isNaN(arr[1])) {
+    //         inicial[0] = arr[1];
+    //         inicial[1] = 1;
+    //         final = [arr[1], -1];
+    //     } else if (arr[1].search(":") > -1) {
+    //         inicial = arr[1].split(":");            
+    //     }
 
-        return {
-            livro,
-            capInicial: parseInt(inicial[0]),
-            capFinal: parseInt(final[0]),
-            versInicial: parseInt(inicial[1]),
-            versFinal: parseInt(final[1])
-        }
-        //Criar correção de referência para livros de 1 capítulo só.
-    }
+    //     return {
+    //         livro,
+    //         capInicial: parseInt(inicial[0]),
+    //         capFinal: parseInt(final[0]),
+    //         versInicial: parseInt(inicial[1]),
+    //         versFinal: parseInt(final[1])
+    //     }
+    //     //Criar correção de referência para livros de 1 capítulo só.
+    // }
 
     render () {
         return (
