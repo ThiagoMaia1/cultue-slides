@@ -5,6 +5,16 @@ import Adicionar from './Adicionar';
 var placeholder = document.createElement("li",);
 placeholder.className = "placeholder";
 
+class Element {
+  constructor(id, tipo, título, texto, apiKey) {
+    this.id = id;
+    this.apiKey = apiKey;
+    this.tipo = tipo;
+    this.título = título;
+    this.texto = texto;  
+  }
+}
+
 class List extends React.Component {
   constructor(props) {
     super(props);
