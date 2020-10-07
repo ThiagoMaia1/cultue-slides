@@ -1,6 +1,6 @@
 import livros from './Livros.json';
 
-export class referenciaBiblica {
+class referenciaBiblica {
     constructor(str, inicial = 0, livro = null, cap = null, vers = null, temLivro = false) {
         this.str = str;
         this.livro = livro;
@@ -13,7 +13,7 @@ export class referenciaBiblica {
 }
 
 export function extrairReferencias(strReferencia) {
-    
+
     var referencias = [];
     //Limpa a string da referência.    
     strReferencia = strReferencia.trim().toLowerCase().replace('.',':').replace(/;/g,',');
@@ -33,127 +33,125 @@ export function extrairReferencias(strReferencia) {
         }
     }
     
-    for (var i = 0; i < referencias.length; i++) {
+    for (i = 0; i < referencias.length; i++) {
         if (!temLivro(referencias[i].str)) {
             referencias[i].livro = referencias[i-1].livro;
         } else {
-            var arr = referencias[i].str.split(' ');
+            arr = referencias[i].str.split(' ');
             referencias[i].temLivro = true;
             referencias[i].livro = extrairLivro(arr[0])
-            referencias[i].str = (arr[1] == undefined ? '' : arr[1]);
+            referencias[i].str = (arr[1] === undefined ? '' : arr[1]);
         }
-        if (referencias[i].livro != null && referencias[i].str != '') {
-            if (referencias[i].livro.chapters == 1) {
+        if (referencias[i].livro !== null && referencias[i].str !== '') {
+            if (referencias[i].livro.chapters === 1) {
                 referencias[i].cap = 1;
             } else {
                 var c = getCap(referencias, i)
                 referencias[i].cap = (c > referencias[i].livro.chapters ? null : c);
             }
             referencias[i].vers = getVers(referencias, i);
-            if (referencias[i].inicial == -1) {
-                if (referencias[i].cap < referencias[i-1].cap || (referencias[i].cap == referencias[i-1].cap && referencias[i].vers < referencias[i-1].vers)) {
+            if (referencias[i].inicial === -1) {
+                if (referencias[i].cap < referencias[i-1].cap || (referencias[i].cap === referencias[i-1].cap && referencias[i].vers < referencias[i-1].vers)) {
                     //Gerar alerta de erro
                     referencias[i-1].inicial = 0;
                     referencias[i].inicial = 0;
                 }
             }
         }
-        console.log(referencias);
-        
     }
 
     return referencias;
-}
-    
-function temLivro(str) {
-    var reg = /[a-z]/;
-    return (reg.test(str));
-}
+        
+    function temLivro(str) {
+        var reg = /[a-z]/;
+        return (reg.test(str));
+    }
 
-function getCap(arr, index) {
-    if (index < 0) {
-        return false;
+    function getCap(arr, index) {
+        if (index < 0) {
+            return false;
+        }
+        if (arr[index].str.includes(':')) {
+            return parseInt(arr[index].str.split(':')[0]);
+        } else if (temCap(arr, index)) {
+            return parseInt(arr[index].str) 
+        } else {
+            return getCap(arr, index-1);
+        }
     }
-    if (arr[index].str.includes(':')) {
-        return parseInt(arr[index].str.split(':')[0]);
-    } else if (temCap(arr, index)) {
-        return parseInt(arr[index].str) 
-    } else {
-        return getCap(arr, index-1);
-    }
-}
 
-function getVers(arr, index) {
-    if (index < 0) {
-        return false;
+    function getVers(arr, index) {
+        if (index < 0) {
+            return false;
+        }
+        if (arr[index].str.includes(':')) {
+            return parseInt(arr[index].str.split(':')[1]);
+        } else if (temVers(arr, index)) {
+            return parseInt(arr[index].str) 
+        } else {
+            return null;
+        }
     }
-    if (arr[index].str.includes(':')) {
-        return parseInt(arr[index].str.split(':')[1]);
-    } else if (temVers(arr, index)) {
-        return parseInt(arr[index].str) 
-    } else {
+
+    function temCap(arr, index) {
+        if (index < 0) {
+            return false;
+        }
+        if (arr[index].str.includes(':')) {
+            return true;
+        } else if (arr[index].temLivro) {
+            if (arr[index].livro.chapters === 1) {
+                return false
+            } else {
+                return true
+            }
+        } else {
+            return (!temVers(arr, index-1)); 
+        }
+    }
+
+    function temVers(arr, index) {
+        if (index < 0) {
+            return false;
+        }
+        if (arr[index].str.includes(':')) {
+            return true;
+        } else if (arr[index].temLivro) {
+            if (arr[index].livro.chapters === 1) {
+                return true
+            } else {
+                return false
+            }
+        } else {
+            return (temVers(arr, index-1)); 
+        }
+    }
+
+    function extrairLivro(refLivro) {
+
+        var livro;
+        
+        var i = refLivro.length
+        do {
+            refLivro = refLivro.substr(0,i);
+            livro = acharLivro(refLivro);
+            i--;
+        } while (livro === null && i > 1)
+
+        return livro;
+    }
+
+    function acharLivro(trecho) {
+        for (var item of livros) {
+            if (item.abbrevPt.localeCompare(trecho) === 0) {
+                return item;
+            }
+        }
+        for (item of livros) {
+            if (item.abbrev.filter(a=>(trecho.localeCompare(a) === 0)).length > 0) {
+                return item;
+            }
+        }
         return null;
     }
-}
-
-function temCap(arr, index) {
-    if (index < 0) {
-        return false;
-    }
-    if (arr[index].str.includes(':')) {
-        return true;
-    } else if (arr[index].temLivro) {
-        if (arr[index].livro.chapters == 1) {
-            return false
-        } else {
-            return true
-        }
-    } else {
-        return (!temVers(arr, index-1)); 
-    }
-}
-
-function temVers(arr, index) {
-    if (index < 0) {
-        return false;
-    }
-    if (arr[index].str.includes(':')) {
-        return true;
-    } else if (arr[index].temLivro) {
-        if (arr[index].livro.chapters == 1) {
-            return true
-        } else {
-            return false
-        }
-    } else {
-        return (temVers(arr, index-1)); 
-    }
-}
-
-function extrairLivro(refLivro) {
-
-    var livro;
-    
-    var i = refLivro.length
-    do {
-        refLivro = refLivro.substr(0,i);
-        livro = acharLivro(refLivro);
-        i--;
-    } while (livro == null && i > 1)
-
-    return livro;
-}
-
-function acharLivro(trecho) {
-    for (var item of livros) {
-        if (item.abbrevPt.localeCompare(trecho) == 0) {
-            return item;
-        }
-    }
-    for (var item of livros) {
-        if (item.abbrev.filter(a=>(trecho.localeCompare(a)==0)).length > 0) {
-            return item;
-        }
-    }
-    return null;
 }

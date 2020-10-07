@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import ComboLetra from './Components/LetrasMusica/ComboLetra';
+//import ComboLetra from './Components/LetrasMusica/ComboLetra';
 import Arrastar from './Components/Arrastar/Arrastar';
 import Preview from './Components/Preview/Preview';
 

@@ -14,7 +14,7 @@ class Popup extends React.Component {
   }
   componentDidUpdate(prevState){
     //Por algum motivo precisa disso pra ficar visível novamente após ter sido fechado uma vez.
-    this.state.showPopup = true;
+    this.setState({showPopup: true});
   }
 
     render() {

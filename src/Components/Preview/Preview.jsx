@@ -3,9 +3,9 @@ import './style.css';
 
 class Preview extends Component {
     
-    constructor(props) {
-        super(props);
-      }
+    // constructor(props) {
+    //     super(props);
+    //   }
 
     render() {
         return (
