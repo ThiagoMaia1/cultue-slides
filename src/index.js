@@ -21,8 +21,12 @@ const elementosReducer = function (state = {}, action) {
 let store = createStore(elementosReducer);
 
 ReactDOM.render(
-  <Provider store={store}>
-    <App />
-  </Provider>,
-  document.getElementById('root')
+  <App />, document.getElementById('root')
 );
+
+// ReactDOM.render(
+//   <Provider store={store}>
+//     <App />
+//   </Provider>,
+//   document.getElementById('root')
+// );

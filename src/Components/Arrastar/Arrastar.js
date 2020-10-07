@@ -73,7 +73,7 @@ class List extends React.Component {
             className={item.tipo}
             onDragEnd={this.dragEnd.bind(this)}
             onClick={e => (this.marcarSelecionado(e.target))}
-            onDragStart={this.dragStart.bind(this)}>{item.tipo + ": " + item.titulo}</li>
+            onDragStart={this.dragStart.bind(this)}>{item.tipo + ": " + item.título}</li>
       )
      });
 		return (
@@ -92,15 +92,13 @@ class Arrastar extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-      lista: [1,2,3]
-      
-      // lista: [new Element(1,null,"Bíblia","João 3:16","Porque Deus amou o mundo de tal maneira"),
-      // new Element(2,null,"Bíblia","João 3:16","Porque Deus amou o mundo de tal maneira"),
-      // new Element(3,null,"Bíblia","João 3:16","Porque Deus amou o mundo de tal maneira"),
-      // new Element(4,null,"Bíblia","João 3:16","Porque Deus amou o mundo de tal maneira"),
-      // new Element(5,null,"Bíblia","João 3:16","Porque Deus amou o mundo de tal maneira"),
-      // new Element(6,null,"Bíblia","João 3:16","Porque Deus amou o mundo de tal maneira"),
-      // ]
+      lista: [new Element(1,null,"Bíblia","João 3:16","Porque Deus amou o mundo de tal maneira"),
+      new Element(2,null,"Bíblia","João 3:16","Porque Deus amou o mundo de tal maneira"),
+      new Element(3,null,"Bíblia","João 3:16","Porque Deus amou o mundo de tal maneira"),
+      new Element(4,null,"Bíblia","João 3:16","Porque Deus amou o mundo de tal maneira"),
+      new Element(5,null,"Bíblia","João 3:16","Porque Deus amou o mundo de tal maneira"),
+      new Element(6,null,"Bíblia","João 3:16","Porque Deus amou o mundo de tal maneira"),
+      ]
     }
   }
 	render() {

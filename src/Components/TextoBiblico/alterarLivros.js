@@ -32,6 +32,7 @@ for (var livro of livros) {
     var a = livro.abbrev.length
     for (var i = 0; i<a; i++) {
         livro.abbrev[i] = livro.abbrev[i].trim();
+        livro.abbrev[i] = livro.abbrev[i].replace('1 ','1').replace('2 ','2').replace('3 ','3')
         livro.abbrev = [...livro.abbrev, (retira_acentos(livro.abbrev[i]))]
     }
     livro.abbrev = livro.abbrev.filter(a => (isNaN(a)))
