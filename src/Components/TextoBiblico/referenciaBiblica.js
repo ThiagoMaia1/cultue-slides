@@ -157,6 +157,3 @@ function acharLivro(trecho) {
     }
     return null;
 }
-
-var a = extrairReferencias("2co3:4,9; 2corin2; 1cro; 3 samu 3:2, jonas1");
-console.log(JSON.stringify(a));
