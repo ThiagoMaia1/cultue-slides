@@ -1,0 +1,21 @@
+#galeria {
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+
+}
+
+.div-img {
+    margin-left: 10px;
+}
+
+img {
+    height: 20vh;
+    width: 30vh;
+    object-fit: cover;
+}
+
+img:hover {
+    height: 23vh;
+    width: 34vh;
+}

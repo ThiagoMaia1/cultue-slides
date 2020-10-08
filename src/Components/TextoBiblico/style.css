@@ -1,0 +1,15 @@
+#textoVersiculos {
+    overflow: auto;
+    padding: 0 25px;
+    text-align: justify;
+    text-justify: inter-word;
+    max-height: 50%;
+}
+
+input {
+    
+}
+
+.textoBiblico {
+ /* overflow:auto; */
+}

@@ -39,6 +39,7 @@ class List extends React.Component {
     var data = this.state.lista;
     var from = Number(this.dragged.dataset.id);
     var to = Number(this.over.dataset.id);
+    console.log(this.over);
     if(from < to) to--;
     this.marcarSelecionado(document.getElementById("ordem-elementos").children[to]);
     data.splice(to, 0, data.splice(from, 1)[0]);
@@ -46,7 +47,8 @@ class List extends React.Component {
   }
   
   dragOver(e) {
-    e.preventDefault();
+    //e.preventDefault();
+    //if (e.parentNode.id !== "ordem-elementos") return;
     this.dragged.style.display = "none";
     if(e.target.className === 'placeholder') return;
     this.over = e.target;
@@ -70,19 +72,20 @@ class List extends React.Component {
             data-id={i}
             key={i}
             draggable='true'
-            className={item.tipo}
+            className={item.tipo + ' itens'}
             onDragEnd={this.dragEnd.bind(this)}
             onClick={e => (this.marcarSelecionado(e.target))}
-            onDragStart={this.dragStart.bind(this)}>{item.tipo + ": " + item.título}</li>
+            onDragStart={this.dragStart.bind(this)}
+            onDragOver={this.dragOver.bind(this)}> {item.tipo + ": " + item.título}</li>
       )
      });
 		return (
-			<div>
-        <ul id="ordem-elementos" onDragOver={this.dragOver.bind(this)}>
+			<div id="div-ordenar">
+        <ul id="ordem-elementos">
           {listItems}
-          <li data-id={this.state.lista.length} onClick={this.onClick.bind(this)}>Adicionar Elemento</li>
         </ul>
-          <Adicionar visibility={this.state.aberto} atualizarLista={this.atualizarLista} />
+        <li className='itens' data-id={this.state.lista.length} onClick={this.onClick.bind(this)} onDragOver={this.dragOver.bind(this)}>Adicionar Elemento</li>
+        <Adicionar visibility={this.state.aberto} atualizarLista={this.atualizarLista}/>
       </div>
     )
 	}
@@ -93,11 +96,23 @@ class Arrastar extends React.Component {
 		super(props);
 		this.state = {
       lista: [new Element(1,null,"Bíblia","João 3:16","Porque Deus amou o mundo de tal maneira"),
-      new Element(2,null,"Bíblia","João 3:16","Porque Deus amou o mundo de tal maneira"),
+      new Element(2,null,"Música","João 3:16","Porque Deus amou o mundo de tal maneira"),
       new Element(3,null,"Bíblia","João 3:16","Porque Deus amou o mundo de tal maneira"),
-      new Element(4,null,"Bíblia","João 3:16","Porque Deus amou o mundo de tal maneira"),
-      new Element(5,null,"Bíblia","João 3:16","Porque Deus amou o mundo de tal maneira"),
-      new Element(6,null,"Bíblia","João 3:16","Porque Deus amou o mundo de tal maneira"),
+      new Element(4,null,"Título","João 3:16","Porque Deus amou o mundo de tal maneira"),
+      new Element(5,null,"Vídeo","João 3:16","Porque Deus amou o mundo de tal maneira"),
+      new Element(6,null,"Imagem","João 3:16","Porque Deus amou o mundo de tal maneira"),
+      new Element(1,null,"Bíblia","João 3:16","Porque Deus amou o mundo de tal maneira"),
+      new Element(2,null,"Música","João 3:16","Porque Deus amou o mundo de tal maneira"),
+      new Element(3,null,"Bíblia","João 3:16","Porque Deus amou o mundo de tal maneira"),
+      new Element(4,null,"Título","João 3:16","Porque Deus amou o mundo de tal maneira"),
+      new Element(5,null,"Vídeo","João 3:16","Porque Deus amou o mundo de tal maneira"),
+      new Element(6,null,"Imagem","João 3:16","Porque Deus amou o mundo de tal maneira"),
+      new Element(1,null,"Bíblia","João 3:16","Porque Deus amou o mundo de tal maneira"),
+      new Element(2,null,"Música","João 3:16","Porque Deus amou o mundo de tal maneira"),
+      new Element(3,null,"Bíblia","João 3:16","Porque Deus amou o mundo de tal maneira"),
+      new Element(4,null,"Título","João 3:16","Porque Deus amou o mundo de tal maneira"),
+      new Element(5,null,"Vídeo","João 3:16","Porque Deus amou o mundo de tal maneira"),
+      new Element(6,null,"Imagem","João 3:16","Porque Deus amou o mundo de tal maneira"),
       ]
     }
   }

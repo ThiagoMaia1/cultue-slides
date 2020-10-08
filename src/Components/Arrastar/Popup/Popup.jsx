@@ -12,19 +12,21 @@ class Popup extends React.Component {
       showPopup: !this.state.showPopup
     });
   }
-  componentDidUpdate(prevState){
-    //Por algum motivo precisa disso pra ficar visível novamente após ter sido fechado uma vez.
-    this.setState({showPopup: true});
-  }
+  // componentDidUpdate(prevState){
+  //   //Por algum motivo precisa disso pra ficar visível novamente após ter sido fechado uma vez.
+  //   if (this.state.showPopup == false) {
+  //     this.setState({showPopup: true});
+  //   }
+  // }
 
     render() {
     if (this.state.showPopup) {
       return (
         <div className='popup' id="popup">
           <div className='popup_inner'>
+            <button id='fechar' onClick={this.togglePopup.bind(this)}>x</button>
             <p>{this.props.text}</p>
-            <button onClick={this.togglePopup.bind(this)}>x</button>
-            {this.props.children}
+            {this.props.children}            
           </div>
         </div>
       );

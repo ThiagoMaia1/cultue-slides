@@ -1,7 +1,9 @@
 #preview {
-    max-width: 600px;
-    width: 100%;
-    padding-bottom: 75%;
+    position: relative;
+    width: 80vh;
+    height: 60vh; 
     background: black;
+    left: 25vw;
     float: left;
+    display: block;
 }

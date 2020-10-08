@@ -46,7 +46,7 @@ class Adicionar extends Component {
         if (this.props.visibility) {
             return (
                 <>
-                    <div id="botoes">
+                    <div id="div-botoes">
                         <button className="Música" onClick={this.adicionarMusica.bind(this)}>Música</button>
                         <button className="Bíblia" onClick={this.adicionarTextoBiblico.bind(this)}>Texto Bíblico</button>
                         <button className="Título" onClick={this.adicionarTitulo.bind(this)}>Título</button>
