@@ -3,6 +3,7 @@ import livros from './Livros.json';
 class referenciaBiblica {
     constructor(str, inicial = 0, livro = null, cap = null, vers = null, temLivro = false) {
         this.str = str;
+        this.strInicial = str;
         this.livro = livro;
         this.cap = cap;
         this.vers = vers;
@@ -18,7 +19,7 @@ export function extrairReferencias(strReferencia) {
     //Limpa a string da referência.    
     strReferencia = strReferencia.trim().toLowerCase().replace('.',':').replace(/;/g,',');
     strReferencia = strReferencia.replace(/[^áàâãéèêíïóôõöúçña-z0-9:\-,\s]/g,"");
-    strReferencia = strReferencia.replace(/(?<=[3-90])\s(?=[áàâãéèêíïóôõöúçña-z])/g,',');
+    strReferencia = strReferencia.replace(/(?<=[3-90])\s+(?=[áàâãéèêíïóôõöúçña-z])/g,',');
     strReferencia = strReferencia.replace(/\s/g,"");
     strReferencia = strReferencia.replace(/[áàâãéèêíïóôõöúçña-z](?=[0-9])/g,'$& ');
 
