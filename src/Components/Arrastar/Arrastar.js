@@ -1,28 +1,16 @@
 import React from 'react';
 import './style.css';
 import Adicionar from './Adicionar';
+//import { Element } from '../../index'
+import { connect } from 'react-redux';
 
 var placeholder = document.createElement("li",);
 placeholder.className = "placeholder";
 
-class Element {
-  constructor(id, apiKey, tipo, título, texto) {
-    this.id = id;
-    this.apiKey = apiKey;
-    this.tipo = tipo;
-    this.título = título;
-    this.texto = texto;  
-  }
-}
-
-class List extends React.Component {
+class Arrastar extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {...props};
-    this.atualizarLista = this.atualizarLista.bind(this);
-  }
-  atualizarLista(novoValor) {
-      this.setState([...this.state.lista, novoValor]);
+    this.state = {...props, aberto: false};
   }
 
   dragStart(e) {
@@ -36,14 +24,14 @@ class List extends React.Component {
     this.dragged.parentNode.removeChild(placeholder);
     
     // update state
-    var data = this.state.lista;
+    var data = this.props.elementos;
     var from = Number(this.dragged.dataset.id);
     var to = Number(this.over.dataset.id);
-    console.log(this.over);
     if(from < to) to--;
     this.marcarSelecionado(document.getElementById("ordem-elementos").children[to]);
     data.splice(to, 0, data.splice(from, 1)[0]);
-    this.setState({lista: data});
+    this.setState({elementos: data});
+    console.log(this.props.elementos);
   }
   
   dragOver(e) {
@@ -56,19 +44,20 @@ class List extends React.Component {
   }
 
   onClick() {
-    this.setState({aberto: true});
+    this.setState({aberto: !this.state.aberto});
   }
 
   marcarSelecionado(e) {
-    var el = document.getElementById("selecionado");
+    var el = document.getElementById("elemento-selecionado");
     if (el != null) el.removeAttribute("id");
-    e.id = "selecionado";
+    e.id = "elemento-selecionado";
   }
 
 	render() {
-    var listItems = this.state.lista.map((item, i) => {
+    var listItems = this.props.elementos.map((item, i) => {
       return (
           <li 
+            identificacaoelemento = {item.id}
             data-id={i}
             key={i}
             draggable='true'
@@ -80,49 +69,21 @@ class List extends React.Component {
       )
      });
 		return (
-			<div id="div-ordenar">
-        <ul id="ordem-elementos">
-          {listItems}
-        </ul>
-        <li className='itens' data-id={this.state.lista.length} onClick={this.onClick.bind(this)} onDragOver={this.dragOver.bind(this)}>Adicionar Elemento</li>
-        <Adicionar visibility={this.state.aberto} atualizarLista={this.atualizarLista}/>
+			<div>
+        <div id="div-ordenar">
+          <ul id="ordem-elementos">
+            {listItems}
+            <li className='itens' data-id={this.props.elementos.length} onClick={this.onClick.bind(this)} onDragOver={this.dragOver.bind(this)}>Adicionar Elemento</li>
+          </ul>
+          <Adicionar visibility={this.state.aberto} atualizarLista={this.atualizarLista}/>
+        </div>
       </div>
     )
 	}
 }
 
-class Arrastar extends React.Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-      lista: [new Element(1,null,"Bíblia","João 3:16","Porque Deus amou o mundo de tal maneira"),
-      new Element(2,null,"Música","João 3:16","Porque Deus amou o mundo de tal maneira"),
-      new Element(3,null,"Bíblia","João 3:16","Porque Deus amou o mundo de tal maneira"),
-      new Element(4,null,"Título","João 3:16","Porque Deus amou o mundo de tal maneira"),
-      new Element(5,null,"Vídeo","João 3:16","Porque Deus amou o mundo de tal maneira"),
-      new Element(6,null,"Imagem","João 3:16","Porque Deus amou o mundo de tal maneira"),
-      new Element(1,null,"Bíblia","João 3:16","Porque Deus amou o mundo de tal maneira"),
-      new Element(2,null,"Música","João 3:16","Porque Deus amou o mundo de tal maneira"),
-      new Element(3,null,"Bíblia","João 3:16","Porque Deus amou o mundo de tal maneira"),
-      new Element(4,null,"Título","João 3:16","Porque Deus amou o mundo de tal maneira"),
-      new Element(5,null,"Vídeo","João 3:16","Porque Deus amou o mundo de tal maneira"),
-      new Element(6,null,"Imagem","João 3:16","Porque Deus amou o mundo de tal maneira"),
-      new Element(1,null,"Bíblia","João 3:16","Porque Deus amou o mundo de tal maneira"),
-      new Element(2,null,"Música","João 3:16","Porque Deus amou o mundo de tal maneira"),
-      new Element(3,null,"Bíblia","João 3:16","Porque Deus amou o mundo de tal maneira"),
-      new Element(4,null,"Título","João 3:16","Porque Deus amou o mundo de tal maneira"),
-      new Element(5,null,"Vídeo","João 3:16","Porque Deus amou o mundo de tal maneira"),
-      new Element(6,null,"Imagem","João 3:16","Porque Deus amou o mundo de tal maneira"),
-      ]
-    }
-  }
-	render() {
-		return (
-			<div>
-        <List lista={this.state.lista} />	
-			</div>
-		)
-	}
+const mapStateToProps = function (state) {
+  return {elementos: state.elementos}
 }
 
-export default Arrastar;
+export default connect(mapStateToProps)(Arrastar);

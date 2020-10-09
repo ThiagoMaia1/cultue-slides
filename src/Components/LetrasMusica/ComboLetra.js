@@ -43,6 +43,7 @@ class ComboLetra extends Component {
     render () {
         return (
             <>
+                <h4>Buscar música por título, artista ou trecho:</h4>
                 <input type="text" list="data" onKeyUp={(e) => {this.onKeyUp(e.target.value)}} />
                 <datalist id="data">
                     {this.state.opcoes}

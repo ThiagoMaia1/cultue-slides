@@ -59,9 +59,6 @@ h1 {
   }
 }
 
-
-
-
 button:focus{
   outline: white;
   box-shadow: 0 0 0 1.5px white;
@@ -107,7 +104,7 @@ button.Imagem {
   box-shadow: 0 0 0 1.5px rgb(0, 168, 22);
 }
 
-#selecionado {
+#elemento-selecionado {
   box-shadow: 0 0 0 3px #000;
 }
 

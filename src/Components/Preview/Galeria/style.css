@@ -12,10 +12,10 @@
 img {
     height: 20vh;
     width: 30vh;
+    border-radius: 0.5vh;
     object-fit: cover;
 }
 
 img:hover {
-    height: 23vh;
-    width: 34vh;
+    box-shadow: 2px 3px 8px black ;
 }

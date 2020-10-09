@@ -1,26 +1,29 @@
 import React, { Component } from 'react';
 import './style.css';
-import listaFundos from './Fundos/listaFundos.json';
+import listaFundos from './listaFundos.json';
+import { connect } from 'react-redux';
+import Img from './Img';
 
 class Galeria extends Component {
     
     getImagens() {
         var imagens = [];
         for (var i of listaFundos.imagens) {
+            if (i>5) break;
             imagens.push({id: i, path: './Fundos/' + i, alt: i.split('.')[0]})
         }
         return imagens;
     }
 
-    onClick (e) {
-        //Atribuir imagem
+    onMouseOver(e) {
+        console.log(e.target.imagem);
     }
-
+    
     render () {
         return (
             <div id='galeria'>
                 {this.getImagens().map( imagem => (
-                    <Img key={imagem.id} imagem={imagem} onClick={this.onClick}/>
+                    <Img key={imagem.id} imagem={imagem} />
                 ))
                     }
             </div>
@@ -28,10 +31,4 @@ class Galeria extends Component {
     }
 }
  
-const Img = ( { imagem } ) => (
-    <div className='div-img'>
-        <img src={require('' + imagem.path)} alt={imagem.alt} />
-    </div>
-);
-
-export default Galeria;
+export default connect()(Galeria);

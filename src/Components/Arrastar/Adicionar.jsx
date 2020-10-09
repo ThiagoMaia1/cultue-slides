@@ -3,6 +3,7 @@ import './style.css';
 import Popup from './Popup/Popup';
 import ComboLetra from './../LetrasMusica/ComboLetra'
 import TextoBiblico from './../TextoBiblico/TextoBiblico'
+import AdicionarTitulo from '../AdicionarTitulo/AdicionarTitulo'
 
 class Adicionar extends Component {
     
@@ -14,7 +15,7 @@ class Adicionar extends Component {
     adicionarMusica() {
 
         this.setState({popupCompleto: (
-            <Popup text="Buscar música por título, artista ou trecho: " showPopup={true}>
+            <Popup showPopup={true}>
                 <ComboLetra />
             </Popup>
         )});
@@ -25,7 +26,7 @@ class Adicionar extends Component {
     
     adicionarTextoBiblico() {
         this.setState({popupCompleto: (
-            <Popup text="Buscar texto bíblico: " showPopup={true}>
+            <Popup showPopup={true}>
                 <TextoBiblico />
             </Popup>
         )});
@@ -35,7 +36,12 @@ class Adicionar extends Component {
     }
 
     adicionarTitulo() {
-
+        this.setState({popupCompleto: (
+            <Popup showPopup={true}>
+                <AdicionarTitulo />
+            </Popup>
+        )});
+        this.forceUpdate();
     }
 
     adicionarImagem() {

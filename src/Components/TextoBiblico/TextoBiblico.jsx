@@ -4,6 +4,7 @@ import livros from './Livros.json';
 import versoes from './Versoes.json';
 import './style.css';
 import { extrairReferencias } from "./referenciaBiblica"
+import { Element } from '../../index'
 
 const url = 'https://bibleapi.co/api';
 const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IlR1ZSBPY3QgMDYgMjAyMCAwMzoxMDo1MCBHTVQrMDAwMC50dGhpYWdvcG1haWFAZ21haWwuY29tIiwiaWF0IjoxNjAxOTUzODUwfQ.J9CusTS1g3uJObw6Hb4da0K4ZmXZgeMKG8QUSH0E4sI"
@@ -29,7 +30,6 @@ class TextoBiblico extends Component {
 
     requestVersos(ref) {
         
-        console.log(ref);
         var query = []
         var versao = versoes.filter(v => (v.nome === document.getElementById('versao').value))[0].version
         var versiculos = [];
@@ -53,9 +53,39 @@ class TextoBiblico extends Component {
         }
         tratarVersiculos();
         
+        function getReferenciaLimpa(ref) {
+            //Funcionamento ainda não bem testado.
+            var [ r, i ] = ['', 0];
+            do {
+                if (!eReferencia(ref[i])) {
+                    delete ref[i];
+                    continue;
+                }
+                if (i === 0 || ref[i].livro !== ref[i-1].livro) {
+                    r = r + ref[i].livro.name + ' ' + ref[i].cap + (ref[i].vers ? ':' + ref[i].vers : '');
+                } else {
+                    r = r + (ref[i].inicial === -1 ? '-' : ', ');
+                    if (ref[i].cap !== ref[i-1].cap) {
+                        r = r + ref[i].cap;
+                        r = r + ref[i].vers === null ? '' : ':' + ref[i].vers;
+                    } else {
+                        r = r + ref[i].vers;
+                    }
+                }
+                i++;
+            } while(i < ref.length)
+            console.log(r);
+            return r;
+        }
+
+        function eReferencia(ref) {
+            console.log(ref);
+            return (ref.livro !== null && ref.cap !== null);
+        }
+
         function montarQuery (ref, versao, ordem, cap = null, filtro = null) {  
             contadorRef++;
-            if (ref.cap === null || ref.livro === null) {
+            if (!eReferencia(ref)) {
                 versiculos.push({versos: new RefInvalida(ref.strInicial), ordem: ordem});
             } else { 
                 query = [url, "verses",
@@ -128,12 +158,15 @@ class TextoBiblico extends Component {
                     return r;
                 }).join('');
                 document.getElementById('textoVersiculos').innerHTML = textoVersiculos;
+                document.getElementById('textoVersiculos').elementoCompleto = 
+                    new Element(1, null, "Bíblia", getReferenciaLimpa(ref), document.getElementById('textoVersiculos').innerHTML)
             }
         }
     }
 
     onClick() {
         //Criar evento pra inserir o texto bíblico
+        //store.dispatch({ type: 'inserir', elemento: document.getElementById('textoVersiculos').elementoCompleto});
         console.log("Texto Incluído!");
     }
 
@@ -165,6 +198,7 @@ class TextoBiblico extends Component {
     render () {
         return (
             <>
+                <h4>Buscar texto bíblico:</h4>
                 <input id="versao" defaultValue="Nova Versão Internacional (NVI)" type="text" list="versoes" />
                 <datalist id="versoes">
                     {versoes.map(v => (<option key={v.version} value={v.nome}></option>))}

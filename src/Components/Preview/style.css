@@ -2,8 +2,34 @@
     position: relative;
     width: 80vh;
     height: 60vh; 
-    background: black;
     left: 25vw;
     float: left;
     display: block;
+    background-color: black;
+}
+
+#fundo-preview {
+    height:100%;
+    width: 100%;
+    object-fit: cover;
+    position: absolute;
+}
+
+.slide {
+    position: absolute;
+}
+
+.paragrafo {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 4vh;
+    margin: 5% 5%;
+}
+
+.titulo {
+    top:10%;
+    left:50%;
+    transform: translate(-50%, -50%);
+    font-size: 8vh;
 }

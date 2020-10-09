@@ -1,3 +1,5 @@
+//Possível forma de dar loop nas imagens depois
+
 var fs = require('fs');
 
 var walkPath = './';
