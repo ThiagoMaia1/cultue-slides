@@ -9,13 +9,13 @@ class Adicionar extends Component {
     
     constructor(props) {
         super(props);
-        this.state = {...props, popupCompleto: (<div id="div-popup"></div>)}
+        this.state = {...props}
       }
     
     adicionarMusica() {
 
         this.setState({popupCompleto: (
-            <Popup showPopup={true}>
+            <Popup ocultarPopup={this.ocultarPopup}>
                 <ComboLetra />
             </Popup>
         )});
@@ -26,33 +26,41 @@ class Adicionar extends Component {
     
     adicionarTextoBiblico() {
         this.setState({popupCompleto: (
-            <Popup showPopup={true}>
+            <Popup ocultarPopup={this.ocultarPopup}>
                 <TextoBiblico />
             </Popup>
         )});
-        this.forceUpdate();
+        //this.forceUpdate();
 
         //this.props.atualizarLista();
     }
 
     adicionarTitulo() {
         this.setState({popupCompleto: (
-            <Popup showPopup={true}>
+            <Popup ocultarPopup={this.ocultarPopup}>
                 <AdicionarTitulo />
             </Popup>
         )});
-        this.forceUpdate();
+        //this.forceUpdate();
     }
 
     adicionarImagem() {
+        this.setState({popupCompleto: (
+            <Popup ocultarPopup={this.ocultarPopup}>
+                {/* <AdicionarImagem /> */}
+            </Popup>
+        )});
+    }
 
+    ocultarPopup = () => {
+        this.setState({popupCompleto: null})
     }
 
     render() {
-        if (this.props.visibility) {
+        if (this.props.visibility === 'visible') {
             return (
                 <>
-                    <div id="div-botoes">
+                    <div id="div-botoes" visibility={this.props.visibility}>
                         <button className="Música" onClick={this.adicionarMusica.bind(this)}>Música</button>
                         <button className="Bíblia" onClick={this.adicionarTextoBiblico.bind(this)}>Texto Bíblico</button>
                         <button className="Título" onClick={this.adicionarTitulo.bind(this)}>Título</button>

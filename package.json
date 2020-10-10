@@ -9,6 +9,7 @@
     "bible-passage-reference-parser": "^2.0.1",
     "bootstrap": "^4.5.2",
     "react": "^16.13.1",
+    "react-color": "^2.18.1",
     "react-dom": "^16.13.1",
     "react-redux": "^7.2.1",
     "react-scripts": "^3.4.3",

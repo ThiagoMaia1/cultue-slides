@@ -1,0 +1,19 @@
+.titulo-musica {
+    font-weight: 550;
+}
+
+.sombrear-selecao:hover {
+    box-shadow: 2px 3px 8px black ;
+}
+
+#combo-musica {
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 15px;
+    font-weight: 500;
+    padding: 10px 15px;
+    width: 100%;
+    border: 1px solid #999999;
+    outline: 0;
+}
+

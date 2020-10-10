@@ -54,6 +54,7 @@ h1 {
   background:#eee;
   border-radius: 4px;
   list-style: none;
+  cursor: default;
   &:hover {
     background: darken(#eee, 5%);
   }

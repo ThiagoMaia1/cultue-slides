@@ -19,7 +19,7 @@ const defaultList = {elementos: [new Element(1,null,"Título","Exemplo","Esta é
   new Element(2,null,"Bíblia","João 1:1-3","João 1:1-3 1 No princípio era o Verbo, e o Verbo estava com Deus, e o Verbo era Deus. 2 Ele estava no princípio com Deus. 3 Todas as coisas foram feitas por intermédio dele, e sem ele nada do que foi feito se fez.", 2),
   new Element(3,null,"Música","Jesus em Tua Presença","Jesus em tua presença...", 3),
   new Element(4,null,"Imagem","Aquarela","./Fundos/Aquarela.jpg", 4)], 
-  apresentacao: {imagemPreview: null, fundoPadrao: './Galeria/Fundos/Aquarela.jpg', texto: 'João 1:1-3 1 No princípio era o Verbo, e o Verbo era Deus. 2 Ele estava no princípio com Deus. 3 Todas as coisas foram feitas por intermédio dele, e sem ele nada do que foi feito se fez.', estilo: {}},
+  apresentacao: {imagemPreview: null, fundoPadrao: './Galeria/Fundos/Aquarela.jpg', texto: 'João 1:1-3 1 No princípio era o Verbo, e o Verbo era Deus. 2 Ele estava no princípio com Deus. 3 Todas as coisas foram feitas por intermédio dele, e sem ele nada do que foi feito se fez.', estilo: {tampao: {backgroundColor: '#000', opacity: '20%'}}},
   selecionado: 1};
 
 export const reducerElementos = function (state = defaultList, action) {

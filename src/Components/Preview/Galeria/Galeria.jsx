@@ -8,8 +8,10 @@ class Galeria extends Component {
     
     getImagens() {
         var imagens = [];
+        var j = 0;
         for (var i of listaFundos.imagens) {
-            if (i>5) break;
+            j++;
+            if (j>6) break;
             imagens.push({id: i, path: './Fundos/' + i, alt: i.split('.')[0]})
         }
         return imagens;

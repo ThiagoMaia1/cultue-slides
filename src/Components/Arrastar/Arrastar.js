@@ -10,7 +10,7 @@ placeholder.className = "placeholder";
 class Arrastar extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {...props, aberto: false};
+    this.state = {...props, aberto: 'hidden'};
   }
 
   dragStart(e) {
@@ -35,7 +35,7 @@ class Arrastar extends React.Component {
   }
   
   dragOver(e) {
-    //e.preventDefault();
+    e.preventDefault();
     //if (e.parentNode.id !== "ordem-elementos") return;
     this.dragged.style.display = "none";
     if(e.target.className === 'placeholder') return;
@@ -43,14 +43,16 @@ class Arrastar extends React.Component {
     e.target.parentNode.insertBefore(placeholder, e.target);
   }
 
-  onClick() {
-    this.setState({aberto: !this.state.aberto});
-  }
-
   marcarSelecionado(e) {
     var el = document.getElementById("elemento-selecionado");
     if (el != null) el.removeAttribute("id");
     e.id = "elemento-selecionado";
+  }
+
+  toggleAdicionar(e, visivel) {
+    if (!document.getElementById('popup')) {
+      this.setState({aberto: visivel});
+    }
   }
 
 	render() {
@@ -70,12 +72,17 @@ class Arrastar extends React.Component {
      });
 		return (
 			<div>
-        <div id="div-ordenar">
+        <div id="div-ordenar" onMouseLeave={e => (this.toggleAdicionar(e, 'hidden'))}>
           <ul id="ordem-elementos">
             {listItems}
-            <li className='itens' data-id={this.props.elementos.length} onClick={this.onClick.bind(this)} onDragOver={this.dragOver.bind(this)}>Adicionar Elemento</li>
+            <li className='itens' 
+              data-id={this.props.elementos.length}
+              onDragOver={this.dragOver.bind(this)} 
+              onMouseOver={e => (this.toggleAdicionar(e, 'visible'))}
+              style={{visibility: (this.state.aberto === 'visible' ? 'hidden' : 'visible'), position:(this.state.aberto === 'visible' ? 'absolute' : '')}}>Adicionar Elemento
+            </li>
           </ul>
-          <Adicionar visibility={this.state.aberto} atualizarLista={this.atualizarLista}/>
+          <Adicionar visibility={this.state.aberto} atualizarLista={this.atualizarLista} />
         </div>
       </div>
     )

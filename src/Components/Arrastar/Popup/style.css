@@ -18,8 +18,8 @@ html, body, .app {
   right: 0;
   bottom: 0;
   margin: auto;
-  background-color: rgba(0,0,0, 0.5);
-  z-index: 10;
+  background-color: rgba(255,255,255, 0.5);
+  z-index: 40;
 }
 .popup_inner {
   position: absolute;
@@ -27,9 +27,10 @@ html, body, .app {
   right: 25%;
   top: 25%;
   bottom: 25%;
-  margin: auto;
   background: white;
   height: 500px;
+  border-radius: 6px;
+  box-shadow: 1px 3px 8px black;
 }
 
 #fechar{
@@ -37,4 +38,9 @@ html, body, .app {
   float: right;
   outline: 3px;
   text-align: center;
+  margin: 3px;
+  padding: 5px 8px;
+  background:#eee;
+  border-radius: 4px;
+  font-weight: 650;
 }

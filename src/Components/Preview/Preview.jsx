@@ -4,16 +4,30 @@ import { connect } from 'react-redux';
 
 class Preview extends Component {
     
-    // constructor(props) {
-    //     super(props);
-    //   }
+    constructor(props) {
+        super(props);
+        this.state = {fullScreen: 'preview'}
+    }
+
+    toggleFullScreen () {
+        if (this.state.fullScreen === 'preview') {
+            this.setState({fullScreen: 'tela-cheia'});
+            document.body.style='height:100%;overflow:hidden;'            
+        } else {
+            this.setState({fullScreen: 'preview'});
+            document.body.style="height:;overflow:auto;"
+        }
+        
+    }
 
     render() {
         return (
-            <div id="preview">
+            <div id={this.state.fullScreen}>
+                <div id='tampao' style={this.props.apresentacao.estilo.tampao}></div>
                 <Img imagem={{path: (this.props.apresentacao.imagemPreview || this.props.apresentacao.fundoPadrao), alt: "Aquarela"}} />
-                <div className='titulo slide'>{'titulo'||this.props.apresentacao.texto}</div>
-                <div className='paragrafo slide'>{this.props.apresentacao.texto}</div>
+                <div className='titulo slide texto'>{'Título'||this.props.apresentacao.texto}</div>
+                <div className='paragrafo slide texto'>{this.props.apresentacao.texto}</div>
+                <button id='ativar-tela-cheia' onClick={this.toggleFullScreen.bind(this)}><span role='img' aria-label='Tela Cheia'>🖥️</span></button>
             </div>
         )
     }

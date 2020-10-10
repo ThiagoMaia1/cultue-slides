@@ -2,10 +2,11 @@
     position: relative;
     width: 80vh;
     height: 60vh; 
-    left: 25vw;
+    left: 7vw;
     float: left;
     display: block;
     background-color: black;
+    border-radius: 1vh;
 }
 
 #fundo-preview {
@@ -15,16 +16,29 @@
     position: absolute;
 }
 
+img {
+    border-radius: 0.5vh;
+    object-fit: cover;
+}
+
 .slide {
     position: absolute;
 }
 
+.slide.texto {
+    color: 	black;
+    font-weight: 500;
+    z-index: 20;
+}
+
 .paragrafo {
+    /* width: 100%; */
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    font-size: 4vh;
-    margin: 5% 5%;
+    font-size: 200%;
+    margin-left: 0;
+    margin-right: -10%;
 }
 
 .titulo {
@@ -32,4 +46,37 @@
     left:50%;
     transform: translate(-50%, -50%);
     font-size: 8vh;
+}
+
+#tela-cheia {
+    position: fixed;
+    width: 101vw;
+    height: 101vh; 
+    left: -5px;
+    top: -5px;
+    overflow: hidden;
+}
+
+#ativar-tela-cheia {
+    position: absolute;
+    right: 3vh;
+    bottom: 3vh;
+    opacity: 20%;
+    font-size: 400%;
+    padding: 1%;
+    border: none;
+    background-color: transparent;
+    z-index: 30;
+}
+
+#ativar-tela-cheia:hover {
+    opacity: 80%;
+}
+
+#tampao {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    z-index: 10;
+    border-radius: 1vh;
 }

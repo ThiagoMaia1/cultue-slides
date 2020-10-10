@@ -11,7 +11,7 @@ class Img extends Component {
         render () {
         return (
         <div className='div-img'>
-            <img src={require('' + this.props.imagem.path)} alt={this.props.imagem.alt} 
+            <img className='imagem-galeria sombrear-selecao' src={require('' + this.props.imagem.path)} alt={this.props.imagem.alt} 
                 onClick={() => {
                     //se nenhum elemento específico estiver selecionado
                     this.props.dispatch({type: 'definir-fundo-padrao', pathImagem:this.props.imagem.path.replace('./','./Galeria/')});

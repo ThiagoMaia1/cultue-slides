@@ -9,13 +9,7 @@
     margin-left: 10px;
 }
 
-img {
+.imagem-galeria {
     height: 20vh;
     width: 30vh;
-    border-radius: 0.5vh;
-    object-fit: cover;
-}
-
-img:hover {
-    box-shadow: 2px 3px 8px black ;
 }
