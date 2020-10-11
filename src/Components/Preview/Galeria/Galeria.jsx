@@ -16,10 +16,6 @@ class Galeria extends Component {
         }
         return imagens;
     }
-
-    onMouseOver(e) {
-        console.log(e.target.imagem);
-    }
     
     render () {
         return (

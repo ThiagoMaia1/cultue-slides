@@ -4,21 +4,22 @@ import './index.css';
 import App from './App';
 import { createStore } from 'redux';
 
+var idElement = 0;
 export class Element {
-  constructor(id, apiKey, tipo, título, texto, ordem) {
-    this.id = id;
+  constructor(apiKey, tipo, título, texto) {
+    idElement++;
+    this.id = idElement;
     this.apiKey = apiKey;
     this.tipo = tipo;
     this.título = título;
-    this.texto = texto; 
-    this.ordem = ordem;
+    this.texto = texto;
   }
 }
 
-const defaultList = {elementos: [new Element(1,null,"Título","Exemplo","Esta é uma apresentação de exemplo.", 1),
-  new Element(2,null,"Bíblia","João 1:1-3","João 1:1-3 1 No princípio era o Verbo, e o Verbo estava com Deus, e o Verbo era Deus. 2 Ele estava no princípio com Deus. 3 Todas as coisas foram feitas por intermédio dele, e sem ele nada do que foi feito se fez.", 2),
-  new Element(3,null,"Música","Jesus em Tua Presença","Jesus em tua presença...", 3),
-  new Element(4,null,"Imagem","Aquarela","./Fundos/Aquarela.jpg", 4)], 
+const defaultList = {elementos: [new Element(null,"Título","Exemplo","Esta é uma apresentação de exemplo."),
+  new Element(null,"Bíblia","João 1:1-3","João 1:1-3 1 No princípio era o Verbo, e o Verbo estava com Deus, e o Verbo era Deus. 2 Ele estava no princípio com Deus. 3 Todas as coisas foram feitas por intermédio dele, e sem ele nada do que foi feito se fez."),
+  new Element(null,"Música","Jesus em Tua Presença","Jesus em tua presença..."),
+  new Element(null,"Imagem","Aquarela","./Fundos/Aquarela.jpg")], 
   apresentacao: {imagemPreview: null, fundoPadrao: './Galeria/Fundos/Aquarela.jpg', texto: 'João 1:1-3 1 No princípio era o Verbo, e o Verbo era Deus. 2 Ele estava no princípio com Deus. 3 Todas as coisas foram feitas por intermédio dele, e sem ele nada do que foi feito se fez.', estilo: {tampao: {backgroundColor: '#000', opacity: '20%'}}},
   selecionado: 1};
 

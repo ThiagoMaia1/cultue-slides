@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import './style.css';
+//import './style.css';
 import Popup from './Popup/Popup';
 import ComboLetra from './../LetrasMusica/ComboLetra'
 import TextoBiblico from './../TextoBiblico/TextoBiblico'
-import AdicionarTitulo from '../AdicionarTitulo/AdicionarTitulo'
+import AdicionarTitulo from './AdicionarTitulo'
 
 class Adicionar extends Component {
     
@@ -21,7 +21,6 @@ class Adicionar extends Component {
         )});
         this.forceUpdate();
 
-        //this.props.atualizarLista();
     }
     
     adicionarTextoBiblico() {
@@ -30,9 +29,6 @@ class Adicionar extends Component {
                 <TextoBiblico />
             </Popup>
         )});
-        //this.forceUpdate();
-
-        //this.props.atualizarLista();
     }
 
     adicionarTitulo() {
@@ -41,7 +37,6 @@ class Adicionar extends Component {
                 <AdicionarTitulo />
             </Popup>
         )});
-        //this.forceUpdate();
     }
 
     adicionarImagem() {
@@ -57,21 +52,17 @@ class Adicionar extends Component {
     }
 
     render() {
-        if (this.props.visibility === 'visible') {
-            return (
-                <>
-                    <div id="div-botoes" visibility={this.props.visibility}>
-                        <button className="Música" onClick={this.adicionarMusica.bind(this)}>Música</button>
-                        <button className="Bíblia" onClick={this.adicionarTextoBiblico.bind(this)}>Texto Bíblico</button>
-                        <button className="Título" onClick={this.adicionarTitulo.bind(this)}>Título</button>
-                        <button className="Imagem" onClick={this.adicionarImagem.bind(this)}>Imagem</button>
-                    </div>
-                    {this.state.popupCompleto}
-                </>
-            )
-        } else {
-            return null;
-        }
+        return (
+            <>
+                <div id="div-botoes">
+                    <button className="Música" onClick={this.adicionarMusica.bind(this)}>Música</button>
+                    <button className="Bíblia" onClick={this.adicionarTextoBiblico.bind(this)}>Texto Bíblico</button>
+                    <button className="Título" onClick={this.adicionarTitulo.bind(this)}>Título</button>
+                    <button className="Imagem" onClick={this.adicionarImagem.bind(this)}>Imagem</button>
+                </div>
+                {this.state.popupCompleto}
+            </>
+        )
     }
 }
 

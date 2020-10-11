@@ -6,7 +6,7 @@
     box-shadow: 2px 3px 8px black ;
 }
 
-#combo-musica {
+.combo-popup {
     border-radius: 4px;
     box-sizing: border-box;
     font-size: 15px;

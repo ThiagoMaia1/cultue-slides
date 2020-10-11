@@ -23,6 +23,7 @@ class TextoBiblico extends Component {
     constructor (props) {
         super(props);
         this.state = {
+            elemento: null,
             comboCaps: 0,
             comboVersos: 0
         }
@@ -74,12 +75,10 @@ class TextoBiblico extends Component {
                 }
                 i++;
             } while(i < ref.length)
-            console.log(r);
             return r;
         }
 
         function eReferencia(ref) {
-            console.log(ref);
             return (ref.livro !== null && ref.cap !== null);
         }
 
@@ -157,9 +156,8 @@ class TextoBiblico extends Component {
                     } 
                     return r;
                 }).join('');
-                document.getElementById('textoVersiculos').innerHTML = textoVersiculos;
-                document.getElementById('textoVersiculos').elementoCompleto = 
-                    new Element(1, null, "Bíblia", getReferenciaLimpa(ref), document.getElementById('textoVersiculos').innerHTML)
+                //this.setState
+                //    new Element(null, "Bíblia", getReferenciaLimpa(ref), document.getElementById('textoVersiculos').innerHTML)
             }
         }
     }
@@ -199,11 +197,11 @@ class TextoBiblico extends Component {
         return (
             <>
                 <h4>Buscar texto bíblico:</h4>
-                <input id="versao" defaultValue="Nova Versão Internacional (NVI)" type="text" list="versoes" />
+                <input id="versao" className='combo-popup' defaultValue="Nova Versão Internacional (NVI)" type="text" list="versoes" />
                 <datalist id="versoes">
                     {versoes.map(v => (<option key={v.version} value={v.nome}></option>))}
                 </datalist>
-                <input type="text" list="livros" onKeyDown={e => this.buscarReferencia(e)} style={{width:'300px'}}/>
+                <input className='combo-popup' type='text' list="livros" onKeyDown={e => this.buscarReferencia(e)} style={{width:'300px'}}/>
                 <datalist id="livros">
                     {livros.map(l => (<option key={l.abbrevPt} value={l.name}></option>))}
                 </datalist>
@@ -216,7 +214,7 @@ class TextoBiblico extends Component {
                     {this.criarLista(this.state.comboVersos)}
                 </datalist>                      */}
                 <Button onClick={this.onClick}/>
-                <p id='textoVersiculos'></p>  
+                <div>{this.state.elemento.texto}</div>  
                 {/* <Button visibility={this.state.visivel} onClick={this.onClick}/> */}
             </>
         )

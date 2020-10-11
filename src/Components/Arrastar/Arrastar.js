@@ -1,6 +1,5 @@
 import React from 'react';
 import './style.css';
-import Adicionar from './Adicionar';
 //import { Element } from '../../index'
 import { connect } from 'react-redux';
 
@@ -31,7 +30,6 @@ class Arrastar extends React.Component {
     this.marcarSelecionado(document.getElementById("ordem-elementos").children[to]);
     data.splice(to, 0, data.splice(from, 1)[0]);
     this.setState({elementos: data});
-    console.log(this.props.elementos);
   }
   
   dragOver(e) {
@@ -72,7 +70,7 @@ class Arrastar extends React.Component {
      });
 		return (
 			<div>
-        <div id="div-ordenar" onMouseLeave={e => (this.toggleAdicionar(e, 'hidden'))}>
+        <div className="coluna" onMouseLeave={e => (this.toggleAdicionar(e, 'hidden'))}>
           <ul id="ordem-elementos">
             {listItems}
             <li className='itens' 
@@ -82,7 +80,6 @@ class Arrastar extends React.Component {
               style={{visibility: (this.state.aberto === 'visible' ? 'hidden' : 'visible'), position:(this.state.aberto === 'visible' ? 'absolute' : '')}}>Adicionar Elemento
             </li>
           </ul>
-          <Adicionar visibility={this.state.aberto} atualizarLista={this.atualizarLista} />
         </div>
       </div>
     )

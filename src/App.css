@@ -1,14 +1,15 @@
 
 .App {
   display: block;
-  margin: 50px;
+  margin: 3vh 3vw 0 0;
 }
 
 #organizador {
   display: flex;
   flex-direction: row;
+  justify-content: space-evenly;
 }
 
 #galeria {
-  margin-top: 30px;
+  margin-top: 6vh;
 }

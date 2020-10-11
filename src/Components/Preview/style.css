@@ -1,9 +1,7 @@
 #preview {
     position: relative;
     width: 80vh;
-    height: 60vh; 
-    left: 7vw;
-    float: left;
+    height: 60vh;
     display: block;
     background-color: black;
     border-radius: 1vh;

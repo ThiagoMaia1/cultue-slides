@@ -1,9 +1,9 @@
-#div-ordenar {
+.coluna {
   display: flex;
   flex-direction: column;
   width: 15vw;
   border: 5px solid #e1e1e1;
-  box-shadow: 1px 3px 8px #888; 
+  box-shadow: 1px 3px 8px #888;
 }
 
 #ordem-elementos {
