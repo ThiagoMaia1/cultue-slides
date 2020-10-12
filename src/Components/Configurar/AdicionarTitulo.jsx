@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-//import './style.css';
+import '../LetrasMusica/style.css';
 import { Element } from '../../index'
 import { connect } from 'react-redux';
 
@@ -23,8 +23,8 @@ class AdicionarTitulo extends Component {
         return (
             <div>
                 <h4>Adicionar Slide de Título</h4>
-                <input id="titulo" type='text' />
-                <input id="subtitulo" type='text' />
+                <input id="titulo" className='combo' type='text' placeholder='Título do slide' />
+                <textarea id="subtitulo" className='combo' placeholder='Texto do slide'></textarea>
                 <button onClick={this.onClick.bind(this)}>Inserir Título</button>
             </div>
         )

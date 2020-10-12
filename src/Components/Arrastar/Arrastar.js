@@ -9,7 +9,7 @@ placeholder.className = "placeholder";
 class Arrastar extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {...props, aberto: 'hidden'};
+    this.state = {...props, aberto: 'hidden', selecionado: 0};
   }
 
   dragStart(e) {
@@ -23,34 +23,25 @@ class Arrastar extends React.Component {
     this.dragged.parentNode.removeChild(placeholder);
     
     // update state
-    var data = this.props.elementos;
-    var from = Number(this.dragged.dataset.id);
+    var novaOrdem = [...this.props.elementos];
+    var from = Number(this.dragged.dataset.id)-1;
     var to = Number(this.over.dataset.id);
     if(from < to) to--;
-    this.marcarSelecionado(document.getElementById("ordem-elementos").children[to]);
-    data.splice(to, 0, data.splice(from, 1)[0]);
-    this.setState({elementos: data});
+    novaOrdem.splice(to, 0, novaOrdem.splice(from, 1)[0]);
+    this.props.dispatch({type:'reordenar', novaOrdemElementos: novaOrdem});
+    this.marcarSelecionado(to);
   }
   
   dragOver(e) {
     e.preventDefault();
-    //if (e.parentNode.id !== "ordem-elementos") return;
     this.dragged.style.display = "none";
     if(e.target.className === 'placeholder') return;
     this.over = e.target;
-    e.target.parentNode.insertBefore(placeholder, e.target);
+    e.target.parentNode.insertBefore(placeholder, e.target.nextSibling);
   }
 
-  marcarSelecionado(e) {
-    var el = document.getElementById("elemento-selecionado");
-    if (el != null) el.removeAttribute("id");
-    e.id = "elemento-selecionado";
-  }
-
-  toggleAdicionar(e, visivel) {
-    if (!document.getElementById('popup')) {
-      this.setState({aberto: visivel});
-    }
+  marcarSelecionado (id) {
+    this.setState({selecionado: id})
   }
 
 	render() {
@@ -58,28 +49,26 @@ class Arrastar extends React.Component {
       return (
           <li 
             identificacaoelemento = {item.id}
-            data-id={i}
-            key={i}
+            data-id={i+1}
+            key={i+1}
             draggable='true'
-            className={item.tipo + ' itens'}
+            className={item.tipo + ' itens ' + (i+1 === this.state.selecionado ? 'selecionado' : '')}
             onDragEnd={this.dragEnd.bind(this)}
-            onClick={e => (this.marcarSelecionado(e.target))}
+            onClick={() => this.marcarSelecionado(i+1)}
             onDragStart={this.dragStart.bind(this)}
-            onDragOver={this.dragOver.bind(this)}> {item.tipo + ": " + item.título}</li>
+            onDragOver={this.dragOver.bind(this)}> <b>{i+1}. {item.tipo}: </b>{item.título}</li>
       )
      });
 		return (
 			<div>
-        <div className="coluna" onMouseLeave={e => (this.toggleAdicionar(e, 'hidden'))}>
-          <ul id="ordem-elementos">
+        <div className="coluna">
+          <ol id="ordem-elementos">
+            <div id="configuracao-global" className={'itens ' + (this.state.selecionado ? '' : 'selecionado')} data-id={0}
+              onClick={() => this.marcarSelecionado(0)}
+              onDragOver={this.dragOver.bind(this)}>Configurações Globais
+            </div>
             {listItems}
-            <li className='itens' 
-              data-id={this.props.elementos.length}
-              onDragOver={this.dragOver.bind(this)} 
-              onMouseOver={e => (this.toggleAdicionar(e, 'visible'))}
-              style={{visibility: (this.state.aberto === 'visible' ? 'hidden' : 'visible'), position:(this.state.aberto === 'visible' ? 'absolute' : '')}}>Adicionar Elemento
-            </li>
-          </ul>
+          </ol>
         </div>
       </div>
     )

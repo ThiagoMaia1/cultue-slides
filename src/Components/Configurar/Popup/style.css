@@ -9,7 +9,7 @@ html, body, .app {
   width: 100%;
   height: 100vh;
 }
-.popup {
+#fundo-popup {
   position: fixed;
   width: 100%;
   height: 100%;
@@ -21,16 +21,26 @@ html, body, .app {
   background-color: rgba(255,255,255, 0.5);
   z-index: 40;
 }
-.popup_inner {
+
+.popup {
+  display: flex;
+  flex-direction: column;
   position: absolute;
   left: 25%;
   right: 25%;
   top: 25%;
   bottom: 25%;
   background: white;
-  height: 500px;
+  height: 40vh;
   border-radius: 6px;
+  padding: 1.5vw;
   box-shadow: 1px 3px 8px black;
+  z-index: 50;
+}
+
+.cabecalho-popup {
+  width: 95%; 
+  position: absolute;
 }
 
 #fechar{

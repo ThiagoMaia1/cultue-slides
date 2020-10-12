@@ -1,5 +1,4 @@
 import React from 'react';
-import './style.css';
 
 class Carregando extends React.Component {
   
@@ -22,9 +21,9 @@ class Carregando extends React.Component {
 
   render() {
         return (
-            <div style={{width:'96%', position: 'absolute', boxSizing: 'border-box'}}>
-                <div style={{transform: 'rotate(' + this.state.angulo + 'deg)', position: 'relative', padding: '6px 15px', float: 'right'}}>
-                    <span role='img' style={{fontSize: '22px', fontWeight: '600', color: '#999999'}}>↻</span>
+            <div style={{width:'100%', position: 'absolute'}}>
+                <div style={{transform: 'rotate(' + this.state.angulo + 'deg)', position: 'relative', padding: '10px 15px', float: 'right'}}>
+                    <img src={require('./Carregando.png')} alt={''} style={{height: '2vh', width: '2vh'}}/>
                 </div>
             </div>
         )

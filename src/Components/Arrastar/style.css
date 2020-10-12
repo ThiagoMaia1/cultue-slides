@@ -37,7 +37,7 @@
   font-weight: 500;
 }
 
-ul{
+ol {
   list-style: none;
   margin:0;
   padding:0;
@@ -53,11 +53,14 @@ h1 {
   padding: 10px 15px;
   background:#eee;
   border-radius: 4px;
-  list-style: none;
   cursor: default;
   &:hover {
     background: darken(#eee, 5%);
   }
+}
+
+#configuracao-global {
+  background-color: #ff6666;
 }
 
 button:focus{
@@ -105,7 +108,7 @@ button.Imagem {
   box-shadow: 0 0 0 1.5px rgb(0, 168, 22);
 }
 
-#elemento-selecionado {
+.selecionado {
   box-shadow: 0 0 0 3px #000;
 }
 

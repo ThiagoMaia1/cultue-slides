@@ -13,6 +13,15 @@ class referenciaBiblica {
 
 }
 
+export class RefInvalida {
+    constructor(str) {
+        this.cap = null; 
+        this.livro = null; 
+        this.vers = null; 
+        this.texto = 'Referência Inválida: "' + str + '"';
+    }
+}
+
 export function extrairReferencias(strReferencia) {
 
     var referencias = [];

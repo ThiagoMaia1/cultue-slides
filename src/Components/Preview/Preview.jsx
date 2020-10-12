@@ -10,19 +10,34 @@ class Preview extends Component {
     }
 
     toggleFullScreen () {
-        if (this.state.fullScreen === 'preview') {
-            this.setState({fullScreen: 'tela-cheia'});
-            document.body.style='height:100%;overflow:hidden;'            
+    
+        if (document.fullscreenElement) {
+            document.exitFullscreen()
+            .then()
+            .catch(function(error) {
+                console.log(error.message);
+            });
         } else {
-            this.setState({fullScreen: 'preview'});
-            document.body.style="height:;overflow:auto;"
-        }
-        
+        var element = document.getElementById('preview');
+
+        element.requestFullscreen()
+        .catch(function(error) {
+            console.log(error.message);
+        });
+
+        // if (this.state.fullScreen === 'preview') {
+        //     this.setState({fullScreen: 'tela-cheia'});
+        //     document.body.style='height:100%;overflow:hidden;'            
+        // } else {
+        //     this.setState({fullScreen: 'preview'});
+        //     document.body.style="height:;overflow:auto;"
+        // }
+        }        
     }
 
     render() {
         return (
-            <div id={this.state.fullScreen}>
+            <div id='preview'>
                 <div id='tampao' style={this.props.apresentacao.estilo.tampao}></div>
                 <Img imagem={{path: (this.props.apresentacao.imagemPreview || this.props.apresentacao.fundoPadrao), alt: "Aquarela"}} />
                 <div className='titulo slide texto'>{'Título'||this.props.apresentacao.texto}</div>

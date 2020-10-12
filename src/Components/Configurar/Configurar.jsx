@@ -14,7 +14,7 @@ class Configurar extends React.Component {
 		return (
       <div className="coluna" >
         <Adicionar />
-        <CompactPicker style={{borderRadius: '1px'}}/>
+        <CompactPicker />
       </div>
     )   
 	}

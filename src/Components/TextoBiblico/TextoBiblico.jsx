@@ -1,42 +1,33 @@
 import React, { Component } from 'react';
-import Button from './Button';
 import livros from './Livros.json';
 import versoes from './Versoes.json';
 import './style.css';
-import { extrairReferencias } from "./referenciaBiblica"
+import { extrairReferencias, RefInvalida } from "./referenciaBiblica"
 import { Element } from '../../index'
+import { connect } from 'react-redux'
+import { formatarVersiculos } from '../Preview/TextoPreview.js'
 
 const url = 'https://bibleapi.co/api';
 const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IlR1ZSBPY3QgMDYgMjAyMCAwMzoxMDo1MCBHTVQrMDAwMC50dGhpYWdvcG1haWFAZ21haWwuY29tIiwiaWF0IjoxNjAxOTUzODUwfQ.J9CusTS1g3uJObw6Hb4da0K4ZmXZgeMKG8QUSH0E4sI"
-
-class RefInvalida {
-    constructor(str) {
-        this.cap = null; 
-        this.livro = null; 
-        this.vers = null; 
-        this.texto = '<p style="color:red"><br><br><i><b>"' + str + '"- Referência Inválida</b></i></p>'
-    }
-}
+const versaoPadrao = 'nvi'
 
 class TextoBiblico extends Component {
 
     constructor (props) {
         super(props);
         this.state = {
-            elemento: null,
+            elemento: {texto: []},
+            botaoValidosVisivel: 'hidden',
             comboCaps: 0,
             comboVersos: 0
         }
-    }
+        this.versao = versaoPadrao;
+    }    
 
     requestVersos(ref) {
-        
-        var query = []
-        var versao = versoes.filter(v => (v.nome === document.getElementById('versao').value))[0].version
-        var versiculos = [];
-        var lastVersiculos = [];
-        var contadorRef = 0;
-        
+        this.referenciaLimpa = this.getReferenciaLimpa(ref);
+        this.versiculos = []; 
+        this.contadorRef = 0;
         for (var i = 0; i < ref.length; i++) {
             if (ref[i].inicial === -1) {
                 continue;
@@ -45,138 +36,130 @@ class TextoBiblico extends Component {
                     ref[i].inicial = 0;
                 } else {
                     for (var j = ref[i].cap; j <= ref[i+1].cap; j++) {
-                        montarQuery(ref[i], versao, i + j/100, j, [ref[i].cap, ref[i].vers, ref[i+1].cap, ref[i+1].vers]);
+                        this.montarQuery(ref[i], this.versao, i + j/100, j, [ref[i].cap, ref[i].vers, ref[i+1].cap, ref[i+1].vers]);
                     }
                 }
             } else {
-                montarQuery(ref[i], versao, i);
+                this.montarQuery(ref[i], this.versao, i);
             }
         }
-        tratarVersiculos();
-        
-        function getReferenciaLimpa(ref) {
-            //Funcionamento ainda não bem testado.
-            var [ r, i ] = ['', 0];
-            do {
-                if (!eReferencia(ref[i])) {
-                    delete ref[i];
-                    continue;
-                }
-                if (i === 0 || ref[i].livro !== ref[i-1].livro) {
-                    r = r + ref[i].livro.name + ' ' + ref[i].cap + (ref[i].vers ? ':' + ref[i].vers : '');
+        this.tratarVersiculos()
+    }
+
+    getReferenciaLimpa(ref) {
+        //Funcionamento ainda não bem testado.
+        var r = '';
+        for (var i = 0; i < ref.length; i++){
+            if (!this.eReferencia(ref[i])) {
+                continue;
+            }
+            if (i === 0 || ref[i].livro !== ref[i-1].livro) {
+                r = r + ref[i].livro.name + ' ' + ref[i].cap + (ref[i].vers ? ':' + ref[i].vers : '');
+            } else {
+                r = r + (ref[i].inicial === -1 ? '-' : ', ');
+                if (ref[i].cap !== ref[i-1].cap) {
+                    r = r + ref[i].cap;
+                    r = r + ref[i].vers === null ? '' : ':' + ref[i].vers;
                 } else {
-                    r = r + (ref[i].inicial === -1 ? '-' : ', ');
-                    if (ref[i].cap !== ref[i-1].cap) {
-                        r = r + ref[i].cap;
-                        r = r + ref[i].vers === null ? '' : ':' + ref[i].vers;
-                    } else {
-                        r = r + ref[i].vers;
-                    }
+                    r = r + ref[i].vers;
                 }
-                i++;
-            } while(i < ref.length)
-            return r;
-        }
-
-        function eReferencia(ref) {
-            return (ref.livro !== null && ref.cap !== null);
-        }
-
-        function montarQuery (ref, versao, ordem, cap = null, filtro = null) {  
-            contadorRef++;
-            if (!eReferencia(ref)) {
-                versiculos.push({versos: new RefInvalida(ref.strInicial), ordem: ordem});
-            } else { 
-                query = [url, "verses",
-                        versao,
-                        ref.livro.abbrevPt,
-                        cap || ref.cap,
-                        ref.inicial === 0 && ref.vers !== null ? ref.vers : null,
-                        ].join('/')
-                getVersiculos(query, filtro, ordem)
             }
         }
-        
-        function getVersiculos(query, filtro, ordem) {
-            var bibleApi = new XMLHttpRequest()
-            bibleApi.filtro = filtro;
-            bibleApi.responseType = 'json';
-            bibleApi.addEventListener('load', () => {
-                if (bibleApi.response.hasOwnProperty('verses')) {
-                    lastVersiculos = bibleApi.response.verses.map(v => ({vers: v.number, texto: v.text}))
-                    for (var x of lastVersiculos) {
-                        x.cap = bibleApi.response.chapter.number ;
-                        x.livro = bibleApi.response.book.name;
-                    }
-                    if (bibleApi.filtro !== null) {
-                        lastVersiculos = lastVersiculos.filter(
-                            v => (((v.cap > bibleApi.filtro[0] || v.vers >= bibleApi.filtro[1]) || (v.cap >= bibleApi.filtro[0] && bibleApi.filtro[1] == null)) &&
-                            ((v.cap < bibleApi.filtro[2] || v.vers <= bibleApi.filtro[3]) || (v.cap <= bibleApi.filtro[2] && bibleApi.filtro[3] == null)))
-                        )
-                    }
-                } else {
-                    lastVersiculos.push({cap: bibleApi.response.chapter, livro: bibleApi.response.book.name, vers: bibleApi.response.number, texto: bibleApi.response.text});
+        return r;
+    }
+
+    eReferencia(ref) {
+        if ('livro' in ref || 'cap' in ref)
+            return ref.livro !== null && ref.cap !== null;
+        return false;
+    }
+
+    montarQuery (ref, versao, ordem, cap = null, filtro = null) {  
+        this.contadorRef++;
+        if (!this.eReferencia(ref)) {
+            this.versiculos.push({versos: new RefInvalida(ref.strInicial), ordem: ordem});
+        } else { 
+            this.query = [url, "verses",
+                    versao,
+                    ref.livro.abbrevPt,
+                    cap || ref.cap,
+                    ref.inicial === 0 && ref.vers !== null ? ref.vers : null,
+                    ].join('/')
+            this.getVersiculos(this.query, filtro, ordem)
+        }
+    }
+    
+    getVersiculos(query, filtro, ordem) {
+        var bibleApi = new XMLHttpRequest()
+        bibleApi.filtro = filtro;
+        bibleApi.responseType = 'json';
+        bibleApi.addEventListener('load', () => {
+            if (bibleApi.response.hasOwnProperty('verses')) {
+                this.lastVersiculos = bibleApi.response.verses.map(v => ({vers: v.number, texto: v.text}))
+                for (var x of this.lastVersiculos) {
+                    x.cap = bibleApi.response.chapter.number ;
+                    x.livro = bibleApi.response.book.name;
                 }
-                
-                versiculos.push({versos: lastVersiculos, ordem: ordem});
-                tratarVersiculos()
-            })
+                if (bibleApi.filtro !== null) {
+                    this.lastVersiculos = this.lastVersiculos.filter(
+                        v => (((v.cap > bibleApi.filtro[0] || v.vers >= bibleApi.filtro[1]) || (v.cap >= bibleApi.filtro[0] && bibleApi.filtro[1] == null)) &&
+                        ((v.cap < bibleApi.filtro[2] || v.vers <= bibleApi.filtro[3]) || (v.cap <= bibleApi.filtro[2] && bibleApi.filtro[3] == null)))
+                    )
+                }
+            } else {
+                this.lastVersiculos.push({cap: bibleApi.response.chapter, livro: bibleApi.response.book.name, vers: bibleApi.response.number, texto: bibleApi.response.text});
+            }
             
-            bibleApi.open('GET', query);
-            bibleApi.setRequestHeader("Authorization", "Bearer " + token)
-            bibleApi.send();
-        }
+            this.versiculos.push({versos: this.lastVersiculos, ordem: ordem});
+            this.tratarVersiculos()
+        })
+        
+        bibleApi.open('GET', query);
+        bibleApi.setRequestHeader("Authorization", "Bearer " + token)
+        bibleApi.send();
+    }
 
-        function tratarVersiculos() {
-            if (versiculos.length === contadorRef) {
-                versiculos = versiculos.sort((a, b) => {
-                    if(a.ordem < b.ordem) {
-                        return -1;
-                    } else if(a.ordem > b.ordem) {
-                        return 1;
-                    } else {
-                        return 0;
-                    }
-                })
-                versiculos = versiculos.flatMap(v => v.versos);
-                var textoVersiculos = versiculos.map((v, i) => {
-                    if (v instanceof RefInvalida) 
-                        return v.texto;
-                    var r = '<b>' + v.vers + '</b> ' + v.texto + ' ';
-                    var c = '<br><br><b>' + v.cap + ':</b>';
-                    var l = '<b>' + v.livro + '</b>';
-                    if (i === 0) {
-                        r = l + c + r;
-                    } else {
-                        if (v.livro !== versiculos[i-1].livro) {
-                            r = '<br><br>' + l + c + r;
-                        } else if (v.cap !== versiculos[i-1].cap) {
-                            r = c + r;
-                        }
-                    } 
-                    return r;
-                }).join('');
-                //this.setState
-                //    new Element(null, "Bíblia", getReferenciaLimpa(ref), document.getElementById('textoVersiculos').innerHTML)
-            }
+    tratarVersiculos() {
+        if (this.versiculos.length === this.contadorRef) {
+            this.versiculos = this.versiculos.sort((a, b) => {
+                if(a.ordem < b.ordem) {
+                    return -1;
+                } else if(a.ordem > b.ordem) {
+                    return 1;
+                } else {
+                    return 0;
+                }
+            })
+            this.versiculos = this.versiculos.flatMap(v => v.versos);
+            this.setState({elemento: new Element(null, "Bíblia", this.referenciaLimpa, this.versiculos)})
         }
+        this.setState({botaoValidosVisivel: this.versiculosValidos(this.versiculos).length > 0 ? 'visible' : 'hidden'});
+    }
+    
+    versiculosValidos(versiculos) {
+        var validos = []
+        for (var v in versiculos) {
+            if (v instanceof RefInvalida) continue;
+            validos.push(v);
+        }
+        return validos;
     }
 
     onClick() {
-        //Criar evento pra inserir o texto bíblico
-        //store.dispatch({ type: 'inserir', elemento: document.getElementById('textoVersiculos').elementoCompleto});
-        console.log("Texto Incluído!");
+        this.props.dispatch({ type: 'inserir', elemento: {...this.state.elemento, texto: this.versiculosValidos(this.versiculos)}});
+        // console.log("Texto Incluído!");
     }
 
     buscarReferencia(e) {
         var str = e.target.value
-        if (e.key === 'Enter' && !(!str || /^\s*$/.test(str)) ) {    
+        if (e.key === 'Enter' && !(!str || /^\s*$/.test(str))) { 
             var refer = [...(extrairReferencias(str))];
             if (refer != null) {
-                if (refer.length === 1 && refer[0].cap == null && !str.substr(2)===/^[0-9]/g) {
+                console.log(refer)
+                if (refer.length === 1 && refer[0].cap === null && refer[0].strInicial.substr(1).match(/[0-9]/g) === null) {
                     if (refer[0].livro !== null) {
                         //alterar opções no input seguinte
-                        this.setState({comboCaps: refer[0].cap});
+                        this.setState({comboCaps: refer[0].livro.chapters});
                     }
                 } else if (refer != null){
                     this.requestVersos(refer);
@@ -192,15 +175,27 @@ class TextoBiblico extends Component {
         }
         return r;
     }
+
+    getVersao(termo) {
+        var arrNomes = versoes.filter(v => (v.version === termo))
+        var nome = arrNomes.length === 0 ? null : arrNomes[0].nome;
+        var arrVersions = versoes.filter(v => (v.nome === termo))
+        var version = arrVersions.length === 0 ? null : arrVersions[0].version;
+        return nome || version;
+    }
+
+    mudarVersao (e) {
+        this.versao = this.getVersao(e.target.value);
+    }
     
     render () {
         return (
-            <>
+            <div style={{height:'100%'}}>
                 <h4>Buscar texto bíblico:</h4>
-                <input id="versao" className='combo-popup' defaultValue="Nova Versão Internacional (NVI)" type="text" list="versoes" />
-                <datalist id="versoes">
-                    {versoes.map(v => (<option key={v.version} value={v.nome}></option>))}
-                </datalist>
+                <select id="versoes" className='combo-popup' defaultValue={this.getVersao(versaoPadrao)} type="text" list="versoes" 
+                    onChange={e => this.mudarVersao(e)}>
+                    {versoes.map(v => (<option style={{width:'100%'}} className='combo-popup' key={v.version} value={v.nome}>{v.nome}</option>))}
+                </select>
                 <input className='combo-popup' type='text' list="livros" onKeyDown={e => this.buscarReferencia(e)} style={{width:'300px'}}/>
                 <datalist id="livros">
                     {livros.map(l => (<option key={l.abbrevPt} value={l.name}></option>))}
@@ -213,12 +208,14 @@ class TextoBiblico extends Component {
                 <datalist id='versiculos'>
                     {this.criarLista(this.state.comboVersos)}
                 </datalist>                      */}
-                <Button onClick={this.onClick}/>
-                <div>{this.state.elemento.texto}</div>  
+                <button style={{visibility: String(this.state.botaoValidosVisivel)}} onClick={() => this.onClick()}>Inserir Texto Bíblico</button>
+                <div style={{whiteSpace: 'pre-wrap', overflow:'auto', height:'100%', flexGrow:'1', marginTop:'2vh'}}>
+                    {formatarVersiculos(this.state.elemento.texto)}
+                </div>
                 {/* <Button visibility={this.state.visivel} onClick={this.onClick}/> */}
-            </>
+            </div>
         )
     }
 }
 
-export default TextoBiblico;
+export default connect()(TextoBiblico);

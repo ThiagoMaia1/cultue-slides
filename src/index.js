@@ -29,7 +29,9 @@ export const reducerElementos = function (state = defaultList, action) {
     case "inserir":
       return {elementos: [...state.elementos, action.elemento], apresentacao: state.apresentacao};
     case "deletar":
-      return {elementos: state.elementos.filter(el => (el.id !== action.elemento.id)), apresentacao: state.imagemPreview};
+      return {elementos: state.elementos.filter(el => (el.id !== action.elemento.id)), apresentacao: state.apresentacao};
+    case "reordenar":
+      return {elementos: action.novaOrdemElementos, apresentacao: state.apresentacao};
     case "atualizar-prévia-imagem":
       return {elementos: state.elementos, apresentacao: {...state.apresentacao, imagemPreview: action.pathImagem}}
     case "definir-fundo-padrao":
