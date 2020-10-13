@@ -24,8 +24,8 @@ class Arrastar extends React.Component {
     
     // update state
     var novaOrdem = [...this.props.elementos];
-    var from = Number(this.dragged.dataset.id)-1;
-    var to = Number(this.over.dataset.id);
+    var from = Number(this.dragged.dataset.id);
+    var to = Number(this.over.dataset.id)+1;
     if(from < to) to--;
     novaOrdem.splice(to, 0, novaOrdem.splice(from, 1)[0]);
     this.props.dispatch({type:'reordenar', novaOrdemElementos: novaOrdem});
@@ -35,36 +35,59 @@ class Arrastar extends React.Component {
   dragOver(e) {
     e.preventDefault();
     this.dragged.style.display = "none";
-    if(e.target.className === 'placeholder') return;
+    if(e.target.className === 'placeholder' || e.target.className === 'item-sublista') return;
     this.over = e.target;
     e.target.parentNode.insertBefore(placeholder, e.target.nextSibling);
   }
 
-  marcarSelecionado (id) {
-    this.setState({selecionado: id})
+  marcarSelecionado (item, slide) {
+    this.props.dispatch({type: 'definir-selecao', novaSelecao: {elemento: item, slide: slide}})
   }
 
 	render() {
+
     var listItems = this.props.elementos.map((item, i) => {
-      return (
+      if (i === 0) return null;
+      
+      if (item.slides.length > 1) { //Se item tem múltiplos slides, cria subdivisão ol.
+        var listSlides = (<ol className='sublista'>
+          {item.slides.map((slide, j) => {
+            if (j === 0) return null; //Pula o slide 0, pois se tem múltiplos slides, o slide 0 é o mestre.
+            return (
+              <li className={(this.props.selecionado.elemento === i && this.props.selecionado.slide === j ? 'selecionado' : '') + ' item-sublista ' + item.tipo}
+                  onClick={() => this.marcarSelecionado(i, j)} key={j}>
+                  {j}º Slide
+              </li>
+            )
+          })
+          }
+        </ol>
+        );
+      }
+      return (            //Cria os li da lista de elementos.
           <li 
             identificacaoelemento = {item.id}
-            data-id={i+1}
-            key={i+1}
+            data-id={i}
+            key={i}
             draggable='true'
-            className={item.tipo + ' itens ' + (i+1 === this.state.selecionado ? 'selecionado' : '')}
+            className={'bloco-reordenar ' + (this.props.selecionado.elemento === i && !this.props.selecionado.slide ? 'selecionado' : '')}
             onDragEnd={this.dragEnd.bind(this)}
-            onClick={() => this.marcarSelecionado(i+1)}
             onDragStart={this.dragStart.bind(this)}
-            onDragOver={this.dragOver.bind(this)}> <b>{i+1}. {item.tipo}: </b>{item.título}</li>
+            onDragOver={this.dragOver.bind(this)}>
+            <div className={'itens ' + item.tipo}
+                 onClick={() => this.marcarSelecionado(i, 0)}>
+              <b>{i}. {item.tipo}: </b>{item.titulo}
+            </div>
+            {listSlides}
+          </li>
       )
-     });
-		return (
-			<div>
+    });
+    return (
+      <div>
         <div className="coluna">
           <ol id="ordem-elementos">
-            <div id="configuracao-global" className={'itens ' + (this.state.selecionado ? '' : 'selecionado')} data-id={0}
-              onClick={() => this.marcarSelecionado(0)}
+            <div id="configuracao-global" className={'itens ' + (this.props.selecionado.elemento ? '' : 'selecionado')} data-id={0}
+              onClick={() => this.marcarSelecionado(0, 0)}
               onDragOver={this.dragOver.bind(this)}>Configurações Globais
             </div>
             {listItems}
@@ -72,11 +95,11 @@ class Arrastar extends React.Component {
         </div>
       </div>
     )
-	}
+  }
 }
 
 const mapStateToProps = function (state) {
-  return {elementos: state.elementos}
+  return state
 }
 
 export default connect(mapStateToProps)(Arrastar);

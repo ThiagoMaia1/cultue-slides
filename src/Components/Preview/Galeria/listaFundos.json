@@ -1,3 +1,23 @@
-{"imagens":["Branco Liso.jpg","Preto Liso.jpg","Aquarela.jpg","Bíblia Coroa.jpg","Cruz Dourada.png","Cruz.jpg","Família.jpg","Galáxia.jpg","Linha Férrea.jpg",
-            "Luz Rosa.jpg","Mar.jpg","Nuvens.jpg", "Outono.jpg", "Pão.jpg", "Papel Antigo.jpg", "Preto e Amarelo.jpg",
-            "Roxo Abstrato.png", "Tecido.jpg", "Triângulos Cinza.png", "Triângulos Laranja.png", "Triângulos.png" ]}
+{"imagens":[{"path": "Branco Liso.jpg", "color": "#000", "tampao": {"backgroundColor": "#000", "opacity": "0"}}, 
+  {"path": "Preto Liso.jpg", "color": "#fff", "tampao": {"backgroundColor": "#fff", "opacity": "0"}}, 
+  {"path": "Aquarela.jpg", "color": "#000", "tampao": {"backgroundColor": "#fff", "opacity": "0"}}, 
+  {"path": "Bíblia Coroa.jpg", "color": " #ffaa00", "tampao": {"backgroundColor": "#000", "opacity": "0.2"}}, 
+  {"path": "Cruz Dourada.png", "color": "#fff", "tampao": {"backgroundColor": "#000", "opacity": "0.2"}}, 
+  {"path": "Cruz.jpg", "color": "#fff", "tampao": {"backgroundColor": "#000", "opacity": "0.3"}}, 
+  {"path": "Família.jpg", "color": "#fff", "tampao": {"backgroundColor": "#000", "opacity": "0.3"}}, 
+  {"path": "Galáxia.jpg", "color": "#fff", "tampao": {"backgroundColor": "#000", "opacity": "0.2"}}, 
+  {"path": "Linha Férrea.jpg", "color": "#000", "tampao": {"backgroundColor": "#fff", "opacity": "0.2"}}, 
+  {"path": "Luz Rosa.jpg", "color": "#000", "tampao": {"backgroundColor": "#fff", "opacity": "0.2"}}, 
+  {"path": "Mar.jpg", "color": "#000", "tampao": {"backgroundColor": "#fff", "opacity": "0.2"}}, 
+  {"path": "Nuvens.jpg", "color": "#000", "tampao": {"backgroundColor": "#000", "opacity": "0"}}, 
+  {"path": "Outono.jpg", "color": "#000", "tampao": {"backgroundColor": "#fff", "opacity": "0.2"}}, 
+  {"path": "Pão.jpg", "color": "#000", "tampao": {"backgroundColor": "#fff", "opacity": "0.2"}}, 
+  {"path": "Papel Antigo.jpg", "color": "#000", "tampao": {"backgroundColor": "#fff", "opacity": "0"}}, 
+  {"path": "Preto e Amarelo.jpg", "color": "#fff", "tampao": {"backgroundColor": "#000", "opacity": "0"}}, 
+  {"path": "Roxo Abstrato.png", "color": "#fff", "tampao": {"backgroundColor": "#000", "opacity": "0"}}, 
+  {"path": "Tecido.jpg", "color": "#000", "tampao": {"backgroundColor": "#fff", "opacity": "s0"}}, 
+  {"path": "Triângulos Cinza.png", "color": "#000", "tampao": {"backgroundColor": "#fff", "opacity": "0"}}, 
+  {"path": "Triângulos Laranja.png", "color": "#000", "tampao": {"backgroundColor": "#fff", "opacity": "0"}}, 
+  {"path": "Triângulos.png", "color": "#000", "tampao": {"backgroundColor": "#fff", "opacity": "0.3"}}
+  ]}
+  

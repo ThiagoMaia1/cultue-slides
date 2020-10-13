@@ -4,10 +4,6 @@ import { Element } from '../../index'
 import { connect } from 'react-redux';
 
 class AdicionarTitulo extends Component {
-
-    // constructor (props) {
-    //     super(props);
-    // }
     
     onClick () {
         var titulo = document.getElementById('titulo').value;
@@ -16,27 +12,19 @@ class AdicionarTitulo extends Component {
             alert("Título não pode ser vazio.");
             return;
         }
-        this.props.dispatch({type: "inserir", elemento: new Element(null, "Título", titulo, subtitulo)})
+        this.props.dispatch({type: "inserir", elemento: new Element( "Título", titulo, subtitulo)})
     }
 
     render () {
         return (
             <div>
                 <h4>Adicionar Slide de Título</h4>
-                <input id="titulo" className='combo' type='text' placeholder='Título do slide' />
-                <textarea id="subtitulo" className='combo' placeholder='Texto do slide'></textarea>
-                <button onClick={this.onClick.bind(this)}>Inserir Título</button>
+                <input id="titulo" className='combo-popup' type='text' placeholder='Título do slide' />
+                <textarea id="subtitulo" className='combo-popup' rows={10} placeholder='Texto do slide'></textarea>
+                <button className='botao' onClick={this.onClick.bind(this)}>Inserir Título</button>
             </div>
         )
     }
 }
 
-const mapStateToProps = function (state) {
-    return {elementos: state.elementos};
-}
-
-// const mapDispatchToProps = function (state) {
-//     { }
-// }
-
-export default connect(mapStateToProps)(AdicionarTitulo);
+export default connect()(AdicionarTitulo);

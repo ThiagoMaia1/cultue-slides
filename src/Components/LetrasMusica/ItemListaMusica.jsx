@@ -23,11 +23,10 @@ class ItemListaMusica extends React.Component {
         return (
             <div>
                 {this.props.idBuscarLetra === this.props.musica.id ? <Carregando /> : null}
-                <div key={this.props.musica.id} className='itens sombrear-selecao' onClick={() => {
+                <button key={this.props.musica.id} className='itens sombrear-selecao' onClick={() => {
                     this.props.buscarLetra(this.props.musica.id)}}>
-                    <span className='titulo-musica'>{this.props.musica.title} - </span>
-                    <span className='banda-musica'>{this.props.musica.band}</span>
-                </div>
+                    <b>{this.props.musica.title} - </b>{this.props.musica.band}
+                </button>
             </div>
         )
     }

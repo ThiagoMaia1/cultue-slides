@@ -21,9 +21,9 @@ class Carregando extends React.Component {
 
   render() {
         return (
-            <div style={{width:'100%', position: 'absolute'}}>
-                <div style={{transform: 'rotate(' + this.state.angulo + 'deg)', position: 'relative', padding: '10px 15px', float: 'right'}}>
-                    <img src={require('./Carregando.png')} alt={''} style={{height: '2vh', width: '2vh'}}/>
+            <div style={{width:'94%', position: 'absolute'}}>
+                <div style={{position: 'relative', padding: '10px 15px', float: 'right'}}>
+                    <img src={require('./Carregando.png')} alt={''} style={{transform: 'rotate(' + this.state.angulo + 'deg)', height: '2vh', width: '2vh'}}/>
                 </div>
             </div>
         )

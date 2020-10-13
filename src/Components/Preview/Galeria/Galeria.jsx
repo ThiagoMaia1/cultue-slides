@@ -10,9 +10,9 @@ class Galeria extends Component {
         var imagens = [];
         var j = 0;
         for (var i of listaFundos.imagens) {
-            j++;
+            j++; //Só pra ter menos imagens pra carregar enquanto crio o site.
             if (j>6) break;
-            imagens.push({id: i, path: './Fundos/' + i, alt: i.split('.')[0]})
+            imagens.push({id: i.path, fundo: './Fundos/' + i.path, alt: i.path.split('.')[0], tampao: i.tampao, texto: {color: i.color}})
         }
         return imagens;
     }

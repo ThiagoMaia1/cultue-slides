@@ -4,6 +4,7 @@ import Popup from './Popup/Popup';
 import ComboLetra from './../LetrasMusica/ComboLetra'
 import TextoBiblico from './../TextoBiblico/TextoBiblico'
 import AdicionarTitulo from './AdicionarTitulo'
+import AdicionarImagem from './../AdicionarImagem/AdicionarImagem'
 
 class Adicionar extends Component {
     
@@ -42,7 +43,15 @@ class Adicionar extends Component {
     adicionarImagem() {
         this.setState({popupCompleto: (
             <Popup ocultarPopup={this.ocultarPopup}>
-                {/* <AdicionarImagem /> */}
+                <AdicionarImagem />
+            </Popup>
+        )});
+    }
+
+    adicionarVideo() {
+        this.setState({popupCompleto: (
+            <Popup ocultarPopup={this.ocultarPopup}>
+                {/* <AdicionarVideo /> */}
             </Popup>
         )});
     }
@@ -55,10 +64,11 @@ class Adicionar extends Component {
         return (
             <>
                 <div id="div-botoes">
-                    <button className="Música" onClick={this.adicionarMusica.bind(this)}>Música</button>
-                    <button className="Bíblia" onClick={this.adicionarTextoBiblico.bind(this)}>Texto Bíblico</button>
-                    <button className="Título" onClick={this.adicionarTitulo.bind(this)}>Título</button>
-                    <button className="Imagem" onClick={this.adicionarImagem.bind(this)}>Imagem</button>
+                    <button className="Música itens" onClick={this.adicionarMusica.bind(this)}>Música</button>
+                    <button className="Bíblia itens" onClick={this.adicionarTextoBiblico.bind(this)}>Texto Bíblico</button>
+                    <button className="Título itens" onClick={this.adicionarTitulo.bind(this)}>Título</button>
+                    <button className="Imagem itens" onClick={this.adicionarImagem.bind(this)}>Imagem</button>
+                    <button className="Vídeo itens" onClick={this.adicionarVideo.bind(this)}>Vídeo</button>
                 </div>
                 {this.state.popupCompleto}
             </>

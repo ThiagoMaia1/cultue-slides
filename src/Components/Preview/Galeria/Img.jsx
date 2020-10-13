@@ -4,29 +4,31 @@ import { connect } from 'react-redux';
 
 class Img extends Component {
 
-    togglePrevia(path) {
-        this.props.dispatch({type: 'atualizar-prévia-imagem', pathImagem: path.replace('./','./Galeria/')});
+    togglePrevia(estiloImagem) {
+        this.fundoAnterior = this.props.slidePreview.estilo;
+        this.props.dispatch({type: 'atualizar-estilo', objeto: 'fundo', valor: estiloImagem.fundo});
+        this.props.dispatch({type: 'atualizar-estilo', objeto: 'tampao', valor: estiloImagem.tampao});
+        this.props.dispatch({type: 'atualizar-estilo', objeto: 'texto', subitem: 'color',valor: estiloImagem.texto.color});
     }
 
         render () {
         return (
         <div className='div-img'>
-            <img className='imagem-galeria sombrear-selecao' src={require('' + this.props.imagem.path)} alt={this.props.imagem.alt} 
+            <img className='imagem-galeria sombrear-selecao' src={require('' + this.props.imagem.fundo)} alt={this.props.imagem.alt} 
                 onClick={() => {
-                    //se nenhum elemento específico estiver selecionado
-                    this.props.dispatch({type: 'definir-fundo-padrao', pathImagem:this.props.imagem.path.replace('./','./Galeria/')});
+                    this.togglePrevia(this.props.imagem.fundo).replace('./','./Galeria/');
                     }
                 }
-                onMouseOver={() => this.togglePrevia(this.props.imagem.path)}
-                onMouseLeave={() => this.togglePrevia('')}
+                onMouseOver={() => this.togglePrevia(this.props.imagem.fundo).replace('./','./Galeria/')}
+                onMouseLeave={() => this.togglePrevia(this.fundoAnterior)}
             />
         </div>
         )
     }
 };
 
-// const mapStateToProps = function(state) {
-//     return {imagemPreview: state.imagemPreview};
-// }
+const mapStateToProps = function(state) {
+    return {slidePreview: state.slidePreview}
+}
 
-export default connect()(Img);
+export default connect(mapStateToProps)(Img);

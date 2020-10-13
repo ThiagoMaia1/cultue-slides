@@ -3,28 +3,42 @@
   flex-direction: column;
   width: 15vw;
   border: 5px solid #e1e1e1;
-  box-shadow: 1px 3px 8px #888;
+  /* outline-offset: 30px; */
+  border-radius: 4px;
+  /* box-shadow: 1px 3px 8px #888; */
+  --cor-biblia: #5f97ff;
+  --cor-musica: #fff6a2;
+  --cor-titulo: #cd69fc;
+  --cor-imagem: #5fbb82;
+  --cor-video: #ff9797;
+  --cor-forte-biblia: #0059ff;
+  --cor-forte-musica: #ffe600;
+  --cor-forte-titulo: #9d00e6;
+  --cor-forte-imagem: #008839;
+  --cor-forte-video: #ff0000;
 }
 
 #ordem-elementos {
   width: 100%;
-  margin: 0 auto;
-  float: left;
-  max-height: 50vh;
-  overflow: auto;
-  
+  padding: 4px 4px 0 4px;
+  margin: auto;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 #div-botoes {
   display: flex;
-  height: 15vw;
   width: 100%;
-  flex-wrap: wrap;
+  padding: 4px 4px 0 4px;
   align-items: center;
+  flex-direction: column;
   justify-content: space-evenly;
 }
 
-#div-botoes > button{
+#div-botoes > .itens {
+  width: 100%;
+}
+/* #div-botoes > button{
   border: none;
   color: black;
   min-width: 50px;
@@ -35,12 +49,27 @@
   font-size: 25px;
   border-radius: 0.5vw;
   font-weight: 500;
-}
+} */
 
 ol {
   list-style: none;
   margin:0;
   padding:0;
+  width: 100%;
+}
+
+.sublista {
+  padding-left: 10px;
+}
+
+.item-sublista {
+  border-radius: 4px;
+  padding: 3px;
+  margin: 3px;
+}
+
+.bloco-reordenar {
+  border-radius: 4px;
 }
 
 h1 {
@@ -48,15 +77,13 @@ h1 {
   padding-left: 5px;
 }
 
-.itens{
-  margin: 3px;
+.itens {
+  margin: 0 auto 3px;
   padding: 10px 15px;
   background:#eee;
   border-radius: 4px;
   cursor: default;
-  &:hover {
-    background: darken(#eee, 5%);
-  }
+  width: 100%;
 }
 
 #configuracao-global {
@@ -68,57 +95,53 @@ button:focus{
   box-shadow: 0 0 0 1.5px white;
 }
 
+.Bíblia {
+  background: var(--cor-biblia);
+}
+
+.Música {
+  background: var(--cor-musica);
+}
+
+.Título {
+  background: var(--cor-titulo);
+}
+
+.Imagem {
+  background: var(--cor-imagem);
+}
+
+.Vídeo {
+  background: var(--cor-video);
+}
+
 .Bíblia:hover {
-  background: rgb(33, 93, 153);
-  color: white;
+  background: var(--cor-forte-biblia);
 }
 
 .Música:hover {
-  background: rgb(255, 251, 0);
-  color: white;
+  background: var(--cor-forte-musica);
 }
 
 .Título:hover {
-  background: rgb(255, 77, 77);
-  color: white;
+  background: var(--cor-forte-titulo);
 }
 
 .Imagem:hover {
-  background: rgb(0, 168, 22);
-  color: white;
+  background: var(--cor-forte-imagem);
 }
 
-button.Bíblia {
-  color: rgb(33, 93, 153);
-  box-shadow: 0 0 0 1.5px rgb(33, 93, 153);
-}
-
-button.Música {
-  color: rgb(255, 251, 0);
-  box-shadow: 0 0 0 1.5px rgb(255, 251, 0);
-}
-
-button.Título {
-  color: rgb(255, 77, 77);
-  box-shadow: 0 0 0 1.5px rgb(255, 77, 77);
-}
-
-button.Imagem {
-  color: rgb(0, 168, 22);
-  box-shadow: 0 0 0 1.5px rgb(0, 168, 22);
+.Vídeo:hover {
+  background:var(--cor-forte-video);
 }
 
 .selecionado {
+  /* border: 3px solid black; */
   box-shadow: 0 0 0 3px #000;
 }
 
 .placeholder {
   margin: 0px;
   border-radius: 0px;
-  background: rgb(255, 158, 239);
   padding-top: 35px;
-  &:before {
-    content: "Drop here";
-    color: rgb(225,210,90);
-  }
 }

@@ -2,12 +2,12 @@ import React from 'react';
 import { RefInvalida } from "../TextoBiblico/referenciaBiblica"
 
 // export class Element {
-//     constructor(apiKey, tipo, título, texto) {
+//     constructor(apiKey, tipo, titulo, texto) {
 //       idElement++;
 //       this.id = idElement;
 //       this.apiKey = apiKey;
 //       this.tipo = tipo;
-//       this.título = título;
+//       this.titulo = titulo;
 //       this.texto = texto;
 //     }
 //   }
@@ -29,11 +29,11 @@ import { RefInvalida } from "../TextoBiblico/referenciaBiblica"
 export function formatarVersiculos(versiculos) {
     return versiculos.map((v, i) => {
         if (v instanceof RefInvalida) {
-            return (<div className="itens" style={{backgroundColor:'#ffcccc', color:'red'}}><b>{v.texto}</b></div>)
+            return (<><br></br><br></br><div className="itens" style={{backgroundColor:'#ffcccc', color:'red'}}><b>{v.texto}</b></div></>)
         }
         var r = [];
-        var l = (<><b> {v.livro} </b></>);
-        var c = (<><br></br><br></br><b> {v.cap}:</b></>);
+        var l = (<><b>{v.livro} </b></>);
+        var c = (<><br></br><br></br><b>{v.cap}:</b></>);
         if (i === 0) {
             r.push(l, c);
         } else {
