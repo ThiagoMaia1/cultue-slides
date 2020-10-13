@@ -3,11 +3,12 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import { createStore } from 'redux';
+import hotkeys from 'hotkeys-js';
 
 const estiloPadrao = {
   texto: {color: 'black', fontFamily: 'Helvetica'}, 
-  titulo: {fontSize: '400%'}, 
-  paragrafo: {fontSize: '200%', padding: '10%'}, 
+  titulo: {fontSize: '300%'}, 
+  paragrafo: {fontSize: '150%', padding: '5% 10% 10% 10%'}, 
   fundo: './Galeria/Fundos/Aquarela.jpg', 
   tampao: {backgroundColor: '#000', opacity: '20%'}
 };
@@ -33,11 +34,12 @@ export class Element {
 }
 
 function divisoesTexto(texto) {
-  var tamanho = 50;
+  var tamanho = 450;
   var textoDividido = [''];
   var j = 0;
+  var divisor = ' ';
   for (var i = 0; i < texto.length; i++) {
-    textoDividido[j] = textoDividido[j] + texto[i];
+    textoDividido[j] = textoDividido[j] + divisor + texto[i];
     if (textoDividido[j].length >= tamanho && i+1 < texto.length) {
       textoDividido.push('');
       j++;
@@ -87,6 +89,23 @@ export const reducerElementos = function (state = defaultList, action) {
     case "definir-selecao":
       nState = {elementos: state.elementos, selecionado: action.novaSelecao};
       return {...nState, slidePreview: getSlidePreview(nState)};
+    case "offset-selecao":
+      var elem = state.elementos.flatMap((e, i) => { 
+        return e.slides.map((s, j) => ({elemento: i, slide: j})); //Gera um array ordenado com todos os slides que existem representados por objetos do tipo "selecionado".
+      })
+      for (var i = 0; i < elem.length; i++) { //Acha o selecionado atual.
+        if (elem[i].elemento === state.selecionado.elemento && elem[i].slide === state.selecionado.slide) {
+          var novoIndex = i + action.offset;
+          if (novoIndex < 0) {
+            novoIndex = 0;
+          } else if (novoIndex >= elem.length) { 
+            novoIndex = elem.length-1;
+          }
+          break;
+        }
+      }
+      nState = {elementos: state.elementos, selecionado: {...elem[novoIndex]}};
+      return {...nState, slidePreview: getSlidePreview(nState)};
     default:
       return state;
   }
@@ -106,12 +125,31 @@ function getSlidePreview (state, selecionado = null) {
       titulo: {...estiloTexto, ...global.estilo.titulo, ...elemento.estilo.titulo, ...slide.estilo.titulo}, 
       paragrafo: {...estiloTexto, ...global.estilo.paragrafo, ...elemento.estilo.paragrafo, ...slide.estilo.paragrafo}, 
       fundo: slide.estilo.fundo || elemento.estilo.fundo || global.estilo.fundo, 
-      tampao: {...global.estilo.tampao, ...elemento.estilo.tampao, ...slide.estilo.tampao}
+      tampao: {...global.estilo.tampao, ...elemento.estilo.tampao, ...slide.estilo.tampao},
+      texto: {...estiloTexto}
     }
   };
 }
 
 export let store = createStore(reducerElementos);
+
+hotkeys('right,left,up,down', function(event, handler){
+  event.preventDefault();
+  var offset = 0;
+  switch (handler.key) {
+      case 'right':
+      case 'down':
+          offset = 1;
+          break;
+      case 'left':
+      case 'up':
+          offset = -1;
+          break;
+      default:
+          offset = 0;
+  }
+  store.dispatch({type: 'offset-selecao', offset: offset})
+});
 
 ReactDOM.render(
   <App />,

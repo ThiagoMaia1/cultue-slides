@@ -26,6 +26,36 @@ import { RefInvalida } from "../TextoBiblico/referenciaBiblica"
 //     }
 // }
 
+function numSuperscrito(num) {
+    var lista = String(num).split('');
+    var sup = [];
+    for (var n of lista) {
+        sup.push("⁰¹²³⁴⁵⁶⁷⁸⁹"[Number(n)]);
+    }
+    return sup.join('');
+}
+
+export function formatarVersiculosSlide(versiculos) {
+    return versiculos.map((v, i) => {
+        if (v instanceof RefInvalida) 
+            return v.texto;
+        console.log(v.vers)
+        var r = numSuperscrito(v.vers) + ' ' + v.texto + ' ';
+        var c = v.cap + ' ';
+        var l = v.livro + ' ';
+        if (i === 0) {
+            r = l + c + r;
+        } else {
+            if (v.livro !== versiculos[i-1].livro) {
+                r = '\n\n' + l + c + r;
+            } else if (v.cap !== versiculos[i-1].cap) {
+                r = c + r;
+            }
+        } 
+        return r;
+    })
+}
+
 export function formatarVersiculos(versiculos) {
     return versiculos.map((v, i) => {
         if (v instanceof RefInvalida) {
@@ -33,7 +63,7 @@ export function formatarVersiculos(versiculos) {
         }
         var r = [];
         var l = (<><b>{v.livro} </b></>);
-        var c = (<><br></br><br></br><b>{v.cap}:</b></>);
+        var c = (<><br></br><br></br><b>{v.cap} </b></>);
         if (i === 0) {
             r.push(l, c);
         } else {
@@ -43,7 +73,7 @@ export function formatarVersiculos(versiculos) {
                 r.push(c);
             }
         } 
-        r.push(<><b>{v.vers}</b> {v.texto} </>);
+        r.push(<><b>{numSuperscrito(v.vers)}</b> {v.texto} </>);
         return r;
     })
 }

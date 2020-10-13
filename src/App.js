@@ -8,6 +8,8 @@ import { Provider } from 'react-redux';
 import Configurar from './Components/Configurar/Configurar.jsx';
 
 function App() {
+
+
   return (
     <Provider store={store}>
       <div className="App">

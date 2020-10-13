@@ -7,9 +7,11 @@
 
 .div-img {
     margin-left: 10px;
+    height: 20vh;
+    width: 30vh;
 }
 
 .imagem-galeria {
-    height: 20vh;
-    width: 30vh;
+    height: 100%;
+    width: 100%;
 }
