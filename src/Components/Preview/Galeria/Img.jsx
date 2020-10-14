@@ -23,8 +23,8 @@ class Img extends Component {
             onMouseOver={() => this.togglePrevia(this.props.imagem)}
             onMouseLeave={() => this.togglePrevia(this.fundoAnterior)}>
             <div className='tampao' style={this.props.imagem.tampao}></div>
-            <div className='texto-preview slide titulo' style={{fontSize: '200%', ...this.props.imagem.texto}}>{this.props.imagem.alt}</div>
             <img className='imagem-galeria sombrear-selecao' src={require('' + this.props.imagem.fundo)} alt={this.props.imagem.alt}/>
+            <div className='texto-mini-preview' style={this.props.imagem.texto}>{this.props.imagem.alt}</div>
         </div>
         )
     }

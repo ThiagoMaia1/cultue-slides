@@ -12,7 +12,7 @@ class AdicionarTitulo extends Component {
             alert("Título não pode ser vazio.");
             return;
         }
-        this.props.dispatch({type: "inserir", elemento: new Element( "Título", titulo, subtitulo)})
+        this.props.dispatch({type: "inserir", elemento: new Element( "Título", titulo, [subtitulo.split('\n\n')])});
     }
 
     render () {

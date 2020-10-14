@@ -39,7 +39,6 @@ export function formatarVersiculosSlide(versiculos) {
     return versiculos.map((v, i) => {
         if (v instanceof RefInvalida) 
             return v.texto;
-        console.log(v.vers)
         var r = numSuperscrito(v.vers) + ' ' + v.texto + ' ';
         var c = v.cap + ' ';
         var l = v.livro + ' ';

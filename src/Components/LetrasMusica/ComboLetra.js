@@ -15,7 +15,8 @@ class ComboLetra extends Component {
 
     constructor (props) {
         super(props);
-        this.state = {opcoes: [], listaAtiva: false, letraMusica:[], botaoVisivel: 'hidden', carregando: null, idBuscarLetra: null}
+        this.state = {opcoes: [], listaAtiva: false, letraMusica:[], botaoVisivel: 'hidden', 
+                      carregando: null, idBuscarLetra: null}
     }
     onKeyUp(e) {
         clearTimeout(timer);
@@ -29,12 +30,10 @@ class ComboLetra extends Component {
     }
 
     pegarMusicas (termo){
-        // this.setState({opcoes: []});
         var vagalume = new XMLHttpRequest()
         vagalume.responseType = 'json';
         
         vagalume.addEventListener('load', () => {    
-            // this.filtrarGenero(vagalume.response.response.docs, 0);
             this.setState({opcoes: vagalume.response.response.docs});
             this.toggleCarregador(false);
         });
@@ -43,31 +42,6 @@ class ComboLetra extends Component {
         vagalume.send();
 
     }    
-
-    // filtrarGenero(vagalume, index) {
-    //     if (index >= vagalume.length || this.state.opcoes.length >= 5) {
-    //         this.toggleCarregador(false);
-    //         return;
-    //     }
-    //     generoMusica.push(new XMLHttpRequest())
-    //     generoMusica[generoMusica.length - 1].responseType = 'json';
-        
-    //     generoMusica[generoMusica.length - 1].addEventListener('load', () => {
-    //         for (var i in generoMusica[generoMusica.length - 1].response.artist.genre) {
-    //             if (i.name = /gospel/g) {
-    //                 this.setState({opcoes: [...this.state.opcoes, vagalume[index]]});
-    //             }
-    //         }    
-    //         this.toggleCarregador(false);
-    //     })
-        
-    //     console.log(url + encodeURIComponent(vagalume[index].url.split('/')[1]) + '/index.js&apikey=' + apiKey);
-    //     generoMusica[generoMusica.length - 1].open('POST', url + encodeURIComponent(vagalume[index].url.split('/')[1]) + '/index.js&apikey=' + apiKey);
-    //     generoMusica[generoMusica.length - 1].setRequestHeader('Access-Control-Allow-Origin', '*');
-    //     generoMusica[generoMusica.length - 1].setRequestHeader('Access-Control-Allow-Credentials', 'true');
-    //     generoMusica[generoMusica.length - 1].send();
-    //     this.filtrarGenero(vagalume, index + 1)
-    // }
 
     buscarLetra = id => {
         if (vagalumeLetra instanceof XMLHttpRequest) {        
@@ -78,9 +52,10 @@ class ComboLetra extends Component {
         vagalumeLetra.responseType = 'json';
             
         vagalumeLetra.addEventListener('load', () => {
-                this.setState({letraMusica: vagalumeLetra.response.mus[0].text.split('\n\n')});
-                this.setState({idBuscarLetra: null, visivel: 'visible', elemento: new Element('Música', vagalumeLetra.response.mus[0].name, this.state.letraMusica)})
-                this.setState({botaoVisivel: 'visible'});
+                var letra = vagalumeLetra.response.mus[0].text.split('\n\n')
+                this.setState({letraMusica: letra, idBuscarLetra: null, botaoVisivel: 'visible', 
+                               elemento: new Element('Música', vagalumeLetra.response.mus[0].name, letra)})
+                console.log(this.state.letraMusica)
             })
             
         vagalumeLetra.open('GET', url + 'search.php?musid=' + id);
@@ -112,3 +87,29 @@ class ComboLetra extends Component {
 }
 
 export default connect()(ComboLetra);
+
+    //Filtrar apenas músicas gospel (requisições demais, e requisição está com problema, API do vagalume foi descontinuado)
+    // filtrarGenero(vagalume, index) {
+    //     if (index >= vagalume.length || this.state.opcoes.length >= 5) {
+    //         this.toggleCarregador(false);
+    //         return;
+    //     }
+    //     generoMusica.push(new XMLHttpRequest())
+    //     generoMusica[generoMusica.length - 1].responseType = 'json';
+        
+    //     generoMusica[generoMusica.length - 1].addEventListener('load', () => {
+    //         for (var i in generoMusica[generoMusica.length - 1].response.artist.genre) {
+    //             if (i.name = /gospel/g) {
+    //                 this.setState({opcoes: [...this.state.opcoes, vagalume[index]]});
+    //             }
+    //         }    
+    //         this.toggleCarregador(false);
+    //     })
+        
+    //     console.log(url + encodeURIComponent(vagalume[index].url.split('/')[1]) + '/index.js&apikey=' + apiKey);
+    //     generoMusica[generoMusica.length - 1].open('POST', url + encodeURIComponent(vagalume[index].url.split('/')[1]) + '/index.js&apikey=' + apiKey);
+    //     generoMusica[generoMusica.length - 1].setRequestHeader('Access-Control-Allow-Origin', '*');
+    //     generoMusica[generoMusica.length - 1].setRequestHeader('Access-Control-Allow-Credentials', 'true');
+    //     generoMusica[generoMusica.length - 1].send();
+    //     this.filtrarGenero(vagalume, index + 1)
+    // }

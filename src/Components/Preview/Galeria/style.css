@@ -6,6 +6,7 @@
 }
 
 .div-img {
+    position: relative;
     margin-left: 10px;
     height: 20vh;
     width: 30vh;
@@ -14,4 +15,13 @@
 .imagem-galeria {
     height: 100%;
     width: 100%;
+    position: absolute;
+}
+
+.texto-mini-preview {
+    position: relative;
+    font-size: '150%';
+    font-weight: 600;
+    text-align: center;
+    line-height: 20vh;
 }

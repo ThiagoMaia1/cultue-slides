@@ -15,10 +15,6 @@ class ItemListaMusica extends React.Component {
         }
       }
 
-    // toggleCarregador (estado) {
-    //     this.setState({carregando: estado ? <Carregando /> : null});
-    // }
-
     render() {
         return (
             <div>
