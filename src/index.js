@@ -4,6 +4,7 @@
 //   ✔️ Corrigir reordenamento. 
 //   Concluir cálculo de linhas do slide.
 //   Permitir formatação de fontes, margens, estilo de texto.
+//   Possibilidade de excluir slides.
 
 // Features:
 //   Permitir envio de imagens.
@@ -110,44 +111,6 @@ export class Element {
       }
     }
   }
-
-  // divisoesTexto(texto, est) { //Retorna um array com os blocos de texto que devem ser divididos para cada slide.
-  //   var estP = {...estiloPadrao.paragrafo, ...est.paragrafo};
-  //   var pad = Number(estP.padding)
-  //   var larguraLinha = window.screen.width*(1-pad*2)*0.5;
-  //   var alturaLinha = Number(estP.lineHeight)*Number(estP.fontSize)*window.innerHeight*fonteBase.numero/100; 
-  //   var nLinhas = window.screen.height*0.5*(0.8-pad*(1 + proporcaoPadTop))/alturaLinha;
-  //   if (nLinhas.rest % 1 > 0.7) {
-  //     nLinhas = Math.ceil(nLinhas);
-  //   } else {
-  //     nLinhas = Math.floor(nLinhas);
-  //   }
-  //   console.log('pad: ' + pad + ' larguraLinha: ' + larguraLinha + ' alturaLinha: ' + alturaLinha + ' nLinhas: ' + nLinhas)
-  //   var estiloFonte = estP.fontSize*fonteBase.numero + fonteBase.unidade + ' ' + est.texto.fontFamily;
-  //   var textoDividido = [];
-  //   var divisor = '\n\n';
-  //   var linhas = [];
-  //   if (this.tipo === 'Bíblia') divisor = ' ';
-  //   for (var i = 0; i < texto.length; i++) {
-  //     var palavras = texto[i].split(' ');
-  //     for (var k = 0; k < palavras.length; k++) {
-  //       linhas[linhas.length-1] = linhas[linhas.length-1] + ' ' + palavras[k];
-  //       var proximaPalavra = (k+1 === palavras.length ? (i+1 === texto.length ? '' : texto[i+1].split(' ')[0]) : palavras[k+1]);
-  //       if (linhas.length === 0 || getTextWidth(linhas[linhas.length-1] + ' ' + proximaPalavra, estiloFonte) > larguraLinha) {
-  //         linhas.push('');
-  //       }    
-  //     }
-  //     if (linhas.length+1 === nLinhas || proximaPalavra === '' || 
-  //        (linhas.length !== 0 && //Se próximo versículo (exceto sozinho) vai ultrapassar o slide, conclui slide atual.
-  //        (Math.ceil(getTextWidth(linhas[linhas.length-1] + (texto[i+1] || ''), estiloFonte) + 50)/larguraLinha) > nLinhas - (linhas.length-1))) {
-  //       textoDividido.push(linhas.join(' '));
-  //       linhas = [];
-  //     }
-  //   }
-  //   console.log(textoDividido);
-  //   return textoDividido;
-  // }
-
 }
 
 function getTextWidth(texto, fontSize) {
@@ -200,20 +163,23 @@ export const reducerElementos = function (state = defaultList, action) {
       return {...nState, slidePreview: getSlidePreview(nState)};
     case "offset-selecao":
       var elem = state.elementos.flatMap((e, i) => { 
-        return e.slides.map((s, j) => ({elemento: i, slide: j})); //Gera um array ordenado com todos os slides que existem representados por objetos do tipo "selecionado".
+        return e.slides.map((s, j) => ({elemento: i, slide: j, texto: s.texto})); //Gera um array ordenado com todos os slides que existem representados por objetos do tipo "selecionado".
       })
       for (var i = 0; i < elem.length; i++) { //Acha o selecionado atual.
         if (elem[i].elemento === state.selecionado.elemento && elem[i].slide === state.selecionado.slide) {
           var novoIndex = i + action.offset;
           if (novoIndex < 0) {
-            novoIndex = 0;
+            novoIndex = 0 + (elem[0].texto === slideMestre ? 1 : 0);
           } else if (novoIndex >= elem.length) { 
             novoIndex = elem.length-1;
+          }
+          if (elem[novoIndex].texto === slideMestre) { //Se for slide mestre, pula um a mais pra frente ou pra trás com base no offset informado.
+            novoIndex += (action.offset >= 0 ? 1 : -1);
           }
           break;
         }
       }
-      nState = {elementos: state.elementos, selecionado: {...elem[novoIndex]}};
+      nState = {elementos: state.elementos, selecionado: {elemento: elem[novoIndex].elemento, slide: elem[novoIndex].slide}};
       return {...nState, slidePreview: getSlidePreview(nState)};
     default:
       return state;

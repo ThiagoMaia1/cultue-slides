@@ -1,0 +1,18 @@
+.configuracoes-texto {
+    display: flex;
+    flex-direction: row;
+}
+
+.botao-configuracao-bool {
+    padding: 1vh;
+    min-width: 4vh;
+    min-height: 4vh;
+    text-align: center;
+    border-radius: 0.7vh;
+    border: 1.5px solid darkgray;
+    margin: 1vh 0vh 1vh 1vh;
+}
+
+.clicado {
+    box-shadow: inset 0px 2px 5px #c1c1c1;
+}
