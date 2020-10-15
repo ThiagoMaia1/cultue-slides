@@ -58,6 +58,7 @@ ol {
 
 .bloco-reordenar {
   border-radius: 4px;
+  width: 100%;
 }
 
 h1 {
@@ -133,4 +134,28 @@ button:focus{
   margin: 0px;
   border-radius: 0px;
   padding-top: 35px;
+}
+
+.div-excluir {
+  position: relative;
+  width: 100%;
+}
+
+.excluir-elemento {
+  font-size: 80%;
+  font-weight: 600;
+  right: 3%;
+  top: 5px;
+  padding: 0 2.5px 0 2px;
+  position: absolute;
+  opacity: 0;
+  text-align: center;
+  border: 0.2px solid black;
+  border-radius: 2.5px;
+  line-height: 100%;
+  background-color: darkgray;
+}
+
+.excluir-elemento:hover {
+  opacity: 60%;
 }

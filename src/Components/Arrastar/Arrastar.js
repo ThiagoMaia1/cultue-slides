@@ -49,6 +49,10 @@ class Arrastar extends React.Component {
     this.props.dispatch({type: 'definir-selecao', novaSelecao: {elemento: item, slide: slide}})
   }
 
+  excluirElemento = (e) => {
+    this.props.dispatch({type: 'deletar', elemento: e.target.dataset.id});
+  }
+
 	render() {
 
     var listItems = this.props.elementos.map((item, i) => {
@@ -80,6 +84,11 @@ class Arrastar extends React.Component {
             onDragStart={this.dragStart.bind(this)}
             onDragOver={this.dragOver.bind(this)}
             style={{marginBottom: i === this.state.placeholder ? this.tamanhoPlaceholder + 'px' : ''}}>
+            <div className='div-excluir'>
+              <div data-id={i} className='excluir-elemento' onClick={e => this.excluirElemento(e)}>
+                x
+              </div>
+            </div>
             <div data-id={i} className={'itens ' + item.tipo}
                  onClick={() => this.marcarSelecionado(i, 0)}>
               <b>{i}. {item.tipo}: </b>{item.titulo}

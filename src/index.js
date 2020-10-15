@@ -4,7 +4,7 @@
 //   ✔️ Corrigir reordenamento. 
 //   Concluir cálculo de linhas do slide.
 //   Permitir formatação de fontes, margens, estilo de texto.
-//   Possibilidade de excluir slides.
+//   ✔️ Possibilidade de excluir elementos.
 
 // Features:
 //   Permitir envio de imagens.
@@ -13,6 +13,7 @@
 //   Exportar como power point/pdf.
 //   Permitir editar texto direto no slide.
 //   Combo de número de capítulos e versículos da bíblia.
+//   Possibilidade de editar elemento (retornando à tela da query).
 
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -142,17 +143,22 @@ export const reducerElementos = function (state = defaultList, action) {
 
   storeInitialized = true;
   var nState;
+  var el;
   switch (action.type) {
     case "inserir":
       nState = {elementos: [...state.elementos, action.elemento], selecionado: {elemento: state.elementos.length, slide: 0}};
       return {...nState, slidePreview: getSlidePreview(nState)};
     case "deletar":
-      return {elementos: state.elementos.filter(el => (el.id !== action.elemento.id)), selecionado: state.selecionado, slidePreview: state.slidePreview};
+      el = state.elementos.filter((e, index) => index != action.elemento);
+      var novaSelecao = {elemento: state.selecionado.elemento, slide: 0};
+      if (state.selecionado.elemento >= el.length) novaSelecao.elemento = state.selecionado.elemento-1 
+      nState = {elementos: [...el], selecionado: {...novaSelecao}};
+      return {...nState, slidePreview: getSlidePreview(nState)};
     case "reordenar":
       nState = {elementos: action.novaOrdemElementos, selecionado: action.novaSelecao};
       return {...nState, slidePreview: getSlidePreview(nState)};  
     case "atualizar-estilo": {
-      var el = [...state.elementos];
+      el = [...state.elementos];
       var obj = el[state.selecionado.elemento].slides[state.selecionado.slide].estilo;
       obj[action.objeto] = action.valor instanceof Object ? {...obj[action.objeto], ...action.valor} : action.valor;
       nState = {elementos: el, selecionado: state.selecionado}; //Para que o getSlidePreview use os valores já atualizados.
@@ -162,29 +168,33 @@ export const reducerElementos = function (state = defaultList, action) {
       nState = {elementos: state.elementos, selecionado: action.novaSelecao};
       return {...nState, slidePreview: getSlidePreview(nState)};
     case "offset-selecao":
-      var elem = state.elementos.flatMap((e, i) => { 
-        return e.slides.map((s, j) => ({elemento: i, slide: j, texto: s.texto})); //Gera um array ordenado com todos os slides que existem representados por objetos do tipo "selecionado".
-      })
-      for (var i = 0; i < elem.length; i++) { //Acha o selecionado atual.
-        if (elem[i].elemento === state.selecionado.elemento && elem[i].slide === state.selecionado.slide) {
-          var novoIndex = i + action.offset;
-          if (novoIndex < 0) {
-            novoIndex = 0 + (elem[0].texto === slideMestre ? 1 : 0);
-          } else if (novoIndex >= elem.length) { 
-            novoIndex = elem.length-1;
-          }
-          if (elem[novoIndex].texto === slideMestre) { //Se for slide mestre, pula um a mais pra frente ou pra trás com base no offset informado.
-            novoIndex += (action.offset >= 0 ? 1 : -1);
-          }
-          break;
-        }
-      }
-      nState = {elementos: state.elementos, selecionado: {elemento: elem[novoIndex].elemento, slide: elem[novoIndex].slide}};
+      nState = {elementos: state.elementos, selecionado: {...selecionadoOffset(state.elementos, state.selecionado, action.offset)}};
       return {...nState, slidePreview: getSlidePreview(nState)};
     default:
       return state;
   }
 };
+
+function selecionadoOffset (elementos, selecionado, offset) {
+  var elem = elementos.flatMap((e, i) => { 
+    return e.slides.map((s, j) => ({elemento: i, slide: j, texto: s.texto})); //Gera um array ordenado com todos os slides que existem representados por objetos do tipo "selecionado".
+  })
+  for (var i = 0; i < elem.length; i++) { //Acha o selecionado atual.
+    if (elem[i].elemento === selecionado.elemento && elem[i].slide === selecionado.slide) {
+      var novoIndex = i + offset;
+      if (novoIndex < 0) {
+        novoIndex = 0 + (elem[0].texto === slideMestre ? 1 : 0);
+      } else if (novoIndex >= elem.length) { 
+        novoIndex = elem.length-1;
+      }
+      if (elem[novoIndex].texto === slideMestre) { //Se for slide mestre, pula um a mais pra frente ou pra trás com base no offset informado.
+        novoIndex += (offset >= 0 ? 1 : -1);
+      }
+      break;
+    }
+  }
+  return {elemento: elem[novoIndex].elemento, slide: elem[novoIndex].slide};
+}
 
 function getSlidePreview (state) {
   const sel = state.selecionado;
