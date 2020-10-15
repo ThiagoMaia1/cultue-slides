@@ -38,18 +38,6 @@
 #div-botoes > .itens {
   width: 100%;
 }
-/* #div-botoes > button{
-  border: none;
-  color: black;
-  min-width: 50px;
-  width: 47%;
-  height: 47%;
-  text-align: center;
-  display: block;
-  font-size: 25px;
-  border-radius: 0.5vw;
-  font-weight: 500;
-} */
 
 ol {
   list-style: none;
@@ -88,6 +76,7 @@ h1 {
 
 #configuracao-global {
   background-color: #ff6666;
+  user-select: none;
 }
 
 button:focus{

@@ -11,7 +11,7 @@ class Img extends Component {
         this.fundoAnterior = this.props.slidePreview.estilo;
         this.props.dispatch({type: 'atualizar-estilo', objeto: 'fundo', valor: img.fundo});
         this.props.dispatch({type: 'atualizar-estilo', objeto: 'tampao', valor: img.tampao});
-        this.props.dispatch({type: 'atualizar-estilo', objeto: 'texto', subitem: 'color', valor: img.texto.color});
+        this.props.dispatch({type: 'atualizar-estilo', objeto: 'texto', valor: {color: img.texto.color}});
     }
 
         render () {
@@ -22,9 +22,11 @@ class Img extends Component {
             }}
             onMouseOver={() => this.togglePrevia(this.props.imagem)}
             onMouseLeave={() => this.togglePrevia(this.fundoAnterior)}>
+            <div className='texto-mini-preview sombrear-selecao'>
+                <div style={this.props.imagem.texto}>{this.props.imagem.alt}</div>
+            </div>
             <div className='tampao' style={this.props.imagem.tampao}></div>
-            <img className='imagem-galeria sombrear-selecao' src={require('' + this.props.imagem.fundo)} alt={this.props.imagem.alt}/>
-            <div className='texto-mini-preview' style={this.props.imagem.texto}>{this.props.imagem.alt}</div>
+            <img className='imagem-galeria' src={require('' + this.props.imagem.fundo)} alt={this.props.imagem.alt}/>
         </div>
         )
     }

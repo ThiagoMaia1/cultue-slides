@@ -3,26 +3,33 @@ import './style.css';
 import { connect } from 'react-redux';
 import { MdFullscreen, MdFullscreenExit } from 'react-icons/md'
 
+export const fonteBase = {numero: 1.5, unidade: 'vh'};
 const larguraTela = window.screen.width;
 const alturaTela = window.screen.height;
-const full = {icone: <MdFullscreenExit/>, fontSize: '3vh', proporcao: 1}
-const small = {icone: <MdFullscreen />, fontSize: '1.5vh', proporcao: 0.5}
+const full = {icone: <MdFullscreenExit/>, fontSize: 2*fonteBase.numero + fonteBase.unidade, proporcao: 1}
+const small = {icone: <MdFullscreen />, fontSize: fonteBase.numero + fonteBase.unidade, proporcao: 0.5}
 
 class Preview extends Component {
     
     constructor(props) {
         super(props);
         this.state = {screen: small}
+        document.addEventListener('fullscreenchange', (event) => {
+            if (document.fullscreenElement) {
+                this.setState({screen: full});
+            } else {
+                this.setState({screen: small});
+            }
+          });
     }
 
-    toggleFullscreen () {
-    
+    toggleFullscreen () {        
+
         if (document.fullscreenElement) {
             document.exitFullscreen()
             .catch(function(error) {
                 console.log(error.message);
             });
-            this.setState({screen: small});
         } else {
             var element = document.getElementById('preview');
 
@@ -30,11 +37,12 @@ class Preview extends Component {
             .catch(function(error) {
                 console.log(error.message);
             });
-            this.setState({screen: full});
         }
     }
     
     render() {
+        
+
         return (
             <div id='preview' style={{width: larguraTela*this.state.screen.proporcao, 
                                       height: alturaTela*this.state.screen.proporcao}}>

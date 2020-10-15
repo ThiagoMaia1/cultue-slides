@@ -42,7 +42,7 @@ img {
     padding: 5% 10% 10% 10%;
     height:80%;
     width:100%;
-    overflow: auto;
+    overflow: hidden;
 }
 
 #ativar-tela-cheia {

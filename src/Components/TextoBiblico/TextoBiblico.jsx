@@ -150,6 +150,8 @@ class TextoBiblico extends Component {
     onClick() {
         this.props.dispatch({ type: 'inserir', 
             elemento: new Element("Bíblia", this.referenciaLimpa, formatarVersiculosSlide(this.versiculosValidos(this.versiculos)))});
+            
+        console.log(JSON.stringify(formatarVersiculosSlide(this.versiculosValidos(this.versiculos))));
         // console.log("Texto Incluído!");
     }
 
