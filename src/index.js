@@ -21,16 +21,16 @@ import './index.css';
 import App from './App';
 import { createStore } from 'redux';
 import hotkeys from 'hotkeys-js';
-import { fonteBase } from './Components/Preview/Preview'; //em vh.
+import { fonteBase, proporcaoTela } from './Components/Preview/Preview';
 
 const estiloPadrao = {
   texto: {color: 'black', fontFamily: 'Helvetica'}, 
-  titulo: {fontSize: '3'}, 
+  titulo: {fontSize: '3', height: '25%'}, 
   paragrafo: {fontSize: '1.5', padding: '0.1', lineHeight: '1.7'}, 
   fundo: './Galeria/Fundos/Aquarela.jpg', 
   tampao: {backgroundColor: '#000', opacity: '0.2'}
 };
-const proporcaoPadTop = 0.25;
+const proporcaoPadTop = 0;
 const slideMestre = 'slide-mestre'
 var storeInitialized;
 
@@ -54,7 +54,7 @@ export class Element {
     } 
   }
 
-  divisoesTexto(texto, nSlide) { //Divide o texto a ser incluído em quantos slides forem necessários, mantendo a estilização de cada slide.
+  divisoesTexto(texto, nSlide) {//Divide o texto a ser incluído em quantos slides forem necessários, mantendo a estilização de cada slide.
     if (nSlide === this.slides.length) {
       this.slides.push({estilo: this.estiloNull, texto: ''});
     } else if (nSlide > this.slides.length) {
@@ -76,8 +76,8 @@ export class Element {
     var estP = {...estGlobal.paragrafo, ...estElemento.paragrafo , ...estSlide.paragrafo};
     var estT = {...estGlobal.texto, ...estElemento.texto, ...estSlide.texto};
     
-    var pad = Number(estP.padding)
-    var larguraLinha = window.screen.width*(1-pad*2)*0.5;
+    var pad = Number(estP.padding) // Variáveis relacionadas ao tamanho do slide.
+    var larguraLinha = window.screen.width*(1-pad*2)*proporcaoTela;
     var alturaLinha = Number(estP.lineHeight)*Number(estP.fontSize)*window.innerHeight*fonteBase.numero/100; 
     var nLinhas = window.screen.height*0.5*(0.8-pad*(1 + proporcaoPadTop))/alturaLinha;
     if (nLinhas % 1 > 0.7) {
@@ -86,8 +86,6 @@ export class Element {
       nLinhas = Math.floor(nLinhas);
     }
 
-    console.log('pad: ' + pad + ' larguraLinha: ' + larguraLinha + ' alturaLinha: ' + alturaLinha + ' nLinhas: ' + nLinhas)
-    
     var estiloFonte = estP.fontSize*fonteBase.numero + fonteBase.unidade + ' ' + estT.fontFamily;
     var divisor = '\n\n';
     if (this.tipo === 'Bíblia') divisor = ' ';

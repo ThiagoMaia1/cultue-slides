@@ -776,3 +776,4 @@
 [1008/080902.989:ERROR:crash_report_database_win.cc(469)] failed to stat report
 [1008/080902.989:ERROR:crash_report_database_win.cc(469)] failed to stat report
 [1015/101307.935:ERROR:directory_reader_win.cc(43)] FindFirstFile: O sistema não pode encontrar o caminho especificado. (0x3)
+[1015/134020.871:ERROR:directory_reader_win.cc(43)] FindFirstFile: O sistema não pode encontrar o caminho especificado. (0x3)
