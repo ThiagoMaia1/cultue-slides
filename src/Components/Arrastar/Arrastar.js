@@ -2,6 +2,7 @@ import React from 'react';
 import './style.css';
 //import { Element } from '../../index'
 import { connect } from 'react-redux';
+import { reverterSuperscrito } from '../Preview/TextoPreview';
 
 // var placeholder = document.createElement("li",);
 // placeholder.className = "placeholder";
@@ -62,10 +63,20 @@ class Arrastar extends React.Component {
         var listSlides = (<ol className='sublista'>
           {item.slides.map((slide, j) => {
             if (j === 0) return null; //Pula o slide 0, pois se tem múltiplos slides, o slide 0 é o mestre.
+            var conteudo = slide.texto.substr(0, 50);
+            if (item.tipo === 'Bíblia') { //Se for da bíblia, pega o número do verso.
+              var n = 0;
+              var palavras = slide.texto.split(' ');
+              do {
+                var verso = reverterSuperscrito(palavras[n]);
+                n++;
+              } while (isNaN(verso))
+              conteudo = 'v. ' + verso.padStart(2, 0);
+            }
             return (
               <li className={'item-sublista ' + (this.props.selecionado.elemento === i && this.props.selecionado.slide === j ? 'selecionado' : '') + ' ' + item.tipo}
                   onClick={() => this.marcarSelecionado(i, j)} key={j}>
-                  {j}º Slide
+                  {conteudo}
               </li>
             )
           })
@@ -85,9 +96,7 @@ class Arrastar extends React.Component {
             onDragOver={this.dragOver.bind(this)}
             style={{marginBottom: i === this.state.placeholder ? this.tamanhoPlaceholder + 'px' : ''}}>
             <div className='div-excluir'>
-              <div data-id={i} className='excluir-elemento' onClick={e => this.excluirElemento(e)}>
-                x
-              </div>
+              <div data-id={i} className='excluir-elemento' onClick={e => this.excluirElemento(e)}>x</div>
             </div>
             <div data-id={i} className={'itens ' + item.tipo}
                  onClick={() => this.marcarSelecionado(i, 0)}>

@@ -6,6 +6,6 @@
     max-height: 50%;
 }
 
-/* .textoBiblico {
-    overflow:auto;
-} */
+.container-versiculos {
+    flex: 1 0 100%;
+}

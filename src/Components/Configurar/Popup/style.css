@@ -28,11 +28,11 @@ html, body, .app {
   position: absolute;
   left: 25%;
   right: 25%;
-  top: 25%;
-  bottom: 25%;
+  top: 12%;
+  bottom: 28%;
   background: white;
-  height: 45vh;
-  width: 45vw;
+  /* height: 45vh; */
+  /* width: 45vw; */
   border-radius: 6px;
   padding: 1.5vw;
   box-shadow: 1px 3px 8px black;
@@ -63,8 +63,51 @@ html, body, .app {
   border-radius: 4px;
   cursor: default;
   outline: 0;
+  width: 10vw;
+  text-align: center;
 }
 
 .botao:hover {
   background: green;
+}
+
+.conteudo-popup {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.container-preview {
+  /* flex: 1 0 0; */
+  /* overflow: auto; */
+  display: block;
+  overflow: auto;
+  white-space: pre-wrap;
+}
+
+.texto-inserir {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  width: 100%;
+}
+
+.paragrafo-musica-esquerda {
+  padding: 0 10px;
+  flex-grow: 1 0 100%;
+}
+
+.paragrafo-musica-direita {
+  padding: 0 10px;
+  top: -2em;
+  position: relative;
+  flex-grow: 1 0 100%;
+}
+
+.container-divisao-popup {
+  display: flex;
+  flex-direction: column;
+  margin-top: 1.5vh;
+  overflow: auto;
 }

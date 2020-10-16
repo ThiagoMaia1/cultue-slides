@@ -777,3 +777,11 @@
 [1008/080902.989:ERROR:crash_report_database_win.cc(469)] failed to stat report
 [1015/101307.935:ERROR:directory_reader_win.cc(43)] FindFirstFile: O sistema não pode encontrar o caminho especificado. (0x3)
 [1015/134020.871:ERROR:directory_reader_win.cc(43)] FindFirstFile: O sistema não pode encontrar o caminho especificado. (0x3)
+[1015/170456.007:ERROR:directory_reader_win.cc(43)] FindFirstFile: O sistema não pode encontrar o caminho especificado. (0x3)
+[1015/175013.751:ERROR:directory_reader_win.cc(43)] FindFirstFile: O sistema não pode encontrar o caminho especificado. (0x3)
+[1015/184441.630:ERROR:directory_reader_win.cc(43)] FindFirstFile: O sistema não pode encontrar o caminho especificado. (0x3)
+[1015/190214.612:ERROR:directory_reader_win.cc(43)] FindFirstFile: O sistema não pode encontrar o caminho especificado. (0x3)
+[1015/202052.848:ERROR:directory_reader_win.cc(43)] FindFirstFile: O sistema não pode encontrar o caminho especificado. (0x3)
+[1015/212505.987:ERROR:directory_reader_win.cc(43)] FindFirstFile: O sistema não pode encontrar o caminho especificado. (0x3)
+[1015/212506.222:ERROR:filesystem_win.cc(129)] GetFileAttributes C:\Users\UFOP\AppData\Local\Google\Chrome\User Data\Crashpad\attachments\e6296bfe-549a-4cd7-b351-59592313be24: O sistema não pode encontrar o caminho especificado. (0x3)
+[1015/214532.026:ERROR:directory_reader_win.cc(43)] FindFirstFile: O sistema não pode encontrar o caminho especificado. (0x3)

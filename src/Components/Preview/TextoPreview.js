@@ -35,6 +35,19 @@ function numSuperscrito(num) {
     return sup.join('');
 }
 
+export function reverterSuperscrito(sup) {
+    var lista = String(sup).split('');
+    var num = [];
+    for (var n of lista) {
+        var i = "⁰¹²³⁴⁵⁶⁷⁸⁹".indexOf(n)
+        if (i > -1) {
+            num.push(i);
+        } 
+    }
+    if (num.length === 0) return;
+    return num.join('');
+}
+
 export function formatarVersiculosSlide(versiculos) {
     return versiculos.map((v, i) => {
         if (v instanceof RefInvalida) 

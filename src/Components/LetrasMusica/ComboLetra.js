@@ -15,7 +15,7 @@ class ComboLetra extends Component {
 
     constructor (props) {
         super(props);
-        this.state = {opcoes: [], listaAtiva: false, letraMusica:[], botaoVisivel: 'hidden', 
+        this.state = {opcoes: [], listaAtiva: false, letraMusica:{}, botaoVisivel: 'hidden', 
                       carregando: null, idBuscarLetra: null}
     }
     onKeyUp(e) {
@@ -38,7 +38,7 @@ class ComboLetra extends Component {
             this.toggleCarregador(false);
         });
         
-        vagalume.open('GET', url + 'search.excerpt?q=' + encodeURIComponent(termo) + '&limit=5');
+        vagalume.open('GET', url + 'search.excerpt?q=' + encodeURIComponent(termo) + '&limit=4');
         vagalume.send();
 
     }    
@@ -52,10 +52,18 @@ class ComboLetra extends Component {
         vagalumeLetra.responseType = 'json';
             
         vagalumeLetra.addEventListener('load', () => {
-                var letra = vagalumeLetra.response.mus[0].text.split('\n\n')
-                this.setState({letraMusica: letra, idBuscarLetra: null, botaoVisivel: 'visible', 
-                               elemento: new Element('Música', vagalumeLetra.response.mus[0].name, letra)})
-                console.log(this.state.letraMusica)
+            var letra = vagalumeLetra.response.mus[0].text.split(/(?=\n\n)/);
+            var letraEsquerda = [];
+            var letraDireita = [];
+            for (var i = 0; i < letra.length; i++) {
+                if (i < Math.ceil(letra.length / 2)) {
+                    letraEsquerda.push(<div className={'paragrafo-musica-esquerda'}>{letra[i]}</div>);
+                } else {
+                    letraDireita.push(<div className={'paragrafo-musica-direita'}>{letra[i]}</div>);
+                }
+            }
+            this.setState({letraMusica: {esquerda: letraEsquerda, direita: letraDireita}, idBuscarLetra: null, botaoVisivel: 'visible', 
+                            elemento: new Element('Música', vagalumeLetra.response.mus[0].name, letra)})
             })
             
         vagalumeLetra.open('GET', url + 'search.php?musid=' + id);
@@ -68,17 +76,30 @@ class ComboLetra extends Component {
 
     render () {
         return (
-            <div>
-                <h4>Pesquisa de Música</h4>
-                {this.state.carregando}
-                <input className='combo-popup' type='text' autoComplete='off' placeholder='Pesquise por nome, artista ou trecho' onKeyUp={e => this.onKeyUp(e)} />
-                <div className='opcoes-musica'>
-                    {this.state.opcoes.map(mus => 
-                         <ItemListaMusica musica={mus} buscarLetra={this.buscarLetra} idBuscarLetra={this.state.idBuscarLetra}/>
-                    )}
+            <div className='conteudo-popup'>
+                <div>
+                    <div>
+                        <h4>Pesquisa de Música</h4>
+                        {this.state.carregando}
+                        <input className='combo-popup' type='text' autoComplete='off' placeholder='Pesquise por nome, artista ou trecho' onKeyUp={e => this.onKeyUp(e)} />
+                    </div>
+                    <div className='opcoes-musica'>
+                        {this.state.opcoes.map(mus => 
+                            <ItemListaMusica musica={mus} buscarLetra={this.buscarLetra} idBuscarLetra={this.state.idBuscarLetra}/>
+                        )}
+                    </div>
                 </div>
-                <div style={{height: '200px'}}>
-                    <div className='texto-inserir'>{this.state.letraMusica.join('\n\n')}</div>
+                <div className='container-divisao-popup'>
+                    <div className='container-preview'>
+                        <div className='texto-inserir'>
+                            <div className='paragrafos-esquerda'>
+                                {this.state.letraMusica.esquerda}
+                            </div>
+                            <div className='paragrafos-direita'>
+                                {this.state.letraMusica.direita}
+                            </div>
+                        </div>
+                    </div>
                     <button className='botao' style={{visibility: String(this.state.botaoVisivel)}} onClick={e => this.onClick(e)}>Inserir Música</button>
                 </div>
             </div>

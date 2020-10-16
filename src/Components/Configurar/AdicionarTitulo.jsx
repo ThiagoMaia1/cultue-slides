@@ -12,12 +12,12 @@ class AdicionarTitulo extends Component {
             alert("Título não pode ser vazio.");
             return;
         }
-        this.props.dispatch({type: "inserir", elemento: new Element( "Título", titulo, [subtitulo.split('\n\n')])});
+        this.props.dispatch({type: "inserir", elemento: new Element( "Título", titulo, [...subtitulo.split(/(?=\n\n)/)])});
     }
 
     render () {
         return (
-            <div>
+            <div className='conteudo-popup'>
                 <h4>Adicionar Slide de Título</h4>
                 <input id="titulo" className='combo-popup' type='text' placeholder='Título do slide' />
                 <textarea id="subtitulo" className='combo-popup' rows={10} placeholder='Texto do slide'></textarea>

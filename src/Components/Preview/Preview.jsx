@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import { MdFullscreen, MdFullscreenExit } from 'react-icons/md'
 
 export const fonteBase = {numero: 0.024*window.screen.height, unidade: 'px'};
-export const proporcaoTela = 0.5;
 
 class Preview extends Component {
     
@@ -13,7 +12,7 @@ class Preview extends Component {
         this.larguraTela = window.screen.width;
         this.alturaTela = window.screen.height;
         this.full = {icone: <MdFullscreenExit/>, proporcao: 1}
-        this.small = {icone: <MdFullscreen />, proporcao: proporcaoTela}
+        this.small = {icone: <MdFullscreen />, proporcao: 0.5}
         this.state = {screen: this.small}
         document.addEventListener('fullscreenchange', (event) => {
             if (document.fullscreenElement) {

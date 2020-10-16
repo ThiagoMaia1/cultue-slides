@@ -21,15 +21,6 @@
 .opcoes-musica {
     padding-top: 4px;
     z-index: 60;
-    height: 0px;
     width: 100%; 
     background: white;
-}
-
-.texto-inserir {
-    white-space: pre-wrap;
-    overflow: auto;
-    margin-top: 2vh;
-    height: 100%; 
-    flex-grow: 1;
 }

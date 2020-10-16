@@ -27,6 +27,7 @@ img {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    white-space: pre-wrap;
 }
 
 .slide-titulo {
@@ -46,10 +47,10 @@ img {
     position: relative;
     font-size: 150%;
     display: inline-block;
-    padding: 5% 10% 10% 10%;
-    /* height:80%; */
+    padding: 0% 10% 10% 10%;
     width:100%;
     overflow: hidden;
+    flex: 1;
 }
 
 #ativar-tela-cheia {

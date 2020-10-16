@@ -186,20 +186,24 @@ class TextoBiblico extends Component {
     
     render () {
         return (
-            <div style={{height:'100%'}}>
-                <h4>Buscar texto bíblico:</h4>
-                <select className='combo-popup' defaultValue={this.getVersao(versaoPadrao)} type="text" list="versoes" 
-                    onChange={e => this.mudarVersao(e)}>
-                    {versoes.map(v => (<option key={v.version} value={v.nome}>{v.nome}</option>))}
-                </select>
-                {this.state.carregando}
-                <input className='combo-popup' type='text' list="livros" onKeyDown={e => this.buscarReferencia(e)} />
-                <datalist id="livros">
-                    {livros.map(l => (<option key={l.abbrevPt} value={l.name}></option>))}
-                </datalist>
+            <div className='conteudo-popup'>
+                <div>
+                    <h4>Buscar texto bíblico:</h4>
+                    <select className='combo-popup' defaultValue={this.getVersao(versaoPadrao)} type="text" list="versoes" 
+                        onChange={e => this.mudarVersao(e)}>
+                        {versoes.map(v => (<option key={v.version} value={v.nome}>{v.nome}</option>))}
+                    </select>
+                    {this.state.carregando}
+                    <input className='combo-popup' type='text' list="livros" onKeyDown={e => this.buscarReferencia(e)} />
+                    <datalist id="livros">
+                        {livros.map(l => (<option key={l.abbrevPt} value={l.name}></option>))}
+                    </datalist>
+                </div>
                 {/* Seleção por capítulo e versículo tem funções salvas no módulo ComboCapVers.jsx */}
-                <div className='texto-inserir'>
-                    {formatarVersiculos(this.state.versiculos)}
+                <div className='container-versiculos'>
+                        {formatarVersiculos(this.state.versiculos)}
+                    {/* <div className='texto-inserir'>
+                    </div> */}
                 </div>
                 <button className='botao' style={{visibility: this.state.botaoValidosVisivel}} onClick={() => this.onClick()}>
                     Inserir Texto Bíblico</button>
