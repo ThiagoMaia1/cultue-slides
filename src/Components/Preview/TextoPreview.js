@@ -71,7 +71,7 @@ export function formatarVersiculosSlide(versiculos) {
 export function formatarVersiculos(versiculos) {
     return versiculos.map((v, i) => {
         if (v instanceof RefInvalida) {
-            return (<><br></br><br></br><div className="itens" style={{backgroundColor:'#ffcccc', color:'red'}}><b>{v.texto}</b></div></>)
+            return (<><br></br><br></br><div className="itens versiculos" style={{backgroundColor:'#ffcccc', color:'red'}}><b>{v.texto}</b></div></>)
         }
         var r = [];
         var l = (<><b>{v.livro} </b></>);

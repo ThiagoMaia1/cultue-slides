@@ -201,12 +201,14 @@ class TextoBiblico extends Component {
                 </div>
                 {/* Seleção por capítulo e versículo tem funções salvas no módulo ComboCapVers.jsx */}
                 <div className='container-versiculos'>
-                        {formatarVersiculos(this.state.versiculos)}
+                    {formatarVersiculos(this.state.versiculos)}
                     {/* <div className='texto-inserir'>
                     </div> */}
                 </div>
-                <button className='botao' style={{visibility: this.state.botaoValidosVisivel}} onClick={() => this.onClick()}>
-                    Inserir Texto Bíblico</button>
+                <div>
+                    <button className='botao' style={{visibility: this.state.botaoValidosVisivel}} onClick={() => this.onClick()}>
+                        Inserir Texto Bíblico</button>
+                </div>
             </div>
         )
     }

@@ -39,7 +39,7 @@ img {
     width:100%;
     text-align: center;
     font-size: 300%;
-    z-index: 100;
+    z-index: 30;
     position: relative;
 }
 
@@ -62,7 +62,7 @@ img {
     padding: 2% 2% 0 2%;
     border: none;
     background-color: transparent;
-    z-index: 30;
+    z-index: 40;
 }
 
 #ativar-tela-cheia:hover {

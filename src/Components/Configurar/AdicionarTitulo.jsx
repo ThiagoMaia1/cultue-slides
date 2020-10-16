@@ -18,10 +18,14 @@ class AdicionarTitulo extends Component {
     render () {
         return (
             <div className='conteudo-popup'>
-                <h4>Adicionar Slide de Título</h4>
-                <input id="titulo" className='combo-popup' type='text' placeholder='Título do slide' />
-                <textarea id="subtitulo" className='combo-popup' rows={10} placeholder='Texto do slide'></textarea>
-                <button className='botao' onClick={this.onClick.bind(this)}>Inserir Título</button>
+                <div>
+                    <h4>Adicionar Slide de Título</h4>
+                    <input id="titulo" className='combo-popup' type='text' placeholder='Título do slide' />
+                </div>
+                <textarea id="subtitulo" className='combo-popup' placeholder='Texto do slide'></textarea>
+                <div>
+                    <button className='botao' onClick={this.onClick.bind(this)}>Inserir Título</button>
+                </div>
             </div>
         )
     }

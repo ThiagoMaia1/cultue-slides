@@ -19,7 +19,7 @@ html, body, .app {
   bottom: 0;
   margin: auto;
   background-color: rgba(255,255,255, 0.5);
-  z-index: 40;
+  z-index: 140;
 }
 
 .popup {
@@ -36,7 +36,7 @@ html, body, .app {
   border-radius: 6px;
   padding: 1.5vw;
   box-shadow: 1px 3px 8px black;
-  z-index: 50;
+  z-index: 150;
 }
 
 .cabecalho-popup {
@@ -57,14 +57,14 @@ html, body, .app {
 }
 
 .botao {
-  margin: 3px;
+  margin-top: 15px;
   padding: 10px 15px;
   background:#eee;
   border-radius: 4px;
   cursor: default;
-  outline: 0;
-  width: 10vw;
+  overflow: visible;
   text-align: center;
+  display: block;
 }
 
 .botao:hover {
@@ -76,6 +76,13 @@ html, body, .app {
   flex-direction: column;
   justify-content: space-between;
   height: 100%;
+}
+
+.container-divisao-popup {
+  display: flex;
+  flex-direction: column;
+  margin-top: 1.5vh;
+  overflow: auto;
 }
 
 .container-preview {
@@ -93,21 +100,7 @@ html, body, .app {
   width: 100%;
 }
 
-.paragrafo-musica-esquerda {
-  padding: 0 10px;
-  flex-grow: 1 0 100%;
-}
-
-.paragrafo-musica-direita {
-  padding: 0 10px;
-  top: -2em;
-  position: relative;
-  flex-grow: 1 0 100%;
-}
-
-.container-divisao-popup {
-  display: flex;
-  flex-direction: column;
-  margin-top: 1.5vh;
-  overflow: auto;
+#subtitulo {
+  flex: 1 0 0;
+  margin-top: 0.5vh;
 }

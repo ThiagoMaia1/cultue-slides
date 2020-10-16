@@ -20,7 +20,20 @@
 
 .opcoes-musica {
     padding-top: 4px;
-    z-index: 60;
+    z-index: 180;
     width: 100%; 
     background: white;
 }
+
+.paragrafo-musica-esquerda {
+    padding: 0 10px;
+    flex-grow: 0 0 100%;
+  }
+  
+  .paragrafo-musica-direita {
+    padding: 0 10px;
+    top: -2em;
+    position: relative;
+    flex-grow: 0 0 100%;
+  }
+  

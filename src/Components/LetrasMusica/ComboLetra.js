@@ -100,7 +100,9 @@ class ComboLetra extends Component {
                             </div>
                         </div>
                     </div>
-                    <button className='botao' style={{visibility: String(this.state.botaoVisivel)}} onClick={e => this.onClick(e)}>Inserir Música</button>
+                    <div>
+                        <button className='botao' style={{visibility: String(this.state.botaoVisivel)}} onClick={e => this.onClick(e)}>Inserir Música</button>
+                    </div>
                 </div>
             </div>
         )

@@ -1,6 +1,6 @@
 // //Falta fazer:
 // Básico:
-//   Corrigir fundo do pop-up nas previews de música e texto bíblico.
+//   ✔️ Corrigir fundo do pop-up nas previews de música e texto bíblico.
 //   ✔️ Corrigir reordenamento. 
 //   ✔️ Concluir cálculo de linhas do slide.
 //   Permitir formatação de fontes, margens, estilo de texto.
@@ -50,7 +50,7 @@ export class Element {
     this.titulo = titulo;
     
     var est = {...new Estilo(), ...estilo};
-    if (tipo === 'Título') est.titulo.height = '60%';
+    if (tipo === 'Título') est.titulo.height = '40%';
     this.slides = [{estilo: {...est}}];
     this.criarSlides(texto, est);
     
