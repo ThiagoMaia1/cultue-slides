@@ -49,39 +49,45 @@ export class Element {
   constructor(tipo, titulo, texto = [], estilo = {}) {
     this.tipo = tipo;
     this.titulo = titulo;
+    this.texto = texto;
     
     var est = {...new Estilo(), ...estilo};
     if (tipo === 'Título') est.titulo.height = '40%';
     this.slides = [{estilo: {...est}}];
-    this.criarSlides(texto, est);
+    this.criarSlides(this.texto, est);
     
   }
 
-  criarSlides(texto, estilo, nSlide = 0) {
-    this.divisoesTexto(texto, nSlide);
+  criarSlides = (texto, estilo, nSlide = 0, estGlobal = null) => {
+    if (this.slides[nSlide].texto === textoMestre) nSlide++;
+    this.divisoesTexto(texto, nSlide, estGlobal);
     if (this.slides.length > 1 && this.slides[0].texto !== textoMestre) {
       this.slides.unshift({estilo: {...estilo}, texto: textoMestre});
       this.slides[1].estilo = {...new Estilo()};
-    } 
+    } else if (this.slides.length === 2 && this.slides[0].texto === textoMestre) {
+      this.slides[1].estilo = this.slides[0].estilo;
+      this.slides.shift();
+    }
   }
 
-  divisoesTexto(texto, nSlide) {//Divide o texto a ser incluído em quantos slides forem necessários, mantendo a estilização de cada slide.
+  divisoesTexto = (texto, nSlide, estGlobal = null) => {//Divide o texto a ser incluído em quantos slides forem necessários, mantendo a estilização de cada slide.
+    
     if (nSlide === this.slides.length) {
       this.slides.push({estilo: {...new Estilo()}, texto: ''});
     } else if (nSlide > this.slides.length) {
       console.log('Tentativa de criar slide além do limite: ' + nSlide);
       return;
     }
-    var slide = this.slides[nSlide];
-    
+    var slide = this.slides[nSlide];  
+
     var estSlide = slide.estilo;
-    var estGlobal;
     var estElemento;
     if (!storeInitialized) {
       [ estGlobal, estElemento ] = [ {...estiloPadrao}, {...estiloPadrao} ]
     } else {
-      estGlobal = store.getState().elementos[0].slides[0].estilo;
       estElemento = this.slides[0].estilo;
+      if (!estGlobal)
+        estGlobal = store.getState().elementos[0].slides[0].estilo;
     }
     
     var estP = {...estGlobal.paragrafo, ...estElemento.paragrafo , ...estSlide.paragrafo};
@@ -99,7 +105,8 @@ export class Element {
       nLinhas = Math.floor(nLinhas);
     }
 
-    var estiloFonte = estP.fontSize*fonteBase.numero + fonteBase.unidade + ' ' + estT.fontFamily;
+    var estiloFonte = [(estT.fontStyle || ''), (estT.fontWeight || ''), estP.fontSize*fonteBase.numero + fonteBase.unidade, estT.fontFamily];
+    estiloFonte = estiloFonte.filter(a => a !== '').join(' ');
     var linhas = [''];
     
     for (var i = 0; i < texto.length; i++) {
@@ -118,11 +125,22 @@ export class Element {
           var textoSlide = linhas.join(' ').replace(/\n /g,'\n');
           console.log(textoSlide);
           this.slides[nSlide].texto = textoSlide;
+          this.slides[nSlide].textoArray = texto.slice(0, i);
           if (proximaPalavra !== '') this.divisoesTexto(texto.slice(i+1), nSlide+1);
           return;
       }
     }
   }
+
+  getArrayTexto = (nSlide = 0) => {
+    if (this.slides[nSlide].texto === textoMestre) nSlide++;
+    var arrayTexto = [];
+    while (nSlide < this.slides.length) {
+      arrayTexto.push(this.slides[nSlide].textoArray);
+    }
+    return arrayTexto.flat();
+  }
+
 }
 
 function getTextWidth(texto, proximaPalavra, fontSize, larguraLinha) {
@@ -136,13 +154,13 @@ function getTextWidth(texto, proximaPalavra, fontSize, larguraLinha) {
 }
 
 const defaultList = {elementos: [
-  new Element("Slide-Mestre", 'Slide-Mestre', [textoMestre], estiloPadrao),
+  new Element("Slide-Mestre", "Slide-Mestre", [textoMestre], estiloPadrao),
   new Element("Título","Exemplo",["Esta é uma apresentação de exemplo."]),
   new Element('Texto-Bíblico',"João 1:1-3", ['João 1']),
   new Element("Música","Jesus em Tua Presença",["Jesus em tua presença..."]),
   new Element("Imagem","Aquarela",["./Fundos/Aquarela.jpg"])],
   selecionado: {elemento: 0, slide: 0}, 
-  slidePreview: {texto: textoMestre, titulo: 'Título', 
+  slidePreview: {selecionado: {elemento: 0, slide: 0}, texto: textoMestre, titulo: 'Slide-Mestre', 
                  estilo: {...estiloPadrao, paragrafo: getEstiloParagrafoPad(estiloPadrao.paragrafo)}}
 }
 
@@ -171,6 +189,12 @@ export const reducerElementos = function (state = defaultList, action) {
       obj[action.objeto] = action.valor instanceof Object ? {...obj[action.objeto], ...action.valor} : action.valor;
       nState = {elementos: el, selecionado: state.selecionado}; //Para que o getSlidePreview use os valores já atualizados.
       return {...nState, slidePreview: getSlidePreview(nState)};
+    }
+    case "redividir-slides": {
+      el = state.elementos[action.selecionado.elemento];
+      el.criarSlides(el.getArrayTexto(action.selecionado.slide), el.slides[0].estilo, action.selecionado.slide, state);
+      nState = {elementos: state.elementos, selecionado: {...action.selecionado}};
+      return {...nState, slidePreview: getSlidePreview(nState)};  
     }
     case "definir-selecao":
       nState = {elementos: state.elementos, selecionado: action.novaSelecao};
@@ -222,7 +246,8 @@ function getSlidePreview (state) {
   var estiloParagrafo = {...estiloTexto, ...global.estilo.paragrafo, ...elemento.estilo.paragrafo, ...slide.estilo.paragrafo};
   
 
-  return {texto: slide.texto,
+  return {selecionado: {...sel},
+    texto: slide.texto,
     titulo: state.elementos[sel.elemento].titulo,
     estilo: {
       titulo: {...estiloTexto, ...global.estilo.titulo, ...elemento.estilo.titulo, ...slide.estilo.titulo}, 

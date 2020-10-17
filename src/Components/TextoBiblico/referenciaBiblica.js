@@ -26,14 +26,13 @@ export function extrairReferencias(strReferencia) {
 
     var referencias = [];
     //Limpa a string da referência.    
-    strReferencia = strReferencia.trim().toLowerCase().replace('.',':').replace(/;/g,',');
-    strReferencia = strReferencia.replace(/,+/)
+    strReferencia = strReferencia.trim().toLowerCase().replace('.',':').replace(/[;,+]/g,',');
     strReferencia = strReferencia.replace(/[^áàâãéèêíïóôõöúçña-z0-9:\-,\s]/g,"");
     strReferencia = strReferencia.replace(/(?<=[3-90])\s+(?=[áàâãéèêíïóôõöúçña-z])/g,',');
     strReferencia = strReferencia.replace(/\s/g,"");
     strReferencia = strReferencia.replace(/[áàâãéèêíïóôõöúçña-z](?=[0-9])/g,'$& ');
 
-    var subReferencias = strReferencia.split(',');
+    var subReferencias = strReferencia.split(',').filter(r => r !== '');
     for (var i = 0; i < subReferencias.length; i++) {
         if (subReferencias[i].includes('-')) {
             var arr = subReferencias[i].split('-');

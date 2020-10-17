@@ -1,11 +1,7 @@
 import React from 'react';
 import './style.css';
-//import { Element } from '../../index'
 import { connect } from 'react-redux';
 import { reverterSuperscrito } from '../Preview/TextoPreview';
-
-// var placeholder = document.createElement("li",);
-// placeholder.className = "placeholder";
 
 class Arrastar extends React.Component {
   constructor(props) {
@@ -15,6 +11,7 @@ class Arrastar extends React.Component {
 
   dragStart(e) {
     this.dragged = e.currentTarget;
+    this.marcarSelecionado(this.dragged.dataset.id, 0);
     this.tamanhoPlaceholder = this.dragged.offsetHeight;
     e.dataTransfer.effectAllowed = 'move';
     e.dataTransfer.setData('text/html', this.dragged);
@@ -103,7 +100,7 @@ class Arrastar extends React.Component {
               <div data-id={i} className='excluir-elemento' onClick={e => this.excluirElemento(e)}>x</div>
             </div>
             <div data-id={i} className={'itens ' + item.tipo}
-                 onClick={() => this.marcarSelecionado(i, 0)}>
+                 onClick={() => this.marcarSelecionado(i, 0)} style={{marginBottom: '0'}}>
               <b>{i}. {item.tipo}: </b>{item.titulo}
             </div>
             {listSlides}

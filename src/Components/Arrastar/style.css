@@ -52,9 +52,9 @@ ol {
 
 .item-sublista {
   border-radius: 4px;
-  padding: 5px 0 5px 12px;
+  padding: 5px 0 3px 12px;
   border-right: solid 12px rgba(0, 0, 0, 0);
-  margin: 3px;
+  margin: 3px 3px 0 3px;
   min-width: 30%;
   overflow: hidden;
   white-space: nowrap;
@@ -63,6 +63,7 @@ ol {
 .bloco-reordenar {
   border-radius: 4px;
   width: 100%;
+  margin-bottom: 3px;
 }
 
 h1 {
