@@ -4,6 +4,7 @@ import './style.css';
 import Carregando from './Carregando.jsx';
 import ItemListaMusica from './ItemListaMusica.jsx';
 import { Element } from '../../index'
+import logoVagalume from './Logo Vagalume.png'
 
 const url = 'https://api.vagalume.com.br/'
 // const apiKey = 'a15ff8771c7c1a484b2c0fcfed2d3289'
@@ -52,16 +53,28 @@ class ComboLetra extends Component {
         vagalumeLetra.responseType = 'json';
             
         vagalumeLetra.addEventListener('load', () => {
-            var letra = vagalumeLetra.response.mus[0].text.split(/(?=\n\n)/);
-            var letraEsquerda = [];
-            var letraDireita = [];
-            for (var i = 0; i < letra.length; i++) {
-                if (i < Math.ceil(letra.length / 2)) {
-                    letraEsquerda.push(<div className={'paragrafo-musica-esquerda'}>{letra[i]}</div>);
+            var musica = vagalumeLetra.response.mus[0];
+            var letra = musica.text.split(/(?=\n\n)/); //Separa em paragrafos
+            var letraLinhas = letra.map(l => ({paragrafo: l.replace('\n\n','\n'), linhas: l.split('\n').length-1})); //Conta \n no parágrafo.
+            var linhasTotais = letraLinhas.reduce((ac, p) => ac + p.linhas, 0) + 2.5;
+            var linhasMetade = Math.ceil(linhasTotais/2);
+            var [ letraEsquerda, letraDireita, contLinhas ]  = [[], [], 0];
+            for (var i = 0; i < letraLinhas.length; i++) {
+                contLinhas += letraLinhas[i].linhas;
+                
+                if (contLinhas <= linhasMetade) {
+                    letraEsquerda.push(<div className={'paragrafo-musica-esquerda'}>{letraLinhas[i].paragrafo}</div>);
                 } else {
-                    letraDireita.push(<div className={'paragrafo-musica-direita'}>{letra[i]}</div>);
+                    letraDireita.push(<div className={'paragrafo-musica-direita'}>{letraLinhas[i].paragrafo}</div>);
                 }
             }
+            letraDireita.push(
+                <div className={'paragrafo-musica-direita link-letra'}>
+                    <i><b><br></br>Fonte: </b>
+                    <a href={musica.url} target="_blank" rel="noopener noreferrer" >
+                        {musica.url}
+                    </a></i>
+                </div>)
             this.setState({letraMusica: {esquerda: letraEsquerda, direita: letraDireita}, idBuscarLetra: null, botaoVisivel: 'visible', 
                             elemento: new Element('Música', vagalumeLetra.response.mus[0].name, letra)})
             })
@@ -77,16 +90,21 @@ class ComboLetra extends Component {
     render () {
         return (
             <div className='conteudo-popup'>
-                <div>
+                <div style={{width: '100%'}}>
                     <div>
                         <h4>Pesquisa de Música</h4>
                         {this.state.carregando}
                         <input className='combo-popup' type='text' autoComplete='off' placeholder='Pesquise por nome, artista ou trecho' onKeyUp={e => this.onKeyUp(e)} />
                     </div>
-                    <div className='opcoes-musica'>
-                        {this.state.opcoes.map(mus => 
-                            <ItemListaMusica musica={mus} buscarLetra={this.buscarLetra} idBuscarLetra={this.state.idBuscarLetra}/>
-                        )}
+                    <div className='container-opcoes-musica'>
+                        <div id='div-logo-vagalume'><a href='https://www.vagalume.com.br/' target="_blank" rel="noopener noreferrer">
+                            <img id='logo-vagalume' src={logoVagalume} alt='Logo Vagalume'/>
+                        </a></div>
+                        <div className='opcoes-musica'>
+                            {this.state.opcoes.map(mus => 
+                                <ItemListaMusica musica={mus} buscarLetra={this.buscarLetra} idBuscarLetra={this.state.idBuscarLetra}/>
+                            )}
+                        </div>
                     </div>
                 </div>
                 <div className='container-divisao-popup'>

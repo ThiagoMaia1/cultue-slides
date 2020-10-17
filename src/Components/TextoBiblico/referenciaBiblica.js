@@ -27,6 +27,7 @@ export function extrairReferencias(strReferencia) {
     var referencias = [];
     //Limpa a string da referência.    
     strReferencia = strReferencia.trim().toLowerCase().replace('.',':').replace(/;/g,',');
+    strReferencia = strReferencia.replace(/,+/)
     strReferencia = strReferencia.replace(/[^áàâãéèêíïóôõöúçña-z0-9:\-,\s]/g,"");
     strReferencia = strReferencia.replace(/(?<=[3-90])\s+(?=[áàâãéèêíïóôõöúçña-z])/g,',');
     strReferencia = strReferencia.replace(/\s/g,"");

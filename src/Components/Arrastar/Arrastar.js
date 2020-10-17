@@ -51,7 +51,11 @@ class Arrastar extends React.Component {
   }
 
   excluirElemento = (e) => {
-    this.props.dispatch({type: 'deletar', elemento: e.target.dataset.id});
+    var elemento = this.props.elementos[e.target.dataset.id];
+    var resposta = window.confirm("Deseja excluir " + (elemento.tipo.slice(-1) === 'o' ? 'o ' : 'a ') 
+                                  + elemento.tipo.toLowerCase().replace('-',' ') + " '" + elemento.titulo + "'?" );
+    if (resposta)
+      this.props.dispatch({type: 'deletar', elemento: e.target.dataset.id});
   }
 
 	render() {
@@ -64,7 +68,7 @@ class Arrastar extends React.Component {
           {item.slides.map((slide, j) => {
             if (j === 0) return null; //Pula o slide 0, pois se tem múltiplos slides, o slide 0 é o mestre.
             var conteudo = slide.texto.substr(0, 50);
-            if (item.tipo === 'Bíblia') { //Se for da bíblia, pega o número do verso.
+            if (item.tipo === 'Texto-Bíblico') { //Se for da bíblia, pega o número do verso.
               var n = 0;
               var palavras = slide.texto.split(' ');
               do {
@@ -110,10 +114,10 @@ class Arrastar extends React.Component {
       <div>
         <div className="coluna">
           <ol id="ordem-elementos">
-            <div id="configuracao-global" className={'itens ' + (this.props.selecionado.elemento ? '' : 'selecionado')} data-id={0}
+            <div id="slide-mestre" className={'itens ' + (this.props.selecionado.elemento ? '' : 'selecionado')} data-id={0}
               onClick={() => this.marcarSelecionado(0, 0)}
               onDragOver={this.dragOver.bind(this)}
-              style={{marginBottom: 0 === this.state.placeholder ? this.tamanhoPlaceholder + 'px' : ''}}>Configurações Globais
+              style={{marginBottom: 0 === this.state.placeholder ? this.tamanhoPlaceholder + 'px' : ''}}>Slide-Mestre
             </div>
             {listItems}
           </ol>

@@ -40,7 +40,7 @@ class ConfigurarSlides extends Component {
               onClick={this.toggleItalico}><i>I</i></button>
             <button className={'botao-configuracao-bool' + (this.props.estiloSlide.texto.textDecorationLine === 'underline' ? ' clicado' : '')} 
               onClick={this.toggleSublinhado}><ins>S</ins></button>
-            <input id="range-fonte" type="range" min="0.5" max="5" value={this.props.estiloSlide.paragrafo.fontSize} class="slider" ></input>
+            <input id="range-fonte" type="range" min="0.5" max="5" defaultValue={this.props.estiloSlide.paragrafo.fontSize} className="slider" ></input>
           </div>
       </div>
     )   

@@ -5,15 +5,17 @@
 //   ✔️ Concluir cálculo de linhas do slide.
 //   Permitir formatação de fontes, margens, estilo de texto.
 //   ✔️ Possibilidade de excluir elementos.
+//   Corrigir problemas no leitor de referência bíblica.
 
 // Features:
-//   Permitir envio de imagens.
-//   Permitir incorporar vídeos do youtube.
+//   Envio de imagens.
+//   Incorporar vídeos do youtube.
 //   Login para salvar preferências.
 //   Exportar como power point/pdf.
-//   Permitir editar texto direto no slide.
+//   Editar texto direto no slide.
 //   Combo de número de capítulos e versículos da bíblia.
 //   Possibilidade de editar elemento (retornando à tela da query).
+//   ✔️ Navegar slides clicando à direita ou esquerda.
 
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -21,7 +23,7 @@ import './index.css';
 import App from './App';
 import { createStore } from 'redux';
 import hotkeys from 'hotkeys-js';
-import { fonteBase } from './Components/Preview/Preview';
+import { fonteBase, textoMestre } from './Components/Preview/Preview';
 
 class Estilo {
   constructor () {
@@ -41,7 +43,6 @@ const estiloPadrao = {
   tampao: {backgroundColor: '#fff', opacity: '0.2'}
 };
 const proporcaoPadTop = 0;
-const slideMestre = 'slide-mestre'
 var storeInitialized;
 
 export class Element {
@@ -58,8 +59,8 @@ export class Element {
 
   criarSlides(texto, estilo, nSlide = 0) {
     this.divisoesTexto(texto, nSlide);
-    if (this.slides.length > 1 && this.slides[0].texto !== slideMestre) {
-      this.slides.unshift({estilo: {...estilo}, texto: slideMestre});
+    if (this.slides.length > 1 && this.slides[0].texto !== textoMestre) {
+      this.slides.unshift({estilo: {...estilo}, texto: textoMestre});
       this.slides[1].estilo = {...new Estilo()};
     } 
   }
@@ -134,20 +135,14 @@ function getTextWidth(texto, proximaPalavra, fontSize, larguraLinha) {
   return metrics.width-3; //-3 porque parece que existe uma pequena tolerância.
 }
 
-const textoPadrao = [
-  "João 1:1-3 1 No princípio era o Verbo, e o Verbo estava com Deus, e o Verbo ' ' ' ' ' ' era Deus.",
-  '2 Ele estava no princípio com Deus.', 
-  '3 Todas as coisas foram feitas por intermédio dele, e sem ele nada do que foi feito se fez.'
-]
-
 const defaultList = {elementos: [
-  new Element("Configurações Globais", 'Título', textoPadrao, estiloPadrao),
+  new Element("Slide-Mestre", 'Slide-Mestre', [textoMestre], estiloPadrao),
   new Element("Título","Exemplo",["Esta é uma apresentação de exemplo."]),
-  new Element("Bíblia","João 1:1-3", textoPadrao),
+  new Element('Texto-Bíblico',"João 1:1-3", ['João 1']),
   new Element("Música","Jesus em Tua Presença",["Jesus em tua presença..."]),
   new Element("Imagem","Aquarela",["./Fundos/Aquarela.jpg"])],
   selecionado: {elemento: 0, slide: 0}, 
-  slidePreview: {texto: textoPadrao, titulo: 'Título', 
+  slidePreview: {texto: textoMestre, titulo: 'Título', 
                  estilo: {...estiloPadrao, paragrafo: getEstiloParagrafoPad(estiloPadrao.paragrafo)}}
 }
 
@@ -196,13 +191,20 @@ function selecionadoOffset (elementos, selecionado, offset) {
     if (elem[i].elemento === selecionado.elemento && elem[i].slide === selecionado.slide) {
       var novoIndex = i + offset;
       if (novoIndex < 0) {
-        novoIndex = 0 + (elem[0].texto === slideMestre ? 1 : 0);
+        novoIndex = 0;
       } else if (novoIndex >= elem.length) { 
         novoIndex = elem.length-1;
       }
-      if (elem[novoIndex].texto === slideMestre) { //Se for slide mestre, pula um a mais pra frente ou pra trás com base no offset informado.
-        novoIndex += (offset >= 0 ? 1 : -1);
-      }
+      if (document.fullscreenElement) { //Se for slide mestre, pula um a mais pra frente ou pra trás com base no offset informado.
+        while (elem[novoIndex].texto === textoMestre) {
+          offset = offset > 0 ? 1 : -1;
+          novoIndex += offset;
+          if (novoIndex >= elem.length || novoIndex <= 0) {
+            novoIndex = i;
+            offset = -offset; 
+          }
+        }
+      }         
       break;
     }
   }
@@ -215,11 +217,12 @@ function getSlidePreview (state) {
   const elemento = state.elementos[sel.elemento].slides[0];
   const slide = state.elementos[sel.elemento].slides[sel.slide];
 
-  var estiloTexto = {...global.estilo.texto, ...elemento.estilo.texto, ...slide.estilo.texto}
+  var estiloTexto = {...global.estilo.texto, ...elemento.estilo.texto, ...slide.estilo.texto};
   //Pra dividir o padding-top.
-  var estiloParagrafo = {...estiloTexto, ...global.estilo.paragrafo, ...elemento.estilo.paragrafo, ...slide.estilo.paragrafo}
+  var estiloParagrafo = {...estiloTexto, ...global.estilo.paragrafo, ...elemento.estilo.paragrafo, ...slide.estilo.paragrafo};
   
-  return {texto: slide.texto === slideMestre ? state.elementos[sel.elemento].slides[1].texto : slide.texto, 
+
+  return {texto: slide.texto,
     titulo: state.elementos[sel.elemento].titulo,
     estilo: {
       titulo: {...estiloTexto, ...global.estilo.titulo, ...elemento.estilo.titulo, ...slide.estilo.titulo}, 

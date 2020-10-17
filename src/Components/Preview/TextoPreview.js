@@ -15,7 +15,7 @@ import { RefInvalida } from "../TextoBiblico/referenciaBiblica"
 // function textoPreview (elemento) {
 //     var textoDividido = [];
 //     switch (elemento.tipo) {
-//         case 'Bíblia':
+//         case 'Texto-Bíblico':
 //             formatarVersiculos(elemento.texto);
 //         case 'Música':
 //             formatarMusica(elemento.texto);

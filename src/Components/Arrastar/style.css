@@ -3,9 +3,7 @@
   flex-direction: column;
   width: 15vw;
   border: 5px solid #e1e1e1;
-  /* outline-offset: 30px; */
   border-radius: 4px;
-  /* box-shadow: 1px 3px 8px #888; */
   --cor-biblia: #5f97ff;
   --cor-musica: #fff6a2;
   --cor-titulo: #cd69fc;
@@ -81,9 +79,9 @@ h1 {
   width: 100%;
 }
 
-#configuracao-global {
-  background-color: #ff6666;
+#slide-mestre {
   user-select: none;
+  text-align: center;
 }
 
 button:focus{
@@ -91,7 +89,7 @@ button:focus{
   box-shadow: 0 0 0 1.5px white;
 }
 
-.Bíblia {
+.Texto-Bíblico {
   background: var(--cor-biblia);
 }
 
@@ -111,7 +109,7 @@ button:focus{
   background: var(--cor-video);
 }
 
-.Bíblia:hover {
+.Texto-Bíblico:hover {
   background: var(--cor-forte-biblia);
 }
 

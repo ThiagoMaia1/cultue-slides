@@ -785,3 +785,7 @@
 [1015/212505.987:ERROR:directory_reader_win.cc(43)] FindFirstFile: O sistema não pode encontrar o caminho especificado. (0x3)
 [1015/212506.222:ERROR:filesystem_win.cc(129)] GetFileAttributes C:\Users\UFOP\AppData\Local\Google\Chrome\User Data\Crashpad\attachments\e6296bfe-549a-4cd7-b351-59592313be24: O sistema não pode encontrar o caminho especificado. (0x3)
 [1015/214532.026:ERROR:directory_reader_win.cc(43)] FindFirstFile: O sistema não pode encontrar o caminho especificado. (0x3)
+[1016/102556.178:ERROR:directory_reader_win.cc(43)] FindFirstFile: O sistema não pode encontrar o caminho especificado. (0x3)
+[1016/111202.309:ERROR:directory_reader_win.cc(43)] FindFirstFile: O sistema não pode encontrar o caminho especificado. (0x3)
+[1016/172041.892:ERROR:directory_reader_win.cc(43)] FindFirstFile: O sistema não pode encontrar o caminho especificado. (0x3)
+[1016/181353.190:ERROR:directory_reader_win.cc(43)] FindFirstFile: O sistema não pode encontrar o caminho especificado. (0x3)

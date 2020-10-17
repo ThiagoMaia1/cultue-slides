@@ -18,22 +18,46 @@
     margin-bottom: 3px;
 }
 
-.opcoes-musica {
+.container-opcoes-musica {
     padding-top: 4px;
     z-index: 180;
     width: 100%; 
     background: white;
+    display: block;
+    position: relative;
+    min-height: 168px;
 }
 
+.opcoes-musica {
+    position: relative;
+}
+
+#div-logo-vagalume {
+    position: absolute;
+    top: 10%;
+    width: 100%;
+    text-align: center;
+}
+
+#logo-vagalume {
+    max-height: 16vh;
+    /* object-fit: cover; */
+}
 .paragrafo-musica-esquerda {
     padding: 0 10px;
     flex-grow: 0 0 100%;
-  }
-  
-  .paragrafo-musica-direita {
+    width: 22vw;
+}
+
+.paragrafo-musica-direita {
     padding: 0 10px;
-    top: -2em;
+    top: -1em;
     position: relative;
     flex-grow: 0 0 100%;
-  }
-  
+    width: 22vw;
+}
+
+.link-letra {
+    font-size: 80%;
+    max-width: 23vw;
+}

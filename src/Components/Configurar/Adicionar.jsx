@@ -65,7 +65,7 @@ class Adicionar extends Component {
             <>
                 <div id="div-botoes">
                     <button className="Música itens" onClick={this.adicionarMusica.bind(this)}>Música</button>
-                    <button className="Bíblia itens" onClick={this.adicionarTextoBiblico.bind(this)}>Texto Bíblico</button>
+                    <button className="Texto-Bíblico itens" onClick={this.adicionarTextoBiblico.bind(this)}>Texto Bíblico</button>
                     <button className="Título itens" onClick={this.adicionarTitulo.bind(this)}>Título</button>
                     <button className="Imagem itens" onClick={this.adicionarImagem.bind(this)}>Imagem</button>
                     <button className="Vídeo itens" onClick={this.adicionarVideo.bind(this)}>Vídeo</button>
