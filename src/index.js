@@ -22,7 +22,7 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import { createStore } from 'redux';
-import hotkeys from 'hotkeys-js';
+// import hotkeys from 'hotkeys-js';
 import { fonteBase, textoMestre } from './Components/Preview/Preview';
 
 export class Estilo {
@@ -107,6 +107,7 @@ export class Element {
 
     var estiloFonte = [(estT.fontStyle || ''), (estT.fontWeight || ''), estP.fontSize*fonteBase.numero + fonteBase.unidade, estT.fontFamily];
     estiloFonte = estiloFonte.filter(a => a !== '').join(' ');
+    var caseTexto = estT.caseTexto || estP.caseTexto;
     var linhas = [''];
     
     for (var i = 0; i < texto.length; i++) {
@@ -115,13 +116,13 @@ export class Element {
         if (linhas.join('') === '' && palavras[k] === '\n') continue; //Se é a primeira linha não precisa de line break antes.
         linhas[linhas.length-1] = linhas[linhas.length-1] + (linhas[linhas.length-1] === '' ? '' : ' ') + palavras[k];
         var proximaPalavra = (k+1 === palavras.length ? (i+1 === texto.length ? '' : texto[i+1].replace('\n', '\n ').split(/ +/)[0]) : palavras[k+1]);
-        if (getTextWidth(linhas[linhas.length-1], proximaPalavra, estiloFonte, larguraLinha) > larguraLinha) {
+        if (getTextWidth(linhas[linhas.length-1], proximaPalavra, estiloFonte, larguraLinha, caseTexto) > larguraLinha) {
           linhas.push('');
         }    
       }
       if (linhas.length+1 >= nLinhas || proximaPalavra === '' || 
          (linhas.join('') !== '' && //Se próximo versículo (exceto sozinho) vai ultrapassar o slide, conclui slide atual.
-         (Math.ceil(getTextWidth(linhas[linhas.length-1], (texto[i+1] || ''), estiloFonte, larguraLinha) + 50)/larguraLinha) > nLinhas - (linhas.length-1))) {
+         (Math.ceil(getTextWidth(linhas[linhas.length-1], (texto[i+1] || ''), estiloFonte, larguraLinha, caseTexto) + 50)/larguraLinha) > nLinhas - (linhas.length-1))) {
           var textoSlide = linhas.join(' ').replace(/\n /g,'\n');
           console.log(textoSlide);
           this.slides[nSlide].texto = textoSlide;
@@ -144,13 +145,14 @@ export class Element {
 
 }
 
-function getTextWidth(texto, proximaPalavra, fontSize, larguraLinha) {
+function getTextWidth(texto, proximaPalavra, fontSize, larguraLinha, caseTexto) {
   var enes = proximaPalavra.split('\n').length-1;
   if (enes > 0) return enes*(larguraLinha + 1);
   var canvas = getTextWidth.canvas || (getTextWidth.canvas = document.createElement("canvas"));
   var context = canvas.getContext("2d");
   context.font = fontSize;
-  var metrics = context.measureText(texto.replace('\n',' ') + ' ' + proximaPalavra);
+  var txt = capitalize(texto.replace('\n',' ') + ' ' + proximaPalavra, caseTexto)
+  var metrics = context.measureText(txt);
   return metrics.width-3; //-3 porque parece que existe uma pequena tolerância.
 }
 
@@ -255,19 +257,38 @@ function getSlidePreview (state) {
   var estiloTexto = {...global.estilo.texto, ...elemento.estilo.texto, ...slide.estilo.texto};
   //Pra dividir o padding-top.
   var estiloParagrafo = {...estiloTexto, ...global.estilo.paragrafo, ...elemento.estilo.paragrafo, ...slide.estilo.paragrafo};
-  
+  var estiloTitulo = {...estiloTexto, ...global.estilo.titulo, ...elemento.estilo.titulo, ...slide.estilo.titulo};
 
   return {selecionado: {...sel},
-    texto: slide.texto,
-    titulo: state.elementos[sel.elemento].titulo,
+    texto: capitalize(slide.texto, estiloParagrafo.caseTexto),
+    titulo: capitalize(state.elementos[sel.elemento].titulo, estiloTitulo.caseTexto),
     estilo: {
-      titulo: {...estiloTexto, ...global.estilo.titulo, ...elemento.estilo.titulo, ...slide.estilo.titulo}, 
+      titulo: estiloTitulo, 
       paragrafo: getEstiloParagrafoPad(estiloParagrafo), 
       fundo: slide.estilo.fundo || elemento.estilo.fundo || global.estilo.fundo, 
       tampao: {...global.estilo.tampao, ...elemento.estilo.tampao, ...slide.estilo.tampao},
       texto: {...estiloTexto}
     }
   };
+}
+
+function capitalize (string, caseTexto) {
+
+  const primeiraMaiuscula = string => {
+    if (typeof string !== 'string') return '';
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  }
+
+  switch (caseTexto) {
+    case 'Maiúsculas':
+      return string.toUpperCase();
+    case 'Minúsculas':
+      return string.toLowerCase();
+    case 'Primeira Maiúscula':
+      return primeiraMaiuscula(string);
+    default:
+      return string;
+  }
 }
 
 function getEstiloParagrafoPad (estiloParagrafo) {
@@ -277,23 +298,23 @@ function getEstiloParagrafoPad (estiloParagrafo) {
 
 export let store = createStore(reducerElementos);
 
-hotkeys('right,left,up,down', function(event, handler){
-  event.preventDefault();
-  var offset = 0;
-  switch (handler.key) {
-      case 'right':
-      case 'down':
-          offset = 1;
-          break;
-      case 'left':
-      case 'up':
-          offset = -1;
-          break;
-      default:
-          offset = 0;
-  }
-  store.dispatch({type: 'offset-selecao', offset: offset})
-});
+// hotkeys('right,left,up,down', function(event, handler){
+//   event.preventDefault();
+//   var offset = 0;
+//   switch (handler.key) {
+//       case 'right':
+//       case 'down':
+//           offset = 1;
+//           break;
+//       case 'left':
+//       case 'up':
+//           offset = -1;
+//           break;
+//       default:
+//           offset = 0;
+//   }
+//   store.dispatch({type: 'offset-selecao', offset: offset})
+// });
 
 ReactDOM.render(
   <App />,

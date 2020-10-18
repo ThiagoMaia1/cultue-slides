@@ -8,27 +8,47 @@ import { CgErase } from 'react-icons/cg';
 import { BsTextLeft, BsTextCenter, BsTextRight, BsJustify} from 'react-icons/bs';
 import { CompactPicker } from 'react-color';
 
-const negrito = {nomeAtributo: 'fontWeight', valorNormal: '500', valorAlterado: '650'};
-const italico = {nomeAtributo: 'fontStyle', valorNormal: 'normal', valorAlterado: 'italic'};
-const sublinhado = {nomeAtributo: 'textDecorationLine', valorNormal: 'none', valorAlterado: 'underline'};
+const casesTexto = [{valor: 'Nenhum', icone: (<span style={{color: '#333'}}>Aa</span>)}, {valor: 'Primeira Maiúscula', icone: 'Aa'}, 
+                    {valor: 'Maiúsculas', icone: 'AA'}, {valor: 'Minúsculas', icone: 'aa'}];
+
+const listaEstilosTexto = [{apelido:'Negrito', nomeAtributo: 'fontWeight', valorNormal: '500', valorAlterado: '650'}, 
+                           {apelido:'Itálico', nomeAtributo: 'fontStyle', valorNormal: 'normal', valorAlterado: 'italic'},
+                           {apelido:'Sublinhado', nomeAtributo: 'textDecorationLine', valorNormal: 'none', valorAlterado: 'underline'}];
+                           
+const listaFontes = ['Helvetica', 'Arial', 'Times New Roman', 'Courier', 'Courier New', 'Verdana', 'Tahoma', 'Arial Black', 'Georgia', 'Impact']
+
+const listaBotoesAbas = [{nomeCodigo: 'titulo', nomeInterface: 'Título'}, {nomeCodigo:'paragrafo', nomeInterface: 'Parágrafo'}, 
+                         {nomeCodigo: 'tampao', nomeInterface: 'Fundo'}];
 
 class ConfigurarSlides extends Component {
   constructor(props) {
     super(props);
     this.state = {...props, aba: 'texto',
-      painelCor: null};
-    this.listaFontes = [
-      'Helvetica', 'Arial', 'Times New Roman', 'Courier', 'Courier New', 'Verdana', 'Tahoma', 'Arial Black', 'Georgia', 'Impact'].sort().map(f => 
+      painelCor: null, caseTexto: 0};
+    this.listaFontes = listaFontes.sort().map(f => 
         <option className='opcoes-fonte' value={f} style={{fontFamily: f}}>{f}</option>                  
     )
   }
 
   gerarBotoesAbas = () => {
-    return [{nomeCodigo: 'titulo', nomeInterface: 'Título'},
-            {nomeCodigo:'paragrafo', nomeInterface: 'Parágrafo'} , {nomeCodigo: 'tampao', nomeInterface: 'Fundo'}].map(a => 
+    return listaBotoesAbas.map(a => 
       <button className={'botao-aba'} data-id={a.nomeCodigo} onClick={this.selecionarAba.bind(this)} 
         style={this.state.aba === a.nomeCodigo ? {backgroundColor: '#ddd'} : null}>{a.nomeInterface}</button>
     );
+  }
+
+  gerarBotoesEstiloTexto = () => {
+       
+    return listaEstilosTexto.map(e => {
+      var objEstilo;
+      objEstilo[e.nomeAtributo] = e.valorAlterado;
+      return (
+        <button title={e.apelido} 
+        className={'botao-configuracao-bool ' + (this.props.slideSelecionado.estilo[this.state.aba][e.nomeAtributo] === e.valorAtributo ? ' clicado' : '')} 
+        onClick={() => this.toggleEstiloTexto(e)} 
+        style={objEstilo}>{e.apelido[0]}</button>
+      )
+    });
   }
 
   selecionarAba = e => {
@@ -54,6 +74,13 @@ class ConfigurarSlides extends Component {
 
   mudarFonte = (e) => {
     this.atualizarEstilo(this.state.aba, 'fontFamily', e.target.value, true)
+  }
+
+  mudarCaseTexto = () => {
+    var i = this.state.caseTexto + 1;
+    if (i >= casesTexto.length) i = 0; 
+    this.setState({caseTexto: i})
+    this.atualizarEstilo(this.state.aba, 'caseTexto', casesTexto[i].valor, true)
   }
 
   toggleEstiloTexto = (atributo) => {
@@ -86,15 +113,14 @@ class ConfigurarSlides extends Component {
     return JSON.stringify(objeto) === "{}";
   }
 
-  // + (this.props.slideSelecionado.estilo[this.state.aba].fontWeight === '650' ? ' clicado' : ''
 	render() {
 		return (
-      <div className="configuracoes" >
-          <div id={'abas'}>
+      <div>
+          <div id='abas'>
             {this.gerarBotoesAbas()}
           </div>
-          <div className='configuracoes-texto'>
-            <div>
+          <div className='configuracoes'>
+            <div className='configuracoes-texto' style={this.state.aba === 'tampao' ? null : {display: 'none'}}>
                 <button id={'cor-texto'} className={'botao-configuracao-bool'} onMouseOver={this.ativarPainelCor}>A
                 <div style={{backgroundColor: (this.props.slideSelecionado.estilo.texto.color || '#000'), width: '18px', height: '4px'}}></div>
               </button>
@@ -103,19 +129,18 @@ class ConfigurarSlides extends Component {
                       defaultValue={this.props.slideSelecionado.estilo[this.state.aba].fontFamily || 'Helvetica'}>
                         {this.listaFontes}
               </select>
-              <button className={'botao-configuracao-bool'} onClick={() => this.toggleEstiloTexto(negrito)}><b>N</b></button>
-              <button className={'botao-configuracao-bool'} onClick={() => this.toggleEstiloTexto(italico)}><i>I</i></button>
-              <button className={'botao-configuracao-bool'} onClick={() => this.toggleEstiloTexto(sublinhado)}><ins>S</ins></button>
+              {this.gerarBotoesEstiloTexto()}
               <div className={'botoes-configuracao'}>
-                <button className={'botao-alinhamento'} onClick={() => this.atualizarAlinhamentoTexto('left')}><BsTextLeft size={20}/></button>
-                <button className={'botao-alinhamento'} onClick={() => this.atualizarAlinhamentoTexto('center')}><BsTextCenter size={20}/></button>
-                <button className={'botao-alinhamento'} onClick={() => this.atualizarAlinhamentoTexto('right')}><BsTextRight size={20}/></button>
-                <button className={'botao-alinhamento'} onClick={() => this.atualizarAlinhamentoTexto('justify')}><BsJustify size={20}/></button>
+                <button title='Alinhado à Esquerda' className={'botao-alinhamento'} onClick={() => this.atualizarAlinhamentoTexto('left')}><BsTextLeft size={20}/></button>
+                <button title='Alinhado ao Centro' className={'botao-alinhamento'} onClick={() => this.atualizarAlinhamentoTexto('center')}><BsTextCenter size={20}/></button>
+                <button title='Alinhado à Direita' className={'botao-alinhamento'} onClick={() => this.atualizarAlinhamentoTexto('right')}><BsTextRight size={20}/></button>
+                <button title='Justificado' className={'botao-alinhamento'} onClick={() => this.atualizarAlinhamentoTexto('justify')}><BsJustify size={20}/></button>
               </div>
+              <button title={casesTexto[this.state.caseTexto].valor} className={'botao-configuracao-bool'} onClick={this.toggleCase}>{casesTexto[this.state.caseTexto].icone}</button>
             </div>
-            <input type="range" min="0.5" max="5" defaultValue={this.props.slideSelecionado.estilo.paragrafo.fontSize} className="slider" ></input>
-            <button className={'botao-configuracao-bool'} onClick={this.limparEstilo}><CgErase size={20} /></button>
-            <input id="range-fonte" type="range" min="0.5" max="5" defaultValue={this.props.slideSelecionado.estilo.paragrafo.fontSize} className="slider" ></input>
+            <input type="range" min="0.5" max="5" defaultValue={this.props.slideSelecionado.estilo[this.state.aba].height} className="slider" ></input>
+            <input id="range-fonte" type="range" min="0.5" max="5" defaultValue={this.props.slideSelecionado.estilo[this.state.aba].fontSize} className="slider" ></input>
+            <button title='Limpar Estilos do Slide' className={'botao-configuracao-bool'} onClick={this.limparEstilo}><CgErase size={20} /></button>
           </div>
       </div>
     )   
