@@ -10,7 +10,7 @@
     background-color: inherit;
     outline: none;
     cursor: pointer;
-    padding: 1.2vh 0.9vh;
+    padding: 1.2vh 0.9vh 0 1.2vh;
     width: auto;
     border-radius: 0.7vh;
     /* border-left: 1px solid darkgray; */

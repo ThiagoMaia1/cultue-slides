@@ -36,7 +36,7 @@ export class Estilo {
 }
 
 const estiloPadrao = {
-  texto: {color: 'black', fontFamily: 'Helvetica'}, 
+  texto: {fontFamily: fonteBase.fontFamily}, 
   titulo: {fontSize: '3', height: '25%'}, 
   paragrafo: {fontSize: '1.5', padding: '0.08', lineHeight: '1.7'}, 
   fundo: './Galeria/Fundos/Aquarela.jpg', 
@@ -60,7 +60,7 @@ export class Element {
 
   criarSlides = (texto, estiloMestre, nSlide = 0, estGlobal = null) => {
     if (this.slides[nSlide].texto === textoMestre) nSlide++;
-    this.divisoesTexto(texto, nSlide, estGlobal);
+    this.dividirTexto(texto, nSlide, estGlobal);
     if (this.slides.length > 1 && this.slides[0].texto !== textoMestre) {
       this.slides.unshift({estilo: {...estiloMestre}, texto: textoMestre});
       this.slides[1].estilo = {...new Estilo()};
@@ -70,7 +70,7 @@ export class Element {
     }
   }
 
-  divisoesTexto = (texto, nSlide, estGlobal = null) => {//Divide o texto a ser incluído em quantos slides forem necessários, mantendo a estilização de cada slide.
+  dividirTexto = (texto, nSlide, estGlobal = null) => {//Divide o texto a ser incluído em quantos slides forem necessários, mantendo a estilização de cada slide.
     
     if (nSlide === this.slides.length) {
       this.slides.push({estilo: {...new Estilo()}, texto: ''});
@@ -124,10 +124,9 @@ export class Element {
          (linhas.join('') !== '' && //Se próximo versículo (exceto sozinho) vai ultrapassar o slide, conclui slide atual.
          (Math.ceil(getTextWidth(linhas[linhas.length-1], (texto[i+1] || ''), estiloFonte, larguraLinha, caseTexto) + 50)/larguraLinha) > nLinhas - (linhas.length-1))) {
           var textoSlide = linhas.join(' ').replace(/\n /g,'\n');
-          console.log(textoSlide);
           this.slides[nSlide].texto = textoSlide;
-          this.slides[nSlide].textoArray = texto.slice(0, i);
-          if (proximaPalavra !== '') this.divisoesTexto(texto.slice(i+1), nSlide+1);
+          this.slides[nSlide].textoArray = texto.slice(0, i+1);
+          if (proximaPalavra !== '') this.dividirTexto(texto.slice(i+1), nSlide+1, estGlobal);
           return;
       }
     }
