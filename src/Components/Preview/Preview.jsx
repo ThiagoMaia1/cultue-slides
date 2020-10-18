@@ -3,7 +3,7 @@ import './style.css';
 import { connect } from 'react-redux';
 import { MdFullscreen, MdFullscreenExit } from 'react-icons/md'
 
-export const fonteBase = {numero: 0.024*window.screen.height, unidade: 'px'};
+export const fonteBase = {numero: 0.015*window.screen.width, unidade: 'px'};
 export const textoMestre = 'As configurações do estilo desse slide serão aplicadas aos demais, exceto quando configurações específicas de cada slide se sobrepuserem as deste. \n\n Este slide não será exibido no modo de apresentação.'
 
 class Preview extends Component {

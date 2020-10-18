@@ -1,11 +1,9 @@
 //Para me inspirar: https://freefrontend.com/css-range-sliders/
 
 import React, { Component } from 'react';
-// import './style.css';
+import './style.css';
 import './stylerange.css';
 import { connect } from 'react-redux';
-// import { textoMestre } from '../Preview/Preview';
-// import Adicionar from './Adicionar';
 import { CgErase } from 'react-icons/cg';
 import { BsTextLeft, BsTextCenter, BsTextRight, BsJustify} from 'react-icons/bs';
 import { CompactPicker } from 'react-color';
@@ -17,21 +15,26 @@ const sublinhado = {nomeAtributo: 'textDecorationLine', valorNormal: 'none', val
 class ConfigurarSlides extends Component {
   constructor(props) {
     super(props);
-    this.botoesAbas = [{nomeCodigo: 'texto', nomeInterface: 'Texto'}, {nomeCodigo: 'titulo', nomeInterface: 'Título'},
-                       {nomeCodigo:'paragrafo', nomeInterface: 'Parágrafo'} , {nomeCodigo: 'tampao', nomeInterface: 'Fundo'}].map(a => 
-      <button className={'botao-aba'} data-id={a.nomeCodigo} onClick={this.selecionarAba.bind(this)}>{a.nomeInterface}</button>
-    );
+    this.state = {...props, aba: 'texto',
+      painelCor: null};
     this.listaFontes = [
       'Helvetica', 'Arial', 'Times New Roman', 'Courier', 'Courier New', 'Verdana', 'Tahoma', 'Arial Black', 'Georgia', 'Impact'].sort().map(f => 
         <option className='opcoes-fonte' value={f} style={{fontFamily: f}}>{f}</option>                  
     )
-    this.state = {...props, aba: 'texto',
-      painelCor: null};
+  }
+
+  gerarBotoesAbas = () => {
+    return [{nomeCodigo: 'titulo', nomeInterface: 'Título'},
+            {nomeCodigo:'paragrafo', nomeInterface: 'Parágrafo'} , {nomeCodigo: 'tampao', nomeInterface: 'Fundo'}].map(a => 
+      <button className={'botao-aba'} data-id={a.nomeCodigo} onClick={this.selecionarAba.bind(this)} 
+        style={this.state.aba === a.nomeCodigo ? {backgroundColor: '#ddd'} : null}>{a.nomeInterface}</button>
+    );
   }
 
   selecionarAba = e => {
-    console.log(e.target.dataset.id)
-    this.setState({aba: e.target.dataset.id});
+    var aba = e.target.dataset.id;
+    if (aba === this.state.aba) aba = 'texto';
+    this.setState({aba: aba});
   }
 
   ativarPainelCor = () => {
@@ -88,7 +91,7 @@ class ConfigurarSlides extends Component {
 		return (
       <div className="configuracoes" >
           <div id={'abas'}>
-            {this.botoesAbas}
+            {this.gerarBotoesAbas()}
           </div>
           <div className='configuracoes-texto'>
             <div>
@@ -96,7 +99,7 @@ class ConfigurarSlides extends Component {
                 <div style={{backgroundColor: (this.props.slideSelecionado.estilo.texto.color || '#000'), width: '18px', height: '4px'}}></div>
               </button>
               {this.state.painelCor}
-              <select className={'botoes-configuracao'} onChange={this.mudarFonte} 
+              <select className={'botoes-configuracao combo-fonte'} onChange={this.mudarFonte} 
                       defaultValue={this.props.slideSelecionado.estilo[this.state.aba].fontFamily || 'Helvetica'}>
                         {this.listaFontes}
               </select>
