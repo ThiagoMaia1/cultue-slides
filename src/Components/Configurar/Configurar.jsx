@@ -2,7 +2,6 @@ import React from 'react';
 //import './style.css';
 import { connect } from 'react-redux';
 import Adicionar from './Adicionar';
-import { CompactPicker } from 'react-color';
 import ConfigurarSlides from './ConfigurarSlides';
 
 class Configurar extends React.Component {
@@ -15,7 +14,6 @@ class Configurar extends React.Component {
 		return (
       <div className="coluna" >
         <Adicionar />
-        <CompactPicker />
         <ConfigurarSlides />
       </div>
     )   

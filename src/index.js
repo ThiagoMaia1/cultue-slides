@@ -25,7 +25,7 @@ import { createStore } from 'redux';
 import hotkeys from 'hotkeys-js';
 import { fonteBase, textoMestre } from './Components/Preview/Preview';
 
-class Estilo {
+export class Estilo {
   constructor () {
     this.texto = {}; 
     this.titulo = {}; 
@@ -58,11 +58,11 @@ export class Element {
     
   }
 
-  criarSlides = (texto, estilo, nSlide = 0, estGlobal = null) => {
+  criarSlides = (texto, estiloMestre, nSlide = 0, estGlobal = null) => {
     if (this.slides[nSlide].texto === textoMestre) nSlide++;
     this.divisoesTexto(texto, nSlide, estGlobal);
     if (this.slides.length > 1 && this.slides[0].texto !== textoMestre) {
-      this.slides.unshift({estilo: {...estilo}, texto: textoMestre});
+      this.slides.unshift({estilo: {...estiloMestre}, texto: textoMestre});
       this.slides[1].estilo = {...new Estilo()};
     } else if (this.slides.length === 2 && this.slides[0].texto === textoMestre) {
       this.slides[1].estilo = this.slides[0].estilo;
@@ -137,6 +137,7 @@ export class Element {
     var arrayTexto = [];
     while (nSlide < this.slides.length) {
       arrayTexto.push(this.slides[nSlide].textoArray);
+      nSlide++;
     }
     return arrayTexto.flat();
   }
@@ -191,10 +192,20 @@ export const reducerElementos = function (state = defaultList, action) {
       return {...nState, slidePreview: getSlidePreview(nState)};
     }
     case "redividir-slides": {
-      el = state.elementos[action.selecionado.elemento];
-      el.criarSlides(el.getArrayTexto(action.selecionado.slide), el.slides[0].estilo, action.selecionado.slide, state);
+      const redividir = (e, s) => e.criarSlides(e.getArrayTexto(s), e.slides[0].estilo, s, state.elementos[0].slides[0].estilo);
+      var [ i, slide, repetir ] = (action.selecionado.elemento === 0 ? [ 1, 0, 1 ] : [ action.selecionado.elemento, action.selecionado.slide, 0]);
+      do {
+        redividir(state.elementos[i], slide)
+        i++;
+      } while (repetir && i < state.elementos.length)
       nState = {elementos: state.elementos, selecionado: {...action.selecionado}};
       return {...nState, slidePreview: getSlidePreview(nState)};  
+    }
+    case "limpar-estilo": {
+      el = [...state.elementos];
+      el[action.selecionado.elemento].slides[action.selecionado.slide].estilo = new Estilo();
+      nState = {elementos: [...el], selecionado: action.selecionado};
+      return {...nState, slidePreview: getSlidePreview(nState)};
     }
     case "definir-selecao":
       nState = {elementos: state.elementos, selecionado: action.novaSelecao};
