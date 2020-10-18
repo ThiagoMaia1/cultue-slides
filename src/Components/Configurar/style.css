@@ -19,7 +19,7 @@
     padding: 0.8vh;
 }
 
-#botoes-alinhamento {
+.botoes-configuracao {
     display: flex;
     flex-direction: row;
     height: 4vh;
@@ -27,6 +27,11 @@
     border-radius: 0.7vh;
     border: 1.5px solid darkgray;
     margin: 1vh 0vh 1vh 1vh;
+}
+
+.opcoes-fonte {
+    height: 4vh;
+    border-radius: 0.7vh;
 }
 
 #cor-texto {
@@ -74,5 +79,3 @@
 #abas button.active {
     background-color: #ccc;
 }
-
-
