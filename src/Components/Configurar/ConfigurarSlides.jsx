@@ -111,7 +111,13 @@ class ConfigurarSlides extends Component {
 
   limparEstilo = () => {
     var estiloAnterior = this.props.slideSelecionado.estilo;
-    this.props.dispatch({type: 'limpar-estilo', selecionado: this.props.selecionado})
+    var obj = this.state.aba.nomeCodigo;
+    if (obj === 'texto') {
+      obj = null;
+    } else {
+      if (this.eObjetoVazio(estiloAnterior[this.state.aba.nomeCodigo])) return;
+    }
+    this.props.dispatch({type: 'limpar-estilo', selecionado: this.props.selecionado, objeto: obj})
     if (!this.eObjetoVazio(estiloAnterior.texto) || !this.eObjetoVazio(estiloAnterior.paragrafo) || !this.eObjetoVazio(estiloAnterior.titulo))
       this.props.dispatch({type: 'redividir-slides', selecionado: this.props.selecionado})
   }

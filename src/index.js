@@ -204,7 +204,12 @@ export const reducerElementos = function (state = defaultList, action) {
     }
     case "limpar-estilo": {
       el = [...state.elementos];
-      el[action.selecionado.elemento].slides[action.selecionado.slide].estilo = new Estilo();
+      var sel = action.selecionado;
+      if (action.objeto) {
+        el[sel.elemento].slides[sel.slide].estilo[action.objeto] = {};
+      } else {
+        el[sel.elemento].slides[sel.slide].estilo = new Estilo();
+      }
       nState = {elementos: [...el], selecionado: action.selecionado};
       return {...nState, slidePreview: getSlidePreview(nState)};
     }

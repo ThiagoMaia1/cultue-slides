@@ -80,15 +80,19 @@ img {
     border-radius: 1vh;
     display: flex;
     flex-direction: column;
+    overflow: hidden;
+}
+
+.container-interno-marca-dagua {
+    width: auto;
+    top: 40%;
+    position: relative; 
 }
 
 .marca-dagua-slide-mestre {
-    font-size: 650%;
-    position: relative; 
-    transform: rotate(-25deg);
-    width: auto;
-    top: 40%;
     opacity: 35%;
+    font-size: 10vh;
+    transform: rotate(-25deg);
     filter: hue-rotate(90deg);
     font-weight: 600;
 }

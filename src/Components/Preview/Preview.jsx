@@ -98,7 +98,9 @@ const mapStateToProps = function (state) {
     var corTexto = state.slidePreview.estilo.texto.color
     if (state.slidePreview.texto === textoMestre) {
         marcaDagua = (<div className='container-marca-dagua-slide-mestre'>                         
-            <div className='marca-dagua-slide-mestre' style={{color: corTexto}}>SLIDE-MESTRE</div>
+            <div className='container-interno-marca-dagua'>
+                <div className='marca-dagua-slide-mestre' style={{color: corTexto}}>SLIDE-MESTRE</div>
+            </div>
         </div>);
     }
     return {slidePreview: state.slidePreview, marcaDagua: marcaDagua}
