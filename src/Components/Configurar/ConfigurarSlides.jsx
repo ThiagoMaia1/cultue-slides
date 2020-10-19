@@ -152,7 +152,7 @@ class ConfigurarSlides extends Component {
               <button title={casesTexto[this.state.caseTexto].valor} className={'botao-configuracao-bool'} onClick={this.mudarCaseTexto}>{casesTexto[this.state.caseTexto].icone}</button>
             </div>
             <input type="range" min="0.5" max="5" defaultValue={this.props.slideSelecionado.estilo[this.state.aba.nomeCodigo].height} className="slider" ></input>
-            <input id="range-fonte" type="range" min="0.5" max="5" defaultValue={this.props.slideSelecionado.estilo[this.state.aba.nomeCodigo].fontSize} className="slider" ></input>
+            {/* <input id="range-fonte" type="range" min="0.5" max="5" defaultValue={this.props.slideSelecionado.estilo[this.state.aba.nomeCodigo].fontSize} className="slider" ></input> */}
             <button title='Limpar Estilos do Slide' className={'botao-configuracao-bool'} onClick={this.limparEstilo}
               style={{display: this.props.selecionado.elemento === 0 ? 'none' : ''}}><CgErase size={20} /></button>
           </div>

@@ -1,9 +1,7 @@
 
 input[type=range] {
   -webkit-appearance: none; /* Hides the slider so that custom slider can be made */
-  background: transparent;
   transform: rotate(-90deg);
-  width: 100%; /* Specific width is required for Firefox. */
   background: transparent; /* Otherwise white in Chrome */
 }
 
@@ -15,7 +13,7 @@ input[type=range]::-webkit-slider-thumb {
   width: 10px;
   border-radius: 3px;
   background: #d4d4d4;
-  margin-top: -14px; /* You need to specify a margin in Chrome, but in Firefox and IE it is automatic */
+  margin-top: -10px; /* You need to specify a margin in Chrome, but in Firefox and IE it is automatic */
 }
 
 /* Firefox */
@@ -42,13 +40,11 @@ input[type=range]:focus {
 
 /* Barrinha */
 input[type=range]::-webkit-slider-runnable-track {
-  width: 100%;
-  height: 8.4px;
-  cursor: pointer;
-  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
-  background: #3071a9;
-  border-radius: 1.3px;
-  border: 0.2px solid #010101;
+  width: 6vh;
+  height: 1vh;
+  background: darkgray;
+  border-radius: 3px;
+  border: 0.1px solid #010101;
 }
 
 input[type=range]:focus::-webkit-slider-runnable-track {
@@ -56,7 +52,7 @@ input[type=range]:focus::-webkit-slider-runnable-track {
 }
 
 input[type=range]::-moz-range-track {
-  width: 100%;
+  width: 2vh;
   height: 8.4px;
   cursor: pointer;
   box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
@@ -66,7 +62,7 @@ input[type=range]::-moz-range-track {
 }
 
 input[type=range]::-ms-track {
-  width: 100%;
+  width: 2vh;
   height: 8.4px;
   cursor: pointer;
   background: transparent;
