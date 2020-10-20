@@ -64,11 +64,11 @@ class Adicionar extends Component {
         return (
             <>
                 <div id="div-botoes">
-                    <button className="Música itens" onClick={this.adicionarMusica.bind(this)}>Música</button>
-                    <button className="Texto-Bíblico itens" onClick={this.adicionarTextoBiblico.bind(this)}>Texto Bíblico</button>
-                    <button className="Título itens" onClick={this.adicionarTitulo.bind(this)}>Título</button>
-                    <button className="Imagem itens" onClick={this.adicionarImagem.bind(this)}>Imagem</button>
-                    <button className="Vídeo itens" onClick={this.adicionarVideo.bind(this)}>Vídeo</button>
+                    <button className="Música itens botao-adicionar" onClick={this.adicionarMusica.bind(this)}>Música</button>
+                    <button className="Texto-Bíblico itens botao-adicionar" onClick={this.adicionarTextoBiblico.bind(this)}>Texto Bíblico</button>
+                    <button className="Título itens botao-adicionar" onClick={this.adicionarTitulo.bind(this)}>Título</button>
+                    <button className="Imagem itens botao-adicionar" onClick={this.adicionarImagem.bind(this)}>Imagem</button>
+                    <button className="Vídeo itens botao-adicionar" onClick={this.adicionarVideo.bind(this)}>Vídeo</button>
                 </div>
                 {this.state.popupCompleto}
             </>

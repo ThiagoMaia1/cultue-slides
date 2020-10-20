@@ -56,20 +56,29 @@ class Preview extends Component {
         }
     }
 
+    realcarElemento = aba => {
+        return {boxShadow: this.props.realce.aba === aba ? '0px 0px 9px ' + this.props.realce.cor : '', borderRadius: '1vh', marginTop: '2px'};
+    }
+
     render() {
         
 
         return (
             <div id='preview' style={{width: this.larguraTela*this.state.screen.proporcao, 
-                                      height: this.alturaTela*this.state.screen.proporcao}}>
+                                      height: this.alturaTela*this.state.screen.proporcao, 
+                                      ...this.realcarElemento('tampao')}}>
                 <div className='tampao' style={this.props.slidePreview.estilo.tampao}>
                                   
                 </div>
                 {this.props.marcaDagua}
                 <Img imagem={this.props.slidePreview.estilo.fundo} />
                 <div className='texto-preview' style={{fontSize: fonteBase.numero*this.state.screen.proporcao + fonteBase.unidade}}>
-                    <div className='slide-titulo' style={this.props.slidePreview.estilo.titulo}>{this.props.slidePreview.titulo}</div>
-                    <div id='paragrafo-slide' className='slide-paragrafo' style={this.props.slidePreview.estilo.paragrafo}>{this.props.slidePreview.texto}</div>
+                    <div className='slide-titulo' style={this.props.slidePreview.estilo.titulo}>
+                        <div><span style={this.realcarElemento('titulo')}>{this.props.slidePreview.titulo}</span></div>
+                    </div>
+                    <div id='paragrafo-slide' className='slide-paragrafo' style={this.props.slidePreview.estilo.paragrafo}>
+                        <div style={this.realcarElemento('paragrafo')}>{this.props.slidePreview.texto}</div>
+                    </div>
                 </div>
                 <div className='container-setas'>
                     <div className='movimentar-slide' onClick={() => this.offsetSlide(-1)}></div>
@@ -103,7 +112,7 @@ const mapStateToProps = function (state) {
             </div>
         </div>);
     }
-    return {slidePreview: state.slidePreview, marcaDagua: marcaDagua}
+    return {slidePreview: state.slidePreview, marcaDagua: marcaDagua, realce: state.realce}
     
 }
 

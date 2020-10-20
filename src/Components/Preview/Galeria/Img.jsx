@@ -8,7 +8,7 @@ class Img extends Component {
         var img = {...estiloImagem};
         if (img.fundo.match(/Galeria/) === null) 
             img.fundo = img.fundo.replace('./','./Galeria/');
-        this.fundoAnterior = this.props.slidePreview.estilo;
+        this.fundoAnterior = this.props.slideSelecionado.estilo;
         this.props.dispatch({type: 'atualizar-estilo', objeto: 'fundo', valor: img.fundo});
         this.props.dispatch({type: 'atualizar-estilo', objeto: 'tampao', valor: img.tampao});
         this.props.dispatch({type: 'atualizar-estilo', objeto: 'texto', valor: {color: img.texto.color}});
@@ -42,7 +42,8 @@ class Img extends Component {
 };
 
 const mapStateToProps = function(state) {
-    return {slidePreview: state.slidePreview}
+    var sel = state.selecionado
+    return {slidePreview: state.slidePreview, slideSelecionado: state.elementos[sel.elemento].slides[sel.slide]}
 }
 
 export default connect(mapStateToProps)(Img);

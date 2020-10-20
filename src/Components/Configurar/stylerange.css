@@ -1,8 +1,22 @@
+.frame-range {
+  --height-barrinha: 1vh;
+  --width-barrinha: 10vh;
+  height: 12vh;
+  width: 5vh;
+  position: relative;
+  border-radius: .7vh;
+}
 
 input[type=range] {
   -webkit-appearance: none; /* Hides the slider so that custom slider can be made */
   transform: rotate(-90deg);
   background: transparent; /* Otherwise white in Chrome */
+  position: absolute;
+  top: 5vh;
+  left: -2.9vh;
+  width: var(--width-barrinha);
+  height: var(--height-barrinha);
+  z-index: 0;
 }
 
 /* Bolinha */
@@ -40,11 +54,11 @@ input[type=range]:focus {
 
 /* Barrinha */
 input[type=range]::-webkit-slider-runnable-track {
-  width: 6vh;
-  height: 1vh;
-  background: darkgray;
+  width: var(--width-barrinha);
+  height: var(--height-barrinha);
+  background: rgb(209, 209, 209);
   border-radius: 3px;
-  border: 0.1px solid #010101;
+  border: 0.05px solid #010101;
 }
 
 input[type=range]:focus::-webkit-slider-runnable-track {
@@ -52,7 +66,7 @@ input[type=range]:focus::-webkit-slider-runnable-track {
 }
 
 input[type=range]::-moz-range-track {
-  width: 2vh;
+  width: 10vh;
   height: 8.4px;
   cursor: pointer;
   box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
@@ -62,7 +76,7 @@ input[type=range]::-moz-range-track {
 }
 
 input[type=range]::-ms-track {
-  width: 2vh;
+  width: 10vh;
   height: 8.4px;
   cursor: pointer;
   background: transparent;
@@ -91,4 +105,13 @@ input[type=range]::-ms-fill-upper {
 
 input[type=range]:focus::-ms-fill-upper {
   background: #367ebd;
+}
+
+.valor-flutuante {
+  position: absolute;
+  left: 5vh;
+  box-shadow: 1px 3px 7px rgba(0,0,0,0.5);
+  border-radius: 0.7vh;
+  background-color: white;
+  padding: 0.5vh;
 }

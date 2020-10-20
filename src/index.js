@@ -22,7 +22,7 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import { createStore } from 'redux';
-// import hotkeys from 'hotkeys-js';
+import hotkeys from 'hotkeys-js';
 import { fonteBase, textoMestre } from './Components/Preview/Preview';
 
 export class Estilo {
@@ -37,7 +37,7 @@ export class Estilo {
 
 const estiloPadrao = {
   texto: {fontFamily: fonteBase.fontFamily}, 
-  titulo: {fontSize: '3', height: '25%'}, 
+  titulo: {fontSize: '3', height: '0.25'}, 
   paragrafo: {fontSize: '1.5', padding: '0.08', lineHeight: '1.7'}, 
   fundo: './Galeria/Fundos/Aquarela.jpg', 
   tampao: {backgroundColor: '#fff', opacity: '0.2'}
@@ -52,7 +52,6 @@ export class Element {
     this.texto = texto;
     
     var est = {...new Estilo(), ...estilo};
-    if (tipo === 'Título') est.titulo.height = '40%';
     this.slides = [{estilo: {...est}}];
     this.criarSlides(this.texto, est);
     
@@ -97,7 +96,7 @@ export class Element {
     var pad = Number(estP.padding) // Variáveis relacionadas ao tamanho do slide.
     var larguraLinha = window.screen.width*(1-pad*2);
     var alturaLinha = Number(estP.lineHeight)*Number(estP.fontSize)*fonteBase.numero; 
-    var alturaParagrafo = window.screen.height*(1-(Number(estTitulo.height.replace('%',''))/100)-pad*(1 + proporcaoPadTop));
+    var alturaParagrafo = window.screen.height*(1-Number(estTitulo.height)-pad*(1 + proporcaoPadTop));
     var nLinhas = alturaParagrafo/alturaLinha;
     if (nLinhas % 1 > 0.7) {
       nLinhas = Math.ceil(nLinhas);
@@ -163,7 +162,8 @@ const defaultList = {elementos: [
   new Element("Imagem","Aquarela",["./Fundos/Aquarela.jpg"])],
   selecionado: {elemento: 0, slide: 0}, 
   slidePreview: {selecionado: {elemento: 0, slide: 0}, texto: textoMestre, titulo: 'Slide-Mestre', 
-                 estilo: {...estiloPadrao, paragrafo: getEstiloParagrafoPad(estiloPadrao.paragrafo)}}
+                 estilo: {...estiloPadrao, paragrafo: getEstiloParagrafoPad(estiloPadrao.paragrafo)}},
+  realce: {aba: '', cor: ''}
 }
 
 export const reducerElementos = function (state = defaultList, action) {
@@ -174,23 +174,23 @@ export const reducerElementos = function (state = defaultList, action) {
   switch (action.type) {
     case "inserir":
       nState = {elementos: [...state.elementos, action.elemento], selecionado: {elemento: state.elementos.length, slide: 0}};
-      return {...nState, slidePreview: getSlidePreview(nState)};
+      return {...nState, slidePreview: getSlidePreview(nState), realce: state.realce};
     case "deletar":
       el = [...state.elementos]
       el.splice(Number(action.elemento), 1);
       var novaSelecao = {elemento: state.selecionado.elemento, slide: 0};
       if (state.selecionado.elemento >= el.length) novaSelecao.elemento = state.selecionado.elemento-1 
       nState = {elementos: el, selecionado: {...novaSelecao}};
-      return {...nState, slidePreview: getSlidePreview(nState)};
+      return {...nState, slidePreview: getSlidePreview(nState), realce: state.realce};
     case "reordenar":
       nState = {elementos: action.novaOrdemElementos, selecionado: action.novaSelecao};
-      return {...nState, slidePreview: getSlidePreview(nState)};  
+      return {...nState, slidePreview: getSlidePreview(nState), realce: state.realce};  
     case "atualizar-estilo": {
       el = [...state.elementos];
       var obj = el[state.selecionado.elemento].slides[state.selecionado.slide].estilo;
       obj[action.objeto] = action.valor instanceof Object ? {...obj[action.objeto], ...action.valor} : action.valor;
       nState = {elementos: el, selecionado: state.selecionado}; //Para que o getSlidePreview use os valores já atualizados.
-      return {...nState, slidePreview: getSlidePreview(nState)};
+      return {...nState, slidePreview: getSlidePreview(nState), realce: state.realce};
     }
     case "redividir-slides": {
       const redividir = (e, s) => e.criarSlides(e.getArrayTexto(s), e.slides[0].estilo, s, state.elementos[0].slides[0].estilo);
@@ -200,7 +200,7 @@ export const reducerElementos = function (state = defaultList, action) {
         i++;
       } while (repetir && i < state.elementos.length)
       nState = {elementos: state.elementos, selecionado: {...action.selecionado}};
-      return {...nState, slidePreview: getSlidePreview(nState)};  
+      return {...nState, slidePreview: getSlidePreview(nState), realce: state.realce};  
     }
     case "limpar-estilo": {
       el = [...state.elementos];
@@ -211,14 +211,17 @@ export const reducerElementos = function (state = defaultList, action) {
         el[sel.elemento].slides[sel.slide].estilo = new Estilo();
       }
       nState = {elementos: [...el], selecionado: action.selecionado};
-      return {...nState, slidePreview: getSlidePreview(nState)};
+      return {...nState, slidePreview: getSlidePreview(nState), realce: state.realce};
+    }
+    case "ativar-realce": {
+      return {...state, realce: action.realce}
     }
     case "definir-selecao":
       nState = {elementos: state.elementos, selecionado: action.novaSelecao};
-      return {...nState, slidePreview: getSlidePreview(nState)};
+      return {...nState, slidePreview: getSlidePreview(nState), realce: state.realce};
     case "offset-selecao":
       nState = {elementos: state.elementos, selecionado: {...selecionadoOffset(state.elementos, state.selecionado, action.offset)}};
-      return {...nState, slidePreview: getSlidePreview(nState)};
+      return {...nState, slidePreview: getSlidePreview(nState), realce: state.realce};
     default:
       return state;
   }
@@ -267,8 +270,8 @@ function getSlidePreview (state) {
     texto: capitalize(slide.texto, estiloParagrafo.caseTexto),
     titulo: capitalize(state.elementos[sel.elemento].titulo, estiloTitulo.caseTexto),
     estilo: {
-      titulo: estiloTitulo, 
-      paragrafo: getEstiloParagrafoPad(estiloParagrafo), 
+      titulo: {...estiloTitulo, fontSize: estiloTitulo.fontSize*100 + '%', height: estiloTitulo.height*100 + '%'},
+      paragrafo: {...getEstiloParagrafoPad(estiloParagrafo), fontSize: estiloParagrafo.fontSize*100 + '%'},
       fundo: slide.estilo.fundo || elemento.estilo.fundo || global.estilo.fundo, 
       tampao: {...global.estilo.tampao, ...elemento.estilo.tampao, ...slide.estilo.tampao},
       texto: {...estiloTexto}
@@ -302,23 +305,23 @@ function getEstiloParagrafoPad (estiloParagrafo) {
 
 export let store = createStore(reducerElementos);
 
-// hotkeys('right,left,up,down', function(event, handler){
-//   event.preventDefault();
-//   var offset = 0;
-//   switch (handler.key) {
-//       case 'right':
-//       case 'down':
-//           offset = 1;
-//           break;
-//       case 'left':
-//       case 'up':
-//           offset = -1;
-//           break;
-//       default:
-//           offset = 0;
-//   }
-//   store.dispatch({type: 'offset-selecao', offset: offset})
-// });
+hotkeys('right,left,up,down', function(event, handler){
+  event.preventDefault();
+  var offset = 0;
+  switch (handler.key) {
+      case 'right':
+      case 'down':
+          offset = 1;
+          break;
+      case 'left':
+      case 'up':
+          offset = -1;
+          break;
+      default:
+          offset = 0;
+  }
+  store.dispatch({type: 'offset-selecao', offset: offset})
+});
 
 ReactDOM.render(
   <App />,

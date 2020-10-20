@@ -14,6 +14,16 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-size: 2.1vh;
+  --cor-biblia: #5f97ff;
+  --cor-musica: #fff6a2;
+  --cor-titulo: #cd69fc;
+  --cor-imagem: #5fbb82;
+  --cor-video: #ff9797;
+  --cor-forte-biblia: #0059ff;
+  --cor-forte-musica: #ffe600;
+  --cor-forte-titulo: #9d00e6;
+  --cor-forte-imagem: #008839;
+  --cor-forte-video: #ff0000;
 }
 
 code {

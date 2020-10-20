@@ -1,13 +1,11 @@
-//Para me inspirar: https://freefrontend.com/css-range-sliders/
-
 import React, { Component } from 'react';
 import './style.css';
-import './stylerange.css';
 import { connect } from 'react-redux';
 import { CgErase } from 'react-icons/cg';
 import { BsTextLeft, BsTextCenter, BsTextRight, BsJustify} from 'react-icons/bs';
 import { CompactPicker } from 'react-color';
 import { fonteBase } from '../Preview/Preview';
+import Slider from './Slider';
 
 const casesTexto = [{valor: 'Nenhum', icone: (<span style={{color: '#999'}}>Aa</span>)}, {valor: 'Primeira Maiúscula', icone: 'Aa'}, 
                     {valor: 'Maiúsculas', icone: 'AA'}, {valor: 'Minúsculas', icone: 'aa'}
@@ -20,17 +18,24 @@ const listaEstilosTexto = [{apelido:'Negrito', nomeAtributo: 'fontWeight', valor
                            
 const listaFontes = ['Helvetica', 'Arial', 'Times New Roman', 'Courier', 'Courier New', 'Verdana', 'Tahoma', 'Arial Black', 'Georgia', 'Impact']
 
-const listaBotoesAbas = [{nomeCodigo: 'texto', nomeInterface: 'Texto', cor: '#fff'},
-                         {nomeCodigo: 'titulo', nomeInterface: 'Título', cor: '#e6e6ff'}, 
-                         {nomeCodigo:'paragrafo', nomeInterface: 'Parágrafo', cor: '#c6ecc6'}, 
-                         {nomeCodigo: 'tampao', nomeInterface: 'Fundo', cor: '#ffd6cc'}
+const listaBotoesAbas = [{nomeCodigo: 'texto', nomeInterface: 'Texto', cor: '#fff', corRealce: 'white'},
+                         {nomeCodigo: 'titulo', nomeInterface: 'Título', cor: '#e6e6ff', corRealce: '#0000ff', maxFonte: '7'}, 
+                         {nomeCodigo: 'paragrafo', nomeInterface: 'Parágrafo', cor: '#c6ecc6', corRealce: '#00ff00', maxFonte: '4'}, 
+                         {nomeCodigo: 'tampao', nomeInterface: 'Fundo', cor: '#ffd6cc', corRealce: '#ff3300'}
 ];
+
+const listaSliders = [{aba: 'paragrafo', atributo: 'padding', min: 0, max: 0.4, step: 0.01,  recalcular: true},
+                      {aba: 'paragrafo', atributo: 'fontSize', min: 1, max: 3.5, step: 0.01,  recalcular: true},
+                      {aba: 'titulo', atributo: 'fontSize', min: 1, max: 7, step: 0.01,  recalcular: true},
+                      {aba: 'titulo', atributo: 'height', min: 0.1, max: 1, step: 0.01,  recalcular: true},
+                      {aba: 'tampao', atributo: 'opacity', min: 0, max: 1, step: 0.05}
+]
 
 class ConfigurarSlides extends Component {
   constructor(props) {
     super(props);
     this.state = {...props, aba: listaBotoesAbas[0],
-      painelCor: null, caseTexto: 0};
+      painelCor: null, caseTexto: 0, tamIcones: window.innerHeight*0.022 + 'px'};
     this.listaFontes = listaFontes.sort().map(f => 
         <option className='opcoes-fonte' value={f} style={{fontFamily: f}}>{f}</option>                  
     )
@@ -38,7 +43,8 @@ class ConfigurarSlides extends Component {
 
   gerarBotoesAbas = () => {
     return listaBotoesAbas.slice(1).map((a, i) => 
-      <button className={'botao-aba'} data-id={i+1} onClick={this.selecionarAba.bind(this)} 
+      <button className={'botao-aba-' + a.nomeCodigo} data-id={i+1} 
+        onClick={this.selecionarAba.bind(this)}
         style={this.state.aba === a ? {backgroundColor: a.cor} : null}>{a.nomeInterface}</button>
     );
   }
@@ -57,25 +63,40 @@ class ConfigurarSlides extends Component {
     });
   }
 
+  gerarSliders = () => {
+    return (
+      listaSliders.map(s => (
+        <Slider min={s.min} max={s.max} step={s.step} 
+                defaultValue={this.props.slideSelecionado.estilo[this.state.aba.nomeCodigo][s.atributo]}
+                callbackFunction={valor => this.atualizarEstilo(this.state.aba.nomeCodigo, s.atributo, valor, s.recalcular)} unidade='%' 
+                style={{display: (this.state.aba.nomeCodigo === s.aba ? '' : 'none')}}/>
+    )));
+  }
+
   selecionarAba = e => {
     var aba = listaBotoesAbas[e.target.dataset.id];
     if (aba === this.state.aba) aba = listaBotoesAbas[0];
     this.setState({aba: aba});
+    this.props.dispatch({type: 'ativar-realce', realce: {aba: aba.nomeCodigo, cor: aba.corRealce}});
   }
 
-  ativarPainelCor = () => {
+  ativarPainelCor = callback => {
     this.setState({painelCor: (
       <div className='div-painel-cor' onMouseLeave={() => this.setState({painelCor: null})}>
         <div className='painel-cor' onMouseLeave={() => this.setState({painelCor: null})}>
-          <CompactPicker onChange={this.mudarCor}/>
+          <CompactPicker onChange={callback} style={{zIndex: '30', position: 'absolute'}}/>
         </div>
       </div>
     )
     })
   }
 
-  mudarCor = (cor) => {
+  mudarCorFonte = (cor) => {
     this.atualizarEstilo(this.state.aba.nomeCodigo, 'color', cor.hex);
+  }
+
+  mudarCorFundo = (cor) => {
+    this.atualizarEstilo('tampao', 'backgroundColor', cor.hex);
   }
 
   mudarFonte = (e) => {
@@ -87,6 +108,22 @@ class ConfigurarSlides extends Component {
     if (i >= casesTexto.length) i = 0; 
     this.setState({caseTexto: i})
     this.atualizarEstilo(this.state.aba.nomeCodigo, 'caseTexto', casesTexto[i].valor, true)
+  }
+
+  mudarTamanhoFonte = valor => {
+    this.atualizarEstilo(this.state.aba.nomeCodigo, 'fontSize', valor, true);
+  }
+
+  mudarAlturaTitulo = valor => {
+    this.atualizarEstilo('titulo', 'height', valor, true);
+  }
+
+  mudarMargemParagrafo = valor => {
+    this.atualizarEstilo('paragrafo', 'padding', valor, true);
+  }
+
+  mudarOpacidadeTampao = valor => {
+    this.atualizarEstilo('tampao', 'opacity', valor);
   }
 
   toggleEstiloTexto = (atributo) => {
@@ -134,25 +171,48 @@ class ConfigurarSlides extends Component {
           </div>
           <div className='configuracoes' style={{backgroundColor: this.state.aba.cor}}>
             <div className='configuracoes-texto' style={{display: (this.state.aba.nomeCodigo === 'tampao' ? 'none' : '')}}>
-                <button id={'cor-texto'} className={'botao-configuracao-bool'} onMouseOver={this.ativarPainelCor}>A
-                <div style={{backgroundColor: (this.props.slideSelecionado.estilo.texto.color || '#000'), width: '18px', height: '4px'}}></div>
+              <button id={'cor-texto'} className={'botao-configuracao-bool'} onMouseOver={() => this.ativarPainelCor(this.mudarCorFonte)}>A
+                <div className='cor-texto' style={{backgroundColor: (this.props.slideSelecionado.estilo.texto.color)}}></div>
               </button>
-              {this.state.painelCor}
+              <button title={casesTexto[this.state.caseTexto].valor} id='botao-case' className={'botao-configuracao-bool'} 
+                      onClick={this.mudarCaseTexto}>{casesTexto[this.state.caseTexto].icone}</button>
               <select className={'botoes-configuracao combo-fonte'} onChange={this.mudarFonte} 
                       defaultValue={this.props.slideSelecionado.estilo[this.state.aba.nomeCodigo].fontFamily || fonteBase.fontFamily}>
                         {this.listaFontes}
               </select>
-              {this.gerarBotoesEstiloTexto()}
+              <div>{this.gerarBotoesEstiloTexto()}</div>
               <div className={'botoes-configuracao'}>
-                <button title='Alinhado à Esquerda' className={'botao-alinhamento'} onClick={() => this.atualizarAlinhamentoTexto('left')}><BsTextLeft size={20}/></button>
-                <button title='Alinhado ao Centro' className={'botao-alinhamento'} onClick={() => this.atualizarAlinhamentoTexto('center')}><BsTextCenter size={20}/></button>
-                <button title='Alinhado à Direita' className={'botao-alinhamento'} onClick={() => this.atualizarAlinhamentoTexto('right')}><BsTextRight size={20}/></button>
-                <button title='Justificado' className={'botao-alinhamento'} onClick={() => this.atualizarAlinhamentoTexto('justify')}><BsJustify size={20}/></button>
+                <button title='Alinhado à Esquerda' className={'botao-alinhamento'} onClick={() => this.atualizarAlinhamentoTexto('left')}><BsTextLeft size={this.state.tamIcones}/></button>
+                <button title='Alinhado ao Centro' className={'botao-alinhamento'} onClick={() => this.atualizarAlinhamentoTexto('center')}><BsTextCenter size={this.state.tamIcones}/></button>
+                <button title='Alinhado à Direita' className={'botao-alinhamento'} onClick={() => this.atualizarAlinhamentoTexto('right')}><BsTextRight size={this.state.tamIcones}/></button>
+                <button title='Justificado' className={'botao-alinhamento'} onClick={() => this.atualizarAlinhamentoTexto('justify')}><BsJustify size={this.state.tamIcones}/></button>
               </div>
-              <button title={casesTexto[this.state.caseTexto].valor} className={'botao-configuracao-bool'} onClick={this.mudarCaseTexto}>{casesTexto[this.state.caseTexto].icone}</button>
             </div>
-            <input type="range" min="0.5" max="5" defaultValue={this.props.slideSelecionado.estilo[this.state.aba.nomeCodigo].height} className="slider" ></input>
-            {/* <input id="range-fonte" type="range" min="0.5" max="5" defaultValue={this.props.slideSelecionado.estilo[this.state.aba.nomeCodigo].fontSize} className="slider" ></input> */}
+            <button className={'botao-configuracao-bool'} onMouseOver={() => this.ativarPainelCor(this.mudarCorFundo)}
+                    style={{display: (this.state.aba.nomeCodigo === 'tampao' ? '' : 'none')}}>
+                <div className='cor-fundo' style={{backgroundColor: (this.props.slideSelecionado.estilo.tampao.backgroundColor)}}>
+                </div>
+            </button>
+            {this.state.painelCor}
+            {this.gerarSliders()}
+            {/* <Slider min="1" max='7' step='0.1' defaultValue={this.props.slideSelecionado.estilo.titulo.fontSize}
+              callbackFunction={this.mudarTamanhoFonte} unidade='%' 
+              style={{display: (this.state.aba.nomeCodigo === 'titulo' ? '' : 'none')}}/>
+            <Slider min="1" max='3' step='0.1' defaultValue={this.props.slideSelecionado.estilo.paragrafo.fontSize}
+              callbackFunction={this.mudarTamanhoFonte} unidade='%' 
+              style={{display: (this.state.aba.nomeCodigo === 'paragrafo' ? '' : 'none')}}/>
+            <Slider min="1" max="0.1" step='0.01' 
+              defaultValue={this.props.slideSelecionado.estilo.titulo.height}
+              callbackFunction={this.mudarAlturaTitulo} unidade='%' 
+              style={{display: (this.state.aba.nomeCodigo === 'titulo' ? '' : 'none')}}/>
+            <Slider min="0" max="0.4" step='0.01' 
+              defaultValue={this.props.slideSelecionado.estilo.paragrafo.padding}
+              callbackFunction={this.mudarMargemParagrafo} unidade='%' 
+              style={{display: (this.state.aba.nomeCodigo === 'paragrafo' ? '' : 'none')}}/>            
+            <Slider min="0" max="1" step='0.05' 
+              defaultValue={this.props.slideSelecionado.estilo.tampao.opacity}
+              callbackFunction={this.mudarOpacidadeTampao} unidade='%' 
+              style={{display: (this.state.aba.nomeCodigo === 'tampao' ? '' : 'none')}}/> */}
             <button title='Limpar Estilos do Slide' className={'botao-configuracao-bool'} onClick={this.limparEstilo}
               style={{display: this.props.selecionado.elemento === 0 ? 'none' : ''}}><CgErase size={20} /></button>
           </div>

@@ -19,6 +19,7 @@ class Arrastar extends React.Component {
 
   dragEnd(e) {
     this.dragged.style.display = 'block';
+    if (!this.over.className) return;
     var novaOrdem = [...this.props.elementos];
     var from = Number(this.dragged.dataset.id);
     var to = Number(this.over.dataset.id)+1;
@@ -100,7 +101,7 @@ class Arrastar extends React.Component {
               <div data-id={i} className='excluir-elemento' onClick={e => this.excluirElemento(e)}>x</div>
             </div>
             <div data-id={i} className={'itens ' + item.tipo}
-                 onClick={() => this.marcarSelecionado(i, 0)} style={{marginBottom: '0'}}>
+                 onClick={() => this.marcarSelecionado(i, 0)}>
               <b>{i}. {item.tipo}: </b>{item.titulo}
             </div>
             {listSlides}
@@ -109,7 +110,9 @@ class Arrastar extends React.Component {
     });
     return (
       <div>
-        <div className="coluna">
+        <div className="coluna arrastar">
+          <div className='gradiente-coluna emcima'></div>
+          <div className='gradiente-coluna embaixo'></div>
           <ol id="ordem-elementos">
             <div id="slide-mestre" className={'itens ' + (this.props.selecionado.elemento ? '' : 'selecionado')} data-id={0}
               onClick={() => this.marcarSelecionado(0, 0)}

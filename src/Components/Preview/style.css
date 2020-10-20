@@ -19,6 +19,7 @@ img {
     object-fit: cover;
 }
 
+
 .texto-preview {
     position: absolute;
     z-index: 20;
@@ -49,12 +50,11 @@ img {
     padding: 0% 10% 10% 10%;
     width:100%;
     overflow: hidden;
-    flex: 1;
+    flex: 1 1;
 }
 
 #ativar-tela-cheia {
     position: absolute;
-    /* padding: 2% 2% 0 2%; */
     text-align: center;
     border: none;
     background-color: transparent;

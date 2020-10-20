@@ -1,40 +1,52 @@
 #abas {
     overflow: hidden;
-    /* border: 1px solid darkgray; */
     display: flex;
     justify-content: space-around;
     margin-top: 1vh;
 }
   
 #abas button {
-    background-color: inherit;
     outline: none;
     cursor: pointer;
-    padding: 1.2vh 0.9vh 0 1.2vh;
+    padding: 1vh 0.9vh 0.5vh 1vh;
     width: auto;
     border-radius: 0.7vh;
-    /* border-left: 1px solid darkgray; */
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
 }
 
-#abas button:hover {
-    background-color: #ddd;
+.botao-aba-titulo:hover {
+    background-color: #e6e6ff;
+}
+
+.botao-aba-paragrafo:hover {
+    background-color: #c6ecc6;
+}
+
+.botao-aba-tampao:hover {
+    background-color: #ffd6cc;
+}
+
+.configuracoes {
+    display: flex;
+    flex-wrap: wrap;
 }
 
 .configuracoes-texto {
     display: flex;
     flex-direction: row;
-    width: 100%;
     flex-wrap: wrap;
 }
 
 .botao-configuracao-bool {
-    padding: 1vh;
-    min-width: 4vh;
+    /* padding: 1vh; */
+    width: 4vh;
     height: 4vh;
     text-align: center;
     border-radius: 0.7vh;
     border: 1.5px solid darkgray;
     margin: 1vh 0vh 0vh 1vh;
+    line-height: 4vh;
 }
 
 .botao-alinhamento {
@@ -51,14 +63,34 @@
     margin: 1vh 0vh 1vh 1vh;
 }
 
+.combo-fonte {
+    max-width: 8vw;
+}
+
 .opcoes-fonte {
     height: 4vh;
     border-radius: 0.7vh;
 }
 
 #cor-texto {
-    line-height: 90%;
-    padding-top: 0.8vh;
+    line-height: 105%;
+    /* padding-top: ; */
+}
+
+.cor-texto {
+    position: relative;
+    border: 0.02px solid gray;
+    color: #000;
+    left: 0.4vh;
+    width: 2.8vh;
+    height: .8vh;
+}
+
+.cor-fundo {
+    height: 3vh;
+    width: 3vh;
+    margin-left: 0.3vh;
+    border: 0.02px solid gray;
 }
 
 .div-painel-cor {
@@ -76,4 +108,8 @@
 
 .clicado {
     box-shadow: inset 0px 2px 5px #c1c1c1;
+}
+
+.botao-adicionar {
+    text-align: center;
 }
