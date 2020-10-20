@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './style.css';
 import { connect } from 'react-redux';
 import { CgErase } from 'react-icons/cg';
+import { GrClone } from 'react-icons/gr'
 import { BsTextLeft, BsTextCenter, BsTextRight, BsJustify} from 'react-icons/bs';
 import { CompactPicker } from 'react-color';
 import { fonteBase } from '../Preview/Preview';
@@ -25,8 +26,9 @@ const listaBotoesAbas = [{nomeCodigo: 'texto', nomeInterface: 'Texto', cor: '#ff
 ];
 
 const listaSliders = [{rotulo: 'Margem', aba: 'paragrafo', atributo: 'padding', min: 0, max: 0.4, step: 0.01,  recalcular: true},
-                      {rotulo: 'Tamanho da Fonte', aba: 'paragrafo', atributo: 'fontSize', min: 1, max: 3.5, step: 0.01,  recalcular: true},
-                      {rotulo: 'Tamanho da Fonte', aba: 'titulo', atributo: 'fontSize', min: 1, max: 7, step: 0.01,  recalcular: true},
+                      {rotulo: 'Fonte', aba: 'paragrafo', atributo: 'fontSize', min: 1, max: 3.5, step: 0.01,  recalcular: true},
+                      {rotulo: 'Espaçamento', aba: 'paragrafo', atributo: 'lineHeight', min: 0.5, max: 3, step: 0.1},
+                      {rotulo: 'Fonte', aba: 'titulo', atributo: 'fontSize', min: 1, max: 7, step: 0.01,  recalcular: true},
                       {rotulo: 'Altura', aba: 'titulo', atributo: 'height', min: 0.1, max: 1, step: 0.01,  recalcular: true},
                       {rotulo: 'Opacidade', aba: 'tampao', atributo: 'opacity', min: 0, max: 1, step: 0.05}
 ]
@@ -143,6 +145,20 @@ class ConfigurarSlides extends Component {
       this.props.dispatch({type: 'redividir-slides', selecionado: this.props.selecionado})
   }
 
+  aplicarEstiloAoMestre = () => {
+    var sel = this.props.selecionado;
+    var aba = this.state.aba.nomeCodigo;
+    aba = aba === 'texto' ? 'estilo' : aba;
+    this.props.dispatch(
+      {type: 'atualizar-estilo', 
+       objeto: aba, 
+       valor: this.props.slidePreview[aba],
+       selecionado: {elemento: sel.slide !== 0 ? sel.elemento : 0,
+                    slide: 0}
+      }
+    );
+  }
+
   eObjetoVazio(objeto) {
     return JSON.stringify(objeto) === "{}";
   }
@@ -155,27 +171,38 @@ class ConfigurarSlides extends Component {
           </div>
           <div className='configuracoes' style={{backgroundColor: this.state.aba.cor}}>
             <div className='container-botao-limpar'>
-              <button title='Limpar Estilos do Slide' className={'botao-configuracao-bool botao-limpar'} 
-                      onClick={this.limparEstilo}>
-                <CgErase size={this.state.tamIcones} />
-              </button>
+              <div className='botoes-direita'>
+                <button title='Aplicar Estilo ao Slide-Mestre' className={'botao-configuracao-bool botao-clonar-estilo'} 
+                        style={{visibility: this.props.selecionado.elemento === 0 ? 'hidden' : 'visible'}}
+                        onClick={this.aplicarEstiloAoMestre}>
+                  <GrClone size={this.state.tamIcones} />
+                </button>
+                <button title='Limpar Estilos do Slide' className={'botao-configuracao-bool botao-limpar'} 
+                        onClick={this.limparEstilo}>
+                  <CgErase size={this.state.tamIcones} />
+                </button>
+              </div>
             </div>
             <div className='configuracoes-texto' style={{display: (this.state.aba.nomeCodigo === 'tampao' ? 'none' : '')}}>
-              <button id={'cor-texto'} className={'botao-configuracao-bool'} onMouseOver={() => this.ativarPainelCor(this.mudarCorFonte)}>A
-                <div className='cor-texto' style={{backgroundColor: (this.props.slideSelecionado.estilo.texto.color)}}></div>
-              </button>
-              <button title={casesTexto[this.state.caseTexto].valor} id='botao-case' className={'botao-configuracao-bool'} 
-                      onClick={this.mudarCaseTexto}>{casesTexto[this.state.caseTexto].icone}</button>
-              <select className={'botoes-configuracao combo-fonte'} onChange={this.mudarFonte} 
-                      defaultValue={this.props.slideSelecionado.estilo[this.state.aba.nomeCodigo].fontFamily || fonteBase.fontFamily}>
-                        {this.listaFontes}
-              </select>
-              <div>{this.gerarBotoesEstiloTexto()}</div>
-              <div className={'botoes-configuracao'}>
-                <button title='Alinhado à Esquerda' className={'botao-alinhamento'} onClick={() => this.atualizarAlinhamentoTexto('left')}><BsTextLeft size={this.state.tamIcones}/></button>
-                <button title='Alinhado ao Centro' className={'botao-alinhamento'} onClick={() => this.atualizarAlinhamentoTexto('center')}><BsTextCenter size={this.state.tamIcones}/></button>
-                <button title='Alinhado à Direita' className={'botao-alinhamento'} onClick={() => this.atualizarAlinhamentoTexto('right')}><BsTextRight size={this.state.tamIcones}/></button>
-                <button title='Justificado' className={'botao-alinhamento'} onClick={() => this.atualizarAlinhamentoTexto('justify')}><BsJustify size={this.state.tamIcones}/></button>
+              <div className='linha-configuracoes-texto'>
+                <button id={'cor-texto'} className={'botao-configuracao-bool'} onMouseOver={() => this.ativarPainelCor(this.mudarCorFonte)}>A
+                  <div className='cor-texto' style={{backgroundColor: (this.props.slideSelecionado.estilo.texto.color)}}></div>
+                </button>
+                <button title={casesTexto[this.state.caseTexto].valor} id='botao-case' className={'botao-configuracao-bool'} 
+                        onClick={this.mudarCaseTexto}>{casesTexto[this.state.caseTexto].icone}</button>
+                <select className={'botoes-configuracao combo-fonte'} onChange={this.mudarFonte} 
+                        defaultValue={this.props.slideSelecionado.estilo[this.state.aba.nomeCodigo].fontFamily || fonteBase.fontFamily}>
+                          {this.listaFontes}
+                </select>
+              </div>
+              <div className='linha-configuracoes-texto'>
+                <div>{this.gerarBotoesEstiloTexto()}</div>
+                <div className={'botoes-configuracao'}>
+                  <button title='Alinhado à Esquerda' className={'botao-alinhamento'} onClick={() => this.atualizarAlinhamentoTexto('left')}><BsTextLeft size={this.state.tamIcones}/></button>
+                  <button title='Alinhado ao Centro' className={'botao-alinhamento'} onClick={() => this.atualizarAlinhamentoTexto('center')}><BsTextCenter size={this.state.tamIcones}/></button>
+                  <button title='Alinhado à Direita' className={'botao-alinhamento'} onClick={() => this.atualizarAlinhamentoTexto('right')}><BsTextRight size={this.state.tamIcones}/></button>
+                  <button title='Justificado' className={'botao-alinhamento'} onClick={() => this.atualizarAlinhamentoTexto('justify')}><BsJustify size={this.state.tamIcones}/></button>
+                </div>
               </div>
             </div>
             <button className={'botao-configuracao-bool'} onMouseOver={() => this.ativarPainelCor(this.mudarCorFundo)}
@@ -183,8 +210,10 @@ class ConfigurarSlides extends Component {
                 <div className='cor-fundo' style={{backgroundColor: (this.props.slideSelecionado.estilo.tampao.backgroundColor)}}>
                 </div>
             </button>
-            {this.gerarSliders()}
             {this.state.painelCor}
+            <div className='div-sliders'>
+              {this.gerarSliders()}
+            </div>
           </div>
       </div>
     )   

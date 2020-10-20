@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import { MdFullscreen, MdFullscreenExit } from 'react-icons/md'
 
 export const fonteBase = {numero: 0.015*window.screen.width, unidade: 'px', fontFamily: 'Helvetica'};
-export const textoMestre = 'As configurações do estilo desse slide serão aplicadas aos demais, exceto quando configurações específicas de cada slide se sobrepuserem as deste. \n\n Este slide não será exibido no modo de apresentação.'
 
 class Preview extends Component {
     
@@ -17,7 +16,7 @@ class Preview extends Component {
         this.state = {screen: {...this.small}}
         document.addEventListener('fullscreenchange', () => {
             if (document.fullscreenElement) {
-                if (this.props.slidePreview.texto === textoMestre) this.offsetSlide(1);
+                if (this.props.slidePreview.eMestre) this.offsetSlide(1);
                 this.setState({screen: {...this.full}});
             } else {
                 this.setState({screen: {...this.small}});
@@ -105,7 +104,7 @@ const Img = ({imagem}) => (
 const mapStateToProps = function (state) {
     var marcaDagua = null;
     var corTexto = state.slidePreview.estilo.texto.color
-    if (state.slidePreview.texto === textoMestre) {
+    if (state.slidePreview.eMestre) {
         marcaDagua = (<div className='container-marca-dagua-slide-mestre'>                         
             <div className='container-interno-marca-dagua'>
                 <div className='marca-dagua-slide-mestre' style={{color: corTexto}}>SLIDE-MESTRE</div>

@@ -16,16 +16,13 @@ class Galeria extends Component {
 
     getImagens() {
         var imagens = [];
-        // var j = 0;
         for (var i of listaFundos.imagens) {
-            // j++; //Só pra ter menos imagens pra carregar enquanto crio o site.
-            // if (j>8) break;
             imagens.push({id: i.path, fundo: './Fundos/' + i.path, alt: i.path.split('.')[0], tampao: i.tampao, texto: {color: i.color}})
         }
         return imagens;
     }
     
-    deslizar(sentido, tamanhoPasso = 50) {
+    deslizar(sentido, tamanhoPasso = 20) {
         var galeria = document.getElementById('galeria');
         clearInterval(this.animacao);
         this.animacao = setInterval(() => {
@@ -36,15 +33,15 @@ class Galeria extends Component {
             } else {
                 this.setState({offset: o + passo});
             }
-        }, 100);
+        }, 40);
     }
 
     saltar(sentido) {
-        // this.deslizar(sentido, 300); //Com animação pra não ser um pulo muito brusco (necessário corrigir travação pra usar)
-        var galeria = document.getElementById('galeria');
-        var final = 0;
-        if (sentido > 0) final = galeria.parentNode.parentNode.offsetWidth - galeria.offsetWidth - diferencaDireita;
-        this.setState({offset: final})
+        this.deslizar(sentido, 120); 
+        setTimeout(() => {
+            clearInterval(this.animacao)
+            this.deslizar(sentido)
+        }, 200);
     }
 
     pararDeslizar = () => {

@@ -13,6 +13,7 @@
     border-radius: 0.7vh;
     border-bottom-right-radius: 0;
     border-bottom-left-radius: 0;
+    font-size: 110%;
 }
 
 .botao-aba-titulo:hover {
@@ -36,21 +37,34 @@
 .container-botao-limpar {
     width: 100%;
     position: absolute;
+    pointer-events: none;
 }
 
-.botao-limpar {
+.botoes-direita {
     position: relative;
-    left: 80%;
+    left: 85%;
+    pointer-events: all;
+    display: flex;
+    flex-direction: column;
 }
 
 .configuracoes-texto {
     display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
+    flex-direction: column;
+    width: 84%;
+}
+
+.linha-configuracoes-texto {
+    max-width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.div-sliders {
+    display: flex;
 }
 
 .botao-configuracao-bool {
-    /* padding: 1vh; */
     width: 4vh;
     height: 4vh;
     text-align: center;
@@ -75,7 +89,7 @@
 }
 
 .combo-fonte {
-    max-width: 8vw;
+    flex: 1;
 }
 
 .opcoes-fonte {

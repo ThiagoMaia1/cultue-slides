@@ -12,6 +12,7 @@
 //    Redivisão de slides duplicando versículos quando a letra fica muito grande.
 //    Realce se mantém no modo de apresentação.
 //    Marcação de clicados no Negrito e afins.
+//    Limpar variáveis action no reducer.
 //
 // Features:
 //   Envio de imagens.
@@ -30,7 +31,7 @@ import './index.css';
 import App from './App';
 import { createStore } from 'redux';
 import hotkeys from 'hotkeys-js';
-import { fonteBase, textoMestre } from './Components/Preview/Preview';
+import { fonteBase } from './Components/Preview/Preview';
 
 export class Estilo {
   constructor () {
@@ -50,27 +51,28 @@ const estiloPadrao = {
   tampao: {backgroundColor: '#fff', opacity: '0.2'}
 };
 const proporcaoPadTop = 0;
+const textoMestre = 'As configurações do estilo desse slide serão aplicadas aos demais, exceto quando configurações específicas de cada slide se sobrepuserem as deste. \n\n Este slide não será exibido no modo de apresentação.'
 var storeInitialized;
 
 export class Element {
-  constructor(tipo, titulo, texto = [], estilo = {}) {
+  constructor(tipo, titulo, texto = [], estilo = {}, eMestre = false) {
     this.tipo = tipo;
     this.titulo = titulo;
     this.texto = texto;
     
     var est = {...new Estilo(), ...estilo};
     this.slides = [{estilo: {...est}}];
+    this.eMestre = eMestre;
     this.criarSlides(this.texto, est);
-    
   }
 
   criarSlides = (texto, estiloMestre, nSlide = 0, estGlobal = null) => {
-    if (this.slides[nSlide].texto === textoMestre) nSlide++;
+    if (this.slides[nSlide].eMestre) nSlide++;
     this.dividirTexto(texto, nSlide, estGlobal);
-    if (this.slides.length > 1 && this.slides[0].texto !== textoMestre) {
-      this.slides.unshift({estilo: {...estiloMestre}, texto: textoMestre});
+    if (this.slides.length > 1 && !this.slides[0].eMestre) {
+      this.slides.unshift({estilo: {...estiloMestre}, texto: textoMestre, eMestre: true});
       this.slides[1].estilo = {...new Estilo()};
-    } else if (this.slides.length === 2 && this.slides[0].texto === textoMestre) {
+    } else if (this.slides.length === 2 && this.slides[0].texto.eMestre) {
       this.slides[1].estilo = this.slides[0].estilo;
       this.slides.shift();
     }
@@ -85,6 +87,7 @@ export class Element {
       return;
     }
     var slide = this.slides[nSlide];  
+    if (nSlide === 0) slide.eMestre = this.eMestre; 
 
     var estSlide = slide.estilo;
     var estElemento;
@@ -139,13 +142,27 @@ export class Element {
   }
 
   getArrayTexto = (nSlide = 0) => {
-    if (this.slides[nSlide].texto === textoMestre) nSlide++;
+    if (this.slides[nSlide].eMestre) nSlide++;
     var arrayTexto = [];
     while (nSlide < this.slides.length) {
       arrayTexto.push(this.slides[nSlide].textoArray);
       nSlide++;
     }
     return arrayTexto.flat();
+  }
+
+  higienizarEstilo(nSlide = 0) {
+    var slidesAHigienizar = nSlide === 0 ? this.slides : this.slides[nSlide];
+    for (let s of slidesAHigienizar) {
+      for (let [i, obj] of Object.entries(s.estilo)) {
+        if (typeof obj === 'string') continue;
+        for (let [atributo, valor] of Object.entries(obj)) {
+          if (valor === null || valor === undefined || valor === '') {
+            delete obj[atributo];
+          } 
+        }
+      }
+    }
   }
 
 }
@@ -162,7 +179,7 @@ function getTextWidth(texto, proximaPalavra, fontSize, larguraLinha, caseTexto) 
 }
 
 const defaultList = {elementos: [
-  new Element("Slide-Mestre", "Slide-Mestre", [textoMestre], estiloPadrao),
+  new Element("Slide-Mestre", "Slide-Mestre", [textoMestre], estiloPadrao, true),
   new Element("Título","Exemplo",["Esta é uma apresentação de exemplo."]),
   new Element('Texto-Bíblico',"João 1:1-3", ['João 1']),
   new Element("Música","Jesus em Tua Presença",["Jesus em tua presença..."]),
@@ -178,12 +195,14 @@ export const reducerElementos = function (state = defaultList, action) {
   storeInitialized = true;
   var nState;
   var el;
+  var sel;
+  console.log(state);
   switch (action.type) {
     case "inserir":
       nState = {elementos: [...state.elementos, action.elemento], selecionado: {elemento: state.elementos.length, slide: 0}};
       return {...nState, slidePreview: getSlidePreview(nState), realce: state.realce};
     case "deletar":
-      el = [...state.elementos]
+      el = [...state.elementos];
       el.splice(Number(action.elemento), 1);
       var novaSelecao = {elemento: state.selecionado.elemento, slide: 0};
       if (state.selecionado.elemento >= el.length) novaSelecao.elemento = state.selecionado.elemento-1 
@@ -193,10 +212,17 @@ export const reducerElementos = function (state = defaultList, action) {
       nState = {elementos: action.novaOrdemElementos, selecionado: action.novaSelecao};
       return {...nState, slidePreview: getSlidePreview(nState), realce: state.realce};  
     case "atualizar-estilo": {
+      sel = action.selecionado || state.selecionado;
       el = [...state.elementos];
-      var obj = el[state.selecionado.elemento].slides[state.selecionado.slide].estilo;
-      obj[action.objeto] = action.valor instanceof Object ? {...obj[action.objeto], ...action.valor} : action.valor;
-      nState = {elementos: el, selecionado: state.selecionado}; //Para que o getSlidePreview use os valores já atualizados.
+      var e = el[sel.elemento]
+      if (action.objeto === 'estilo') {
+        e.slides[sel.slide].estilo = action.valor;
+      } else {
+        var obj = e.slides[sel.slide].estilo;
+        obj[action.objeto] = action.valor instanceof Object ? {...obj[action.objeto], ...action.valor} : action.valor;
+      }
+      e.higienizarEstilo(sel.slide);
+      nState = {elementos: el, selecionado: sel}; //Para que o getSlidePreview use os valores já atualizados.
       return {...nState, slidePreview: getSlidePreview(nState), realce: state.realce};
     }
     case "redividir-slides": {
@@ -211,7 +237,7 @@ export const reducerElementos = function (state = defaultList, action) {
     }
     case "limpar-estilo": {
       el = [...state.elementos];
-      var sel = action.selecionado;
+      sel = action.selecionado;
       if (sel.elemento === 0 && sel.slide === 0) {
         if (action.objeto) {
           el[0].slides[0].estilo[action.objeto] = estiloPadrao[action.objeto];
@@ -256,7 +282,7 @@ function selecionadoOffset (elementos, selecionado, offset) {
         novoIndex = elem.length-1;
       }
       if (document.fullscreenElement) { //Se for slide mestre, pula um a mais pra frente ou pra trás com base no offset informado.
-        while (elem[novoIndex].texto === textoMestre) {
+        while (elem[novoIndex].eMestre) {
           offset = offset > 0 ? 1 : -1;
           novoIndex += offset;
           if (novoIndex >= elem.length || novoIndex <= 0) {
@@ -285,6 +311,7 @@ function getSlidePreview (state) {
   return {selecionado: {...sel},
     texto: capitalize(slide.texto, estiloParagrafo.caseTexto),
     titulo: capitalize(state.elementos[sel.elemento].titulo, estiloTitulo.caseTexto),
+    eMestre: slide.eMestre,
     estilo: {
       titulo: {...estiloTitulo, fontSize: estiloTitulo.fontSize*100 + '%', height: estiloTitulo.height*100 + '%'},
       paragrafo: {...getEstiloParagrafoPad(estiloParagrafo), fontSize: estiloParagrafo.fontSize*100 + '%'},
