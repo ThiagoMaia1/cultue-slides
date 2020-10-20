@@ -57,8 +57,8 @@ html, body, .app {
 }
 
 .botao {
-  margin-top: 15px;
-  padding: 10px 15px;
+  margin: 1.7vh 0 0 1vh;
+  padding: 0.9vh 1.5vh;
   background:#eee;
   border-radius: 0.7vh;
   cursor: default;

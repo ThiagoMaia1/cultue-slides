@@ -26,9 +26,10 @@ export function extrairReferencias(strReferencia) {
 
     var referencias = [];
     //Limpa a string da referência.    
-    strReferencia = strReferencia.trim().toLowerCase().replace('.',':').replace(/[;,+]/g,',');
-    strReferencia = strReferencia.replace(/[^áàâãéèêíïóôõöúçña-z0-9:\-,\s]/g,"");
-    strReferencia = strReferencia.replace(/(?<=[3-90])\s+(?=[áàâãéèêíïóôõöúçña-z])/g,',');
+    strReferencia = strReferencia.trim().toLowerCase().replace(/[:.+]/g,':').replace(/[;,+]/g,',');
+    strReferencia = strReferencia.replace(/(?<=,):+/g,'')
+    strReferencia = strReferencia.replace(/[^áàâãéèêíïóôõöúçña-z0-9:\-,\s]/g,'');
+    strReferencia = strReferencia.replace(/(?<=[03-9])\s+(?=[áàâãéèêíïóôõöúçña-z])/g,',');
     strReferencia = strReferencia.replace(/\s/g,"");
     strReferencia = strReferencia.replace(/[áàâãéèêíïóôõöúçña-z](?=[0-9])/g,'$& ');
 
@@ -44,7 +45,7 @@ export function extrairReferencias(strReferencia) {
     }
     
     for (i = 0; i < referencias.length; i++) {
-        if (!temLivro(referencias[i].str)) {
+        if (!temLivro(referencias[i].str) && i > 0) {
             referencias[i].livro = referencias[i-1].livro;
         } else {
             arr = referencias[i].str.split(' ');

@@ -25,10 +25,11 @@ const listaBotoesAbas = [{nomeCodigo: 'texto', nomeInterface: 'Texto', cor: '#ff
                          {nomeCodigo: 'tampao', nomeInterface: 'Fundo', cor: '#ffd6cc', corRealce: '#ff3300'}
 ];
 
-const listaSliders = [{rotulo: 'Margem', aba: 'paragrafo', atributo: 'padding', min: 0, max: 0.4, step: 0.01,  recalcular: true},
-                      {rotulo: 'Fonte', aba: 'paragrafo', atributo: 'fontSize', min: 1, max: 3.5, step: 0.01,  recalcular: true},
+const listaSliders = [{rotulo: 'Fonte', aba: 'paragrafo', atributo: 'fontSize', min: 1, max: 3.5, step: 0.01,  recalcular: true},
+                      {rotulo: 'Margem', aba: 'paragrafo', atributo: 'padding', min: 0, max: 0.4, step: 0.01,  recalcular: true},
                       {rotulo: 'Espaçamento', aba: 'paragrafo', atributo: 'lineHeight', min: 0.5, max: 3, step: 0.1},
                       {rotulo: 'Fonte', aba: 'titulo', atributo: 'fontSize', min: 1, max: 7, step: 0.01,  recalcular: true},
+                      {rotulo: 'Margem', aba: 'titulo', atributo: 'padding', min: 0, max: 0.4, step: 0.01,  recalcular: true},
                       {rotulo: 'Altura', aba: 'titulo', atributo: 'height', min: 0.1, max: 1, step: 0.01,  recalcular: true},
                       {rotulo: 'Opacidade', aba: 'tampao', atributo: 'opacity', min: 0, max: 1, step: 0.05}
 ]
@@ -51,14 +52,14 @@ class ConfigurarSlides extends Component {
     );
   }
 
-  gerarBotoesEstiloTexto = () => {
+  gerarBotoesEstiloTexto = aba => {
        
     return listaEstilosTexto.map(e => {
       var objEstilo = {};
       objEstilo[e.nomeAtributo] = e.valorAlterado;
       return (
         <button title={e.apelido} 
-        className={'botao-configuracao-bool ' + (this.props.slideSelecionado.estilo[this.state.aba.nomeCodigo][e.nomeAtributo] === e.valorAtributo ? ' clicado' : '')} 
+        className={'botao-configuracao-bool ' + (this.props.slideSelecionado.estilo[aba.nomeCodigo][e.nomeAtributo] === e.valorAlterado ? ' clicado' : '')} 
         onClick={() => this.toggleEstiloTexto(e)} 
         style={objEstilo}>{e.apelido[0]}</button>
       )
@@ -129,7 +130,7 @@ class ConfigurarSlides extends Component {
   }
 
   atualizarAlinhamentoTexto = alinhamento => {
-    this.atualizarEstilo('paragrafo', 'textAlign', alinhamento);
+    this.atualizarEstilo(this.state.aba.nomeCodigo, 'textAlign', alinhamento);
   }
 
   limparEstilo = () => {
@@ -148,11 +149,17 @@ class ConfigurarSlides extends Component {
   aplicarEstiloAoMestre = () => {
     var sel = this.props.selecionado;
     var aba = this.state.aba.nomeCodigo;
-    aba = aba === 'texto' ? 'estilo' : aba;
+    var valor;
+    if (aba === 'texto') {
+      aba = 'estilo';
+      valor = this.props.slidePreview.estilo;
+    } else {
+      valor = this.props.slidePreview.estilo[aba];
+    }
     this.props.dispatch(
       {type: 'atualizar-estilo', 
        objeto: aba, 
-       valor: this.props.slidePreview[aba],
+       valor: valor,
        selecionado: {elemento: sel.slide !== 0 ? sel.elemento : 0,
                     slide: 0}
       }
@@ -196,8 +203,8 @@ class ConfigurarSlides extends Component {
                 </select>
               </div>
               <div className='linha-configuracoes-texto'>
-                <div>{this.gerarBotoesEstiloTexto()}</div>
-                <div className={'botoes-configuracao'}>
+                <div className='negItaSub'>{this.gerarBotoesEstiloTexto(this.state.aba)}</div>
+                <div className='botoes-configuracao'>
                   <button title='Alinhado à Esquerda' className={'botao-alinhamento'} onClick={() => this.atualizarAlinhamentoTexto('left')}><BsTextLeft size={this.state.tamIcones}/></button>
                   <button title='Alinhado ao Centro' className={'botao-alinhamento'} onClick={() => this.atualizarAlinhamentoTexto('center')}><BsTextCenter size={this.state.tamIcones}/></button>
                   <button title='Alinhado à Direita' className={'botao-alinhamento'} onClick={() => this.atualizarAlinhamentoTexto('right')}><BsTextRight size={this.state.tamIcones}/></button>
@@ -210,10 +217,10 @@ class ConfigurarSlides extends Component {
                 <div className='cor-fundo' style={{backgroundColor: (this.props.slideSelecionado.estilo.tampao.backgroundColor)}}>
                 </div>
             </button>
-            {this.state.painelCor}
             <div className='div-sliders'>
               {this.gerarSliders()}
             </div>
+            {this.state.painelCor}
           </div>
       </div>
     )   

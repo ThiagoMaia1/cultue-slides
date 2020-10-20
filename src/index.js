@@ -8,11 +8,12 @@
 //   ✔️ Corrigir problemas no leitor de referência bíblica.
 // 
 // Errinhos para corrigir:
-//    'Null' no título do slide em alguns casos (e.g. múltiplas referências)
+//    (Não consegui reproduzir) 'Null' no título do slide em alguns casos (e.g. múltiplas referências)
 //    Redivisão de slides duplicando versículos quando a letra fica muito grande.
-//    Realce se mantém no modo de apresentação.
-//    Marcação de clicados no Negrito e afins.
+//    ✔️ Realce se mantém no modo de apresentação.
+//    ✔️ Marcação de clicados no Negrito e afins.
 //    Limpar variáveis action no reducer.
+//    ✔️ Imagem ficando fixa apenas no hover.
 //
 // Features:
 //   Envio de imagens.
@@ -45,7 +46,7 @@ export class Estilo {
 
 const estiloPadrao = {
   texto: {fontFamily: fonteBase.fontFamily}, 
-  titulo: {fontSize: '3', height: '0.25'}, 
+  titulo: {fontSize: '3', height: '0.25', padding: '0.08'}, 
   paragrafo: {fontSize: '1.5', padding: '0.08', lineHeight: '1.7'}, 
   fundo: './Galeria/Fundos/Aquarela.jpg', 
   tampao: {backgroundColor: '#fff', opacity: '0.2'}
@@ -154,8 +155,8 @@ export class Element {
   higienizarEstilo(nSlide = 0) {
     var slidesAHigienizar = nSlide === 0 ? this.slides : this.slides[nSlide];
     for (let s of slidesAHigienizar) {
-      for (let [i, obj] of Object.entries(s.estilo)) {
-        if (typeof obj === 'string') continue;
+      for (let [ , obj] of Object.entries(s.estilo)) {
+        if (JSON.stringify(obj) === '{}' || typeof obj === 'string') continue;
         for (let [atributo, valor] of Object.entries(obj)) {
           if (valor === null || valor === undefined || valor === '') {
             delete obj[atributo];
@@ -186,7 +187,7 @@ const defaultList = {elementos: [
   new Element("Imagem","Aquarela",["./Fundos/Aquarela.jpg"])],
   selecionado: {elemento: 0, slide: 0}, 
   slidePreview: {selecionado: {elemento: 0, slide: 0}, texto: textoMestre, titulo: 'Slide-Mestre', 
-                 estilo: {...estiloPadrao, paragrafo: getEstiloParagrafoPad(estiloPadrao.paragrafo)}},
+                 estilo: {...estiloPadrao, paragrafo: getEstiloPad(estiloPadrao.paragrafo, 'paragrafo'), titulloo: getEstiloPad(estiloPadrao.paragrafo, 'titulo')}},
   realce: {aba: '', cor: ''}
 }
 
@@ -196,7 +197,6 @@ export const reducerElementos = function (state = defaultList, action) {
   var nState;
   var el;
   var sel;
-  console.log(state);
   switch (action.type) {
     case "inserir":
       nState = {elementos: [...state.elementos, action.elemento], selecionado: {elemento: state.elementos.length, slide: 0}};
@@ -221,7 +221,7 @@ export const reducerElementos = function (state = defaultList, action) {
         var obj = e.slides[sel.slide].estilo;
         obj[action.objeto] = action.valor instanceof Object ? {...obj[action.objeto], ...action.valor} : action.valor;
       }
-      e.higienizarEstilo(sel.slide);
+      // e.higienizarEstilo(sel.slide);
       nState = {elementos: el, selecionado: sel}; //Para que o getSlidePreview use os valores já atualizados.
       return {...nState, slidePreview: getSlidePreview(nState), realce: state.realce};
     }
@@ -313,8 +313,8 @@ function getSlidePreview (state) {
     titulo: capitalize(state.elementos[sel.elemento].titulo, estiloTitulo.caseTexto),
     eMestre: slide.eMestre,
     estilo: {
-      titulo: {...estiloTitulo, fontSize: estiloTitulo.fontSize*100 + '%', height: estiloTitulo.height*100 + '%'},
-      paragrafo: {...getEstiloParagrafoPad(estiloParagrafo), fontSize: estiloParagrafo.fontSize*100 + '%'},
+      titulo: {...estiloTitulo, ...getEstiloPad(estiloTitulo, 'titulo'), fontSize: estiloTitulo.fontSize*100 + '%', height: estiloTitulo.height*100 + '%'},
+      paragrafo: {...getEstiloPad(estiloParagrafo, 'paragrafo'), fontSize: estiloParagrafo.fontSize*100 + '%'},
       fundo: slide.estilo.fundo || elemento.estilo.fundo || global.estilo.fundo, 
       tampao: {...global.estilo.tampao, ...elemento.estilo.tampao, ...slide.estilo.tampao},
       texto: {...estiloTexto}
@@ -341,10 +341,20 @@ function capitalize (string, caseTexto) {
   }
 }
 
-function getEstiloParagrafoPad (estiloParagrafo) {
-  var pad = estiloParagrafo.padding*100; //Separa o padding para o padding-top ser diferente, proporcional à constante proporcaoPadTop.
-  return {...estiloParagrafo, padding: String(pad*proporcaoPadTop).substr(0, 5) + ('% ' + pad).repeat(3) + '%'};
+function getEstiloPad (estilo, objeto) {
+  var pad = estilo.padding*100; //Separa o padding para o padding-top ser diferente, proporcional à constante proporcaoPadTop.
+  var proporcao;
+  var rep;
+  if (objeto === 'titulo') {
+    proporcao = 0;
+    rep = 1;
+  } else {
+    proporcao = proporcaoPadTop;
+    rep = 3;
+  }
+  return {...estilo, padding: String(pad*proporcao).substr(0, 5) + ('% ' + pad).repeat(rep) + '%'};
 }
+
 
 export let store = createStore(reducerElementos, /* preloadedState, */
   window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()

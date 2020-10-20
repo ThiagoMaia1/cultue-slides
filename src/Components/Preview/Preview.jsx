@@ -9,8 +9,10 @@ class Preview extends Component {
     
     constructor(props) {
         super(props);
-        this.larguraTela = window.screen.width;
-        this.alturaTela = window.screen.height;
+        var wWidth = window.screen.width;
+        var wHeight = window.screen.height;
+        this.larguraTela = Math.max(wWidth, wHeight);
+        this.alturaTela = Math.min(wWidth, wHeight);
         this.full = {icone: <MdFullscreenExit className='icone-botao' size={140}/>, proporcao: 1, opacidadeBotao: '0%'}
         this.small = {icone: <MdFullscreen className='icone-botao' size={60}/>, proporcao: 0.5, opacidadeBotao: '30%'}
         this.state = {screen: {...this.small}}
@@ -56,7 +58,8 @@ class Preview extends Component {
     }
 
     realcarElemento = aba => {
-        return {boxShadow: this.props.realce.aba === aba ? '0px 0px 9px ' + this.props.realce.cor : '', borderRadius: '1vh', marginTop: '2px'};
+        return {boxShadow: (this.props.realce.aba === aba && this.state.screen.proporcao === this.small.proporcao ? '0px 0px 9px ' + this.props.realce.cor : ''), 
+                borderRadius: '1vh', marginTop: '2px'};
     }
 
     render() {

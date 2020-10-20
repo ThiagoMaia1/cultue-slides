@@ -1,17 +1,21 @@
 import React, { Component } from 'react';
-//import './style.css';
 import Popup from './Popup/Popup';
-import ComboLetra from './../LetrasMusica/ComboLetra'
-import TextoBiblico from './../TextoBiblico/TextoBiblico'
-import AdicionarTitulo from './AdicionarTitulo'
-import AdicionarImagem from './../AdicionarImagem/AdicionarImagem'
+import ComboLetra from './../LetrasMusica/ComboLetra';
+import TextoBiblico from './../TextoBiblico/TextoBiblico';
+import AdicionarTitulo from './AdicionarTitulo';
+import AdicionarImagem from './../AdicionarImagem/AdicionarImagem';
+import { GrChapterAdd } from 'react-icons/gr';
 
 class Adicionar extends Component {
     
     constructor(props) {
         super(props);
-        this.state = {...props}
-      }
+        this.state = {...props, adicionarVisivel: true};
+    }
+
+    onMouse = visivel => {
+        this.setState({adicionarVisivel: visivel});
+    }
     
     adicionarMusica() {
 
@@ -63,7 +67,11 @@ class Adicionar extends Component {
     render() {
         return (
             <>
-                <div id="div-botoes">
+                <div id="div-botoes" onMouseOver={() => this.onMouse(false)} onMouseLeave={() => this.onMouse(true)}>
+                    <div id='container-adicionar-slide' style={{display: this.state.adicionarVisivel ? '' : 'none' }}>
+                        <div><div id='p-adicionar-slide'>Adicionar um Slide</div>
+                        <GrChapterAdd size={50}/></div>
+                    </div>
                     <button className="Música itens botao-adicionar" onClick={this.adicionarMusica.bind(this)}>Música</button>
                     <button className="Texto-Bíblico itens botao-adicionar" onClick={this.adicionarTextoBiblico.bind(this)}>Texto Bíblico</button>
                     <button className="Título itens botao-adicionar" onClick={this.adicionarTitulo.bind(this)}>Título</button>

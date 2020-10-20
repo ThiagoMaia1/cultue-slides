@@ -3,8 +3,23 @@ import '../LetrasMusica/style.css';
 import { Element } from '../../index'
 import { connect } from 'react-redux';
 
+const listaSlidesPadrao = [{titulo: 'Visitantes', subtitulo: 'Sejam bem-vindos à nossa Igreja!'},
+                           {titulo: 'Avisos', subtitulo: ''}, 
+                           {titulo: 'Mensagem', subtitulo: ''},
+                           {titulo: '✕ Limpar', subtitulo: ''}
+]
+
 class AdicionarTitulo extends Component {
     
+    gerarListaSlidesPadrao = () => 
+        listaSlidesPadrao.map(s => (
+            <button className='botao' 
+                    onClick={() => {
+                        document.getElementById('titulo').value = s.titulo === '✕ Limpar' ? '' : s.titulo;
+                        document.getElementById('subtitulo').value = s.subtitulo
+                    }}>{s.titulo}</button>
+    ));
+
     onClick () {
         var titulo = document.getElementById('titulo').value;
         var subtitulo = (document.getElementById('subtitulo').value || '');
@@ -23,6 +38,10 @@ class AdicionarTitulo extends Component {
                     <input id="titulo" className='combo-popup' type='text' placeholder='Título do slide' />
                 </div>
                 <textarea id="subtitulo" className='combo-popup' placeholder='Texto do slide'></textarea>
+                <div className='lista-slides-padrao'>
+                    <div className='titulo-secao-popup'>Slides Padrão: </div>
+                    {this.gerarListaSlidesPadrao()}
+                </div>
                 <div>
                     <button className='botao' onClick={this.onClick.bind(this)}>Inserir Título</button>
                 </div>
