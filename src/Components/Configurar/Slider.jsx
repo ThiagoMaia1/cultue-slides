@@ -30,6 +30,7 @@ class Slider extends Component {
     }
 
     getValorUnidade(valor) {
+        if (isNaN(valor)) return '-';
         if (this.props.unidade) {
             if (this.props.unidade === '%') {
                 return Math.round(valor*100) + '%';
@@ -42,7 +43,7 @@ class Slider extends Component {
 
     render() {
         return (
-            <div style={this.props.style}>
+            <div className='container-range' style={this.props.style}>
                 <div className='rotulo-range'>{this.props.rotulo}</div>
                 <div className='frame-range'>
                     <input type="range" 

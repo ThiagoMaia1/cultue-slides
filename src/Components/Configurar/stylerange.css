@@ -1,10 +1,24 @@
+.container-range {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 12vh;
+  margin: 1vh 3vh 0 3vh;
+}
+
+.rotulo-range {
+  word-wrap: break-word;
+  width: 100%;
+}
+
 .frame-range {
   --height-barrinha: 1vh;
   --width-barrinha: 10vh;
   height: 12vh;
-  width: 5vh;
+  width: 100%;
   position: relative;
   border-radius: .7vh;
+  display: flex;
 }
 
 input[type=range] {

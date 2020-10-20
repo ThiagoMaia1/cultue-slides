@@ -3,10 +3,16 @@
 //   ✔️ Corrigir fundo do pop-up nas previews de música e texto bíblico.
 //   ✔️ Corrigir reordenamento. 
 //   ✔️ Concluir cálculo de linhas do slide.
-//   Permitir formatação de fontes, margens, estilo de texto.
+//   ✔️ Permitir formatação de fontes, margens, estilo de texto.
 //   ✔️ Possibilidade de excluir elementos.
-//   Corrigir problemas no leitor de referência bíblica.
-
+//   ✔️ Corrigir problemas no leitor de referência bíblica.
+// 
+// Errinhos para corrigir:
+//    'Null' no título do slide em alguns casos (e.g. múltiplas referências)
+//    Redivisão de slides duplicando versículos quando a letra fica muito grande.
+//    Realce se mantém no modo de apresentação.
+//    Marcação de clicados no Negrito e afins.
+//
 // Features:
 //   Envio de imagens.
 //   Incorporar vídeos do youtube.
@@ -16,6 +22,7 @@
 //   Combo de número de capítulos e versículos da bíblia.
 //   Possibilidade de editar elemento (retornando à tela da query).
 //   ✔️ Navegar slides clicando à direita ou esquerda.
+//   Marcador de repetições de estrofes nos slides de música/slide de refrão repetido.
 
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -205,10 +212,19 @@ export const reducerElementos = function (state = defaultList, action) {
     case "limpar-estilo": {
       el = [...state.elementos];
       var sel = action.selecionado;
-      if (action.objeto) {
-        el[sel.elemento].slides[sel.slide].estilo[action.objeto] = {};
+      if (sel.elemento === 0 && sel.slide === 0) {
+        if (action.objeto) {
+          el[0].slides[0].estilo[action.objeto] = estiloPadrao[action.objeto];
+        } else {
+          var f = el[sel.elemento].slides[sel.slide].estilo.fundo
+          el[sel.elemento].slides[sel.slide].estilo = {...estiloPadrao, fundo: f};
+        }  
       } else {
-        el[sel.elemento].slides[sel.slide].estilo = new Estilo();
+        if (action.objeto) {
+          el[sel.elemento].slides[sel.slide].estilo[action.objeto] = {};
+        } else {
+          el[sel.elemento].slides[sel.slide].estilo = new Estilo();
+        }
       }
       nState = {elementos: [...el], selecionado: action.selecionado};
       return {...nState, slidePreview: getSlidePreview(nState), realce: state.realce};

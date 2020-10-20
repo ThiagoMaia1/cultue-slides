@@ -30,6 +30,17 @@
 .configuracoes {
     display: flex;
     flex-wrap: wrap;
+    position: relative;
+}
+
+.container-botao-limpar {
+    width: 100%;
+    position: absolute;
+}
+
+.botao-limpar {
+    position: relative;
+    left: 80%;
 }
 
 .configuracoes-texto {
@@ -60,7 +71,7 @@
     width: auto;
     border-radius: 0.7vh;
     border: 1.5px solid darkgray;
-    margin: 1vh 0vh 1vh 1vh;
+    margin: 1vh 0vh 0 1vh;
 }
 
 .combo-fonte {
@@ -80,7 +91,7 @@
 .cor-texto {
     position: relative;
     border: 0.02px solid gray;
-    color: #000;
+    background-color: #000;
     left: 0.4vh;
     width: 2.8vh;
     height: .8vh;
