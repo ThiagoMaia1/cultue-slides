@@ -319,7 +319,9 @@ function getEstiloParagrafoPad (estiloParagrafo) {
   return {...estiloParagrafo, padding: String(pad*proporcaoPadTop).substr(0, 5) + ('% ' + pad).repeat(3) + '%'};
 }
 
-export let store = createStore(reducerElementos);
+export let store = createStore(reducerElementos, /* preloadedState, */
+  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+);
 
 hotkeys('right,left,up,down', function(event, handler){
   event.preventDefault();
