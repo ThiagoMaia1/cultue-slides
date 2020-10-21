@@ -19,7 +19,7 @@ const listaEstilosTexto = [{apelido:'Negrito', nomeAtributo: 'fontWeight', valor
                            
 const listaFontes = ['Helvetica', 'Arial', 'Times New Roman', 'Courier', 'Courier New', 'Verdana', 'Tahoma', 'Arial Black', 'Georgia', 'Impact']
 
-const listaBotoesAbas = [{nomeCodigo: 'texto', nomeInterface: 'Texto', cor: '#fff', corRealce: 'white'},
+const listaBotoesAbas = [{nomeCodigo: 'texto', nomeInterface: 'Texto', cor: '', corRealce: 'white'},
                          {nomeCodigo: 'titulo', nomeInterface: 'Título', cor: '#efefef', corRealce: '#fca311', maxFonte: '7'}, 
                          {nomeCodigo: 'paragrafo', nomeInterface: 'Parágrafo', cor: '#efefef', corRealce: '#fca311', maxFonte: '4'}, 
                          {nomeCodigo: 'tampao', nomeInterface: 'Fundo', cor: '#efefef', corRealce: '#fca311'}
@@ -48,7 +48,7 @@ class ConfigurarSlides extends Component {
     return listaBotoesAbas.slice(1).map((a, i) => 
       <button className={'botao-aba-' + a.nomeCodigo} data-id={i+1} 
         onClick={this.selecionarAba.bind(this)}
-        style={this.state.aba === a ? {backgroundColor: a.cor} : null}>{a.nomeInterface}</button>
+        style={this.state.aba === a ? {boxShadow: '1px 3px 7px rgba(0,0,0,0.5)'} : null}>{a.nomeInterface}</button>
     );
   }
 
@@ -176,7 +176,7 @@ class ConfigurarSlides extends Component {
           <div id='abas'>
             {this.gerarBotoesAbas()}
           </div>
-          <div className='configuracoes' style={{backgroundColor: this.state.aba.cor}}>
+          <div className='configuracoes' style={this.state.aba.cor !== '' ? {boxShadow: '1px 3px 7px rgba(0,0,0,0.5)'} : null}>
             <div className='container-botao-limpar'>
               <div className='botoes-direita'>
                 <button title='Aplicar Estilo ao Slide-Mestre' className={'botao-configuracao-bool botao-clonar-estilo'} 

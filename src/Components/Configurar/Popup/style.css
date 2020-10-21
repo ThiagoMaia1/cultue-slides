@@ -56,6 +56,11 @@ html, body, .app {
   font-weight: 650;
 }
 
+#fechar:hover {
+  background: black;
+  color: white;
+}
+
 .botao {
   margin: 1.7vh 0 0 1vh;
   padding: 0.9vh 1.5vh;
@@ -68,7 +73,28 @@ html, body, .app {
 }
 
 .botao:hover {
-  background: green;
+  background: #3757A9;
+}
+
+.botao-limpar-input {
+  margin: 1.7vh 0 0 1vh;
+  padding: 0.9vh 1.5vh;
+  background:#ff3c3c;
+  border-radius: 0.7vh;
+  cursor: default;
+  overflow: visible;
+  text-align: center;
+  display: block;
+  color: white;
+}
+
+.botao-limpar-input:hover {
+  background:#dd0000;
+}
+
+.container-botoes-popup {
+  display: flex;
+  justify-content: space-between;
 }
 
 .conteudo-popup {

@@ -5,8 +5,7 @@ import { connect } from 'react-redux';
 
 const listaSlidesPadrao = [{titulo: 'Visitantes', subtitulo: 'Sejam bem-vindos à nossa Igreja!'},
                            {titulo: 'Avisos', subtitulo: ''}, 
-                           {titulo: 'Mensagem', subtitulo: ''},
-                           {titulo: '✕ Limpar', subtitulo: ''}
+                           {titulo: 'Mensagem', subtitulo: ''}
 ]
 
 class AdicionarTitulo extends Component {
@@ -30,6 +29,11 @@ class AdicionarTitulo extends Component {
         this.props.dispatch({type: "inserir", elemento: new Element( "Título", titulo, [...subtitulo.split(/(?=\n\n)/)])});
     }
 
+    limparInputs = () => {
+        document.getElementById('titulo').value = '';
+        document.getElementById('subtitulo').value = '';
+    }
+
     render () {
         return (
             <div className='conteudo-popup'>
@@ -42,8 +46,9 @@ class AdicionarTitulo extends Component {
                     <div className='titulo-secao-popup'>Slides Padrão: </div>
                     {this.gerarListaSlidesPadrao()}
                 </div>
-                <div>
+                <div className='container-botoes-popup'>
                     <button className='botao' onClick={this.onClick.bind(this)}>Inserir Título</button>
+                    <button className='botao-limpar-input' onClick={this.limparInputs}>✕ Limpar</button>
                 </div>
             </div>
         )
