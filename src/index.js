@@ -14,6 +14,7 @@
 //    ✔️ Marcação de clicados no Negrito e afins.
 //    Limpar variáveis action no reducer.
 //    ✔️ Imagem ficando fixa apenas no hover.
+//    Zerar sliders ao limpar formatação.
 //
 // Features:
 //   Envio de imagens.

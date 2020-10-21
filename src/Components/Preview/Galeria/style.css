@@ -9,7 +9,7 @@
 }
 
 .seta-galeria {
-    opacity: 0%;
+    opacity: 0;
     z-index: 30;
     height: 100%;
     width: 20%;
@@ -18,7 +18,7 @@
 }
 
 .seta-galeria:hover {
-    opacity: 100%;
+    opacity: 1;
 }
 
 .esquerda {

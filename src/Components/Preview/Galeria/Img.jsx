@@ -34,7 +34,7 @@ class Img extends Component {
     render () {
         return (
             <div id={'img-galeria-path-' + this.props.imagem.fundo} className='div-img' 
-                onClick={() => this.togglePrevia(this.props.imagem)}
+                onClick={this.onClick}
                 onMouseOver={this.onMouseOver}
                 onMouseLeave={this.onMouseLeave}>
                 <div className='texto-mini-preview sombrear-selecao'>
