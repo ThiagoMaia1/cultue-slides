@@ -41,7 +41,7 @@
 #abas button {
     outline: none;
     cursor: pointer;
-    padding: 1vh 0.9vh 0.5vh 1vh;
+    padding: 1vh 0.9vh 0.7vh 1vh;
     width: auto;
     border-radius: 0.7vh;
     border-bottom-right-radius: 0;
@@ -49,16 +49,22 @@
     font-size: 110%;
 }
 
-.botao-aba-titulo:hover {
-    background-color: #efefef;
+.botao-aba {
+    position: relative;
 }
 
-.botao-aba-paragrafo:hover {
-    background-color: #efefef;
+.botao-aba:hover {
+    box-shadow: 1px 3px 7px rgba(0,0,0,0.5);
 }
 
-.botao-aba-tampao:hover {
-    background-color: #efefef;
+.tampar-shadow {
+    position: absolute;
+    height: 5px;
+    width: 100%;
+    background: white;
+    left: 0;
+    bottom: 0;
+    z-index: 30;
 }
 
 .configuracoes {
@@ -123,12 +129,13 @@
 }
 
 .botoes-configuracao {
+    background-color: #efefef;
     display: flex;
     flex-direction: row;
     height: 4vh;
     width: auto;
     border-radius: 0.7vh;
-    border: 1.5px solid darkgray;
+    border: none;
     margin: 1vh 0vh 0 1vh;
 }
 
@@ -154,12 +161,23 @@
     height: .8vh;
 }
 
-.cor-fundo {
+.container-cor-fundo {
     height: 3vh;
     width: 3vh;
-    margin-left: 0.3vh;
-    border: 0.02px solid gray;
+    margin-left: 0.5vh;
+    position: relative;
+}
+
+.cor-fundo {
+    width: 100%;
+    height: 100%;
     position: absolute;
+}
+
+.quadradinho-transparente {
+    position: absolute;
+    width: 100%;
+    height: 100%;
 }
 
 .div-painel-cor {

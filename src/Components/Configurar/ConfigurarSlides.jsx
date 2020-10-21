@@ -25,6 +25,12 @@ const listaBotoesAbas = [{nomeCodigo: 'texto', nomeInterface: 'Texto', cor: '', 
                          {nomeCodigo: 'tampao', nomeInterface: 'Fundo', cor: '#efefef', corRealce: '#fca311'}
 ];
 
+const listaBotoesAlinhamento = [{direcao: 'left', titulo: 'Alinhado à Esquerda', icone: BsTextLeft}, 
+                                {direcao: 'center', titulo: 'Alinhado ao Centro', icone: BsTextCenter}, 
+                                {direcao: 'right', titulo: 'Alinhado à Direita', icone: BsTextRight}, 
+                                {direcao: 'justify', titulo: 'Justificado', icone: BsJustify}
+];
+
 const listaSliders = [{rotulo: 'Fonte', aba: 'paragrafo', atributo: 'fontSize', min: 1, max: 3.5, step: 0.01,  recalcular: true},
                       {rotulo: 'Margem', aba: 'paragrafo', atributo: 'padding', min: 0, max: 0.4, step: 0.01,  recalcular: true},
                       {rotulo: 'Espaçamento', aba: 'paragrafo', atributo: 'lineHeight', min: 0.5, max: 3, step: 0.1},
@@ -33,6 +39,8 @@ const listaSliders = [{rotulo: 'Fonte', aba: 'paragrafo', atributo: 'fontSize', 
                       {rotulo: 'Altura', aba: 'titulo', atributo: 'height', min: 0.1, max: 1, step: 0.01,  recalcular: true},
                       {rotulo: 'Opacidade', aba: 'tampao', atributo: 'opacity', min: 0, max: 1, step: 0.05}
 ]
+
+const blocoShadow = {boxShadow: '1px 3px 7px rgba(0, 0, 0, 0.5)'}
 
 class ConfigurarSlides extends Component {
   constructor(props) {
@@ -45,11 +53,17 @@ class ConfigurarSlides extends Component {
   }
 
   gerarBotoesAbas = () => {
-    return listaBotoesAbas.slice(1).map((a, i) => 
-      <button className={'botao-aba-' + a.nomeCodigo} data-id={i+1} 
-        onClick={this.selecionarAba.bind(this)}
-        style={this.state.aba === a ? {boxShadow: '1px 3px 7px rgba(0,0,0,0.5)'} : null}>{a.nomeInterface}</button>
-    );
+    return listaBotoesAbas.slice(1).map((a, i) => {
+      var tampar;
+      if (this.state.aba === a) tampar = (<div className='tampar-shadow'></div>);
+      return (<>
+          <button className='botao-aba' data-id={i+1} 
+            onClick={this.selecionarAba.bind(this)}
+            style={this.state.aba === a ? blocoShadow : null}>
+              {a.nomeInterface}
+            {tampar}
+          </button>
+      </>)});
   }
 
   gerarBotoesEstiloTexto = aba => {
@@ -64,6 +78,22 @@ class ConfigurarSlides extends Component {
         style={objEstilo}>{e.apelido[0]}</button>
       )
     });
+  }
+
+  gerarBotoesAlinhamento = aba => {
+    return listaBotoesAlinhamento.map((b, i) => {
+      var Icone = b.icone;
+      var bordas;
+      if (i === 0) {bordas = {borderRadius: '0.7vh 0 0 0.7vh'}; 
+      } else if (i === 3) {bordas = {borderRadius: '0 0.7vh 0.7vh 0'};}
+      return (
+        <button title={b.titulo} 
+                style={bordas}
+                className={'botao-alinhamento ' + (this.props.slideSelecionado.estilo[aba.nomeCodigo].textAlign === b.direcao ? ' clicado' : '')} 
+                onClick={() => this.atualizarEstilo(this.state.aba.nomeCodigo, 'textAlign', b.direcao)}>
+                <Icone size={this.state.tamIcones}/>
+        </button>
+    )});
   }
 
   gerarSliders = () => {
@@ -129,10 +159,6 @@ class ConfigurarSlides extends Component {
     if (recalcular) this.props.dispatch({type: 'redividir-slides', selecionado: sel})
   }
 
-  atualizarAlinhamentoTexto = alinhamento => {
-    this.atualizarEstilo(this.state.aba.nomeCodigo, 'textAlign', alinhamento);
-  }
-
   limparEstilo = () => {
     var estiloAnterior = this.props.slideSelecionado.estilo;
     var obj = this.state.aba.nomeCodigo;
@@ -176,7 +202,7 @@ class ConfigurarSlides extends Component {
           <div id='abas'>
             {this.gerarBotoesAbas()}
           </div>
-          <div className='configuracoes' style={this.state.aba.cor !== '' ? {boxShadow: '1px 3px 7px rgba(0,0,0,0.5)'} : null}>
+          <div className='configuracoes' style={this.state.aba.cor !== '' ? blocoShadow : null}>
             <div className='container-botao-limpar'>
               <div className='botoes-direita'>
                 <button title='Aplicar Estilo ao Slide-Mestre' className={'botao-configuracao-bool botao-clonar-estilo'} 
@@ -205,19 +231,16 @@ class ConfigurarSlides extends Component {
               </div>
               <div className='linha-configuracoes-texto'>
                 <div className='negItaSub'>{this.gerarBotoesEstiloTexto(this.state.aba)}</div>
-                <div className='botoes-configuracao'>
-                  <button title='Alinhado à Esquerda' className={'botao-alinhamento'} onClick={() => this.atualizarAlinhamentoTexto('left')}><BsTextLeft size={this.state.tamIcones}/></button>
-                  <button title='Alinhado ao Centro' className={'botao-alinhamento'} onClick={() => this.atualizarAlinhamentoTexto('center')}><BsTextCenter size={this.state.tamIcones}/></button>
-                  <button title='Alinhado à Direita' className={'botao-alinhamento'} onClick={() => this.atualizarAlinhamentoTexto('right')}><BsTextRight size={this.state.tamIcones}/></button>
-                  <button title='Justificado' className={'botao-alinhamento'} onClick={() => this.atualizarAlinhamentoTexto('justify')}><BsJustify size={this.state.tamIcones}/></button>
-                </div>
+                <div className='botoes-configuracao'>{this.gerarBotoesAlinhamento(this.state.aba)}</div>
               </div>
             </div>
             <button className={'botao-configuracao-bool'} onMouseOver={() => this.ativarPainelCor(this.mudarCorFundo)}
                     style={{display: (this.state.aba.nomeCodigo === 'tampao' ? '' : 'none')}}>
-                <div className='quadriculado-imitando-transparente cor-fundo'></div>
-                <div className='cor-fundo' style={{backgroundColor: this.props.slideSelecionado.estilo.tampao.backgroundColor, 
-                                                   opacity: this.props.slideSelecionado.estilo.tampao.opacity}}>
+                <div className='container-cor-fundo'>
+                  <div className='quadriculado-imitando-transparente quadradinho-transparente'></div>
+                  <div className='cor-fundo' style={{backgroundColor: this.props.slideSelecionado.estilo.tampao.backgroundColor, 
+                                                    opacity: this.props.slideSelecionado.estilo.tampao.opacity}}>
+                  </div>
                 </div>
             </button>
             <div className='div-sliders'>
