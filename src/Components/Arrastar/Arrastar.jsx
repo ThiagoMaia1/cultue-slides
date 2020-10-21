@@ -1,7 +1,7 @@
 import React from 'react';
 import './style.css';
 import { connect } from 'react-redux';
-import { reverterSuperscrito } from '../Preview/TextoPreview';
+import { reverterSuperscrito } from '../Preview/TextoPreview.jsx';
 
 class Arrastar extends React.Component {
   constructor(props) {
@@ -60,8 +60,8 @@ class Arrastar extends React.Component {
 
     var listItems = this.props.elementos.map((item, i) => {
       if (i === 0) return null;
-      
-      if (item.slides.length > 1) { //Se item tem múltiplos slides, cria subdivisão ol.
+      //Se item tem múltiplos slides, cria subdivisão ol.
+      if (item.slides.length > 1) { 
         var listSlides = (<ol className='sublista'>
           {item.slides.map((slide, j) => {
             if (j === 0) return null; //Pula o slide 0, pois se tem múltiplos slides, o slide 0 é o mestre.
@@ -86,7 +86,8 @@ class Arrastar extends React.Component {
         </ol>
         );
       }
-      return (            //Cria os li da lista de elementos.
+      //Cria os li da lista de elementos.
+      return (            
           <li 
             identificacaoelemento = {item.id}
             data-id={i}

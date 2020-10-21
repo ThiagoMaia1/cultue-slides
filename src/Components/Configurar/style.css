@@ -115,6 +115,7 @@
     background-color: #efefef;
     margin: 0.9vh 0vh 0vh 0.9vh;
     line-height: 4vh;
+    position: relative;
 }
 
 .botao-alinhamento {
@@ -158,6 +159,7 @@
     width: 3vh;
     margin-left: 0.3vh;
     border: 0.02px solid gray;
+    position: absolute;
 }
 
 .div-painel-cor {

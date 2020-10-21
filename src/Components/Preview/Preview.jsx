@@ -59,7 +59,7 @@ class Preview extends Component {
 
     realcarElemento = aba => {
         return {boxShadow: (this.props.realce.aba === aba && this.state.screen.proporcao === this.small.proporcao ? '0px 0px 9px ' + this.props.realce.cor : ''), 
-                borderRadius: '1vh', marginTop: '2px'};
+                borderRadius: '1.5vh', marginTop: '2px'};
     }
 
     render() {

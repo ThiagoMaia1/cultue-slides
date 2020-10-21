@@ -5,7 +5,7 @@ import './style.css';
 import { extrairReferencias, RefInvalida } from "./referenciaBiblica"
 import { Element } from '../../index'
 import { connect } from 'react-redux'
-import { formatarVersiculos, formatarVersiculosSlide } from '../Preview/TextoPreview.js'
+import { formatarVersiculos, formatarVersiculosSlide } from '../Preview/TextoPreview.jsx'
 import Carregando from '../LetrasMusica/Carregando.jsx';
 
 const url = 'https://bibleapi.co/api';
