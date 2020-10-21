@@ -128,7 +128,7 @@ class Arrastar extends React.Component {
 }
 
 const mapStateToProps = function (state) {
-  return state
+  return {elementos: state.elementos, selecionado: state.selecionado}
 }
 
 export default connect(mapStateToProps)(Arrastar);

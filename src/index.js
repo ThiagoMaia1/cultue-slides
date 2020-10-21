@@ -187,7 +187,7 @@ const defaultList = {elementos: [
   new Element("Imagem","Aquarela",["./Fundos/Aquarela.jpg"])],
   selecionado: {elemento: 0, slide: 0}, 
   slidePreview: {selecionado: {elemento: 0, slide: 0}, texto: textoMestre, titulo: 'Slide-Mestre', 
-                 estilo: {...estiloPadrao, paragrafo: getEstiloPad(estiloPadrao.paragrafo, 'paragrafo'), titulloo: getEstiloPad(estiloPadrao.paragrafo, 'titulo')}},
+                 estilo: {...estiloPadrao, paragrafo: getEstiloPad(estiloPadrao.paragrafo, 'paragrafo'), titulo: getEstiloPad(estiloPadrao.paragrafo, 'titulo')}},
   realce: {aba: '', cor: ''}
 }
 

@@ -16,6 +16,12 @@ class Img extends Component {
         this.togglePrevia(this.estiloAnterior);
     }
 
+    onClick = () => {
+        this.togglePrevia(this.props.imagem);
+        this.mudancaTemporaria = false;
+        this.estiloAnterior = {...this.props.slideSelecionado.estilo};
+    }
+
     togglePrevia(estiloImagem) {
         var img = {...estiloImagem};
         if (img.fundo.match(/Galeria/) === null) 
