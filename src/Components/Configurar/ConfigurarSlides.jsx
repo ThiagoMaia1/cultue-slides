@@ -20,9 +20,9 @@ const listaEstilosTexto = [{apelido:'Negrito', nomeAtributo: 'fontWeight', valor
 const listaFontes = ['Helvetica', 'Arial', 'Times New Roman', 'Courier', 'Courier New', 'Verdana', 'Tahoma', 'Arial Black', 'Georgia', 'Impact']
 
 const listaBotoesAbas = [{nomeCodigo: 'texto', nomeInterface: 'Texto', cor: '#fff', corRealce: 'white'},
-                         {nomeCodigo: 'titulo', nomeInterface: 'Título', cor: '#e6e6ff', corRealce: '#0000ff', maxFonte: '7'}, 
-                         {nomeCodigo: 'paragrafo', nomeInterface: 'Parágrafo', cor: '#c6ecc6', corRealce: '#00ff00', maxFonte: '4'}, 
-                         {nomeCodigo: 'tampao', nomeInterface: 'Fundo', cor: '#ffd6cc', corRealce: '#ff3300'}
+                         {nomeCodigo: 'titulo', nomeInterface: 'Título', cor: '#efefef', corRealce: '#fca311', maxFonte: '7'}, 
+                         {nomeCodigo: 'paragrafo', nomeInterface: 'Parágrafo', cor: '#efefef', corRealce: '#fca311', maxFonte: '4'}, 
+                         {nomeCodigo: 'tampao', nomeInterface: 'Fundo', cor: '#efefef', corRealce: '#fca311'}
 ];
 
 const listaSliders = [{rotulo: 'Fonte', aba: 'paragrafo', atributo: 'fontSize', min: 1, max: 3.5, step: 0.01,  recalcular: true},
@@ -198,7 +198,8 @@ class ConfigurarSlides extends Component {
                 <button title={casesTexto[this.state.caseTexto].valor} id='botao-case' className={'botao-configuracao-bool'} 
                         onClick={this.mudarCaseTexto}>{casesTexto[this.state.caseTexto].icone}</button>
                 <select className={'botoes-configuracao combo-fonte'} onChange={this.mudarFonte} 
-                        defaultValue={this.props.slideSelecionado.estilo[this.state.aba.nomeCodigo].fontFamily || fonteBase.fontFamily}>
+                        defaultValue={this.props.slideSelecionado.estilo[this.state.aba.nomeCodigo].fontFamily || fonteBase.fontFamily}
+                        style={{fontFamily: this.props.slideSelecionado.estilo[this.state.aba.nomeCodigo].fontFamily || fonteBase.fontFamily}}>
                           {this.listaFontes}
                 </select>
               </div>

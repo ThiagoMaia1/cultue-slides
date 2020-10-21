@@ -7,7 +7,7 @@ class Img extends Component {
     onMouseOver = () => {
         var t = this.mudancaTemporaria;
         this.mudancaTemporaria = true;
-        if (!t) this.estiloAnterior = {...this.props.slideSelecionado.estilo};
+        if (!t || !this.estiloAnterior) this.estiloAnterior = {...this.props.slideSelecionado.estilo};
         this.togglePrevia(this.props.imagem);
     }
 

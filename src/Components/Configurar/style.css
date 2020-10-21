@@ -50,21 +50,22 @@
 }
 
 .botao-aba-titulo:hover {
-    background-color: #e6e6ff;
+    background-color: #efefef;
 }
 
 .botao-aba-paragrafo:hover {
-    background-color: #c6ecc6;
+    background-color: #efefef;
 }
 
 .botao-aba-tampao:hover {
-    background-color: #ffd6cc;
+    background-color: #efefef;
 }
 
 .configuracoes {
     display: flex;
     flex-wrap: wrap;
     position: relative;
+    border-radius: 0.7vh;
 }
 
 .container-botao-limpar {
@@ -110,7 +111,8 @@
     height: 4vh;
     text-align: center;
     border-radius: 0.7vh;
-    border: 1.5px solid darkgray;
+    /* border: 1.5px solid darkgray; */
+    background-color: #efefef;
     margin: 0.9vh 0vh 0vh 0.9vh;
     line-height: 4vh;
 }
@@ -145,7 +147,6 @@
 
 .cor-texto {
     position: relative;
-    border: 0.02px solid gray;
     background-color: #000;
     left: 0.4vh;
     width: 2.8vh;
