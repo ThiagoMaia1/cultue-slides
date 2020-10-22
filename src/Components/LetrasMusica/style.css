@@ -8,7 +8,7 @@
 
 .combo-popup {
     position: static;
-    border-radius: 1vh;
+    border-radius: var(--round-border-medio);
     font-size: 15px;
     font-weight: 500;
     padding: 10px 15px;

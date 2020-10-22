@@ -32,7 +32,7 @@
 }
 
 .tracejado-animacao {
-    border-radius: 1vh;
+    border-radius: var(--round-border-medio);
     border: 0.5vh dashed #b9b9b9;
 }
 
@@ -50,9 +50,19 @@
 }
 
 .previa-imagem-upload {
-    box-shadow: 1px 3px 7px rgba(0,0,0,0.5);
-    border-radius: 1.5vh;
-    max-width: 300px;
-    max-height: 300px;
+    box-shadow: var(--box-shadow);
+    border-radius: var(--round-border-grande);
+    width: 30vh;
+    height: 22.5vh;
     object-fit: scale-down;
+}
+
+.imagem-invalida {
+    background-color: var(--vermelho-fraco);
+    color: white;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    font-size: 150%;
 }

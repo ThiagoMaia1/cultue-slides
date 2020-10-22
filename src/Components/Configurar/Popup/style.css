@@ -31,11 +31,9 @@ html, body, .app {
   top: 12%;
   bottom: 28%;
   background: white;
-  /* height: 45vh; */
-  /* width: 45vw; */
-  border-radius: 6px;
+  border-radius: var(--round-border-grande);
   padding: 1.5vw;
-  box-shadow: 1px 3px 8px black;
+  box-shadow: var(--box-shadow);
   z-index: 150;
 }
 
@@ -55,8 +53,8 @@ html, body, .app {
   text-align: center;
   margin: 3px;
   padding: 5px 8px;
-  background:#e5e5e5;
-  border-radius: 0.7vh;
+  background: var(--platinum);
+  border-radius: var(--round-border-pequeno);
   font-weight: 650;
 }
 
@@ -68,8 +66,8 @@ html, body, .app {
 .botao {
   margin: 1.7vh 0 0 1vh;
   padding: 0.9vh 1.5vh;
-  background:#e5e5e5;
-  border-radius: 0.7vh;
+  background: var(--platinum);
+  border-radius: var(--round-border-pequeno);
   cursor: default;
   overflow: visible;
   text-align: center;
@@ -83,8 +81,8 @@ html, body, .app {
 .botao-limpar-input {
   margin: 1.7vh 0 0 1vh;
   padding: 0.9vh 1.5vh;
-  background:#ff3c3c;
-  border-radius: 0.7vh;
+  background: var(--vermelho-fraco);
+  border-radius: var(--round-border-pequeno);
   cursor: default;
   overflow: visible;
   text-align: center;
@@ -93,7 +91,7 @@ html, body, .app {
 }
 
 .botao-limpar-input:hover {
-  background:#dd0000;
+  background: var(--vermelho-forte);
 }
 
 .container-botoes-popup {

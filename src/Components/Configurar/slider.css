@@ -19,7 +19,7 @@
   height: 12vh;
   width: 100%;
   position: relative;
-  border-radius: .7vh;
+  border-radius: var(--round-border-pequeno);
   display: flex;
 }
 
@@ -74,8 +74,7 @@ input[type=range]::-webkit-slider-runnable-track {
   width: var(--width-barrinha);
   height: var(--height-barrinha);
   background: rgb(209, 209, 209);
-  border-radius: 7px;
-  /* border: 0.05px solid #010101; */
+  border-radius: 10px;
 }
 
 input[type=range]:focus::-webkit-slider-runnable-track {
@@ -83,31 +82,25 @@ input[type=range]:focus::-webkit-slider-runnable-track {
 }
 
 input[type=range]::-moz-range-track {
-  width: 10vh;
-  height: 8.4px;
-  cursor: pointer;
-  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
-  background: #3071a9;
-  border-radius: 1.3px;
-  border: 0.2px solid #010101;
+  width: var(--width-barrinha);
+  height: var(--height-barrinha);
+  background: rgb(209, 209, 209);
+  border-radius: 10px;
 }
 
 input[type=range]::-ms-track {
-  width: 10vh;
-  height: 8.4px;
-  cursor: pointer;
-  background: transparent;
-  border-color: transparent;
-  border-width: 16px 0;
-  color: transparent;
+  width: var(--width-barrinha);
+  height: var(--height-barrinha);
+  background: rgb(209, 209, 209);
+  border-radius: 10px;
 }
 
 .valor-flutuante {
   font-size: 80%;
   position: absolute;
   left: 3.5vh;
-  box-shadow: 1px 3px 7px rgba(0,0,0,0.5);
-  border-radius: 0.7vh;
+  box-shadow: var(--box-shadow);
+  border-radius: var(--round-border-pequeno);
   background-color: white;
   padding: 0.5vh;
 }

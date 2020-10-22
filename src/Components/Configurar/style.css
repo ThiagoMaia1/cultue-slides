@@ -22,7 +22,7 @@
     padding: 6vh;
     position: absolute;
     border: 0.4vh solid #3757A9;
-    border-radius: 1vh;
+    border-radius: var(--round-border-medio);
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -52,7 +52,7 @@
     cursor: pointer;
     padding: 0.7vh 0.9vh 0.7vh 1vh;
     width: auto;
-    border-radius: 0.7vh;
+    border-radius: var(--round-border-pequeno);
     border-bottom-right-radius: 0;
     border-bottom-left-radius: 0;
     font-size: 110%;
@@ -63,7 +63,7 @@
 }
 
 .botao-aba:hover {
-    box-shadow: 1px 3px 7px rgba(0,0,0,0.5);
+    box-shadow: var(--box-shadow);
 }
 
 .tampar-shadow {
@@ -80,7 +80,7 @@
     display: flex;
     flex-wrap: wrap;
     position: relative;
-    border-radius: 0.7vh;
+    border-radius: var(--round-border-pequeno);
 }
 
 .container-botao-limpar {
@@ -125,7 +125,7 @@
     width: 4vh;
     height: 4vh;
     text-align: center;
-    border-radius: 0.7vh;
+    border-radius: var(--round-border-pequeno);
     background-color: #efefef;
     margin: 0.9vh 0vh 0vh 0.9vh;
     line-height: 4vh;
@@ -142,7 +142,7 @@
     flex-direction: row;
     height: 4vh;
     width: auto;
-    border-radius: 0.7vh;
+    border-radius: var(--round-border-pequeno);
     border: none;
     margin: 1vh 0vh 0 1vh;
 }
@@ -153,7 +153,7 @@
 
 .opcoes-fonte {
     height: 4vh;
-    border-radius: 0.7vh;
+    border-radius: var(--round-border-pequeno);
 }
 
 #cor-texto {
@@ -199,8 +199,8 @@
     left: 1vh;
     top: 1vh;
     background-color: white;
-    border-radius: 0.7vh;
-    box-shadow: 1px 3px 7px rgba(0,0,0,0.5);
+    border-radius: var(--round-border-pequeno);
+    box-shadow: var(--box-shadow);
     z-index: 30;
     padding: 1vh;
     width: 40vh;
@@ -208,7 +208,7 @@
 }
 
 .compact-picker span div {
-    border-radius: 0.3vh;
+    border-radius: var(--round-border-muito-pequeno);
     border: none;
 }
 

@@ -1,7 +1,7 @@
 .coluna {
   width: 20vw;
   height: 60vh;
-  border-radius: 0.7vh;
+  border-radius: var(--round-border-pequeno);
   overflow-y: auto;
   display: flex;
   flex-direction: column;
@@ -56,7 +56,7 @@ ol {
 }
 
 .item-sublista {
-  border-radius: 0.7vh;
+  border-radius: var(--round-border-pequeno);
   padding: 5px 0 3px 12px;
   border-right: solid 12px rgba(0, 0, 0, 0);
   margin: 3px 3px 0 3px;
@@ -66,7 +66,7 @@ ol {
 }
 
 .bloco-reordenar {
-  border-radius: 0.7vh;
+  border-radius: var(--round-border-pequeno);
   width: 100%;
   margin-bottom: 3px;
   overflow: visible;
@@ -84,8 +84,8 @@ h1 {
 .itens {
   margin: 0 auto 3px;
   padding: 1.2vh 1.2vh;
-  background:#e5e5e5;
-  border-radius: 0.7vh;
+  background: var(--platinum);
+  border-radius: var(--round-border-pequeno);
   cursor: default;
   width: 100%;
 }
@@ -96,43 +96,43 @@ h1 {
 }
 
 .Texto-Bíblico {
-  background: var(--cor-biblia);
+  background: var(--azul-fraco);
 }
 
 .Música {
-  background: var(--cor-musica);
+  background: var(--azul-fraco);
 }
 
 .Título {
-  background: var(--cor-titulo);
+  background: var(--azul-fraco);
 }
 
 .Imagem {
-  background: var(--cor-imagem);
+  background: var(--azul-fraco);
 }
 
 .Vídeo {
-  background: var(--cor-video);
+  background: var(--azul-fraco);
 }
 
 .Texto-Bíblico:hover {
-  background: var(--cor-forte-biblia);
+  background: var(--azul-forte);
 }
 
 .Música:hover {
-  background: var(--cor-forte-musica);
+  background: var(--azul-forte);
 }
 
 .Título:hover {
-  background: var(--cor-forte-titulo);
+  background: var(--azul-forte);
 }
 
 .Imagem:hover {
-  background: var(--cor-forte-imagem);
+  background: var(--azul-forte);
 }
 
 .Vídeo:hover {
-  background:var(--cor-forte-video);
+  background: var(--azul-forte);
 }
 
 .selecionado:not(.item-sublista) {
@@ -167,7 +167,7 @@ h1 {
   padding-top: 0.1vh;
   position: absolute;
   opacity: 0;
-  border-radius: 0.3vh;
+  border-radius: var(--round-border-muito-pequeno);
   color: white;
   background-color: black;
   display: flex;

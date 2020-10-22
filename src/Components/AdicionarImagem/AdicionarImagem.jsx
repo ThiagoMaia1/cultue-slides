@@ -12,7 +12,7 @@ class AdicionarImagem extends Component {
     constructor (props) {
         super(props);
         this.o = 100;
-        this.state = {...props, path: this.mensagemPath, estiloCaixa: {opacity: '0'}};
+        this.state = {...props, path: this.mensagemPath, imagens: [], estiloCaixa: {opacity: '0'}};
     }
 
     onDragOver = () => {
@@ -56,29 +56,30 @@ class AdicionarImagem extends Component {
 
     validarImagem(input){
         var url = window.URL || window.webkitURL;
-        var arquivo = input.files[0];
+        const adicionarImagem = e => this.setState({imagens: [...this.state.imagens, e.target]});
     
-        if (arquivo) {
+        for (var arquivo of input.files) {
             var imagem = new Image();
-    
-            imagem.onload = () => {
-                if (imagem.width) {
-                     console.log('Image has width, I think it is real image');
-                     this.setState({imagem: imagem.src, path: input.files[0].name});
-                     //TODO: upload to backend
-                } else {
-                    this.setState({path: arquivoInvalido});
-                }
-            };
-
-            imagem.onerror = () => {
-                this.setState({path: arquivoInvalido});
-            }
-    
+              
+            [ imagem.onload, imagem.onerror ] = [ adicionarImagem, adicionarImagem];
             imagem.src = url.createObjectURL(arquivo);
         }
     }
     
+    gerarListaImagens = () => {
+        return (
+            this.state.imagens.map( img => 
+                <div className='container-imagem-upload'>
+                    {img.width ?
+                        <img className='previa-imagem-upload' src={img.src} alt={img.alt}/> :
+                        <div className='imagem-invalida previa-imagem-upload'>
+                            <div>Arquivo Inválido: "{img.alt}"<br></br></div>
+                            <div style={{fontSize: '120%'}}>✕</div>
+                        </div>}                    
+                </div>
+        )); 
+    }
+
     limparInputs = () => {
         this.setState({path: null, imagem: null});
     }
@@ -99,11 +100,9 @@ class AdicionarImagem extends Component {
                             <div style={{color: 'red'}}>{arquivoInvalido}</div> : 
                             'Arquivo selecionado: ' + this.state.path : 
                         null}
-                        {<div className='container-imagem-upload'>
-                            <img className='previa-imagem-upload' src={this.state.imagem} alt={this.state.path}/>
-                        </div>}
+                        {this.gerarListaImagens()}
                     </div>
-                    <input id="adicionar-imagem" className='combo-popup' type='file' accept="image/*" 
+                    <input id="adicionar-imagem" className='combo-popup' type='file' multiple="multiple" accept="image/*" 
                            onChange={e => this.validarImagem(e.target)} placeholder='Arraste uma imagem para fazer o upload' />
                 </label>
                 <div className='container-botoes-popup'>

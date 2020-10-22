@@ -1,4 +1,6 @@
-/*https://coolors.co/000000-14213d-fca311-e5e5e5-ffffff*/
+/*https://coolors.co/000000-14213d-fca311-e5e5e5-ffffff
+
+https://coolors.co/000000-e5e5e5-ffffff-3757a9-748fd2-ff3c3c-dd0000*/
 
 html {
   box-sizing: border-box;
@@ -10,23 +12,22 @@ html {
 
 body {
   margin: 0;
-  font-family: 'Montserrat';
-   /* 'Helvetica', 'Segoe UI', 'Roboto', 'Oxygen',
+  font-family: 'Montserrat', 'Roboto', 'Helvetica', 'Segoe UI', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif; */
+    sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-size: 2.1vh;
-  --cor-biblia: #748FD2;
-  --cor-musica: #748FD2;
-  --cor-titulo: #748FD2;
-  --cor-imagem: #748FD2;
-  --cor-video: #748FD2;
-  --cor-forte-biblia: #3757A9;
-  --cor-forte-musica: #3757A9;
-  --cor-forte-titulo: #3757A9;
-  --cor-forte-imagem: #3757A9;
-  --cor-forte-video: #3757A9;
+  --azul-fraco: #748FD2;
+  --azul-forte: #3757A9;
+  --platinum: #eeeeee;
+  --vermelho-fraco: #ff3c3c;
+  --vermelho-forte: #dd0000;
+  --round-border-muito-pequeno: 0.3vh;
+  --round-border-pequeno: 0.7vh;
+  --round-border-medio: 1vh;
+  --round-border-grande: 1.5vh;
+  --box-shadow: 1px 3px 7px rgba(0,0,0,0.5);
 }
 
 code {
