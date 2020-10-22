@@ -8,24 +8,29 @@
 //   ✔️ Corrigir problemas no leitor de referência bíblica.
 // 
 // Errinhos para corrigir:
-//    'Null' no título do slide quando a referência é como: lc3-5.
-//    ✔️ Redivisão de slides duplicando versículos quando a letra fica muito grande.
-//    ✔️ Realce se mantém no modo de apresentação.
-//    ✔️ Marcação de clicados no Negrito e afins.
-//    Limpar variáveis action no reducer.
-//    ✔️ Imagem ficando fixa apenas no hover.
-//    Zerar sliders ao limpar formatação.
+//   'Null' no título do slide quando a referência é como: lc3-5.
+//   ✔️ Redivisão de slides duplicando versículos quando a letra fica muito grande.
+//   ✔️ Realce se mantém no modo de apresentação.
+//   ✔️ Marcação de clicados no Negrito e afins.
+//   Limpar variáveis action no reducer.
+//   ✔️ Imagem ficando fixa apenas no hover.
+//   Zerar sliders ao limpar formatação.
+//   Incluir webfonts na combo de fontes disponíveis.
+//   Rolar a lista lateral igual a galeria. 
+//   Ícone menor na galeria.
+//   Botão para zerar/começar nova apresentação.
 //
 // Features:
 //   Envio de imagens.
 //   Incorporar vídeos do youtube.
 //   Login para salvar preferências.
-//   Exportar como power point/pdf.
+//   Exportar como power point, pdf e html.
 //   Editar texto direto no slide.
 //   Combo de número de capítulos e versículos da bíblia.
 //   Possibilidade de editar elemento (retornando à tela da query).
 //   ✔️ Navegar slides clicando à direita ou esquerda.
 //   Marcador de repetições de estrofes nos slides de música/slide de refrão repetido.
+//   Enviar imagem para fundo.
 
 import React from 'react';
 import ReactDOM from 'react-dom';
