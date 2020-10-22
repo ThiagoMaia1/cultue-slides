@@ -99,7 +99,7 @@ class Arrastar extends React.Component {
             onDragOver={this.dragOver.bind(this)}
             style={{marginBottom: i === this.state.placeholder ? this.tamanhoPlaceholder + 'px' : ''}}>
             <div className='div-excluir'>
-              <div data-id={i} className='excluir-elemento' onClick={e => this.excluirElemento(e)}>x</div>
+              <div data-id={i} className='excluir-elemento' onClick={e => this.excluirElemento(e)}>✕</div>
             </div>
             <div data-id={i} className={'itens ' + item.tipo}
                  onClick={() => this.marcarSelecionado(i, 0)}>

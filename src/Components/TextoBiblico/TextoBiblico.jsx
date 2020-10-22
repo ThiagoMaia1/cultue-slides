@@ -188,7 +188,7 @@ class TextoBiblico extends Component {
         return (
             <div className='conteudo-popup'>
                 <div>
-                    <h4>Buscar texto bíblico:</h4>
+                    <h4 className='titulo-popup'>Buscar texto bíblico:</h4>
                     <select className='combo-popup' defaultValue={this.getVersao(versaoPadrao)} type="text" list="versoes" 
                         onChange={e => this.mudarVersao(e)}>
                         {versoes.map(v => (<option key={v.version} value={v.nome}>{v.nome}</option>))}

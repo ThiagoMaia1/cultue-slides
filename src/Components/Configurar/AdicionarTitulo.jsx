@@ -38,7 +38,7 @@ class AdicionarTitulo extends Component {
         return (
             <div className='conteudo-popup'>
                 <div>
-                    <h4>Adicionar Slide de Título</h4>
+                    <h4 className='titulo-popup'>Adicionar Slide de Título</h4>
                     <input id="titulo" className='combo-popup' type='text' placeholder='Título do slide' />
                 </div>
                 <textarea id="subtitulo" className='combo-popup' placeholder='Texto do slide'></textarea>

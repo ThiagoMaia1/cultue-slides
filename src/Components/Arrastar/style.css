@@ -3,6 +3,9 @@
   height: 60vh;
   border-radius: 0.7vh;
   overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .coluna.arrastar {
@@ -155,20 +158,23 @@ h1 {
 }
 
 .excluir-elemento {
-  font-size: 80%;
-  font-weight: 600;
-  right: 3%;
-  top: 5px;
-  padding: 0 2.5px 0 2px;
+  font-size: 50%;
+  right: 0.6vh;
+  top: 0.6vh;
+  height: 1.7vh;
+  width: 1.7vh;
+  line-height: 0.1vh;
+  padding-top: 0.1vh;
   position: absolute;
   opacity: 0;
-  text-align: center;
-  border: 0.2px solid black;
-  border-radius: 2.5px;
-  line-height: 100%;
-  background-color: darkgray;
+  border-radius: 0.3vh;
+  color: white;
+  background-color: black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .excluir-elemento:hover {
-  opacity: 0.6;
+  opacity: 1;
 }

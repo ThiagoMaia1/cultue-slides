@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import './stylerange.css';
+import './slider.css';
 
 class Slider extends Component {
 
@@ -24,7 +24,7 @@ class Slider extends Component {
         var posicao = (valor - this.min)/distancia;
         this.props.callbackFunction(valor);
         this.setState({valor: this.getValorUnidade(valor)});
-        var coordenadaX = (0.97 - posicao)*70 + "%";
+        var coordenadaX = (1.10 - posicao)*58 + "%";
         this.setState({coordenadaX: coordenadaX});
         return coordenadaX;
     }

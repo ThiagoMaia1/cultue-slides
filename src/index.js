@@ -8,8 +8,8 @@
 //   ✔️ Corrigir problemas no leitor de referência bíblica.
 // 
 // Errinhos para corrigir:
-//    (Não consegui reproduzir) 'Null' no título do slide em alguns casos (e.g. múltiplas referências)
-//    Redivisão de slides duplicando versículos quando a letra fica muito grande.
+//    'Null' no título do slide quando a referência é como: lc3-5.
+//    ✔️ Redivisão de slides duplicando versículos quando a letra fica muito grande.
 //    ✔️ Realce se mantém no modo de apresentação.
 //    ✔️ Marcação de clicados no Negrito e afins.
 //    Limpar variáveis action no reducer.
@@ -137,7 +137,11 @@ export class Element {
           var textoSlide = linhas.join(' ').replace(/\n /g,'\n');
           this.slides[nSlide].texto = textoSlide;
           this.slides[nSlide].textoArray = texto.slice(0, i+1);
-          if (proximaPalavra !== '') this.dividirTexto(texto.slice(i+1), nSlide+1, estGlobal);
+          if (proximaPalavra !== '') {
+            this.dividirTexto(texto.slice(i+1), nSlide+1, estGlobal);
+          } else {
+            this.slides = this.slides.slice(0, nSlide+1);
+          }
           return;
       }
     }

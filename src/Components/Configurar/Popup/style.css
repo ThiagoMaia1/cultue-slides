@@ -44,6 +44,10 @@ html, body, .app {
   position: absolute;
 }
 
+.titulo-popup {
+  padding-left: 2vh;
+}
+
 #fechar{
   position: relative;
   float: right;

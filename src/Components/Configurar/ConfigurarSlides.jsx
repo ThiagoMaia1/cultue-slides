@@ -112,13 +112,11 @@ class ConfigurarSlides extends Component {
     this.setState({aba: aba});
     this.props.dispatch({type: 'ativar-realce', realce: {aba: aba.nomeCodigo, cor: aba.corRealce}});
   }
-
+  
   ativarPainelCor = callback => {
     this.setState({painelCor: (
-      <div className='div-painel-cor' onMouseLeave={() => this.setState({painelCor: null})}>
-        <div className='painel-cor' onMouseLeave={() => this.setState({painelCor: null})}>
-          <CompactPicker onChange={callback} style={{zIndex: '30', position: 'absolute'}}/>
-        </div>
+      <div className='painel-cor' onMouseLeave={() => this.setState({painelCor: null})}>
+        <div style={{transform: 'scale(' + window.innerHeight/850 + ')', transformOrigin: 'top left', position: 'relative'}}><CompactPicker onChange={callback}/></div>
       </div>
     )
     })
@@ -198,7 +196,7 @@ class ConfigurarSlides extends Component {
 
 	render() {
 		return (
-      <div>
+      <div id='painel-configuracao'>
           <div id='abas'>
             {this.gerarBotoesAbas()}
           </div>
