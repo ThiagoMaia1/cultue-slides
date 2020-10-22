@@ -64,7 +64,7 @@ html, body, .app {
 }
 
 .botao {
-  margin: 1.7vh 0 0 1vh;
+  margin: 1.7vh 0 0 0;
   padding: 0.9vh 1.5vh;
   background: var(--platinum);
   border-radius: var(--round-border-pequeno);

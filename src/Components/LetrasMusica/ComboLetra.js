@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import './style.css';
 import Carregando from './Carregando.jsx';
 import ItemListaMusica from './ItemListaMusica.jsx';
-import { Element } from '../../index'
+import Element from '../../Element'
 import logoVagalume from './Logo Vagalume.png'
 
 const url = 'https://api.vagalume.com.br/'

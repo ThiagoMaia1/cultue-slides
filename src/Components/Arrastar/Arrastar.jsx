@@ -19,14 +19,15 @@ class Arrastar extends React.Component {
 
   dragEnd(e) {
     this.dragged.style.display = 'block';
-    if (!this.over.className) return;
+    if (!this.over) return;
     var novaOrdem = [...this.props.elementos];
     var from = Number(this.dragged.dataset.id);
     var to = Number(this.over.dataset.id)+1;
     if(from < to) to--;
     novaOrdem.splice(to, 0, novaOrdem.splice(from, 1)[0]);
-    this.props.dispatch({type:'reordenar', novaOrdemElementos: novaOrdem, novaSelecao: {elemento: to, slide: 0}});
+    this.props.dispatch({type:'reordenar', novaOrdemElementos: novaOrdem, selecionado: {elemento: to, slide: 0}});
     this.setState({placeholder: -1});
+    [ this.over, this.dragged ] = [ null, null ];
   }
   
   dragOver(e) {
@@ -45,7 +46,7 @@ class Arrastar extends React.Component {
   }
 
   marcarSelecionado (item, slide) {
-    this.props.dispatch({type: 'definir-selecao', novaSelecao: {elemento: item, slide: slide}})
+    this.props.dispatch({type: 'definir-selecao', selecionado: {elemento: item, slide: slide}})
   }
 
   excluirElemento = (e) => {

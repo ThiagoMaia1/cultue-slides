@@ -224,6 +224,10 @@
     display: flex;
 }
 
+.lista-slides-padrao button {
+    margin-left: 1vh;
+}
+
 .titulo-secao-popup {
     margin: 1.7vh 0 0 0.7vh;
     padding: 0.9vh 1.5vh;

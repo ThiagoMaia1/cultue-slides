@@ -2,6 +2,7 @@
     flex: 1;
     overflow: hidden;
     position: relative;  
+    margin-top: 0.5vh;
 }
 
 .file-input-container [type=file] {
@@ -19,7 +20,6 @@
 }
 
 .animacao-drag-over {
-    /* background-color: rgba(255, 0, 0, 0.233); */
     position: absolute;
     display: flex;
     flex-direction: column;
@@ -52,8 +52,8 @@
 .previa-imagem-upload {
     box-shadow: var(--box-shadow);
     border-radius: var(--round-border-grande);
-    width: 30vh;
-    height: 22.5vh;
+    width: 24vh;
+    height: 18vh;
     object-fit: scale-down;
 }
 
@@ -64,5 +64,9 @@
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    font-size: 150%;
+    font-size: 130%;
+}
+
+.texto-auxiliar {
+    color: gray;
 }

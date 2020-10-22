@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import '../LetrasMusica/style.css';
-import { Element } from '../../index'
+import Element from '../../Element'
 import { connect } from 'react-redux';
 
 const listaSlidesPadrao = [{titulo: 'Visitantes', subtitulo: 'Sejam bem-vindos à nossa Igreja!'},

@@ -3,7 +3,7 @@ import livros from './Livros.json';
 import versoes from './Versoes.json';
 import './style.css';
 import { extrairReferencias, RefInvalida } from "./referenciaBiblica"
-import { Element } from '../../index'
+import Element from '../../Element'
 import { connect } from 'react-redux'
 import { formatarVersiculos, formatarVersiculosSlide } from '../Preview/TextoPreview.jsx'
 import Carregando from '../LetrasMusica/Carregando.jsx';
