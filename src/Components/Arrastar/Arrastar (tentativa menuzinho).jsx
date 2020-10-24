@@ -10,8 +10,8 @@ class Arrastar extends React.Component {
   constructor(props) {
     super(props);
     this.ref = React.createRef();
-    this.state = {...props, painelAdicionar: true, posicaoPainelAdicionar: {position: 'relative'}, 
-                  selecionado: 0, placeholder: -1, carrosselAtivo: false};
+    this.state = {...props, painelAdicionar: true, alturaPainelAdicionar: 0, posicaoPainelAdicionar: 'relative', direcaoPainelAdicionar: 'flex-start',
+                  selecionado: 0, placeholder: -1, carrosselAtivo: false, alturaMenuAdicionar: 23};
   }
 
   dragStart(e) {
@@ -63,10 +63,26 @@ class Arrastar extends React.Component {
   }
 
   abrirPainelAdicionar = () => {
-    this.setState({painelAdicionar: !this.state.painelAdicionar,
-                   posicaoPainelAdicionar: this.ref.current.offsetHeight >= 0.6*window.innerHeight ?
-                                              {position: 'absolute', top: '-18vh'} :
-                                              {position: 'relative'}});
+    var sentido = this.state.alturaMenuAdicionar >= 23 ? -0.4 : 0.4;
+    this.animacao = setInterval(() => {
+      var a = this.state.alturaMenuAdicionar;
+      var t = this.state.alturaPainelAdicionar;
+      if ((sentido >= 0 && a <= 23) || (sentido <= 0 && a >= 4)) {
+        a += sentido;
+      } else if ((sentido <= 0 && t <= 0) || (sentido >=0 && t >= -15)){
+        t -= sentido;
+      } else {
+        clearInterval(this.animacao);
+        return;
+      }
+      this.setState({alturaMenuAdicionar: a, alturaPainelAdicionar: t});
+    }, 10)
+    if (this.ref.current.offsetHeight >= 0.55*window.innerHeight) {
+      this.setState({direcaoPainelAdicionar: 'flex-end', posicaoPainelAdicionar: 'absolute'});
+    } else {
+      this.setState({direcaoPainelAdicionar: 'flex-start', posicaoPainelAdicionar: 'relative'});
+    }
+    this.setState({painelAdicionar: !this.state.painelAdicionar});
   }
 
   abrirPopup = ComponenteConteudoPopup => {
@@ -118,7 +134,7 @@ class Arrastar extends React.Component {
             onDragEnd={this.dragEnd.bind(this)}
             onDragStart={this.dragStart.bind(this)}
             onDragOver={this.dragOver.bind(this)}
-            style={{marginBottom: this.state.placeholder === i ? this.tamanhoPlaceholder + 'px' : (i === this.props.elementos.length-1 ? '0': '')}}>
+            style={{marginBottom: this.state.placeholder === i ? this.tamanhoPlaceholder + 'px' : ''}}>
             <div className='div-excluir'>
               <div data-id={i} className='excluir-elemento' onClick={e => this.excluirElemento(e)}>✕</div>
             </div>
@@ -135,7 +151,7 @@ class Arrastar extends React.Component {
         <div className='coluna-lista-slides'>
           <div className='gradiente-coluna emcima'></div>
           <div className='gradiente-coluna embaixo'></div>
-          <Carrossel direcao='vertical' tamanhoIcone={50} refGaleria={this.ref} tamanhoMaximo={'55vh'} style={{zIndex: '20', width: '20vw', height: 'auto'}}>
+          <Carrossel direcao='vertical' tamanhoIcone={50} refGaleria={this.ref} tamanhoMaximo={'58vh'} style={{zIndex: '20', width: '20vw', height: 'min-content'}}>
               <ol ref={this.ref} id="ordem-elementos">
                 <div id="slide-mestre" className={'itens ' + (this.props.selecionado.elemento === 0 ? 'selecionado' : '')} data-id={0}
                   onClick={() => this.marcarSelecionado(0, 0)}
@@ -147,10 +163,14 @@ class Arrastar extends React.Component {
               </ol>
           </Carrossel>
           <div className='tampao-do-overflow'>
-            <div id="adicionar-slide" onClick={this.abrirPainelAdicionar} 
-                  className={'botao-azul itens lista-slides ' + (this.props.elementos.length > 1 ? '' : 'selecionado')}>Adicionar Slide</div>
-            {this.state.painelAdicionar ? 
-              <div className='container-adicionar' style={this.state.posicaoPainelAdicionar}><Adicionar callback={this.abrirPopup} /></div> : null} 
+            <div id="adicionar-slide" onClick={this.abrirPainelAdicionar} style={{height: this.state.alturaMenuAdicionar + 'vh', justifyContent: this.state.direcaoPainelAdicionar}}
+                  className={'botao-azul itens lista-slides ' + (this.props.elementos.length > 1 ? '' : 'selecionado')}>
+                  <div>Adicionar Slide</div>
+                {this.state.painelAdicionar ? 
+                  <div className='container-adicionar' style={{position: this.state.posicaoPainelAdicionar, top: this.state.alturaPainelAdicionar}}>
+                    <Adicionar callback={this.abrirPopup} />
+                  </div> : null}
+              </div>
           </div>
         </div>
         {this.state.popupCompleto}

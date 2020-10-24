@@ -52,7 +52,7 @@
     position: relative;
     left: 83%;
     width: 4vh;
-    pointer-events: all;
+    pointer-events: auto;
     display: flex;
     flex-direction: column;
     color: white;
@@ -64,7 +64,7 @@
 }
 
 .botoes-direita .bool:hover {
-    background-color: var(--azul-oxford);
+    background-color: var(--azul-oxford) !important;
 }
 
 .configuracoes-texto {
@@ -87,7 +87,7 @@
 }
 
 .botao-configuracao.bool:hover, .botao-alinhamento:hover {
-    background-color: #e5e5e5;
+    background-color: var(--platinum-forte);
 }
 
 .botao-alinhamento {
@@ -174,10 +174,6 @@
 
 .clicado {
     box-shadow: inset 0px 2px 7px #a3a3a3;
-}
-
-.botao-adicionar {
-    text-align: center;
 }
 
 .lista-slides-padrao {

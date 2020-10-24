@@ -10,3 +10,26 @@
   justify-content: space-evenly;
   align-items: top;
 }
+
+.botao-azul {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--azul-forte);
+  color: white;
+  box-shadow: var(--box-shadow);
+  border-radius: var(--round-border-medio);
+  text-align: center;
+  z-index: 50;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -webkit-touch-callout: none;
+  -moz-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+}
+
+.botao-azul:hover {
+  background-color: var(--azul-oxford);
+}

@@ -21,11 +21,11 @@ class Adicionar extends Component {
                         <div><div id='p-adicionar-slide'>Adicionar um Slide</div>
                         <GrChapterAdd size={50}/></div>
                     </div> */}
-                    <button className="Título itens botao-adicionar" onClick={() => this.props.callback(AdicionarTitulo)}>Título</button>
-                    <button className="Texto-Bíblico itens botao-adicionar" onClick={() => this.props.callback(TextoBiblico)}>Texto Bíblico</button>
-                    <button className="Música itens botao-adicionar" onClick={() => this.props.callback(ComboLetra)}>Música</button>
-                    <button className="Imagem itens botao-adicionar" onClick={() => this.props.callback(AdicionarImagem)}>Ima- gem</button>
-                    <button className="Vídeo itens botao-adicionar" onClick={() => this.props.callback(Desenv)}>Vídeo</button>
+                    <button className="botao-azul itens" onClick={() => this.props.callback(AdicionarTitulo)}>Título</button>
+                    <button className="botao-azul itens" onClick={() => this.props.callback(TextoBiblico)}>Texto Bíblico</button>
+                    <button className="botao-azul itens" onClick={() => this.props.callback(ComboLetra)}>Música</button>
+                    <button className="botao-azul itens" onClick={() => this.props.callback(AdicionarImagem)}>Ima- gem</button>
+                    <button className="botao-azul itens" onClick={() => this.props.callback(Desenv)}>Vídeo</button>
                 </div>
                 
             </>

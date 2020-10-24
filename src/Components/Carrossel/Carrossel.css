@@ -1,6 +1,5 @@
 .carrossel {
     position: relative;
-    color: gray;
     overflow: hidden;
     width: inherit;
     height: inherit;
@@ -10,8 +9,12 @@
 }
 
 .seta-galeria {
+    color: gray;
     z-index: inherit;
     position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .container-galeria {

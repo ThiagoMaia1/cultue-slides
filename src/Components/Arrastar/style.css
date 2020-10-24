@@ -1,6 +1,6 @@
 .coluna {
   width: 40vh;
-  height: 60vh;
+  height: 58vh;
   border-radius: var(--round-border-pequeno);
   display: flex;
   flex-direction: column;
@@ -13,17 +13,9 @@
 
 .coluna-lista-slides {
   width: 23vw;
-  height: 63vh;
+  height: 58vh;
   position: relative;
   margin-top: -3vh;
-}
-
-.container-lista-slides {
-  margin-top: 3vh;
-  width: 23vw;
-  height: 63vh;
-  overflow: visible;
-  position: relative;
 }
 
 .gradiente-coluna {
@@ -35,7 +27,7 @@
 }
 
 .gradiente-coluna.embaixo {
-  top: 60.5vh;
+  top: 55vh;
   background-image: linear-gradient(to bottom, transparent,  white);
 }
 
@@ -46,10 +38,11 @@
 
 #ordem-elementos {
   width: 18vw;
-  margin: 0 6%;
+  margin: 0 5%;
+  height: auto;
   overflow: visible;
-  /* position: absolute; */
-  /* top: 0; */
+  position: relative;
+  padding: 3vh 0 3vh;
 }
 
 ol {
@@ -77,7 +70,7 @@ ol {
 }
 
 .item-sublista:hover {
-  background: #e5e5e5;
+  background: var(--platinum-forte);
 }
 
 .bloco-reordenar {
@@ -91,11 +84,6 @@ ol {
   z-index: 30;
 }
 
-h1 {
-  border-left: 5px solid #e1e1e1;
-  padding-left: 5px;
-}
-
 .itens {
   margin: 0.5vh 0.5vh 0 0;
   padding: 1.2vh 1.2vh;
@@ -106,22 +94,30 @@ h1 {
 }
 
 #slide-mestre {
-  margin-top: 3vh;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -webkit-touch-callout: none;
+  -moz-user-select: none;
+  -o-user-select: none;
   user-select: none;
   text-align: center;
-  background-color: var(--azul-forte);
+  background-color: black;
   color: white;
 }
 
 #slide-mestre:hover {
-  background-color: var(--azul-oxford);
+  background-color: #202020;
 }
 
 #adicionar-slide {
-  user-select: none;
-  text-align: center;
-  margin-top: 1vh;
   position: relative;
+  width: 18vw;
+  margin: 0 5%;
+  background-color: var(--azul-forte);
+}
+
+#adicionar-slide:hover {
+  background-color: var(--azul-oxford);
 }
 
 .lista-slides {
@@ -129,7 +125,7 @@ h1 {
 }
 
 .lista-slides:hover {
-  background: #e5e5e5;
+  background: var(--platinum-forte);
 }
 
 .selecionado:not(.item-sublista) {
@@ -177,7 +173,8 @@ h1 {
 }
 
 .container-adicionar {
-  position: relative;
+  width: 18vw;
+  margin: 0 6%;
 }
 
 #div-botoes {
@@ -201,15 +198,23 @@ h1 {
   max-width: 8.5vh;
   height: 7vh;
   margin: 1vh 1vh 0 0;
+  text-align: center;
+  /* color: black; */
+  background: var(--azul-forte);
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: var(--azul-forte);
-  color: white;
-  box-shadow: var(--box-shadow);
 }
 
 #div-botoes .itens:hover {
   background-color: var(--azul-oxford);
+}
+
+.tampao-do-overflow {
+  background: white;
+  height: 100%;
+  width: 100%;
+  position: relative;
+  z-index: 40;
 }

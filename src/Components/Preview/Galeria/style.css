@@ -1,12 +1,23 @@
+#botao-mostrar-galeria {
+    overflow: hidden;
+    position: fixed;
+}
+
+.container-carrossel-fundos {
+    position: relative;
+    overflow: visible;
+    pointer-events: auto;
+}
+
 .galeria-fundos {
     height: 24vh;
-    margin: 3vh 0;
+    margin-top: 3.8vh;
     flex: 0 0;
     display: flex;
     width: auto;
     flex-direction: row;
     position: relative;
-    /* overflow: visible; */
+    background-color: var(--azul-forte);
 }
 
 .div-img {
@@ -24,7 +35,6 @@
 .imagem-galeria {
     height: 100%;
     width: 100%;
-    position: absolute;
     box-shadow: var(--box-shadow);
     border-radius: var(--round-border-grande);
 }
@@ -44,16 +54,23 @@
 }
 
 #botao-enviar-fundo {
-    background-color: var(--azul-forte);
-    color: white;
-    font-size: 150%;
+    background-color: var(--platinum-forte);
+    font-size: 1.7vw;
     text-align: center;
     align-items: center;
     display: flex;
     flex-direction: row;
     justify-content: center;
+    color: black;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -webkit-touch-callout: none;
+    -moz-user-select: none;
+    -o-user-select: none;
+    user-select: none;
 }
 
 #botao-enviar-fundo:hover {
-    background-color: var(--azul-oxford);
+    background-color: #dddddd;
 }
+
