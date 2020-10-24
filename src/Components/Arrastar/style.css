@@ -199,16 +199,17 @@ ol {
   height: 7vh;
   margin: 1vh 1vh 0 0;
   text-align: center;
-  /* color: black; */
-  background: var(--azul-forte);
+  color: var(--platinum-forte);
+  background: var(--azul-fraco);
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  box-shadow: 3px 6px 7px rgba(0,0,0,0.7);;
 }
 
 #div-botoes .itens:hover {
-  background-color: var(--azul-oxford);
+  background-color: var(--azul-forte);
 }
 
 .tampao-do-overflow {

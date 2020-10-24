@@ -24,16 +24,17 @@ class Img extends Component {
 
     togglePrevia(estiloImagem) {
         var img = {...estiloImagem};
-        if (img.fundo && img.fundo.match(/Galeria/) === null) 
-            img.fundo = img.fundo.replace('./','./Galeria/');
-        this.props.dispatch({type: 'atualizar-estilo', objeto: 'fundo', valor: img.fundo});
+        var fundo = {...img.fundo};
+        if (typeof fundo.src === 'string' && fundo.src.match(/Galeria/) === null) 
+            fundo.src = fundo.src.replace('./','./Galeria/');
+        this.props.dispatch({type: 'atualizar-estilo', objeto: 'fundo', valor: fundo});
         this.props.dispatch({type: 'atualizar-estilo', objeto: 'tampao', valor: img.tampao});
         this.props.dispatch({type: 'atualizar-estilo', objeto: 'texto', valor: {color: img.texto.color}});
     }
 
     render () {
         return (
-            <div id={'img-galeria-path-' + this.props.imagem.fundo} className='div-img' 
+            <div className='div-img' 
                 onClick={this.onClick}
                 onMouseOver={this.onMouseOver}
                 onMouseLeave={this.onMouseLeave}>
@@ -42,7 +43,7 @@ class Img extends Component {
                 </div>
                 <div className='tampao' style={this.props.imagem.tampao}></div>
                 <img className='imagem-galeria' 
-                     src={this.props.imagem.fundo ? require('' + this.props.imagem.fundo.replace(/.jpg|.png/,'-300px.jpg')) : this.props.imagem.src} 
+                     src={typeof this.props.imagem.fundo.src === 'string' ? require('' + this.props.imagem.fundo.src.replace(/.jpg|.png/,'-300px.jpg')) : this.props.imagem.fundo.src} 
                      alt={this.props.imagem.alt}
                 />
             </div>

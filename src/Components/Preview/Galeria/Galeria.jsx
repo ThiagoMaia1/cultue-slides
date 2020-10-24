@@ -37,7 +37,7 @@ class Galeria extends Component {
     getImagens() {
         var imagens = [];
         for (var i of listaFundos.imagens) {
-            imagens.push({id: i.path, fundo: './Fundos/' + i.path, alt: i.path.split('.')[0], tampao: i.tampao, texto: {color: i.color}})
+            imagens.push({fundo: {src:'./Fundos/' + i.path}, alt: i.path.split('.')[0], tampao: i.tampao, texto: {color: i.color}})
         }
         return imagens;
     }
@@ -52,7 +52,7 @@ class Galeria extends Component {
     }
 
     enviarImagensFundo = imagens => {
-        var imgs = imagens.map(i => ({...i, texto: {color: '#000'}, tampao: {opacity: 0}}))
+        var imgs = imagens.map(i => ({imagem: i, fundo: {src: i.src}, alt: i.alt, height: i.height, width: i.width, texto: {color: '#000'}, tampao: {opacity: 0}}))
         this.setState({imagens: [...imgs, ...this.state.imagens]})
     }
 
@@ -66,7 +66,7 @@ class Galeria extends Component {
                 <div className={'container-carrossel-fundos'} style={{display: this.state.galeriaVisivel ? '' : 'none'}}
                      onClick={e => e.stopPropagation()}>
                     <Carrossel tamanhoIcone={100} refGaleria={this.ref} tamanhoMaximo='96vw' style={{zIndex: '45'}} corGradiente='var(--azul-forte)'
-                               percentualBeirada={0.1}>
+                               percentualBeirada={0.04}>
                         <div ref={this.ref} className='galeria-fundos'>
                             <div className='div-img' onClick={this.abrirPopup}>
                                 <div id='botao-enviar-fundo' className='imagem-galeria'>Enviar Fundo Personalizado</div>

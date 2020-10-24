@@ -91,12 +91,7 @@ export const reducerElementos = function (state = defaultList, action) {
     }
     case "limpar-estilo": {
       if (sel.elemento === 0 && sel.slide === 0) {
-        if (action.objeto) {
-          el[0].slides[0].estilo[action.objeto] = estiloPadrao[action.objeto];
-        } else {
-          var f = el[sel.elemento].slides[sel.slide].estilo.fundo
-          el[sel.elemento].slides[sel.slide].estilo = {...estiloPadrao, fundo: f};
-        }  
+        el[0].slides[0].estilo[action.objeto] = estiloPadrao[action.objeto];  
       } else {
         if (action.objeto) {
           el[sel.elemento].slides[sel.slide].estilo[action.objeto] = {};
@@ -160,7 +155,7 @@ function getSlidePreview (state) {
   var estiloParagrafo = {...estiloTexto, ...global.estilo.paragrafo, ...elemento.estilo.paragrafo, ...slide.estilo.paragrafo};
   var estiloTitulo = {...estiloTexto, ...global.estilo.titulo, ...elemento.estilo.titulo, ...slide.estilo.titulo};
   var tipo = state.elementos[sel.elemento].tipo;
-  var titulo = capitalize(state.elementos[sel.elemento].titulo, estiloTitulo.caseTexto)
+  var titulo = capitalize(state.elementos[sel.elemento].titulo, estiloTitulo.caseTexto);
 
   return {tipo: tipo,
     nomeLongoElemento: tipo.replace('-', ' ') + ': ' + ((tipo === 'Imagem' && !state.elementos[sel.elemento].titulo) ? elemento.imagem.alt : state.elementos[sel.elemento].titulo),
@@ -173,7 +168,7 @@ function getSlidePreview (state) {
     estilo: {
       titulo: {...estiloTitulo, ...getEstiloPad(estiloTitulo, 'titulo'), fontSize: estiloTitulo.fontSize*100 + '%', height: estiloTitulo.height*100 + '%'},
       paragrafo: {...getEstiloPad(estiloParagrafo, 'paragrafo'), fontSize: estiloParagrafo.fontSize*100 + '%'},
-      fundo: slide.estilo.fundo || elemento.estilo.fundo || global.estilo.fundo, 
+      fundo: {...global.estilo.fundo, ...elemento.estilo.fundo, ...slide.estilo.fundo}, 
       tampao: {...global.estilo.tampao, ...elemento.estilo.tampao, ...slide.estilo.tampao},
       texto: {...estiloTexto},
       imagem: {...global.estilo.imagem, ...elemento.estilo.imagem, ...slide.estilo.imagem}

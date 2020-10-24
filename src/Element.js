@@ -5,7 +5,7 @@ export class Estilo {
       this.texto = {}; 
       this.titulo = {}; 
       this.paragrafo = {}; 
-      this.fundo = null; 
+      this.fundo = {}; 
       this.tampao = {};
       this.imagem = {};
     }
@@ -15,12 +15,12 @@ export const estiloPadrao = {
     texto: {fontFamily: fonteBase.fontFamily}, 
     titulo: {fontSize: '3', height: '0.25', padding: '0.08'}, 
     paragrafo: {fontSize: '1.5', padding: '0.08', lineHeight: '1.7'}, 
-    fundo: './Galeria/Fundos/Aquarela.jpg', 
+    fundo: {src: './Galeria/Fundos/Aquarela.jpg'}, 
     tampao: {backgroundColor: '#fff', opacity: '0.2'}
 };
 
 export const proporcaoPadTop = 0;
-export const textoMestre = 'As configurações do estilo desse slide serão aplicadas aos demais, exceto quando configurações específicas de cada slide se sobrepuserem às deste. \n\n Este slide não será exibido no modo de apresentação.'
+export const textoMestre = 'As configurações do estilo desse slide serão aplicadas aos demais, exceto quando configurações específicas de cada slide se sobrepuserem às deste. \n\nEste slide não será exportado nem exibido no modo de apresentação.'
 
   
 export default class Element {

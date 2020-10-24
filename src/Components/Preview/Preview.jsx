@@ -115,11 +115,13 @@ class Preview extends Component {
     }
 }
 
-const Img = ({imagem}) => (
-    <>
-        <img id='fundo-preview' src={require('' + imagem)} alt='' />
-    </>
-);
+const Img = ({imagem}) => {
+    if (typeof imagem.src === 'string') {
+        return <img id='fundo-preview' src={require('' + imagem.src)} alt='' />
+    } else {
+        return <img id='fundo-preview' src={imagem.src} alt='' />
+    }
+};
 
 const mapStateToProps = function (state) {
     return {slidePreview: state.slidePreview, realce: state.realce}

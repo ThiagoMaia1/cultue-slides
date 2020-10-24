@@ -122,7 +122,7 @@ class InputImagem extends Component {
                     </div>
                 </div>
                 <div className='container-botoes-popup'>
-                    <button className='botao' onClick={() => this.props.callback(this.state.imagens)}>Inserir Imagem</button>
+                    <button className='botao' onClick={() => this.props.callback(this.state.imagens.filter(i => i.width))}>Inserir Imagem</button>
                     <button className='botao-limpar-input' onClick={this.limparInputs}>✕ Limpar</button>
                 </div>
             </>
