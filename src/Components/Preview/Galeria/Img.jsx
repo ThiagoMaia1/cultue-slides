@@ -37,7 +37,7 @@ class Img extends Component {
                 onClick={this.onClick}
                 onMouseOver={this.onMouseOver}
                 onMouseLeave={this.onMouseLeave}>
-                <div className='texto-mini-preview sombrear-selecao'>
+                <div className='texto-mini-preview'>
                     <div style={this.props.imagem.texto}>{this.props.imagem.alt}</div>
                 </div>
                 <div className='tampao' style={this.props.imagem.tampao}></div>
