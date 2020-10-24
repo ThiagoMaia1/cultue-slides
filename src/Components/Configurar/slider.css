@@ -13,7 +13,7 @@
 }
 
 .frame-range {
-  --diametro-bolinha: 20px;
+  --diametro-bolinha: 2vh;
   --height-barrinha: 1vh;
   --width-barrinha: 9vh;
   height: 12vh;
@@ -74,7 +74,7 @@ input[type=range]::-webkit-slider-runnable-track {
   width: var(--width-barrinha);
   height: var(--height-barrinha);
   background: rgb(209, 209, 209);
-  border-radius: 10px;
+  border-radius: 100px;
 }
 
 input[type=range]:focus::-webkit-slider-runnable-track {
@@ -85,14 +85,14 @@ input[type=range]::-moz-range-track {
   width: var(--width-barrinha);
   height: var(--height-barrinha);
   background: rgb(209, 209, 209);
-  border-radius: 10px;
+  border-radius: 100px;
 }
 
 input[type=range]::-ms-track {
   width: var(--width-barrinha);
   height: var(--height-barrinha);
   background: rgb(209, 209, 209);
-  border-radius: 10px;
+  border-radius: 100px;
 }
 
 .valor-flutuante {

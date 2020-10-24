@@ -2,17 +2,21 @@ import React, { Component } from 'react';
 import '../LetrasMusica/style.css';
 import './style.css';
 import { connect } from 'react-redux';
-import firebase, { firebaseStorage } from '../../firebase.js'
+// import firebase, { firebaseStorage } from '../../firebase.js'
+import Carrossel from '../Carrossel/Carrossel'
 
 class InputImagem extends Component {
     
     constructor (props) {
         super(props);
+        this.ref = React.createRef();
+        this.refInputFile = React.createRef();
         this.o = 100;
-        this.state = {...props, umArquivoInvalido: false, imagens: [], estiloCaixa: {opacity: '0'}};
+        this.state = {umArquivoInvalido: false, imagens: [], estiloCaixa: {opacity: '0'}, pointerEvents: 'none'};
     }
 
-    onDragOver = () => {
+    onDragOver = e => {
+        this.setState({pointerEvents: 'none'});
         if (this.animacao) return;
         this.setState({estiloCaixa: {...this.state.estiloCaixa, opacity: '1'}})
         this.o = 100;
@@ -53,17 +57,18 @@ class InputImagem extends Component {
             var imagem = new Image();
             var n = arquivo.name;
 
-            for (var i = n.length; i >= 0; i--) {
-                if (i === '.') {
+            for (var i = n.length-1; i >= 0; i--) {
+                if (n[i] === '.') {
                     n = n.slice(0, i-1);
                     break;
                 }
             }
 
             imagem.alt = n;
-            [ imagem.onload, imagem.onerror ] = [ adicionarImagem, adicionarImagem];
+            [ imagem.onload, imagem.onerror ] = [ adicionarImagem, adicionarImagem ];
             imagem.src = url.createObjectURL(arquivo);
         }
+        this.refInputFile.current.value = '';
     }
     
     gerarListaImagens = () => {
@@ -72,38 +77,52 @@ class InputImagem extends Component {
         if (imgs.length === 1 && !imgs[0].width) 
             return (<div style={{color: 'red'}}>Arquivo Inválido: {imgs[0].alt}</div>);
         return (
-            this.state.imagens.map( img => 
-                <div className='container-imagem-upload'>
-                    {img.width ?
+            <div className='container-imagens-previa-upload'>
+                {this.state.imagens.map( img => 
+                    <div className='container-imagem-upload'>
+                        {img.width ?
                         <img className='previa-imagem-upload' src={img.src} alt={img.alt}/> :
                         <div className='imagem-invalida previa-imagem-upload'>
                             <div>Arquivo Inválido: "{img.alt}"<br></br></div>
                             <div style={{fontSize: '120%'}}>✕</div>
-                        </div>}                    
-                </div>
-        )); 
+                        </div>}
+                    </div>)
+                }                    
+            </div>
+        )
     }
 
     limparInputs = () => {
         this.setState({umArquivoInvalido: false, imagens: []});
     }
+    
+    ativarSetas = () => {
+        setTimeout(() => this.setState({pointerEvents: {pointerEvents: ''}}), 50);
+    }                    
 
     render () {
         return (
             <>
-                <label className='file-input-container combo-popup' onDragOver={this.onDragOver} onDrop={this.onDrop}>
+                <div className='combo-popup caixa-input-imagem' 
+                    onDragOver={this.onDragOver} 
+                    onDrop={this.onDrop} 
+                    onMouseOver={this.ativarSetas}>
+                    <Carrossel refGaleria={this.ref} tamanhoMaximo='100%' direcao='vertical' style={{zIndex: '400', pointerEvents: this.state.pointerEvents}}>
+                        <div ref={this.ref} className='file-input-container' >
+                            <div className='container-texto-input-file'>
+                                <p className='texto-auxiliar'>Arraste uma imagem, ou clique para selecionar o arquivo.</p>
+                                {this.gerarListaImagens()}
+                            </div>
+                        </div>
+                    </Carrossel>
+                    <input ref={this.refInputFile} id="adicionar-imagem" className='combo-popup' type='file' multiple="multiple" accept="image/*" 
+                            onChange={e => this.validarImagem(e.target)} placeholder='Arraste uma imagem para fazer o upload' />
                     <div className='animacao-drag-over'>
                         <div className='tracejado-animacao' style={this.state.estiloCaixa}></div>
                     </div>
-                    <div className='container-texto-input-file'>
-                        <p className='texto-auxiliar'>Arraste uma imagem, ou clique para selecionar o arquivo.</p>
-                        {this.gerarListaImagens()}
-                    </div>
-                    <input id="adicionar-imagem" className='combo-popup' type='file' multiple="multiple" accept="image/*" 
-                            onChange={e => this.validarImagem(e.target)} placeholder='Arraste uma imagem para fazer o upload' />
-                </label>
+                </div>
                 <div className='container-botoes-popup'>
-                    <button className='botao' onClick={() => this.props.callback()}>Inserir Imagem</button>
+                    <button className='botao' onClick={() => this.props.callback(this.state.imagens)}>Inserir Imagem</button>
                     <button className='botao-limpar-input' onClick={this.limparInputs}>✕ Limpar</button>
                 </div>
             </>

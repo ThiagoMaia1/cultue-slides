@@ -21,9 +21,16 @@ class Slider extends Component {
 
     valorFlutuante(valor) {
         var distancia = this.max - this.min;
+        var setar = true;
+        if (!valor) {
+            valor = this.min + distancia/2;
+            setar = false;
+        }
         var posicao = (valor - this.min)/distancia;
-        this.props.callbackFunction(valor);
-        this.setState({valor: this.getValorUnidade(valor)});
+        if (setar) {
+            this.props.callbackFunction(valor);
+            this.setState({valor: this.getValorUnidade(valor)});
+        }
         var coordenadaX = (1.10 - posicao)*58 + "%";
         this.setState({coordenadaX: coordenadaX});
         return coordenadaX;

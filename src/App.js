@@ -15,8 +15,8 @@ function App() {
       <div className="App">
         <div id='organizador'>
           <Arrastar />
-          <Configurar />
           <Preview />
+          <Configurar />
         </div>
         <Galeria id='galeria'/>
       </div>

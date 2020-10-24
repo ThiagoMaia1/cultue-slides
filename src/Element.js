@@ -20,30 +20,36 @@ export const estiloPadrao = {
 };
 
 export const proporcaoPadTop = 0;
-export const textoMestre = 'As configurações do estilo desse slide serão aplicadas aos demais, exceto quando configurações específicas de cada slide se sobrepuserem as deste. \n\n Este slide não será exibido no modo de apresentação.'
+export const textoMestre = 'As configurações do estilo desse slide serão aplicadas aos demais, exceto quando configurações específicas de cada slide se sobrepuserem às deste. \n\n Este slide não será exibido no modo de apresentação.'
 
   
 export default class Element {
-    constructor(tipo, titulo, texto = [], imagem = null, estilo = {}, eMestre = false) {     
+    constructor(tipo, titulo, texto = [], imagens = [], estilo = {}, eMestre = false) {     
       this.tipo = tipo;
       this.titulo = titulo;
       this.texto = texto;
-      this.imagem = imagem;
+      this.imagens = imagens;
       this.eMestre = eMestre;
       
       var est = {...new Estilo(), ...estilo};
       if (this.tipo === 'Título' && texto.filter(t => t !== '').length === 0) est.titulo.height = '1';
-      this.slides = [{estilo: {...est}}];
+      this.slides = [{estilo: {...est}, eMestre: true, texto: textoMestre}];
       this.criarSlides(this.texto, est);
+
     }
   
     criarSlides = (texto, estiloMestre, nSlide = 0, estGlobal = null) => {
       if (this.slides[nSlide].eMestre) nSlide++;
-      this.dividirTexto(texto, nSlide, estiloMestre, estGlobal);
+      if (this.tipo === 'Imagem') {
+        this.dividirImagens();
+      } else {
+        this.dividirTexto(texto, nSlide, estiloMestre, estGlobal);
+      }
+      if (this.eMestre) return;
       if (this.slides.length > 1 && !this.slides[0].eMestre) {
         this.slides.unshift({estilo: {...estiloMestre}, texto: textoMestre, eMestre: true});
         this.slides[1].estilo = {...new Estilo()};
-      } else if (this.slides.length === 2 && this.slides[0].texto.eMestre) {
+      } else if (this.slides.length === 2 && this.slides[0].eMestre) {
         this.slides[1].estilo = this.slides[0].estilo;
         this.slides.shift();
       }
@@ -117,6 +123,16 @@ export default class Element {
         nSlide++;
       }
       return arrayTexto.flat();
+    }
+
+    dividirImagens = () => {
+      if (this.imagens.length === 1) {
+        this.slides[0].imagem = this.imagens[0];
+      } else {
+        for (var img of this.imagens) {
+          this.slides.push({estilo: {...new Estilo()}, imagem: img});
+        }
+      }
     }
 }
   

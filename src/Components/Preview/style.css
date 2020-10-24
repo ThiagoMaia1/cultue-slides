@@ -1,7 +1,15 @@
+.borda-slide-mestre {
+    border-radius: var(--round-border-grande);
+    padding: 1vh;
+    background-color: black;
+    color: white;    
+    box-shadow: var(--box-shadow);
+}
+
 #preview {
+    color: initial;
+    visibility: initial;
     position: relative;
-    width: 80vh;
-    height: 60vh;
     display: block;
     border-radius: var(--round-border-grande);
 }
@@ -53,6 +61,19 @@ img {
     flex: 1 1;
 }
 
+.div-imagem-slide {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 35;
+}
+
+.imagem-slide {
+    object-fit: contain;
+    width: 100%;
+    height: 100%;
+}
+
 #ativar-tela-cheia {
     position: absolute;
     text-align: center;
@@ -69,32 +90,6 @@ img {
     border-radius: var(--round-border-grande);
     display: flex;
     justify-content: space-between;
-}
-
-.container-marca-dagua-slide-mestre {
-    width: 100%;
-    height: 100%;
-    z-index: 15;
-    text-align: center;
-    position: absolute;
-    border-radius: var(--round-border-grande);
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-}
-
-.container-interno-marca-dagua {
-    width: auto;
-    top: 40%;
-    position: relative; 
-}
-
-.marca-dagua-slide-mestre {
-    opacity: 0.35;
-    font-size: 10vh;
-    transform: rotate(-25deg);
-    /* filter: hue-rotate(90deg); */
-    font-weight: 600;
 }
 
 .movimentar-slide {

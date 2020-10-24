@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import './style.css';
 import { connect } from 'react-redux';
 import { CgErase } from 'react-icons/cg';
-import { GrClone } from 'react-icons/gr'
+import { RiMastercardLine } from 'react-icons/ri'
 import { BsTextLeft, BsTextCenter, BsTextRight, BsJustify} from 'react-icons/bs';
 import { CompactPicker } from 'react-color';
 import { fonteBase } from '../Preview/Preview';
@@ -17,12 +17,13 @@ const listaEstilosTexto = [{apelido:'Negrito', nomeAtributo: 'fontWeight', valor
                            {apelido:'Sublinhado', nomeAtributo: 'textDecorationLine', valorNormal: 'none', valorAlterado: 'underline'}
 ];
                            
-const listaFontes = ['Helvetica', 'Arial', 'Times New Roman', 'Courier', 'Courier New', 'Verdana', 'Tahoma', 'Arial Black', 'Georgia', 'Impact']
+const listaFontes = ['Montserrat', 'Roboto', 'Source Sans Pro', 'Noto Sans', 'Helvetica', 'Arial', 'Times New Roman', 'Courier', 'Courier New', 'Verdana', 
+                     'Tahoma', 'Arial Black', 'Georgia', 'Impact']
 
 const listaBotoesAbas = [{nomeCodigo: 'texto', nomeInterface: 'Texto', cor: '', corRealce: 'white'},
-                         {nomeCodigo: 'titulo', nomeInterface: 'Título', cor: '#efefef', corRealce: '#fca311', maxFonte: '7'}, 
-                         {nomeCodigo: 'paragrafo', nomeInterface: 'Parágrafo', cor: '#efefef', corRealce: '#fca311', maxFonte: '4'}, 
-                         {nomeCodigo: 'tampao', nomeInterface: 'Fundo', cor: '#efefef', corRealce: '#fca311'}
+                         {nomeCodigo: 'titulo', nomeInterface: 'Título', cor: '#efefef', corRealce: 'var(--azul-forte)', maxFonte: '7'}, 
+                         {nomeCodigo: 'paragrafo', nomeInterface: 'Parágrafo', cor: '#efefef', corRealce: 'var(--azul-forte)', maxFonte: '4'}, 
+                         {nomeCodigo: 'tampao', nomeInterface: 'Fundo', cor: '#efefef', corRealce: 'var(--azul-forte)'}
 ];
 
 const listaBotoesAlinhamento = [{direcao: 'left', titulo: 'Alinhado à Esquerda', icone: BsTextLeft}, 
@@ -73,7 +74,7 @@ class ConfigurarSlides extends Component {
       objEstilo[e.nomeAtributo] = e.valorAlterado;
       return (
         <button title={e.apelido} 
-        className={'botao-configuracao-bool ' + (this.props.slideSelecionado.estilo[aba.nomeCodigo][e.nomeAtributo] === e.valorAlterado ? ' clicado' : '')} 
+        className={'botao-configuracao bool ' + (this.props.slideSelecionado.estilo[aba.nomeCodigo][e.nomeAtributo] === e.valorAlterado ? ' clicado' : '')} 
         onClick={() => this.toggleEstiloTexto(e)} 
         style={objEstilo}>{e.apelido[0]}</button>
       )
@@ -90,7 +91,11 @@ class ConfigurarSlides extends Component {
         <button title={b.titulo} 
                 style={bordas}
                 className={'botao-alinhamento ' + (this.props.slideSelecionado.estilo[aba.nomeCodigo].textAlign === b.direcao ? ' clicado' : '')} 
-                onClick={() => this.atualizarEstilo(this.state.aba.nomeCodigo, 'textAlign', b.direcao)}>
+                onClick={() => {
+                  var direcao = b.direcao;
+                  if (this.props.slideSelecionado.estilo[aba.nomeCodigo].textAlign === direcao) direcao = '';
+                  this.atualizarEstilo(this.state.aba.nomeCodigo, 'textAlign', direcao)
+                }}>
                 <Icone size={this.state.tamIcones}/>
         </button>
     )});
@@ -201,14 +206,14 @@ class ConfigurarSlides extends Component {
             {this.gerarBotoesAbas()}
           </div>
           <div className='configuracoes' style={this.state.aba.cor !== '' ? blocoShadow : null}>
-            <div className='container-botao-limpar'>
+            <div className='container-botoes-direita'>
               <div className='botoes-direita'>
-                <button title='Aplicar Estilo ao Slide-Mestre' className={'botao-configuracao-bool botao-clonar-estilo'} 
+                <button title='Aplicar Estilo ao Slide-Mestre' className={'botao-configuracao bool'} 
                         style={{visibility: this.props.selecionado.elemento === 0 ? 'hidden' : 'visible'}}
                         onClick={this.aplicarEstiloAoMestre}>
-                  <GrClone size={this.state.tamIcones} />
+                  <RiMastercardLine size={this.state.tamIcones} />
                 </button>
-                <button title='Limpar Estilos do Slide' className={'botao-configuracao-bool botao-limpar'} 
+                <button title='Limpar Estilos do Slide' className={'botao-configuracao bool'} 
                         onClick={this.limparEstilo}>
                   <CgErase size={this.state.tamIcones} />
                 </button>
@@ -216,26 +221,27 @@ class ConfigurarSlides extends Component {
             </div>
             <div className='configuracoes-texto' style={{display: (this.state.aba.nomeCodigo === 'tampao' ? 'none' : '')}}>
               <div className='linha-configuracoes-texto'>
-                <button id={'cor-texto'} className={'botao-configuracao-bool'} onMouseOver={() => this.ativarPainelCor(this.mudarCorFonte)}>A
-                  <div className='cor-texto' style={{backgroundColor: (this.props.slideSelecionado.estilo.texto.color)}}></div>
+                <button id={'cor-texto'} className={'botao-configuracao bool'} onMouseOver={() => this.ativarPainelCor(this.mudarCorFonte)}>
+                  <span className='a-cor-texto' style={{color: this.props.slideSelecionado.estilo.texto.color}}>A</span>
+                  <div className='cor-texto' style={{backgroundColor: this.props.slideSelecionado.estilo.texto.color}}></div>
                 </button>
-                <button title={casesTexto[this.state.caseTexto].valor} id='botao-case' className={'botao-configuracao-bool'} 
+                <button title={casesTexto[this.state.caseTexto].valor} id='botao-case' className={'botao-configuracao bool'} 
                         onClick={this.mudarCaseTexto}>{casesTexto[this.state.caseTexto].icone}</button>
-                <select className={'botoes-configuracao combo-fonte'} onChange={this.mudarFonte} 
+                <select className={'botao-configuracao combo-fonte'} onChange={this.mudarFonte} 
                         defaultValue={this.props.slideSelecionado.estilo[this.state.aba.nomeCodigo].fontFamily || fonteBase.fontFamily}
                         style={{fontFamily: this.props.slideSelecionado.estilo[this.state.aba.nomeCodigo].fontFamily || fonteBase.fontFamily}}>
                           {this.listaFontes}
                 </select>
               </div>
               <div className='linha-configuracoes-texto'>
-                <div className='negItaSub'>{this.gerarBotoesEstiloTexto(this.state.aba)}</div>
-                <div className='botoes-configuracao'>{this.gerarBotoesAlinhamento(this.state.aba)}</div>
+                {this.gerarBotoesEstiloTexto(this.state.aba)}
+                <div className='botao-configuracao'>{this.gerarBotoesAlinhamento(this.state.aba)}</div>
               </div>
             </div>
-            <button className={'botao-configuracao-bool'} onMouseOver={() => this.ativarPainelCor(this.mudarCorFundo)}
+            <button className={'botao-configuracao bool'} onMouseOver={() => this.ativarPainelCor(this.mudarCorFundo)}
                     style={{display: (this.state.aba.nomeCodigo === 'tampao' ? '' : 'none')}}>
                 <div className='container-cor-fundo'>
-                  <div className='quadriculado-imitando-transparente quadradinho-transparente'></div>
+                  <div className='quadriculado-imitando-transparente cor-fundo'></div>
                   <div className='cor-fundo' style={{backgroundColor: this.props.slideSelecionado.estilo.tampao.backgroundColor, 
                                                     opacity: this.props.slideSelecionado.estilo.tampao.opacity}}>
                   </div>

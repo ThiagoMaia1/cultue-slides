@@ -1,0 +1,31 @@
+.carrossel {
+    position: relative;
+    color: gray;
+    overflow: hidden;
+    width: inherit;
+    height: inherit;
+    flex: inherit;
+    display: inherit;
+    overflow: inherit;
+}
+
+.seta-galeria {
+    z-index: inherit;
+    position: absolute;
+}
+
+.container-galeria {
+    display: inline-block;
+    overflow: hidden;
+    width: inherit;
+    height: inherit;
+    flex: inherit;
+}
+
+.movimentador-galeria {
+    overflow: visible;
+    position: relative;
+    width: inherit;
+    height: inherit;
+    flex: inherit;
+}

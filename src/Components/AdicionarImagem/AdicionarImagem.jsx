@@ -10,8 +10,8 @@ class AdicionarImagem extends Component {
         this.state = {...props.state, titulo: ''};
     }
 
-    adicionarSlideImagem = img => {
-        this.props.dispatch({type: 'adicionar', elemento: new Element('Imagem', this.state.titulo, [], img)})
+    adicionarSlideImagem = imgs => {
+        this.props.dispatch({type: 'inserir', elemento: new Element('Imagem', this.state.titulo, [], imgs.filter(i => i.width))})
     }
 
     onChange = e => {
@@ -22,7 +22,7 @@ class AdicionarImagem extends Component {
         return (
             <div className='conteudo-popup'>
                 <h4 className='titulo-popup'>Adicionar Imagem</h4>
-                <input className='combo-popup' type='text' placeholder='Digite um título para o slide. (opcional)' onChange={this.onChange} />
+                <input className='combo-popup' type='text' placeholder='Digite um título para o slide (Opcional)' onChange={this.onChange} />
                 <InputImagem callback={this.adicionarSlideImagem} />
             </div>
         )

@@ -2,11 +2,15 @@ import React from 'react';
 import './style.css';
 import { connect } from 'react-redux';
 import { reverterSuperscrito } from '../Preview/TextoPreview.jsx';
+import Adicionar from '../Configurar/Adicionar';
+import Carrossel from '../Carrossel/Carrossel';
+import Popup from '../Configurar/Popup/Popup';
 
 class Arrastar extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {...props, aberto: 'hidden', selecionado: 0, placeholder: -1};
+    this.ref = React.createRef();
+    this.state = {...props, painelAdicionar: true, selecionado: 0, placeholder: -1, carrosselAtivo: false};
   }
 
   dragStart(e) {
@@ -57,6 +61,14 @@ class Arrastar extends React.Component {
       this.props.dispatch({type: 'deletar', elemento: e.target.dataset.id});
   }
 
+  abrirPopup = ComponenteConteudoPopup => {
+    this.setState({popupCompleto: (
+        <Popup ocultarPopup={() => this.setState({popupCompleto: null})}>
+            <ComponenteConteudoPopup />
+        </Popup>
+    ), painelAdicionar: false});
+  }
+
 	render() {
 
     var listItems = this.props.elementos.map((item, i) => {
@@ -66,7 +78,7 @@ class Arrastar extends React.Component {
         var listSlides = (<ol className='sublista'>
           {item.slides.map((slide, j) => {
             if (j === 0) return null; //Pula o slide 0, pois se tem múltiplos slides, o slide 0 é o mestre.
-            var conteudo = slide.texto.substr(0, 50);
+            var conteudo = item.tipo !== 'Imagem' ? slide.texto.substr(0, 50) : (item.titulo || slide.imagem.alt);
             if (item.tipo === 'Texto-Bíblico') { //Se for da bíblia, pega o número do verso.
               var n = 0;
               var palavras = slide.texto.split(' ');
@@ -98,33 +110,43 @@ class Arrastar extends React.Component {
             onDragEnd={this.dragEnd.bind(this)}
             onDragStart={this.dragStart.bind(this)}
             onDragOver={this.dragOver.bind(this)}
-            style={{marginBottom: i === this.state.placeholder ? this.tamanhoPlaceholder + 'px' : ''}}>
+            style={{marginBottom: this.state.placeholder === i ? this.tamanhoPlaceholder + 'px' : ''}}>
             <div className='div-excluir'>
               <div data-id={i} className='excluir-elemento' onClick={e => this.excluirElemento(e)}>✕</div>
             </div>
-            <div data-id={i} className={'itens ' + item.tipo}
+            <div data-id={i} className='itens lista-slides'
                  onClick={() => this.marcarSelecionado(i, 0)}>
-              <b>{i}. {item.tipo}: </b>{item.titulo}
+              <b>{i}. {item.tipo}: </b>{(item.tipo === 'Imagem' && !item.titulo) ? item.imagens[0].alt : item.titulo}
             </div>
             {listSlides}
           </li>
       )
     });
     return (
-      <div>
-        <div className="coluna arrastar">
+      <>
+        <div className='coluna-lista-slides'>
           <div className='gradiente-coluna emcima'></div>
           <div className='gradiente-coluna embaixo'></div>
-          <ol id="ordem-elementos">
-            <div id="slide-mestre" className={'itens ' + (this.props.selecionado.elemento ? '' : 'selecionado')} data-id={0}
-              onClick={() => this.marcarSelecionado(0, 0)}
-              onDragOver={this.dragOver.bind(this)}
-              style={{marginBottom: 0 === this.state.placeholder ? this.tamanhoPlaceholder + 'px' : ''}}>Slide-Mestre
+          <Carrossel direcao='vertical' refGaleria={this.ref} tamanhoMaximo={'60vh'}>
+            <div ref={this.ref} className='container-lista-slides' zIndex='150'>
+              <ol id="ordem-elementos">
+                <div id="slide-mestre" className={'itens ' + (this.props.selecionado.elemento === 0 ? 'selecionado' : '')} data-id={0}
+                  onClick={() => this.marcarSelecionado(0, 0)}
+                  onDragOver={this.dragOver.bind(this)}
+                  style={{marginBottom: this.state.placeholder === 0 ? this.tamanhoPlaceholder + 'px' : '', 
+                          display: this.props.elementos.length === 1 ? 'none' : ''}}>Slide-Mestre
+                </div>
+                {listItems}
+                <div id="adicionar-slide" onClick={() => this.setState({painelAdicionar: !this.state.painelAdicionar})} 
+                     className={'itens lista-slides ' + (this.props.elementos.length > 1 ? '' : 'selecionado')}>Adicionar Slide</div>
+                {this.state.painelAdicionar ? 
+                  <div className='container-adicionar'><Adicionar callback={this.abrirPopup} /></div> : null} 
+              </ol>
             </div>
-            {listItems}
-          </ol>
+          </Carrossel>
         </div>
-      </div>
+        {this.state.popupCompleto}
+      </>
     )
   }
 }

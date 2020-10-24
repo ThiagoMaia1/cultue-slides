@@ -12,7 +12,7 @@
 //   ✔️ Redivisão de slides duplicando versículos quando a letra fica muito grande.
 //   ✔️ Realce se mantém no modo de apresentação.
 //   ✔️ Marcação de clicados no Negrito e afins.
-//   Limpar variáveis action no reducer.
+//   ✔️ Limpar variáveis action no reducer.
 //   ✔️ Imagem ficando fixa apenas no hover.
 //   Zerar sliders ao limpar formatação.
 //   Incluir webfonts na combo de fontes disponíveis.
@@ -21,7 +21,7 @@
 //   Botão para zerar/começar nova apresentação.
 //
 // Features:
-//   Envio de imagens.
+//   ✔️ Envio de imagens.
 //   Incorporar vídeos do youtube.
 //   Login para salvar preferências.
 //   Exportar como power point, pdf e html.
@@ -31,6 +31,7 @@
 //   ✔️ Navegar slides clicando à direita ou esquerda.
 //   Marcador de repetições de estrofes nos slides de música/slide de refrão repetido.
 //   Enviar imagem para fundo.
+//   Criar slide a partir de lista com separador.
 
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -41,14 +42,9 @@ import hotkeys from 'hotkeys-js';
 import Element, { estiloPadrao, proporcaoPadTop, textoMestre, Estilo, capitalize } from './Element.js';
 
 
-const defaultList = {elementos: [
-  new Element("Slide-Mestre", "Slide-Mestre", [textoMestre], null, estiloPadrao, true),
-  new Element("Título","Exemplo",["Esta é uma apresentação de exemplo."]),
-  new Element('Texto-Bíblico',"João 1:1-3", ['João 1']),
-  new Element("Música","Jesus em Tua Presença",["Jesus em tua presença..."]),
-  new Element("Imagem","Aquarela",["./Fundos/Aquarela.jpg"])],
+const defaultList = {elementos: [new Element("Slide-Mestre", "Slide-Mestre", [textoMestre], null, estiloPadrao, true)],
   selecionado: {elemento: 0, slide: 0}, 
-  slidePreview: {selecionado: {elemento: 0, slide: 0}, texto: textoMestre, titulo: 'Slide-Mestre', 
+  slidePreview: {selecionado: {elemento: 0, slide: 0}, texto: textoMestre, titulo: 'Slide-Mestre', eMestre: true,
                  estilo: {...estiloPadrao, paragrafo: getEstiloPad(estiloPadrao.paragrafo, 'paragrafo'), titulo: getEstiloPad(estiloPadrao.paragrafo, 'titulo')}},
   realce: {aba: '', cor: ''}
 }
@@ -163,17 +159,24 @@ function getSlidePreview (state) {
   //Pra dividir o padding-top.
   var estiloParagrafo = {...estiloTexto, ...global.estilo.paragrafo, ...elemento.estilo.paragrafo, ...slide.estilo.paragrafo};
   var estiloTitulo = {...estiloTexto, ...global.estilo.titulo, ...elemento.estilo.titulo, ...slide.estilo.titulo};
+  var tipo = state.elementos[sel.elemento].tipo;
+  var titulo = capitalize(state.elementos[sel.elemento].titulo, estiloTitulo.caseTexto)
 
-  return {selecionado: {...sel},
+  return {tipo: tipo,
+    nomeLongoElemento: tipo.replace('-', ' ') + ': ' + ((tipo === 'Imagem' && !state.elementos[sel.elemento].titulo) ? elemento.imagem.alt : state.elementos[sel.elemento].titulo),
+    nomeLongoSlide: '',
+    selecionado: {...sel},
     texto: capitalize(slide.texto, estiloParagrafo.caseTexto),
-    titulo: capitalize(state.elementos[sel.elemento].titulo, estiloTitulo.caseTexto),
+    titulo: titulo,
     eMestre: slide.eMestre,
+    imagem: slide.imagem,
     estilo: {
       titulo: {...estiloTitulo, ...getEstiloPad(estiloTitulo, 'titulo'), fontSize: estiloTitulo.fontSize*100 + '%', height: estiloTitulo.height*100 + '%'},
       paragrafo: {...getEstiloPad(estiloParagrafo, 'paragrafo'), fontSize: estiloParagrafo.fontSize*100 + '%'},
       fundo: slide.estilo.fundo || elemento.estilo.fundo || global.estilo.fundo, 
       tampao: {...global.estilo.tampao, ...elemento.estilo.tampao, ...slide.estilo.tampao},
-      texto: {...estiloTexto}
+      texto: {...estiloTexto},
+      imagem: {...global.estilo.imagem, ...elemento.estilo.imagem, ...slide.estilo.imagem}
     }
   };
 }

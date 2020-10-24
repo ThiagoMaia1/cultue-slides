@@ -1,7 +1,7 @@
 import React from 'react';
 //import './style.css';
 import { connect } from 'react-redux';
-import Adicionar from './Adicionar';
+// import Adicionar from './Adicionar';
 import ConfigurarSlides from './ConfigurarSlides';
 
 class Configurar extends React.Component {
@@ -13,7 +13,7 @@ class Configurar extends React.Component {
 	render() {
 		return (
       <div className="coluna" >
-        <Adicionar />
+        {/* <Adicionar /> */}
         <ConfigurarSlides />
       </div>
     )   

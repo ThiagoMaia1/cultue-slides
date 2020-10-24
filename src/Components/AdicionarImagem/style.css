@@ -1,11 +1,17 @@
-.file-input-container {
-    flex: 1;
+.caixa-input-imagem {
     overflow: hidden;
-    position: relative;  
+    flex: 1;
     margin-top: 0.5vh;
+    position: relative; 
+    padding: 0;
 }
 
-.file-input-container [type=file] {
+.file-input-container {
+    overflow-y: visible;
+    position: relative;  
+}
+
+.caixa-input-imagem [type=file] {
     cursor: inherit;
     display: block;
     font-size: 999px;
@@ -17,6 +23,7 @@
     right: 0;
     text-align: right;
     top: 0;
+    z-index: 300;
 }
 
 .animacao-drag-over {
@@ -34,6 +41,8 @@
 .tracejado-animacao {
     border-radius: var(--round-border-medio);
     border: 0.5vh dashed #b9b9b9;
+    z-index: 450;
+    pointer-events: none;
 }
 
 .container-texto-input-file {
@@ -43,8 +52,7 @@
 }
 
 .container-imagem-upload {
-    margin-top: 4vh;
-    width: 100%;
+    margin: 2vh;
     display: flex;
     justify-content: center;
 }
@@ -52,8 +60,8 @@
 .previa-imagem-upload {
     box-shadow: var(--box-shadow);
     border-radius: var(--round-border-grande);
-    width: 24vh;
-    height: 18vh;
+    width: 12vw;
+    height: 9vw;
     object-fit: scale-down;
 }
 
@@ -69,4 +77,15 @@
 
 .texto-auxiliar {
     color: gray;
+}
+
+.container-imagens-previa-upload {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    flex-direction: row;
+}
+
+.file-input-container{
+    pointer-events: none;
 }

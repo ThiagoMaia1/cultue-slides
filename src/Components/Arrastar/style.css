@@ -1,8 +1,7 @@
 .coluna {
-  width: 20vw;
+  width: 40vh;
   height: 60vh;
   border-radius: var(--round-border-pequeno);
-  overflow-y: auto;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -10,21 +9,33 @@
 
 .coluna.arrastar {
   width: 23vw;
+}
+
+.coluna-lista-slides {
+  width: 23vw;
+  height: 63vh;
   position: relative;
-  margin-top: -2.6vh;
+  margin-top: -3vh;
+}
+
+.container-lista-slides {
+  margin-top: 3vh;
+  width: 23vw;
+  height: 63vh;
+  overflow: visible;
+  position: relative;
 }
 
 .gradiente-coluna {
   width: 100%;
-  height: 7%;
-  position: -webkit-sticky; /* Safari */
-  position: sticky;
+  height: 3vh;
+  position: absolute;
   z-index: 25;
   pointer-events: none;
 }
 
 .gradiente-coluna.embaixo {
-  top: 93%;
+  top: 60.5vh;
   background-image: linear-gradient(to bottom, transparent,  white);
 }
 
@@ -35,11 +46,10 @@
 
 #ordem-elementos {
   width: 18vw;
-  margin: 7% 7% 7% 7%;
+  margin: 0 6%;
   overflow: visible;
-  position: absolute;
-  top: 0;
-  display: block;
+  /* position: absolute; */
+  /* top: 0; */
 }
 
 ol {
@@ -63,6 +73,11 @@ ol {
   min-width: 30%;
   overflow: hidden;
   white-space: nowrap;
+  background-color: var(--platinum);
+}
+
+.item-sublista:hover {
+  background: #e5e5e5;
 }
 
 .bloco-reordenar {
@@ -82,7 +97,7 @@ h1 {
 }
 
 .itens {
-  margin: 0 auto 3px;
+  margin: 0.5vh 0.5vh 0 0;
   padding: 1.2vh 1.2vh;
   background: var(--platinum);
   border-radius: var(--round-border-pequeno);
@@ -91,52 +106,34 @@ h1 {
 }
 
 #slide-mestre {
+  margin-top: 3vh;
   user-select: none;
   text-align: center;
+  background-color: var(--azul-forte);
+  color: white;
 }
 
-.Texto-Bíblico {
-  background: var(--azul-fraco);
+#slide-mestre:hover {
+  background-color: var(--azul-oxford);
 }
 
-.Música {
-  background: var(--azul-fraco);
+#adicionar-slide {
+  user-select: none;
+  text-align: center;
+  margin-top: 1vh;
+  position: relative;
 }
 
-.Título {
-  background: var(--azul-fraco);
+.lista-slides {
+  background: var(--platinum);
 }
 
-.Imagem {
-  background: var(--azul-fraco);
-}
-
-.Vídeo {
-  background: var(--azul-fraco);
-}
-
-.Texto-Bíblico:hover {
-  background: var(--azul-forte);
-}
-
-.Música:hover {
-  background: var(--azul-forte);
-}
-
-.Título:hover {
-  background: var(--azul-forte);
-}
-
-.Imagem:hover {
-  background: var(--azul-forte);
-}
-
-.Vídeo:hover {
-  background: var(--azul-forte);
+.lista-slides:hover {
+  background: #e5e5e5;
 }
 
 .selecionado:not(.item-sublista) {
-  transform: scale(1.1);
+  transform: scale(1.08);
   margin: 1.5vh 0 1.7vh;
 }
 
@@ -144,7 +141,7 @@ h1 {
   transform: scale(1.2);
 }
 
-.selecionado .itens, .selecionado .item-sublista, .selecionado.item-sublista, .selecionado#slide-mestre {
+.selecionado .itens, .selecionado .item-sublista, .selecionado.item-sublista, .selecionado#slide-mestre, .selecionado#adicionar-slide {
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.678) ;
 }
 
@@ -177,4 +174,42 @@ h1 {
 
 .excluir-elemento:hover {
   opacity: 1;
+}
+
+.container-adicionar {
+  position: relative;
+}
+
+#div-botoes {
+  position: absolute;
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  padding: 0.5vh;
+  z-index: 100;
+  height: auto;
+  justify-content: center;
+}
+
+.linha-flex-adicionar {
+  display: flex;
+  width: 100%;
+}
+
+#div-botoes .itens {
+  min-width: 8.5vh;
+  max-width: 8.5vh;
+  height: 7vh;
+  margin: 1vh 1vh 0 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--azul-forte);
+  color: white;
+  box-shadow: var(--box-shadow);
+}
+
+#div-botoes .itens:hover {
+  background-color: var(--azul-oxford);
 }

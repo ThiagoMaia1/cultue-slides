@@ -3,15 +3,16 @@ import './style.css';
 import listaFundos from './listaFundos.json';
 import { connect } from 'react-redux';
 import Img from './Img';
-import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from 'react-icons/md';
-
-const diferencaDireita = 350;
+import Carrossel from '../../Carrossel/Carrossel';
+import InputImagem from '../../AdicionarImagem/InputImagem';
+import Popup from '../../Configurar/Popup/Popup';
 
 class Galeria extends Component {
 
     constructor (props) {
         super(props);
-        this.state = {...props, offset: 0};
+        this.ref = React.createRef();
+        this.state = {popupCompleto: null, imagens: this.getImagens()};
     }
 
     getImagens() {
@@ -21,49 +22,37 @@ class Galeria extends Component {
         }
         return imagens;
     }
-    
-    deslizar(sentido, tamanhoPasso = 20) {
-        var galeria = document.getElementById('galeria');
-        clearInterval(this.animacao);
-        this.animacao = setInterval(() => {
-            var o = this.state.offset
-            var passo = - sentido*tamanhoPasso;
-            if (o + passo > 0 || o + passo <= galeria.parentNode.parentNode.offsetWidth - galeria.offsetWidth - diferencaDireita) {
-                clearInterval(this.animacao);
-            } else {
-                this.setState({offset: o + passo});
-            }
-        }, 40);
+
+    abrirPopup = () => {
+        this.setState({popupCompleto: (
+            <Popup ocultarPopup={() => this.setState({popupCompleto: null})}>
+                <h4>Enviar Fundo Personalizado</h4>
+                <InputImagem callback={this.enviarImagensFundo}/>
+            </Popup>
+        ), painelAdicionar: false});
     }
 
-    saltar(sentido) {
-        this.deslizar(sentido, 120); 
-        setTimeout(() => {
-            clearInterval(this.animacao)
-            this.deslizar(sentido)
-        }, 200);
-    }
-
-    pararDeslizar = () => {
-        clearInterval(this.animacao);
+    enviarImagensFundo = imagens => {
+        var imgs = imagens.map(i => ({...i, texto: {color: '#000'}, tampao: {opacity: 0}}))
+        this.setState({imagens: [...imgs, ...this.state.imagens]})
     }
 
     render () {
         return (
-            <div id='super-galeria'>
-                <MdKeyboardArrowLeft className="seta-galeria esquerda" onMouseOver={() => this.deslizar(-1)} onMouseLeave={this.pararDeslizar}
-                    onClick={() => this.saltar(-1)}/>
-                <MdKeyboardArrowRight className="seta-galeria direita" onMouseOver={() => this.deslizar(1)} onMouseLeave={this.pararDeslizar}
-                    onClick={() => this.saltar(1)}/>
-                <div id='container-galeria'>
-                    <div id='galeria' style={{left: this.state.offset + 'px'}}>
-                    {this.getImagens().map( imagem => (
+        <>
+            {this.state.popupCompleto}
+            <Carrossel tamanhoIcone={2} refGaleria={this.ref} tamanhoMaximo='100vw' zIndex='45'>
+                <div ref={this.ref} className='galeria-fundos'>
+                    <div className='div-img' onClick={this.abrirPopup}>
+                        <div id='botao-enviar-fundo' className='imagem-galeria'>Enviar Fundo Personalizado</div>
+                    </div>
+                    {this.state.imagens.map(imagem => (
                         <Img key={imagem.id} imagem={imagem} />
                         ))
                     }
-                    </div>
                 </div>
-            </div>
+            </Carrossel>
+        </>
         )
     }
 }

@@ -1,11 +1,12 @@
 
 .App {
   display: block;
-  margin: 3vh 0 0 2vw;
+  margin-top: 3vh;
 }
 
 #organizador {
   display: flex;
   flex-direction: row;
   justify-content: space-evenly;
+  align-items: top;
 }
