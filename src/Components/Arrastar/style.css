@@ -1,16 +1,3 @@
-.coluna {
-  width: 40vh;
-  height: 58vh;
-  border-radius: var(--round-border-pequeno);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.coluna.arrastar {
-  width: 23vw;
-}
-
 .coluna-lista-slides {
   width: 23vw;
   height: 58vh;

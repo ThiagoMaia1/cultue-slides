@@ -9,7 +9,6 @@ import Popup from '../Configurar/Popup/Popup';
 class Arrastar extends React.Component {
   constructor(props) {
     super(props);
-    this.ref = React.createRef();
     this.state = {...props, painelAdicionar: true, alturaPainelAdicionar: 0, posicaoPainelAdicionar: 'relative', direcaoPainelAdicionar: 'flex-start',
                   selecionado: 0, placeholder: -1, carrosselAtivo: false, alturaMenuAdicionar: 23};
   }
@@ -151,8 +150,8 @@ class Arrastar extends React.Component {
         <div className='coluna-lista-slides'>
           <div className='gradiente-coluna emcima'></div>
           <div className='gradiente-coluna embaixo'></div>
-          <Carrossel direcao='vertical' tamanhoIcone={50} refGaleria={this.ref} tamanhoMaximo={'58vh'} style={{zIndex: '20', width: '20vw', height: 'min-content'}}>
-              <ol ref={this.ref} id="ordem-elementos">
+          <Carrossel direcao='vertical' tamanhoIcone={50} tamanhoMaximo={'58vh'} style={{zIndex: '20', width: '20vw', height: 'min-content'}}>
+              <ol id="ordem-elementos">
                 <div id="slide-mestre" className={'itens ' + (this.props.selecionado.elemento === 0 ? 'selecionado' : '')} data-id={0}
                   onClick={() => this.marcarSelecionado(0, 0)}
                   onDragOver={this.dragOver.bind(this)}

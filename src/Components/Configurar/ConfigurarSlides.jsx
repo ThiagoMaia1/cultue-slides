@@ -257,7 +257,9 @@ class ConfigurarSlides extends Component {
             <button className={'botao-configuracao bool'} onMouseOver={() => this.ativarPainelCor(this.mudarCorFundo)}
                     style={{display: (this.state.aba.nomeCodigo === 'tampao' ? '' : 'none')}}>
                 <div className='container-cor-fundo'>
-                  <div className='quadriculado-imitando-transparente cor-fundo'></div>
+                  <div className='cor-fundo'>
+                    <img id='img-quadriculado' alt='' src={require('./Quadriculado PNG.png')} className='quadriculado-imitando-transparente'/>
+                  </div>
                   <div className='cor-fundo' style={{backgroundColor: this.props.slideSelecionado.estilo.tampao.backgroundColor, 
                                                     opacity: this.props.slideSelecionado.estilo.tampao.opacity}}>
                   </div>

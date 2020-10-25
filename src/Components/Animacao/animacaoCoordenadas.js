@@ -1,9 +1,9 @@
 // Recebe coordenadas atuais do elemento a ser animado, coordenadas limite de alvo, e uma proporcao para mvoer no sentido y de forma diferente do x.
 // Retorn as coordenadas novas ou false se já atingiu as coordenadas limite.
 
-const animacaoCoordenadas = (coordenadasAtuais, coordenadasLimite, proporcaoY) => {
+export const animacaoCoordenadas = (coordenadasAtuais, coordenadasLimite, proporcaoY) => {
     if (JSON.stringify(coordenadasAtuais) === JSON.stringify(coordenadasLimite)) 
-        return false;
+        return coordenadasAtuais;
     var coordenadas = coordenadasAtuais;
     var sentido = coordenadas.map((c, i) => {
         if (c > coordenadasLimite[i]) {
@@ -25,4 +25,21 @@ const animacaoCoordenadas = (coordenadasAtuais, coordenadasLimite, proporcaoY) =
     return coordenadas;
 }
 
-export default animacaoCoordenadas;
+export const toggleAnimacao = (coordenadasAtuais, coordenadasFechado, coordenadasAberto, callbackRepetida, callbackCondicional = null, funcaoCondicao = null, proporcaoY= null) => {
+    var limite = JSON.stringify(coordenadasAtuais) !== JSON.stringify(coordenadasFechado) ? 
+                     coordenadasFechado : 
+                     coordenadasAberto;
+    proporcaoY = proporcaoY || Math.min((100 - coordenadasAberto[3] - coordenadasAberto[1])/(100 - coordenadasAberto[0] - coordenadasAberto[2]), 4);
+        var animacao = setInterval(() => {
+            var coordenadas = animacaoCoordenadas(coordenadasAtuais, limite, proporcaoY);
+            if (funcaoCondicao && callbackCondicional) {
+                if (funcaoCondicao(coordenadas)) {
+                    callbackCondicional(true);
+                } else {
+                    callbackCondicional(false);
+                }
+            }
+            if (JSON.stringify(coordenadas) === JSON.stringify(limite)) clearInterval(animacao)
+            callbackRepetida(coordenadas);
+        }, 10);
+}

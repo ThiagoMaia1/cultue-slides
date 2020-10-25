@@ -9,7 +9,6 @@ class InputImagem extends Component {
     
     constructor (props) {
         super(props);
-        this.ref = React.createRef();
         this.refInputFile = React.createRef();
         this.o = 100;
         this.state = {umArquivoInvalido: false, imagens: [], estiloCaixa: {opacity: '0'}, pointerEvents: 'none'};
@@ -109,8 +108,8 @@ class InputImagem extends Component {
                     onDrop={this.onDrop} 
                     onMouseOver={this.ativarSetas}>
                     <div className='container-carrossel' style={{pointerEvents: this.state.pointerEvents}}>
-                        <Carrossel refGaleria={this.ref} tamanhoIcone={45} tamanhoMaximo='100%' direcao='vertical' style={{zIndex: '400'}}>
-                            <div ref={this.ref} className='file-input-container' >
+                        <Carrossel tamanhoIcone={45} tamanhoMaximo='100%' direcao='vertical' style={{zIndex: '400'}}>
+                            <div className='file-input-container' >
                                 <div className='container-texto-input-file'>
                                     <p className='texto-auxiliar'>Arraste uma imagem, ou clique para selecionar o arquivo.</p>
                                     {this.gerarListaImagens()}

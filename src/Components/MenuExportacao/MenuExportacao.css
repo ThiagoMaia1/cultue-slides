@@ -1,0 +1,116 @@
+#menu-exportacao {
+    position: fixed;
+    overflow: hidden;
+    justify-content: center;
+    flex-wrap: wrap;
+    --diametro-bolinha: 3.7vw;
+}
+
+#opcoes-menu-exportacao {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    pointer-events: all;
+}
+
+.botao-exportar {
+    border-radius: var(--diametro-bolinha);
+    height: var(--diametro-bolinha);
+    width: var(--diametro-bolinha);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#exportar-html {
+    background-color: gray;
+}
+
+#logo-html {
+    color: white;
+    font-size: calc(var(--diametro-bolinha)/2);
+    transform: scaleY(1.3);
+}
+
+#logo-pptx {
+    position: absolute;
+    pointer-events: none;
+    left: -1.06vw;
+    height: 5.54vw;
+    width: 5.54vw;
+}
+
+#exportar-pdf {
+    background-color: white;
+}
+
+#logo-pdf {
+    top: -0.2vw;
+    height: 2.8vw;
+    width: 2.8vw;
+    border-radius: 0;
+    position: relative;
+}
+
+.rotulo-botao-exportar {
+    margin: 0.4vw 0 0;
+    font-size: calc(var(--diametro-bolinha)/5);
+    color: white;
+}
+
+.logo-exportacao {
+    object-fit: contain;
+}
+
+.div-botao-exportar {
+    margin: 0.7vw 1.1vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#exportar-link {
+    color: black;
+    background-color: var(--platinum-forte);
+}
+
+#exportar-email {
+    color: white;
+    background-color: black;
+}
+
+.container-logo-pptx {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.colapsar-menu {
+    position: absolute;
+    color: white;
+    width: 100%;
+    height: 100%;
+    z-index: 100;
+    font-size: 5vh;
+    display: flex;
+    flex-direction: column;
+    line-height: 65%;
+    pointer-events: 'none';
+}
+
+.colapsar-menu.exportacao {
+    justify-content: flex-end;
+    padding: 0.7vh;
+}
+
+.container-seta-colapsar-menu.exportacao {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+}

@@ -7,8 +7,10 @@
 #organizador {
   display: flex;
   flex-direction: row;
-  justify-content: space-evenly;
+  justify-content: space-between;
   align-items: top;
+  width: 67%;
+  margin-left: 3vw;
 }
 
 .botao-azul {

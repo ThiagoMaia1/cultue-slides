@@ -6,6 +6,7 @@ import Galeria from './Components/Preview/Galeria/Galeria'
 import { store } from './index';
 import { Provider } from 'react-redux';
 import Configurar from './Components/Configurar/Configurar.jsx';
+import MenuExportacao from './Components/MenuExportacao/MenuExportacao';
 
 function App() {
 
@@ -19,6 +20,7 @@ function App() {
           <Configurar />
         </div>
         <Galeria id='galeria'/>
+        <MenuExportacao />
       </div>
     </Provider>
   );

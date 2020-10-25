@@ -1,6 +1,31 @@
+#botao-menu-configurar {
+    position: fixed;
+    justify-content: flex-start;
+    overflow: hidden;
+}
+
+.div-titulo-botao {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+}
+
+.menu-configuracoes {
+    border-radius: var(--round-border-pequeno);
+    width: 21.2vw;
+    pointer-events: all;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 #painel-configuracao {
     width: 95%;
     margin-top: 0.7vh;
+    color: black;
 }
 
 #abas {
@@ -21,6 +46,7 @@
     border-bottom-left-radius: 0;
     font-size: 110%;
     position: relative;
+    background: white;
 }
 
 .botao-aba:hover {
@@ -40,6 +66,8 @@
 .configuracoes {
     position: relative;
     border-radius: var(--round-border-pequeno);
+    background-color: white;
+    padding-bottom: 2vh;
 }
 
 .container-botoes-direita {
@@ -148,6 +176,7 @@
     width: 100%;
     height: 100%;
     position: absolute;
+    overflow: hidden;
 }
 
 .container-painel-cor {
@@ -191,4 +220,12 @@
 .titulo-secao-popup {
     margin: 1.7vh 0 0 0.7vh;
     padding: 0.9vh 1.5vh;
+}
+
+#img-quadriculado {
+    position: relative;
+    border-radius: 0;
+    object-fit: contain;
+    width: 100%;
+    height: 100%;
 }
