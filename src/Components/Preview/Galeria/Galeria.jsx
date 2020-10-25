@@ -59,10 +59,9 @@ class Galeria extends Component {
             <div id='botao-mostrar-galeria' className='botao-azul' onClick={this.mostrarGaleria} 
                 style={{top: this.state.coordenadas[0] + 'vh', right: this.state.coordenadas[1] + 'vw', bottom: this.state.coordenadas[2] + 'vh', left: this.state.coordenadas[3] + 'vw',
                         pointerEvents: this.state.galeriaVisivel ? 'none' : 'all', background: this.state.galeriaVisivel ? 'var(--azul-forte)' : ''}}>
-                <div className='colapsar-menu galeria sombrear-selecao' style={{display: this.state.galeriaVisivel ? '' : 'none'}}>
-                    <div className='container-seta-colapsar-menu galeria' onClick={e => e.stopPropagation()}>
-                        <div role='img' style={{pointerEvents: 'all'}} onClick={this.abrirMenu}>◣</div>
-                    </div>
+                <div className='colapsar-menu galeria' 
+                     onClick={this.mostrarGaleria} 
+                     style={{display: this.state.galeriaVisivel ? '' : 'none'}}>◣
                 </div>
                 <div style={{display: !this.state.galeriaVisivel ? '' : 'none'}}>Galeria de Fundos</div>
                 <div className={'container-carrossel-fundos'} style={{display: this.state.galeriaVisivel ? '' : 'none'}}

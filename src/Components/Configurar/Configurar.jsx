@@ -37,6 +37,10 @@ class Configurar extends Component {
                       left: this.state.coordenadas[3] + 'vw',
                     pointerEvents: this.state.menuVisivel ? 'none' : 'all', background: this.state.menuVisivel ? 'var(--azul-forte)' : '',
                     paddingBottom: this.state.menuVisivel ? '2.5vh' : ''}}>
+            <div className='colapsar-menu configurar' 
+                 onClick={this.abrirMenu} 
+                 style={{display: this.state.menuVisivel ? '' : 'none'}}>◥
+            </div>
             <div style={{display: this.state.menuVisivel ? '' : 'none'}} 
                  className='menu-configuracoes' 
                  onClick={e => e.stopPropagation()} c>

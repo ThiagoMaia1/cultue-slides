@@ -131,9 +131,8 @@ class TextoBiblico extends Component {
                 }
             })
             this.versiculos = this.versiculos.flatMap(v => v.versos);
-            this.setState({versiculos: this.versiculos, 
-                           botaoValidosVisivel: this.versiculosValidos(this.versiculos).length > 0 ? 'visible' : 'hidden',
-                           carregando: null
+            this.setState({versiculos: this.versiculos, carregando: null, 
+                           botaoValidosVisivel: this.versiculosValidos(this.versiculos).length > 0 ? 'visible' : 'hidden'
             });
         }
     }
@@ -189,15 +188,17 @@ class TextoBiblico extends Component {
             <div className='conteudo-popup'>
                 <div>
                     <h4 className='titulo-popup'>Buscar texto bíblico:</h4>
-                    <select className='combo-popup' defaultValue={this.getVersao(versaoPadrao)} type="text" list="versoes" 
-                        onChange={e => this.mudarVersao(e)}>
-                        {versoes.map(v => (<option key={v.version} value={v.nome}>{v.nome}</option>))}
-                    </select>
-                    {this.state.carregando}
-                    <input className='combo-popup' type='text' list="livros" onKeyDown={e => this.buscarReferencia(e)} />
-                    <datalist id="livros">
-                        {livros.map(l => (<option key={l.abbrevPt} value={l.name}></option>))}
-                    </datalist>
+                    <div style={{position: 'relative'}}> 
+                        <select className='combo-popup' defaultValue={this.getVersao(versaoPadrao)} type="text" list="versoes" 
+                            onChange={e => this.mudarVersao(e)}>
+                            {versoes.map(v => (<option key={v.version} value={v.nome}>{v.nome}</option>))}
+                        </select>
+                        {this.state.carregando}
+                        <input className='combo-popup' type='text' list="livros" onKeyDown={e => this.buscarReferencia(e)} />
+                        <datalist id="livros">
+                            {livros.map(l => (<option key={l.abbrevPt} value={l.name}></option>))}
+                        </datalist>
+                    </div>
                 </div>
                 {/* Seleção por capítulo e versículo tem funções salvas no módulo ComboCapVers.jsx */}
                 <div className='container-versiculos'>

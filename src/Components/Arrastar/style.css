@@ -47,9 +47,9 @@ ol {
 
 .item-sublista {
   border-radius: var(--round-border-pequeno);
-  padding: 5px 0 3px 12px;
-  border-right: solid 12px rgba(0, 0, 0, 0);
-  margin: 3px 3px 0 3px;
+  padding: 1vh 0 0.5vh 2vh;
+  border-right: solid 2vh rgba(0, 0, 0, 0);
+  margin: 0.5vh 0.5vh 0 0.5vh;
   min-width: 30%;
   overflow: hidden;
   white-space: nowrap;
@@ -63,7 +63,7 @@ ol {
 .bloco-reordenar {
   border-radius: var(--round-border-pequeno);
   width: 100%;
-  margin-bottom: 3px;
+  margin-bottom: 1vh;
   overflow: visible;
 }
 

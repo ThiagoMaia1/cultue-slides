@@ -30,15 +30,14 @@ class MenuExportacao extends Component {
     }
 
 
-
     render() {
         var html = '</>';
         return (
             <div id='menu-exportacao' className='botao-azul' onClick={this.abrirMenu}
                  style={{top: this.state.coordenadas[0] + 'vw', right: this.state.coordenadas[1] + 'vw', bottom: this.state.coordenadas[2] + 'vh', left: this.state.coordenadas[3] + 'vw',
                         pointerEvents: this.state.menuVisivel ? 'none' : 'all', background: this.state.menuVisivel ? 'var(--azul-forte)' : ''}}>
-                <div className='colapsar-menu exportacao sombrear-selecao' style={{display: this.state.menuVisivel ? '' : 'none'}}>
-                    <div className='container-seta-colapsar-menu exportacao'><span role='img' onClick={this.abrirMenu}>◢</span></div>
+                <div className='colapsar-menu exportacao' style={{display: this.state.menuVisivel ? '' : 'none'}}
+                    onClick={this.abrirMenu}>◢
                 </div>
                 <div id='opcoes-menu-exportacao' style={{display: this.state.menuVisivel ? '' : 'none'}} onClick={e => e.stopPropagation()}>
                     <div className='div-botao-exportar'> 

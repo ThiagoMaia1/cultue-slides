@@ -93,8 +93,10 @@ class ComboLetra extends Component {
                 <div style={{width: '100%'}}>
                     <div>
                         <h4 className='titulo-popup'>Pesquisa de Música</h4>
-                        {this.state.carregando}
-                        <input className='combo-popup' type='text' autoComplete='off' placeholder='Pesquise por nome, artista ou trecho' onKeyUp={e => this.onKeyUp(e)} />
+                        <div style={{position: 'relative'}}>
+                            {this.state.carregando}
+                            <input className='combo-popup' type='text' autoComplete='off' placeholder='Pesquise por nome, artista ou trecho' onKeyUp={e => this.onKeyUp(e)} />
+                        </div>
                     </div>
                     <div className='container-opcoes-musica'>
                         <div id='div-logo-vagalume'><a href='https://www.vagalume.com.br/' target="_blank" rel="noopener noreferrer">

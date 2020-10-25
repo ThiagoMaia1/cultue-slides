@@ -78,7 +78,7 @@ class Preview extends Component {
         
 
         return (
-            <div className='borda-slide-mestre' style={{height: this.alturaTela*this.state.screen.proporcao + 50, 
+            <div className='borda-slide-mestre' style={{height: this.alturaTela*this.state.screen.proporcao + 0.051*window.innerHeight, 
                                                         visibility: this.props.slidePreview.eMestre ? '' : 'hidden', 
                                                         ...this.realcarElemento('tampao', 'fora')}}>
                 <div id='preview' style={{width: this.larguraTela*this.state.screen.proporcao, 

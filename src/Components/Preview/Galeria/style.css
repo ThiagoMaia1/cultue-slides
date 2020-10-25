@@ -75,12 +75,6 @@
 }
 
 .colapsar-menu.galeria {
-    justify-content: flex-end;
-    padding: 0.7vh;
-}
-
-.container-seta-colapsar-menu.galeria {
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
+    bottom: 0.7vh;
+    left: 0.7vh;
 }
