@@ -8,30 +8,33 @@
 //   ✔️ Corrigir problemas no leitor de referência bíblica.
 // 
 // Errinhos para corrigir:
-//   'Null' no título do slide quando a referência é como: lc3-5.
 //   ✔️ Redivisão de slides duplicando versículos quando a letra fica muito grande.
 //   ✔️ Realce se mantém no modo de apresentação.
 //   ✔️ Marcação de clicados no Negrito e afins.
 //   ✔️ Limpar variáveis action no reducer.
 //   ✔️ Imagem ficando fixa apenas no hover.
+//   ✔️ Rolar a lista lateral igual a galeria. 
+//   ✔️ Ícone menor na galeria.
 //   Zerar sliders ao limpar formatação.
 //   Incluir webfonts na combo de fontes disponíveis.
-//   Rolar a lista lateral igual a galeria. 
-//   Ícone menor na galeria.
-//   Botão para zerar/começar nova apresentação.
+//   'Null' no título do slide quando a referência é como: lc3-5.
 //
 // Features:
 //   ✔️ Envio de imagens.
-//   Incorporar vídeos do youtube.
-//   Login para salvar preferências.
-//   Exportar como power point, pdf e html.
-//   Editar texto direto no slide.
-//   Combo de número de capítulos e versículos da bíblia.
-//   Possibilidade de editar elemento (retornando à tela da query).
 //   ✔️ Navegar slides clicando à direita ou esquerda.
+//   ✔️ Enviar imagem para fundo.
+//   Incorporar vídeos do youtube.
+//   Exportar como power point, pdf e html.
+//   Botão para zerar/começar nova apresentação.
+//   Permitir desfazer ações da store (Ctrl + Z).
+//   Possibilidade de editar elemento (retornando à tela da query).
+//   Editar texto direto no slide.
 //   Marcador de repetições de estrofes nos slides de música/slide de refrão repetido.
-//   Enviar imagem para fundo.
+//   Atalhos em geral.
+//   Combo de número de capítulos e versículos da bíblia.
+//   Login para salvar preferências.
 //   Criar slide a partir de lista com separador.
+//   Navegação pelas setas causar rolagem na lista de slides.
 
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -42,12 +45,12 @@ import hotkeys from 'hotkeys-js';
 import Element, { estiloPadrao, proporcaoPadTop, textoMestre, Estilo, capitalize } from './Element.js';
 
 
-const defaultList = {elementos: [new Element("Slide-Mestre", "Slide-Mestre", [textoMestre], null, estiloPadrao, true)],
+var defaultSemPreview = {elementos: [new Element("Slide-Mestre", "Slide-Mestre", [textoMestre], null, estiloPadrao, true)],
   selecionado: {elemento: 0, slide: 0}, 
-  slidePreview: {selecionado: {elemento: 0, slide: 0}, texto: textoMestre, titulo: 'Slide-Mestre', eMestre: true,
-                 estilo: {...estiloPadrao, paragrafo: getEstiloPad(estiloPadrao.paragrafo, 'paragrafo'), titulo: getEstiloPad(estiloPadrao.paragrafo, 'titulo')}},
   realce: {aba: '', cor: ''}
-}
+};
+
+const defaultList = {...defaultSemPreview, slidePreview: getSlidePreview(defaultSemPreview)};
 
 export const reducerElementos = function (state = defaultList, action) {
 
@@ -80,6 +83,7 @@ export const reducerElementos = function (state = defaultList, action) {
       return {...nState, slidePreview: getSlidePreview(nState), realce: state.realce};
     }
     case "redividir-slides": {
+      if (state.elementos.length === 1) return state;
       const redividir = (e, s) => e.criarSlides(e.getArrayTexto(s), e.slides[0].estilo, s, state.elementos[0].slides[0].estilo);
       var [ i, slide, repetir ] = (action.selecionado.elemento === 0 ? [ 1, 0, 1 ] : [ action.selecionado.elemento, action.selecionado.slide, 0]);
       do {
@@ -158,7 +162,7 @@ function getSlidePreview (state) {
   var titulo = capitalize(state.elementos[sel.elemento].titulo, estiloTitulo.caseTexto);
 
   return {tipo: tipo,
-    nomeLongoElemento: tipo.replace('-', ' ') + ': ' + ((tipo === 'Imagem' && !state.elementos[sel.elemento].titulo) ? elemento.imagem.alt : state.elementos[sel.elemento].titulo),
+    nomeLongoElemento: tipo.replace('-', ' ') + ': ' + ((tipo === 'Imagem' && !state.elementos[sel.elemento].titulo) ? state.elementos[sel.elemento].imagens[0].alt : state.elementos[sel.elemento].titulo),
     nomeLongoSlide: '',
     selecionado: {...sel},
     texto: capitalize(slide.texto, estiloParagrafo.caseTexto),
@@ -178,16 +182,15 @@ function getSlidePreview (state) {
 
 function getEstiloPad (estilo, objeto) {
   var pad = estilo.padding*100; //Separa o padding para o padding-top ser diferente, proporcional à constante proporcaoPadTop.
-  var proporcao;
   var rep;
+  var padTop;
   if (objeto === 'titulo') {
-    proporcao = 0;
-    rep = 1;
+    [ rep, padTop ] = [ 1, 0 ];
   } else {
-    proporcao = proporcaoPadTop;
     rep = 3;
+    padTop = pad*proporcaoPadTop || '0.5';
   }
-  return {...estilo, padding: String(pad*proporcao).substr(0, 5) + ('% ' + pad).repeat(rep) + '%'};
+  return {...estilo, padding: String(padTop).substr(0, 5) + ('% ' + pad).repeat(rep) + '%'};
 }
 
 export let store = createStore(reducerElementos, /* preloadedState, */

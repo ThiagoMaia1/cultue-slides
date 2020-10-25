@@ -150,14 +150,18 @@
     position: absolute;
 }
 
+.container-painel-cor {
+    position: relative;
+}
+
 .painel-cor {
     position: absolute;
+    left: 1vh;
+    top: 1vh;
 }
 
 .compact-picker {
     position: relative;
-    left: 1vh;
-    top: 1vh;
     background-color: white;
     border-radius: var(--round-border-pequeno);
     box-shadow: var(--box-shadow);

@@ -16,7 +16,8 @@ export const estiloPadrao = {
     titulo: {fontSize: '3', height: '0.25', padding: '0.08'}, 
     paragrafo: {fontSize: '1.5', padding: '0.08', lineHeight: '1.7'}, 
     fundo: {src: './Galeria/Fundos/Aquarela.jpg'}, 
-    tampao: {backgroundColor: '#fff', opacity: '0.2'}
+    tampao: {backgroundColor: '#fff', opacity: '0.2'},
+    imagem: {padding: '0.02'}
 };
 
 export const proporcaoPadTop = 0;
@@ -128,6 +129,8 @@ export default class Element {
     dividirImagens = () => {
       if (this.imagens.length === 1) {
         this.slides[0].imagem = this.imagens[0];
+        this.slides[0].eMestre = false;
+        this.slides[0].texto = '';
       } else {
         for (var img of this.imagens) {
           this.slides.push({estilo: {...new Estilo()}, imagem: img});

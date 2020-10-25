@@ -20,10 +20,12 @@ const listaEstilosTexto = [{apelido:'Negrito', nomeAtributo: 'fontWeight', valor
 const listaFontes = ['Montserrat', 'Roboto', 'Source Sans Pro', 'Noto Sans', 'Helvetica', 'Arial', 'Times New Roman', 'Courier', 'Courier New', 'Verdana', 
                      'Tahoma', 'Arial Black', 'Georgia', 'Impact']
 
-const listaBotoesAbas = [{nomeCodigo: 'texto', nomeInterface: 'Texto', cor: '', corRealce: 'white'},
-                         {nomeCodigo: 'titulo', nomeInterface: 'Título', cor: '#efefef', corRealce: 'var(--azul-forte)', maxFonte: '7'}, 
-                         {nomeCodigo: 'paragrafo', nomeInterface: 'Parágrafo', cor: '#efefef', corRealce: 'var(--azul-forte)', maxFonte: '4'}, 
-                         {nomeCodigo: 'tampao', nomeInterface: 'Fundo', cor: '#efefef', corRealce: 'var(--azul-forte)'}
+const listaBotoesAbas = [{nomeCodigo: 'texto', nomeInterface: 'Texto'},
+                         {nomeCodigo: 'titulo', nomeInterface: 'Título', maxFonte: '7'}, 
+                         {nomeCodigo: 'paragrafo', nomeInterface: 'Parágrafo', maxFonte: '4'}, 
+                         {nomeCodigo: 'imagem', nomeInterface: 'Imagem'},
+                         {nomeCodigo: 'imagem', nomeInterface: 'Vídeo'},
+                         {nomeCodigo: 'tampao', nomeInterface: 'Fundo'}
 ];
 
 const listaBotoesAlinhamento = [{direcao: 'left', titulo: 'Alinhado à Esquerda', icone: BsTextLeft}, 
@@ -38,7 +40,10 @@ const listaSliders = [{rotulo: 'Fonte', aba: 'paragrafo', atributo: 'fontSize', 
                       {rotulo: 'Fonte', aba: 'titulo', atributo: 'fontSize', min: 1, max: 7, step: 0.01,  recalcular: true},
                       {rotulo: 'Margem', aba: 'titulo', atributo: 'padding', min: 0, max: 0.4, step: 0.01,  recalcular: true},
                       {rotulo: 'Altura', aba: 'titulo', atributo: 'height', min: 0.1, max: 1, step: 0.01,  recalcular: true},
-                      {rotulo: 'Opacidade', aba: 'tampao', atributo: 'opacity', min: 0, max: 1, step: 0.05}
+                      {rotulo: 'Opacidade', aba: 'tampao', atributo: 'opacity', min: 0, max: 1, step: 0.05},
+                      {rotulo: 'Margem', aba: 'imagem', atributo: 'padding', min: 0, max: 0.25, step: 0.01},
+                      {rotulo: 'Altura', aba: 'imagem', atributo: 'height', min: 0, max: 1, step: 0.01},
+                      {rotulo: 'Largura', aba: 'imagem', atributo: 'width', min: 0, max: 1, step: 0.01}
 ]
 
 const blocoShadow = {boxShadow: '1px 3px 7px rgba(0, 0, 0, 0.5)'}
@@ -55,6 +60,13 @@ class ConfigurarSlides extends Component {
 
   gerarBotoesAbas = () => {
     return listaBotoesAbas.slice(1).map((a, i) => {
+      var t = this.props.slidePreview.tipo;
+      if (t === 'Imagem' || t === 'Vídeo') {
+        if (a.nomeCodigo === 'paragrafo') return null;
+        if (a.nomeCodigo === 'imagem' && t !== a.nomeInterface) return null;
+      } else {
+        if (a.nomeCodigo === 'imagem') return null;
+      }
       var tampar;
       if (this.state.aba === a) tampar = (<div className='tampar-shadow'></div>);
       return (<>
@@ -104,9 +116,9 @@ class ConfigurarSlides extends Component {
   gerarSliders = () => {
     return (
       listaSliders.map(s => (
-        <Slider rotulo={s.rotulo} min={s.min} max={s.max} step={s.step} 
+        <Slider rotulo={s.rotulo} min={s.min} max={s.max} step={s.step} unidade='%'
                 defaultValue={this.props.slideSelecionado.estilo[this.state.aba.nomeCodigo][s.atributo]}
-                callbackFunction={valor => this.atualizarEstilo(this.state.aba.nomeCodigo, s.atributo, valor, s.recalcular)} unidade='%' 
+                callbackFunction={valor => this.atualizarEstilo(this.state.aba.nomeCodigo, s.atributo, valor +'', s.recalcular)} 
                 style={{display: (this.state.aba.nomeCodigo === s.aba ? '' : 'none')}}/>
     )));
   }
@@ -115,13 +127,15 @@ class ConfigurarSlides extends Component {
     var aba = listaBotoesAbas[e.target.dataset.id];
     if (aba === this.state.aba) aba = listaBotoesAbas[0];
     this.setState({aba: aba});
-    this.props.dispatch({type: 'ativar-realce', realce: {aba: aba.nomeCodigo, cor: aba.corRealce}});
+    this.props.dispatch({type: 'ativar-realce', realce: {aba: aba.nomeCodigo}});
   }
   
   ativarPainelCor = callback => {
     this.setState({painelCor: (
-      <div className='painel-cor' onMouseLeave={() => this.setState({painelCor: null})}>
-        <div style={{transform: 'scale(' + window.innerHeight/850 + ')', transformOrigin: 'top left', position: 'relative'}}><CompactPicker onChange={callback}/></div>
+      <div className='container-painel-cor' onMouseLeave={() => this.setState({painelCor: null})}>
+        <div className='painel-cor'>
+          <CompactPicker onChange={callback}/>
+        </div>
       </div>
     )
     })
@@ -198,14 +212,15 @@ class ConfigurarSlides extends Component {
   eObjetoVazio(objeto) {
     return JSON.stringify(objeto) === "{}";
   }
-
+  
 	render() {
-		return (
+    return (
       <div id='painel-configuracao'>
           <div id='abas'>
             {this.gerarBotoesAbas()}
           </div>
-          <div className='configuracoes' style={this.state.aba.cor !== '' ? blocoShadow : null}>
+      {this.state.painelCor}
+          <div className='configuracoes' style={this.state.aba.nomeCodigo !== 'texto' ? blocoShadow : null}>
             <div className='container-botoes-direita'>
               <div className='botoes-direita'>
                 <button title='Aplicar Estilo ao Slide-Mestre' className={'botao-configuracao bool'} 
@@ -219,7 +234,8 @@ class ConfigurarSlides extends Component {
                 </button>
               </div>
             </div>
-            <div className='configuracoes-texto' style={{display: (this.state.aba.nomeCodigo === 'tampao' ? 'none' : '')}}>
+            <div className='configuracoes-texto' 
+                 style={{display: (this.state.aba.nomeCodigo === 'tampao' || this.state.aba.nomeCodigo === 'imagem' ? 'none' : '')}}>
               <div className='linha-configuracoes-texto'>
                 <button id={'cor-texto'} className={'botao-configuracao bool'} onMouseOver={() => this.ativarPainelCor(this.mudarCorFonte)}>
                   <span className='a-cor-texto' style={{color: this.props.slideSelecionado.estilo.texto.color}}>A</span>
@@ -250,7 +266,6 @@ class ConfigurarSlides extends Component {
             <div className='div-sliders'>
               {this.gerarSliders()}
             </div>
-            {this.state.painelCor}
           </div>
       </div>
     )   

@@ -42,10 +42,10 @@ class Slider extends Component {
             if (this.props.unidade === '%') {
                 return Math.round(valor*100) + '%';
             } else {
-                return valor + ' ' + this.props.unidade; 
+                return valor + this.props.unidade; 
             }
         }
-        return '';
+        return valor;
     }
 
     render() {

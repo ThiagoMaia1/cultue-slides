@@ -25,7 +25,7 @@ class Img extends Component {
     togglePrevia(estiloImagem) {
         var img = {...estiloImagem};
         var fundo = {...img.fundo};
-        if (typeof fundo.src === 'string' && fundo.src.match(/Galeria/) === null) 
+        if (fundo.src && fundo.src.substr(0, 4) !== 'blob' && fundo.src.match(/Galeria/) === null) 
             fundo.src = fundo.src.replace('./','./Galeria/');
         this.props.dispatch({type: 'atualizar-estilo', objeto: 'fundo', valor: fundo});
         this.props.dispatch({type: 'atualizar-estilo', objeto: 'tampao', valor: img.tampao});
@@ -43,7 +43,7 @@ class Img extends Component {
                 </div>
                 <div className='tampao' style={this.props.imagem.tampao}></div>
                 <img className='imagem-galeria' 
-                     src={typeof this.props.imagem.fundo.src === 'string' ? require('' + this.props.imagem.fundo.src.replace(/.jpg|.png/,'-300px.jpg')) : this.props.imagem.fundo.src} 
+                     src={this.props.imagem.fundo.src.substr(0, 4) === 'blob' ? this.props.imagem.fundo.src : require('' + this.props.imagem.fundo.src.replace(/.jpg|.png/,'-300px.jpg'))} 
                      alt={this.props.imagem.alt}
                 />
             </div>

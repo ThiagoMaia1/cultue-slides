@@ -145,6 +145,10 @@ ol {
   margin: 0 0 1.5vh 0;
 }
 
+.selecionado#adicionar-slide {
+  margin-top: -3vh;
+}
+
 .div-excluir {
   position: relative;
   width: 100%;

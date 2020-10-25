@@ -5,7 +5,7 @@ import { MdFullscreen, MdFullscreenExit } from 'react-icons/md'
 
 export const fonteBase = {numero: 0.015*window.screen.width, unidade: 'px', fontFamily: 'Noto Sans'};
 const full = {icone: <MdFullscreenExit className='icone-botao' size={140}/>, proporcao: 1, opacidadeBotao: '0%'}
-const small = {icone: <MdFullscreen className='icone-botao' size={60}/>, proporcao: 0.4, opacidadeBotao: '30%'}
+export const small = {icone: <MdFullscreen className='icone-botao' size={60}/>, proporcao: 0.4, opacidadeBotao: '30%'}
 
 class Preview extends Component {
     
@@ -65,8 +65,13 @@ class Preview extends Component {
                 return;
             }
         }
-        return {boxShadow: (this.props.realce.aba === aba && this.state.screen.proporcao === small.proporcao ? '0px 0px 9px ' + this.props.realce.cor : ''), 
-                    borderRadius: aba === 'tampao' ? 'var(--round-border-grande)' : 'var(--round-border-medio)', marginTop: '2px'};        
+        return {boxShadow: (this.props.realce.aba === aba && this.state.screen.proporcao === small.proporcao ? '0px 0px 9px var(--azul-forte)' : ''), 
+                    borderRadius: aba === 'tampao' ? 'var(--round-border-grande)' : 'var(--round-border-medio)'};        
+    }
+
+    getEstiloImagem = () => {
+        var e = this.props.slidePreview.estilo.imagem;
+        return {...this.realcarElemento('imagem'), height: e.height*100 + '%', width: e.width*100 + '%'}
     }
 
     render() {
@@ -93,8 +98,9 @@ class Preview extends Component {
                         </div>
                     </div>
                     {this.props.slidePreview.imagem ? 
-                        <div className='div-imagem-slide' style={this.props.slidePreview.estilo.imagem}>
-                            <img className='imagem-slide' src={this.props.slidePreview.imagem.src} alt={this.props.slidePreview.imagem.alt}/>
+                        <div className='div-imagem-slide' style={{padding: this.props.slidePreview.estilo.imagem.padding*100 + '%'}}>
+                            <img className='imagem-slide' src={this.props.slidePreview.imagem.src} alt={this.props.slidePreview.imagem.alt}
+                                 style={this.getEstiloImagem()}/>
                         </div>: 
                         null}
                     <div className='container-setas'>
@@ -116,10 +122,10 @@ class Preview extends Component {
 }
 
 const Img = ({imagem}) => {
-    if (typeof imagem.src === 'string') {
-        return <img id='fundo-preview' src={require('' + imagem.src)} alt='' />
-    } else {
+    if (imagem.src.substr(0, 4) === 'blob') {
         return <img id='fundo-preview' src={imagem.src} alt='' />
+    } else {
+        return <img id='fundo-preview' src={require('' + imagem.src)} alt='' />
     }
 };
 

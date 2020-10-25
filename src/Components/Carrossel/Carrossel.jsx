@@ -43,6 +43,7 @@ class Carrossel extends Component {
         this.setState({estiloSetaUm: {...this.state.estiloSetaUm, display: ''}, estiloSetaDois: {...this.state.estiloSetaDois, display: ''}});
         
         if (sentido < 0 && o + passo < this.state.tamanhoCarrossel*this.percentualBeirada) {
+            //TODO: conferir se funciona tudo como display em vez de display e opacity.
             if (this.state.estiloSetaUm.opacity === '0') this.setState({estiloSetaUm: {...this.state.estiloSetaUm, opacity: '1'}});
         } else if (sentido > 0 && o + passo > this.state.tamanhoCarrossel*(1-this.percentualBeirada) - this.state.tamanhoGaleria) {
             if (this.state.estiloSetaDois.opacity === '0') this.setState({estiloSetaDois: {...this.state.estiloSetaDois, opacity: '1'}});
@@ -84,6 +85,7 @@ class Carrossel extends Component {
     }
 
     onMouseOver = () => {
+        console.log('mouse-over do carrossel')
         if (this.direcao === 'top') {
             this.setState({tamanhoCarrossel: this.refCarrossel.current.offsetHeight, tamanhoGaleria: this.refGaleria.current.offsetHeight});
         } else {

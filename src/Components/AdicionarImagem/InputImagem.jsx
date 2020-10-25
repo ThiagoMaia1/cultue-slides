@@ -51,15 +51,16 @@ class InputImagem extends Component {
 
     validarImagem(input){
         var url = window.URL || window.webkitURL;
-        const adicionarImagem = e => this.setState({imagens: [...this.state.imagens, e.target]});
+        const adicionarImagem = e => this.setState({imagens: [e.target, ...this.state.imagens]});
     
         for (var arquivo of input.files) {
             var imagem = new Image();
-            var n = arquivo.name;
+            imagem.nomeComExtensao = arquivo.name;
+            var n = imagem.nomeComExtensao;
 
             for (var i = n.length-1; i >= 0; i--) {
                 if (n[i] === '.') {
-                    n = n.slice(0, i-1);
+                    n = n.slice(0, i);
                     break;
                 }
             }
@@ -83,7 +84,7 @@ class InputImagem extends Component {
                         {img.width ?
                         <img className='previa-imagem-upload' src={img.src} alt={img.alt}/> :
                         <div className='imagem-invalida previa-imagem-upload'>
-                            <div>Arquivo Inválido: "{img.alt}"<br></br></div>
+                            <div style={{textAlign: 'center'}}>Arquivo Inválido:<br></br>"{img.nomeComExtensao}"<br></br></div>
                             <div style={{fontSize: '120%'}}>✕</div>
                         </div>}
                     </div>)
@@ -97,7 +98,7 @@ class InputImagem extends Component {
     }
     
     ativarSetas = () => {
-        setTimeout(() => this.setState({pointerEvents: {pointerEvents: ''}}), 50);
+        this.setState({pointerEvents: 'all'});
     }                    
 
     render () {
@@ -107,14 +108,16 @@ class InputImagem extends Component {
                     onDragOver={this.onDragOver} 
                     onDrop={this.onDrop} 
                     onMouseOver={this.ativarSetas}>
-                    <Carrossel refGaleria={this.ref} tamanhoMaximo='100%' direcao='vertical' style={{zIndex: '400', pointerEvents: this.state.pointerEvents}}>
-                        <div ref={this.ref} className='file-input-container' >
-                            <div className='container-texto-input-file'>
-                                <p className='texto-auxiliar'>Arraste uma imagem, ou clique para selecionar o arquivo.</p>
-                                {this.gerarListaImagens()}
+                    <div className='container-carrossel' style={{pointerEvents: this.state.pointerEvents}}>
+                        <Carrossel refGaleria={this.ref} tamanhoIcone={45} tamanhoMaximo='100%' direcao='vertical' style={{zIndex: '400'}}>
+                            <div ref={this.ref} className='file-input-container' >
+                                <div className='container-texto-input-file'>
+                                    <p className='texto-auxiliar'>Arraste uma imagem, ou clique para selecionar o arquivo.</p>
+                                    {this.gerarListaImagens()}
+                                </div>
                             </div>
-                        </div>
-                    </Carrossel>
+                        </Carrossel>
+                    </div>
                     <input ref={this.refInputFile} id="adicionar-imagem" className='combo-popup' type='file' multiple="multiple" accept="image/*" 
                             onChange={e => this.validarImagem(e.target)} placeholder='Arraste uma imagem para fazer o upload' />
                     <div className='animacao-drag-over'>

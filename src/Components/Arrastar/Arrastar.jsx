@@ -51,6 +51,12 @@ class Arrastar extends React.Component {
   }
 
   marcarSelecionado (item, slide) {
+    var sel = this.props.selecionado
+    if (sel.elemento === item && sel.slide === slide) {
+      if (slide !== 0) {slide = 0} 
+      else if(item !== 0) {item = 0} 
+      else {return}
+    }
     this.props.dispatch({type: 'definir-selecao', selecionado: {elemento: item, slide: slide}})
   }
 
