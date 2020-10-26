@@ -36,7 +36,7 @@ class Carrossel extends Component {
         this.state.estilo[this.direcao] = '0';
     }
 
-    deslizar = (sentido, tamanhoPasso = 20) => {
+    ativarSetas = (sentido, tamanhoPasso = 10) => {
         var o = Number(this.state.estilo[this.direcao]);
         var passo = - sentido*tamanhoPasso;
 
@@ -50,7 +50,11 @@ class Carrossel extends Component {
         } else {
             this.setState({estiloSetaUm: {...this.state.estiloSetaUm, opacity: '0'}, estiloSetaDois: {...this.state.estiloSetaDois, opacity: '0'}})
             return;
-        }        
+        }   
+    }
+    
+    deslizar = (sentido, tamanhoPasso = 10) => {
+        this.ativarSetas(sentido, tamanhoPasso)     
 
         clearInterval(this.animacao);
         this.animacao = setInterval(() => {
@@ -68,11 +72,11 @@ class Carrossel extends Component {
                 objEstilo[this.direcao] = o + passo;
                 this.setState({estilo: objEstilo});
             }
-        }, 40);
+        }, 20);
     }
 
     saltar(sentido) {
-        this.deslizar(sentido, 120); 
+        this.deslizar(sentido, 80); 
         setTimeout(() => {
             clearInterval(this.animacao)
             this.deslizar(sentido)
@@ -82,6 +86,17 @@ class Carrossel extends Component {
     pararDeslizar = () => {
         this.setState({estiloSetaUm: {...this.state.estiloSetaUm, opacity: '0'}, estiloSetaDois: {...this.state.estiloSetaDois, opacity: '0'}})
         clearInterval(this.animacao);
+    }
+
+    deslizarWheel = e => {
+        e.preventDefault();
+        var obj = {};
+        obj[this.direcao] = Math.min(Math.max(
+            this.state.estilo[this.direcao] - e.deltaY, 
+            this.state.tamanhoCarrossel*(1-this.percentualBeirada) - this.state.tamanhoGaleria), 
+            this.state.tamanhoCarrossel*this.percentualBeirada);
+        this.setState({estilo: obj});
+        this.ativarSetas(0);
     }
 
     onMouseOver = () => {
@@ -103,7 +118,7 @@ class Carrossel extends Component {
         var SetaUm = this.setaUm;
         var SetaDois = this.setaDois;
         return (
-            <div ref={this.refCarrossel} className='carrossel' onMouseOver={this.onMouseOver} style={this.style}>
+            <div ref={this.refCarrossel} className='carrossel' onMouseOver={this.onMouseOver} onWheel={this.deslizarWheel} style={this.style}>
                 {this.state.tamanhoGaleria > this.state.tamanhoCarrossel ? 
                     <>
                         <div className="seta-galeria" 

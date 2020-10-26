@@ -58,7 +58,7 @@ class TextoBiblico extends Component {
             } else {
                 if (ref[i].cap !== ref[i-1].cap) {
                     r = r + ref[i].cap;
-                    r = r + ref[i].vers === null ? '' : ':' + ref[i].vers;
+                    r = r + (ref[i].vers === null ? '' : ':' + ref[i].vers);
                 } else {
                     r = r + ref[i].vers;
                 }

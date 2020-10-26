@@ -1,0 +1,1366 @@
+<head>
+    <meta charset="utf-8">
+    <base href="/">
+    <link rel="icon" href="/favicon.ico">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&amp;family=Noto+Sans:wght@400;700&amp;family=Source+Sans+Pro:wght@400;600&amp;display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#000000">
+    <meta name="description" content="Web site created using create-react-app">
+    
+    <title>Slides Culto</title>
+  <style type="text/css">/*https://coolors.co/000000-14213d-fca311-e5e5e5-ffffff
+
+https://coolors.co/000000-e5e5e5-ffffff-3757a9-748fd2-ff3c3c-dd0000*/
+
+html, body {
+  box-sizing: border-box;
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+body {
+  margin: 0;
+  font-family: 'Montserrat', 'Roboto', 'Helvetica', 'Segoe UI', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-size: 2.1vh;
+  --azul-fraco: #6688df;
+  --azul-forte: #3757A9;
+  --azul-oxford: #304e8f;
+  --platinum: #eeeeee;
+  --platinum-forte: #e5e5e5;
+  --vermelho-fraco: #ff3c3c;
+  --vermelho-forte: #dd0000;
+  --round-border-muito-pequeno: 0.3vh;
+  --round-border-pequeno: 0.7vh;
+  --round-border-medio: 1vh;
+  --round-border-grande: 1.5vh;
+  --box-shadow: 1px 3px 7px rgba(0,0,0,0.5);
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+textarea {
+  resize: none;
+}
+
+textarea, input, button, select { 
+  font-family: inherit; font-size: inherit; 
+}
+
+button, input[type="submit"], input[type="reset"] {
+	background: none;
+	color: inherit;
+	border: none;
+	padding: 0;
+	font: inherit;
+	cursor: pointer;
+  outline: inherit;
+  text-align: left;
+}
+
+.quadriculado-imitando-transparente{
+  object-fit: cover;
+  /* background: -webkit-linear-gradient(45deg, rgba(0, 0, 0, 0.0980392) 25%, transparent 25%, transparent 75%, rgba(0, 0, 0, 0.0980392) 75%, rgba(0, 0, 0, 0.0980392) 0), -webkit-linear-gradient(45deg, rgba(0, 0, 0, 0.0980392) 25%, transparent 25%, transparent 75%, rgba(0, 0, 0, 0.0980392) 75%, rgba(0, 0, 0, 0.0980392) 0), white;
+  background: -moz-linear-gradient(45deg, rgba(0, 0, 0, 0.0980392) 25%, transparent 25%, transparent 75%, rgba(0, 0, 0, 0.0980392) 75%, rgba(0, 0, 0, 0.0980392) 0), -moz-linear-gradient(45deg, rgba(0, 0, 0, 0.0980392) 25%, transparent 25%, transparent 75%, rgba(0, 0, 0, 0.0980392) 75%, rgba(0, 0, 0, 0.0980392) 0), white;
+  background: linear-gradient(45deg, rgba(0, 0, 0, 0.0980392) 25%, transparent 25%, transparent 75%, rgba(0, 0, 0, 0.0980392) 75%, rgba(0, 0, 0, 0.0980392) 0), linear-gradient(45deg, rgba(0, 0, 0, 0.0980392) 25%, transparent 25%, transparent 75%, rgba(0, 0, 0, 0.0980392) 75%, rgba(0, 0, 0, 0.0980392) 0), white;
+  background-repeat: repeat, repeat;
+  background-position: 0px 0, 1.5vh 1.5vh;
+  -webkit-transform-origin: 0 0 0;
+  transform-origin: 0 0 0;
+  -webkit-background-origin: padding-box, padding-box;
+  background-origin: padding-box, padding-box;
+  -webkit-background-clip: border-box, border-box;
+  background-clip: border-box, border-box;
+  -webkit-background-size: 3vh 3vh, 3vh 3vh;
+  background-size: 3vh 3vh, 3vh 3vh;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  text-shadow: none;
+  -webkit-transition: none;
+  -moz-transition: none;
+  -o-transition: none;
+  transition: none;
+  -webkit-transform: scaleX(1) scaleY(1) scaleZ(1);
+  transform: scaleX(1) scaleY(1) scaleZ(1); */
+}</style><style type="text/css">
+.App {
+  display: block;
+  margin-top: 3vh;
+}
+
+#organizador {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: top;
+  width: 67%;
+  margin-left: 3vw;
+}
+
+.botao-azul {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--azul-forte);
+  color: white;
+  box-shadow: var(--box-shadow);
+  border-radius: var(--round-border-medio);
+  text-align: center;
+  z-index: 50;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -webkit-touch-callout: none;
+  -o-user-select: none;
+  user-select: none;
+}
+
+.botao-azul:hover {
+  background-color: var(--azul-oxford);
+}
+</style><style type="text/css">.coluna-lista-slides {
+  width: 23vw;
+  height: 58vh;
+  position: relative;
+  margin-top: -3vh;
+}
+
+.gradiente-coluna {
+  width: 100%;
+  height: 3vh;
+  position: absolute;
+  z-index: 25;
+  pointer-events: none;
+}
+
+.gradiente-coluna.embaixo {
+  top: 55vh;
+  background-image: linear-gradient(to bottom, transparent,  white);
+}
+
+.gradiente-coluna.emcima {
+  top: 0;
+  background-image: linear-gradient(to top,  transparent,  white);
+}
+
+#ordem-elementos {
+  width: 18vw;
+  margin: 0 5%;
+  height: auto;
+  overflow: visible;
+  position: relative;
+  padding: 3vh 0 3vh;
+}
+
+ol {
+  list-style: none;
+  margin:0;
+  padding:0;
+  width: 100%;
+}
+
+.sublista {
+  padding-left: 10px;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.item-sublista {
+  border-radius: var(--round-border-pequeno);
+  padding: 1vh 0 0.5vh 2vh;
+  border-right: solid 2vh rgba(0, 0, 0, 0);
+  margin: 0.5vh 0.5vh 0 0.5vh;
+  min-width: 30%;
+  overflow: hidden;
+  white-space: nowrap;
+  background-color: var(--platinum);
+}
+
+.item-sublista:hover {
+  background: var(--platinum-forte);
+}
+
+.bloco-reordenar {
+  border-radius: var(--round-border-pequeno);
+  width: 100%;
+  margin-bottom: 1vh;
+  overflow: visible;
+}
+
+.bloco-reordenar:last-child, .bloco-reordenar:first-child {
+  z-index: 30;
+}
+
+.itens {
+  margin: 0.5vh 0.5vh 0 0;
+  padding: 1.2vh 1.2vh;
+  background: var(--platinum);
+  border-radius: var(--round-border-pequeno);
+  cursor: default;
+  width: 100%;
+}
+
+#slide-mestre {
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -webkit-touch-callout: none;
+  -o-user-select: none;
+  user-select: none;
+  text-align: center;
+  background-color: black;
+  color: white;
+}
+
+#slide-mestre:hover {
+  background-color: #202020;
+}
+
+#adicionar-slide {
+  position: relative;
+  width: 18vw;
+  margin: 0 5%;
+  background-color: var(--azul-forte);
+}
+
+#adicionar-slide:hover {
+  background-color: var(--azul-oxford);
+}
+
+.lista-slides {
+  background: var(--platinum);
+}
+
+.lista-slides:hover {
+  background: var(--platinum-forte);
+}
+
+.selecionado:not(.item-sublista) {
+  transform: scale(1.08);
+  margin: 1.5vh 0 1.7vh;
+}
+
+.selecionado.item-sublista {
+  transform: scale(1.2);
+}
+
+.selecionado .itens, .selecionado .item-sublista, .selecionado.item-sublista, .selecionado#slide-mestre, .selecionado#adicionar-slide {
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.678) ;
+}
+
+.selecionado#slide-mestre {
+  margin: 0 0 1.5vh 0;
+}
+
+.selecionado#adicionar-slide {
+  margin-top: -3vh;
+}
+
+.div-excluir {
+  position: relative;
+  width: 100%;
+}
+
+.excluir-elemento {
+  font-size: 50%;
+  right: 0.6vh;
+  top: 0.6vh;
+  height: 1.7vh;
+  width: 1.7vh;
+  line-height: 0.1vh;
+  padding-top: 0.1vh;
+  position: absolute;
+  opacity: 0;
+  border-radius: var(--round-border-muito-pequeno);
+  color: white;
+  background-color: black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.excluir-elemento:hover {
+  opacity: 1;
+}
+
+.container-adicionar {
+  width: 18vw;
+  margin: 0 6%;
+}
+
+#div-botoes {
+  position: absolute;
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  padding: 0.5vh;
+  z-index: 100;
+  height: auto;
+  justify-content: center;
+}
+
+.linha-flex-adicionar {
+  display: flex;
+  width: 100%;
+}
+
+#div-botoes .itens {
+  min-width: 8.5vh;
+  max-width: 8.5vh;
+  height: 7vh;
+  margin: 1vh 1vh 0 0;
+  text-align: center;
+  color: var(--platinum-forte);
+  background: var(--azul-fraco);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 3px 6px 7px rgba(0,0,0,0.7);;
+}
+
+#div-botoes .itens:hover {
+  background-color: var(--azul-forte);
+}
+
+.tampao-do-overflow {
+  background: white;
+  height: 100%;
+  width: 100%;
+  position: relative;
+  z-index: 40;
+}</style><style type="text/css">.titulo-musica {
+    font-weight: 550;
+}
+
+.sombrear-selecao:hover {
+    box-shadow: 2px 3px 8px black ;
+}
+
+.combo-popup {
+    position: static;
+    border-radius: var(--round-border-pequeno);
+    font-size: 15px;
+    font-weight: 500;
+    padding: 10px 15px;
+    width: 100%;
+    border: 1px solid #999999;
+    outline: 0;
+    margin-bottom: 3px;
+}
+
+.container-opcoes-musica {
+    z-index: 180;
+    width: 100%; 
+    background: white;
+    display: block;
+    position: relative;
+    min-height: 168px;
+}
+
+.opcoes-musica {
+    position: relative;
+}
+
+#div-logo-vagalume {
+    position: absolute;
+    top: 10%;
+    width: 100%;
+    text-align: center;
+}
+
+#logo-vagalume {
+    max-height: 16vh;
+    /* object-fit: cover; */
+}
+.paragrafo-musica-esquerda {
+    padding: 0 10px;
+    flex-grow: 0 0 100%;
+    width: 22vw;
+}
+
+.paragrafo-musica-direita {
+    padding: 0 10px;
+    top: -1em;
+    position: relative;
+    flex-grow: 0 0 100%;
+    width: 22vw;
+}
+
+.link-letra {
+    font-size: 80%;
+    max-width: 23vw;
+}</style><style type="text/css">.borda-slide-mestre {
+    border-radius: var(--round-border-grande);
+    padding: 1vh;
+    background-color: black;
+    color: white;    
+    box-shadow: var(--box-shadow);
+}
+
+#preview, #preview-fake {
+    color: initial;
+    visibility: initial;
+    position: relative;
+    display: block;
+    border-radius: var(--round-border-grande);
+}
+
+#fundo-preview {
+    height:100%;
+    width: 100%;
+    object-fit: cover;
+    position: absolute;
+    box-shadow: var(--box-shadow);
+}
+
+img {
+    border-radius: var(--round-border-grande);
+    object-fit: cover;
+}
+
+
+.texto-preview {
+    position: absolute;
+    z-index: 20;
+    width:100%;
+    height:100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    white-space: pre-wrap;
+}
+
+.slide-titulo {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height:20%;
+    width:100%;
+    text-align: center;
+    font-size: 300%;
+    z-index: 30;
+    position: relative;
+}
+
+.slide-paragrafo {
+    position: relative;
+    font-size: 150%;
+    display: inline-block;
+    padding: 0% 10% 10% 10%;
+    width:100%;
+    overflow: hidden;
+    flex: 1 1;
+}
+
+.div-imagem-slide {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 29;
+}
+
+.imagem-slide {
+    object-fit: contain;
+    width: 100%;
+    height: 100%;
+}
+
+#ativar-tela-cheia {
+    position: absolute;
+    text-align: center;
+    border: none;
+    background-color: transparent;
+    z-index: 40;
+}
+
+.tampao {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    z-index: 10;
+    border-radius: var(--round-border-grande);
+    display: flex;
+    justify-content: space-between;
+}
+
+.movimentar-slide {
+    height: 100%;
+    width: 32%;
+    z-index: 35;
+}
+
+.container-setas {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    z-index: 34;
+    border-radius: var(--round-border-grande);
+    display: flex;
+    justify-content: space-between;
+}</style><style type="text/css">.container-versiculos {
+    flex: 1 1;
+    overflow: auto;
+    justify-content: start;
+    margin-top: 1.2vh;
+    text-align: justify;
+    text-justify: inter-word;
+    padding: 1vh 2.5vh 1vh 1vh;
+    display: block;
+}
+
+
+.versiculos {
+    padding: 1vh;
+    border-radius: var(--round-border-pequeno);
+    background-color: var(--platinum);   
+}
+</style><style type="text/css">.caixa-input-imagem {
+    overflow: hidden;
+    flex: 1 1;
+    margin-top: 0.5vh;
+    position: relative; 
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.file-input-container {
+    overflow-y: visible;
+    position: relative;  
+}
+
+.caixa-input-imagem [type=file] {
+    cursor: inherit;
+    display: flex;
+    font-size: 999px;
+    filter: alpha(opacity=0);
+    min-height: 100%;
+    min-width: 100%;
+    opacity: 0;
+    position: absolute;
+    right: 0;
+    text-align: right;
+    top: 0;
+    z-index: 300;
+}
+
+.container-carrossel {
+    flex: 1 1; 
+    position: relative; 
+    overflow: hidden;
+}
+
+.animacao-drag-over {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.tracejado-animacao {
+    border-radius: var(--round-border-medio);
+    border: 0.5vh dashed #b9b9b9;
+    z-index: 450;
+    pointer-events: none;
+}
+
+.container-texto-input-file {
+    width: 91%;
+    height: 91%;
+    margin: 3% 5%;
+}
+
+.container-imagem-upload {
+    margin: 2vh;
+    display: flex;
+    justify-content: center;
+}
+
+.previa-imagem-upload {
+    box-shadow: var(--box-shadow);
+    border-radius: var(--round-border-grande);
+    width: 12vw;
+    height: 9vw;
+    object-fit: scale-down;
+}
+
+.imagem-invalida {
+    background-color: var(--vermelho-fraco);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 1vw;
+}
+
+.texto-auxiliar {
+    color: gray;
+}
+
+.container-imagens-previa-upload {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    flex-direction: row;
+}
+
+.file-input-container{
+    pointer-events: none;
+}</style><style type="text/css">.carrossel {
+    position: relative;
+    overflow: hidden;
+    width: inherit;
+    height: inherit;
+    flex: inherit;
+    display: inherit;
+    overflow: inherit;
+}
+
+.seta-galeria {
+    color: gray;
+    z-index: inherit;
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container-galeria {
+    display: inline-block;
+    overflow: hidden;
+    width: inherit;
+    height: inherit;
+    flex: inherit;
+}
+
+.movimentador-galeria {
+    overflow: visible;
+    position: relative;
+    width: inherit;
+    height: inherit;
+    flex: inherit;
+}</style><style type="text/css">h1 {
+    margin: 0;
+    padding: 0;
+  }
+html, body, .app {
+  margin: 0;
+  padding: 0;
+  position: relative;
+  width: 100%;
+  height: 100vh;
+}
+#fundo-popup {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+  background-color: rgba(255,255,255, 0.5);
+  z-index: 140;
+}
+
+.popup {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  left: 25%;
+  right: 25%;
+  top: 12%;
+  bottom: 28%;
+  background: white;
+  border-radius: var(--round-border-grande);
+  padding: 1.5vw;
+  box-shadow: var(--box-shadow);
+  z-index: 150;
+}
+
+.cabecalho-popup {
+  width: 95%; 
+  position: absolute;
+}
+
+.titulo-popup {
+  padding-left: 2vh;
+}
+
+#fechar{
+  position: relative;
+  float: right;
+  outline: 3px;
+  text-align: center;
+  margin: 3px;
+  padding: 5px 8px;
+  background: var(--platinum);
+  border-radius: var(--round-border-pequeno);
+  font-weight: 650;
+}
+
+#fechar:hover {
+  background: black;
+  color: white;
+}
+
+.botao {
+  margin: 1.7vh 0 0 0;
+  padding: 0.9vh 1.5vh;
+  background: var(--azul-forte);
+  border-radius: var(--round-border-pequeno);
+  cursor: default;
+  overflow: visible;
+  text-align: center;
+  display: block;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -webkit-touch-callout: none;
+  -o-user-select: none;
+  user-select: none;
+  color: white;
+}
+
+.botao:hover {
+  background: var(--azul-oxford);;
+}
+
+.botao-limpar-input {
+  margin: 1.7vh 0 0 1vh;
+  padding: 0.9vh 1.5vh;
+  background: var(--vermelho-fraco);
+  border-radius: var(--round-border-pequeno);
+  cursor: default;
+  overflow: visible;
+  text-align: center;
+  display: block;
+  color: white;
+}
+
+.botao-limpar-input:hover {
+  background: var(--vermelho-forte);
+}
+
+.container-botoes-popup {
+  display: flex;
+  justify-content: space-between;
+}
+
+.conteudo-popup {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.container-divisao-popup {
+  display: flex;
+  flex-direction: column;
+  margin-top: 1.5vh;
+  overflow: auto;
+  flex: 1 1;
+  justify-content: space-between;
+}
+
+.container-preview {
+  /* flex: 1 0 0; */
+  /* overflow: auto; */
+  display: block;
+  overflow: auto;
+  white-space: pre-wrap;
+}
+
+.texto-inserir {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  width: 100%;
+}
+
+#subtitulo {
+  flex: 1 0;
+  margin-top: 0.5vh;
+}</style><style type="text/css">#botao-mostrar-galeria {
+    overflow: hidden;
+    position: fixed;
+}
+
+.container-carrossel-fundos {
+    position: relative;
+    overflow: visible;
+    pointer-events: auto;
+}
+
+.galeria-fundos {
+    height: 24vh;
+    margin-top: 3.8vh;
+    flex: 0 0;
+    display: flex;
+    width: auto;
+    flex-direction: row;
+    position: relative;
+    background-color: var(--azul-forte);
+}
+
+.div-img {
+    position: relative;
+    margin: 0 0 0 1vh;
+    height: 85%;
+    width: 14vw;
+}
+
+.div-img:hover {
+    transform: scale(1.08);
+    margin: 0 2vh 0 3vh
+}
+
+.imagem-galeria {
+    height: 100%;
+    width: 100%;
+    box-shadow: var(--box-shadow);
+    border-radius: var(--round-border-grande);
+}
+
+.texto-mini-preview {
+    position: absolute;
+    font-size: '150%';
+    font-weight: 600;
+    text-align: center;
+    z-index: 20;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-radius: var(--round-border-grande);
+}
+
+#botao-enviar-fundo {
+    background-color: var(--platinum-forte);
+    font-size: 1.7vw;
+    text-align: center;
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    color: black;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -webkit-touch-callout: none;
+    -o-user-select: none;
+    user-select: none;
+}
+
+#botao-enviar-fundo:hover {
+    background-color: #dddddd;
+}
+
+.colapsar-menu.galeria {
+    bottom: 0.7vh;
+    left: 0.7vh;
+}</style><style type="text/css">#botao-menu-configurar {
+    position: fixed;
+    justify-content: flex-start;
+    overflow: hidden;
+}
+
+.div-titulo-botao {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+}
+
+.menu-configuracoes {
+    border-radius: var(--round-border-pequeno);
+    width: 21.2vw;
+    pointer-events: all;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#painel-configuracao {
+    width: 95%;
+    margin-top: 1.2vh;
+    color: black;
+}
+
+#abas {
+    overflow: hidden;
+    display: flex;
+    justify-content: space-around;
+    margin-top: 1vh;
+    padding-top: 0.8vh;
+}
+ 
+.botao-aba {
+    outline: none;
+    cursor: pointer;
+    padding: 0.7vh 0.9vh 0.7vh 1vh;
+    width: auto;
+    border-radius: var(--round-border-pequeno);
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+    font-size: 110%;
+    position: relative;
+    background: white;
+}
+
+.botao-aba:hover {
+    box-shadow: var(--box-shadow);
+}
+
+.tampar-shadow {
+    position: absolute;
+    height: 5px;
+    width: 100%;
+    background: white;
+    left: 0;
+    bottom: 0;
+    z-index: 30;
+}
+
+.configuracoes {
+    position: relative;
+    border-radius: var(--round-border-pequeno);
+    background-color: white;
+    padding-bottom: 2vh;
+}
+
+.container-botoes-direita {
+    width: 100%;
+    position: absolute;
+    pointer-events: none;
+}
+
+.botoes-direita {
+    position: relative;
+    left: 83%;
+    width: 4vh;
+    pointer-events: auto;
+    display: flex;
+    flex-direction: column;
+    color: white;
+}
+
+.botoes-direita .bool {
+    background-color: var(--azul-forte);
+    padding: 0.4vh 0 0 0.2vh;
+}
+
+.botoes-direita .bool:hover {
+    background-color: var(--azul-oxford) !important;
+}
+
+.configuracoes-texto {
+    width: 84%;
+    display: flex;
+    flex-direction: column;
+}
+
+.linha-configuracoes-texto {
+    display: flex;
+}
+
+.div-sliders {
+    display: flex;
+}
+
+.botao-configuracao.bool {
+    width: 4vh;
+    flex: none;
+}
+
+.botao-configuracao.bool:hover, .botao-alinhamento:hover {
+    background-color: var(--platinum-forte);
+}
+
+.botao-alinhamento {
+    padding: 0.8vh;
+    width: 4vh;
+    height: 4vh;
+}
+
+.botao-configuracao {
+    display: inline-block;
+    position: relative;
+    background-color: #efefef;
+    height: 4vh;
+    border-radius: var(--round-border-pequeno);
+    border: none;
+    margin: 0.9vh 0 0 0.9vh;
+    text-align: center;
+}
+
+.combo-fonte {
+    flex: 1 1;
+    padding-left: 0.6vh;
+    max-width: 20.9vh;
+}
+
+.opcoes-fonte {
+    height: 4vh;
+    border-radius: var(--round-border-pequeno);
+}
+
+#cor-texto {
+    display: inline-block;
+}
+
+.a-cor-texto {
+    position: relative;
+    top: -0.5vh;
+}
+
+.cor-texto {
+    background-color: #000;
+    width: 80%;
+    height: .8vh;
+    position: absolute;
+    left: 10%;
+    top: 67%;
+}
+
+.container-cor-fundo {
+    height: 3vh;
+    width: 3vh;
+    margin-left: 0.49vh;
+    margin-top: 0.08vh;
+    position: relative;
+}
+
+.cor-fundo {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    overflow: hidden;
+}
+
+.container-painel-cor {
+    position: relative;
+}
+
+.painel-cor {
+    position: absolute;
+    left: 1vh;
+    top: 1vh;
+}
+
+.compact-picker {
+    position: relative;
+    background-color: white;
+    border-radius: var(--round-border-pequeno);
+    box-shadow: var(--box-shadow);
+    z-index: 30;
+    padding: 1vh;
+    width: 40vh;
+
+}
+
+.compact-picker span div {
+    border-radius: var(--round-border-muito-pequeno);
+    border: none;
+}
+
+.clicado {
+    box-shadow: inset 0px 2px 7px #a3a3a3;
+}
+
+.lista-slides-padrao {
+    display: flex;
+}
+
+.lista-slides-padrao button {
+    margin-left: 1vh;
+}
+
+.titulo-secao-popup {
+    margin: 1.7vh 0 0 0.7vh;
+    padding: 0.9vh 1.5vh;
+}
+
+#img-quadriculado {
+    position: relative;
+    border-radius: 0;
+    object-fit: contain;
+    width: 100%;
+    height: 100%;
+}
+
+.colapsar-menu.configurar {
+    top: 0.7vh;
+    right: 0.7vh;
+}</style><style type="text/css">.container-range {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 8vh;
+  margin: 1vh 1.5vh 0;
+}
+
+.rotulo-range {
+  word-wrap: unset;
+  width: 100%;
+  font-size: 85%;
+}
+
+.frame-range {
+  --diametro-bolinha: 2vh;
+  --height-barrinha: 1vh;
+  --width-barrinha: 9vh;
+  height: 12vh;
+  width: 100%;
+  position: relative;
+  border-radius: var(--round-border-pequeno);
+  display: flex;
+}
+
+input[type=range] {
+  -webkit-appearance: none; /* Hides the slider so that custom slider can be made */
+  transform: rotate(-90deg);
+  background: transparent; /* Otherwise white in Chrome */
+  position: absolute;
+  top: 5vh;
+  left: -2.9vh;
+  width: var(--width-barrinha);
+  height: var(--height-barrinha);
+  z-index: 0;
+}
+
+/* Bolinha */
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  border: 5px solid #dddddd;
+  height: var(--diametro-bolinha);
+  width: var(--diametro-bolinha);
+  border-radius: var(--diametro-bolinha);
+  background: #eeeeee;
+  margin-top: -5.7px; /*You need to specify a margin in Chrome, but in Firefox and IE it is automatic*/
+  box-shadow: -2px 1px 5px rgba(0,0,0,0.5);
+}
+
+/* Firefox */
+input[type=range]::-moz-range-thumb {
+  border: 1px solid #000000;
+  height: var(--diametro-bolinha);
+  width: var(--diametro-bolinha);
+  border-radius: var(--diametro-bolinha);
+  background: #d4d4d4;
+}
+
+/* Internet Explorer */
+input[type=range]::-ms-thumb {
+  border: 1px solid #000000;
+  height: var(--diametro-bolinha);
+  width: var(--diametro-bolinha);
+  border-radius: var(--diametro-bolinha);
+  background: #d4d4d4;
+}
+
+input[type=range]:focus {
+  outline: none; /* Removes the blue border. You should probably do some kind of focus styling for accessibility reasons though. */
+}   
+
+/* Barrinha */
+input[type=range]::-webkit-slider-runnable-track {
+  width: var(--width-barrinha);
+  height: var(--height-barrinha);
+  background: rgb(209, 209, 209);
+  border-radius: 100px;
+}
+
+input[type=range]:focus::-webkit-slider-runnable-track {
+  background: #3757A9;
+}
+
+input[type=range]::-moz-range-track {
+  width: var(--width-barrinha);
+  height: var(--height-barrinha);
+  background: rgb(209, 209, 209);
+  border-radius: 100px;
+}
+
+input[type=range]::-ms-track {
+  width: var(--width-barrinha);
+  height: var(--height-barrinha);
+  background: rgb(209, 209, 209);
+  border-radius: 100px;
+}
+
+.valor-flutuante {
+  font-size: 80%;
+  position: absolute;
+  left: 3.5vh;
+  box-shadow: var(--box-shadow);
+  border-radius: var(--round-border-pequeno);
+  background-color: white;
+  padding: 0.5vh;
+}</style><style type="text/css">#menu-exportacao {
+    position: fixed;
+    overflow: hidden;
+    justify-content: center;
+    flex-wrap: wrap;
+    --diametro-bolinha: 3.7vw;
+}
+
+#opcoes-menu-exportacao {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    pointer-events: all;
+}
+
+.botao-exportar {
+    border-radius: var(--diametro-bolinha);
+    height: var(--diametro-bolinha);
+    width: var(--diametro-bolinha);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#exportar-html {
+    background-color: gray;
+}
+
+#logo-html {
+    color: white;
+    font-size: calc(var(--diametro-bolinha)/2);
+    transform: scaleY(1.3);
+}
+
+#logo-pptx {
+    position: absolute;
+    pointer-events: none;
+    left: -1.06vw;
+    height: 5.54vw;
+    width: 5.54vw;
+}
+
+#exportar-pdf {
+    background-color: white;
+}
+
+#logo-pdf {
+    top: -0.2vw;
+    height: 2.8vw;
+    width: 2.8vw;
+    border-radius: 0;
+    position: relative;
+}
+
+.rotulo-botao-exportar {
+    margin: 0.4vw 0 0;
+    font-size: calc(var(--diametro-bolinha)/5);
+    color: white;
+}
+
+.logo-exportacao {
+    object-fit: contain;
+}
+
+.div-botao-exportar {
+    margin: 0.7vw 1.1vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#exportar-link {
+    color: black;
+    background-color: var(--platinum-forte);
+}
+
+#exportar-email {
+    color: white;
+    background-color: black;
+}
+
+.container-logo-pptx {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.colapsar-menu {
+    position: absolute;
+    color: white;
+    z-index: 100;
+    font-size: 3.5vh;
+    line-height: 70%;
+    pointer-events: all;
+}
+
+.colapsar-menu:hover {
+    color: #cfcfcf;
+}
+
+.colapsar-menu.exportacao {
+    bottom: 0.7vh;
+    right: 0.7vh;
+}
+</style></head><body><div id="preview-fake" style="width: 546.4px; height: 307.2px;"><div class="tampao" style="background-color: rgb(255, 255, 255); opacity: 0.2;"></div><img id="fundo-preview" src="/static/media/Aquarela.1d7673ff.jpg" alt=""><div class="texto-preview" style="font-size: 8.196px;"><div class="slide-titulo" style="font-family: &quot;Noto Sans&quot;; font-size: 300%; height: 25%; padding: 0% 8%;"><div><span style="border-radius: var(--round-border-medio);">Lucas 2</span></div></div><div id="paragrafo-slide" class="slide-paragrafo" style="font-family: &quot;Noto Sans&quot;; font-size: 150%; padding: 0.5% 8% 8%; line-height: 1.7;"><div style="border-radius: var(--round-border-medio);">As configurações do estilo desse slide serão aplicadas aos demais, exceto quando configurações específicas de cada slide se sobrepuserem às deste. 
+
+Este slide não será exportado nem exibido no modo de apresentação.</div></div></div><div class="container-setas"><div class="movimentar-slide"></div><div class="movimentar-slide"></div></div><button id="ativar-tela-cheia" style="opacity: 0.3; width: 56px; height: 56px; right: 3vh; bottom: 2.6vh;"><svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" class="icone-botao" size="60" height="60" width="60" xmlns="http://www.w3.org/2000/svg"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"></path></svg></button></div><div id="preview-fake" style="width: 546.4px; height: 307.2px;"><div class="tampao" style="background-color: rgb(255, 255, 255); opacity: 0.2;"></div><img id="fundo-preview" src="/static/media/Aquarela.1d7673ff.jpg" alt=""><div class="texto-preview" style="font-size: 8.196px;"><div class="slide-titulo" style="font-family: &quot;Noto Sans&quot;; font-size: 300%; height: 25%; padding: 0% 8%;"><div><span style="border-radius: var(--round-border-medio);">Lucas 2</span></div></div><div id="paragrafo-slide" class="slide-paragrafo" style="font-family: &quot;Noto Sans&quot;; font-size: 150%; padding: 0.5% 8% 8%; line-height: 1.7;"><div style="border-radius: var(--round-border-medio);">As configurações do estilo desse slide serão aplicadas aos demais, exceto quando configurações específicas de cada slide se sobrepuserem às deste. 
+
+Este slide não será exportado nem exibido no modo de apresentação.</div></div></div><div class="container-setas"><div class="movimentar-slide"></div><div class="movimentar-slide"></div></div><button id="ativar-tela-cheia" style="opacity: 0.3; width: 56px; height: 56px; right: 3vh; bottom: 2.6vh;"><svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" class="icone-botao" size="60" height="60" width="60" xmlns="http://www.w3.org/2000/svg"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"></path></svg></button></div><div id="preview-fake" style="width: 546.4px; height: 307.2px;"><div class="tampao" style="background-color: rgb(255, 255, 255); opacity: 0.2;"></div><img id="fundo-preview" src="/static/media/Aquarela.1d7673ff.jpg" alt=""><div class="texto-preview" style="font-size: 8.196px;"><div class="slide-titulo" style="font-family: &quot;Noto Sans&quot;; font-size: 300%; height: 25%; padding: 0% 8%;"><div><span style="border-radius: var(--round-border-medio);">Lucas 2</span></div></div><div id="paragrafo-slide" class="slide-paragrafo" style="font-family: &quot;Noto Sans&quot;; font-size: 150%; padding: 0.5% 8% 8%; line-height: 1.7;"><div style="border-radius: var(--round-border-medio);">As configurações do estilo desse slide serão aplicadas aos demais, exceto quando configurações específicas de cada slide se sobrepuserem às deste. 
+
+Este slide não será exportado nem exibido no modo de apresentação.</div></div></div><div class="container-setas"><div class="movimentar-slide"></div><div class="movimentar-slide"></div></div><button id="ativar-tela-cheia" style="opacity: 0.3; width: 56px; height: 56px; right: 3vh; bottom: 2.6vh;"><svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" class="icone-botao" size="60" height="60" width="60" xmlns="http://www.w3.org/2000/svg"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"></path></svg></button></div><div id="preview-fake" style="width: 546.4px; height: 307.2px;"><div class="tampao" style="background-color: rgb(255, 255, 255); opacity: 0.2;"></div><img id="fundo-preview" src="/static/media/Aquarela.1d7673ff.jpg" alt=""><div class="texto-preview" style="font-size: 8.196px;"><div class="slide-titulo" style="font-family: &quot;Noto Sans&quot;; font-size: 300%; height: 25%; padding: 0% 8%;"><div><span style="border-radius: var(--round-border-medio);">Lucas 2</span></div></div><div id="paragrafo-slide" class="slide-paragrafo" style="font-family: &quot;Noto Sans&quot;; font-size: 150%; padding: 0.5% 8% 8%; line-height: 1.7;"><div style="border-radius: var(--round-border-medio);">As configurações do estilo desse slide serão aplicadas aos demais, exceto quando configurações específicas de cada slide se sobrepuserem às deste. 
+
+Este slide não será exportado nem exibido no modo de apresentação.</div></div></div><div class="container-setas"><div class="movimentar-slide"></div><div class="movimentar-slide"></div></div><button id="ativar-tela-cheia" style="opacity: 0.3; width: 56px; height: 56px; right: 3vh; bottom: 2.6vh;"><svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" class="icone-botao" size="60" height="60" width="60" xmlns="http://www.w3.org/2000/svg"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"></path></svg></button></div><div id="preview-fake" style="width: 546.4px; height: 307.2px;"><div class="tampao" style="background-color: rgb(255, 255, 255); opacity: 0.2;"></div><img id="fundo-preview" src="/static/media/Aquarela.1d7673ff.jpg" alt=""><div class="texto-preview" style="font-size: 8.196px;"><div class="slide-titulo" style="font-family: &quot;Noto Sans&quot;; font-size: 300%; height: 25%; padding: 0% 8%;"><div><span style="border-radius: var(--round-border-medio);">Lucas 2</span></div></div><div id="paragrafo-slide" class="slide-paragrafo" style="font-family: &quot;Noto Sans&quot;; font-size: 150%; padding: 0.5% 8% 8%; line-height: 1.7;"><div style="border-radius: var(--round-border-medio);">As configurações do estilo desse slide serão aplicadas aos demais, exceto quando configurações específicas de cada slide se sobrepuserem às deste. 
+
+Este slide não será exportado nem exibido no modo de apresentação.</div></div></div><div class="container-setas"><div class="movimentar-slide"></div><div class="movimentar-slide"></div></div><button id="ativar-tela-cheia" style="opacity: 0.3; width: 56px; height: 56px; right: 3vh; bottom: 2.6vh;"><svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" class="icone-botao" size="60" height="60" width="60" xmlns="http://www.w3.org/2000/svg"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"></path></svg></button></div><div id="preview-fake" style="width: 546.4px; height: 307.2px;"><div class="tampao" style="background-color: rgb(255, 255, 255); opacity: 0.2;"></div><img id="fundo-preview" src="/static/media/Aquarela.1d7673ff.jpg" alt=""><div class="texto-preview" style="font-size: 8.196px;"><div class="slide-titulo" style="font-family: &quot;Noto Sans&quot;; font-size: 300%; height: 25%; padding: 0% 8%;"><div><span style="border-radius: var(--round-border-medio);">Lucas 2</span></div></div><div id="paragrafo-slide" class="slide-paragrafo" style="font-family: &quot;Noto Sans&quot;; font-size: 150%; padding: 0.5% 8% 8%; line-height: 1.7;"><div style="border-radius: var(--round-border-medio);">As configurações do estilo desse slide serão aplicadas aos demais, exceto quando configurações específicas de cada slide se sobrepuserem às deste. 
+
+Este slide não será exportado nem exibido no modo de apresentação.</div></div></div><div class="container-setas"><div class="movimentar-slide"></div><div class="movimentar-slide"></div></div><button id="ativar-tela-cheia" style="opacity: 0.3; width: 56px; height: 56px; right: 3vh; bottom: 2.6vh;"><svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" class="icone-botao" size="60" height="60" width="60" xmlns="http://www.w3.org/2000/svg"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"></path></svg></button></div><div id="preview-fake" style="width: 546.4px; height: 307.2px;"><div class="tampao" style="background-color: rgb(255, 255, 255); opacity: 0.2;"></div><img id="fundo-preview" src="/static/media/Aquarela.1d7673ff.jpg" alt=""><div class="texto-preview" style="font-size: 8.196px;"><div class="slide-titulo" style="font-family: &quot;Noto Sans&quot;; font-size: 300%; height: 25%; padding: 0% 8%;"><div><span style="border-radius: var(--round-border-medio);">Lucas 2</span></div></div><div id="paragrafo-slide" class="slide-paragrafo" style="font-family: &quot;Noto Sans&quot;; font-size: 150%; padding: 0.5% 8% 8%; line-height: 1.7;"><div style="border-radius: var(--round-border-medio);">As configurações do estilo desse slide serão aplicadas aos demais, exceto quando configurações específicas de cada slide se sobrepuserem às deste. 
+
+Este slide não será exportado nem exibido no modo de apresentação.</div></div></div><div class="container-setas"><div class="movimentar-slide"></div><div class="movimentar-slide"></div></div><button id="ativar-tela-cheia" style="opacity: 0.3; width: 56px; height: 56px; right: 3vh; bottom: 2.6vh;"><svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" class="icone-botao" size="60" height="60" width="60" xmlns="http://www.w3.org/2000/svg"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"></path></svg></button></div><div id="preview-fake" style="width: 546.4px; height: 307.2px;"><div class="tampao" style="background-color: rgb(255, 255, 255); opacity: 0.2;"></div><img id="fundo-preview" src="/static/media/Aquarela.1d7673ff.jpg" alt=""><div class="texto-preview" style="font-size: 8.196px;"><div class="slide-titulo" style="font-family: &quot;Noto Sans&quot;; font-size: 300%; height: 25%; padding: 0% 8%;"><div><span style="border-radius: var(--round-border-medio);">Lucas 2</span></div></div><div id="paragrafo-slide" class="slide-paragrafo" style="font-family: &quot;Noto Sans&quot;; font-size: 150%; padding: 0.5% 8% 8%; line-height: 1.7;"><div style="border-radius: var(--round-border-medio);">As configurações do estilo desse slide serão aplicadas aos demais, exceto quando configurações específicas de cada slide se sobrepuserem às deste. 
+
+Este slide não será exportado nem exibido no modo de apresentação.</div></div></div><div class="container-setas"><div class="movimentar-slide"></div><div class="movimentar-slide"></div></div><button id="ativar-tela-cheia" style="opacity: 0.3; width: 56px; height: 56px; right: 3vh; bottom: 2.6vh;"><svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" class="icone-botao" size="60" height="60" width="60" xmlns="http://www.w3.org/2000/svg"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"></path></svg></button></div><div id="preview-fake" style="width: 546.4px; height: 307.2px;"><div class="tampao" style="background-color: rgb(255, 255, 255); opacity: 0.2;"></div><img id="fundo-preview" src="/static/media/Aquarela.1d7673ff.jpg" alt=""><div class="texto-preview" style="font-size: 8.196px;"><div class="slide-titulo" style="font-family: &quot;Noto Sans&quot;; font-size: 300%; height: 25%; padding: 0% 8%;"><div><span style="border-radius: var(--round-border-medio);">Lucas 2</span></div></div><div id="paragrafo-slide" class="slide-paragrafo" style="font-family: &quot;Noto Sans&quot;; font-size: 150%; padding: 0.5% 8% 8%; line-height: 1.7;"><div style="border-radius: var(--round-border-medio);">As configurações do estilo desse slide serão aplicadas aos demais, exceto quando configurações específicas de cada slide se sobrepuserem às deste. 
+
+Este slide não será exportado nem exibido no modo de apresentação.</div></div></div><div class="container-setas"><div class="movimentar-slide"></div><div class="movimentar-slide"></div></div><button id="ativar-tela-cheia" style="opacity: 0.3; width: 56px; height: 56px; right: 3vh; bottom: 2.6vh;"><svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" class="icone-botao" size="60" height="60" width="60" xmlns="http://www.w3.org/2000/svg"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"></path></svg></button></div><div id="preview-fake" style="width: 546.4px; height: 307.2px;"><div class="tampao" style="background-color: rgb(255, 255, 255); opacity: 0.2;"></div><img id="fundo-preview" src="/static/media/Aquarela.1d7673ff.jpg" alt=""><div class="texto-preview" style="font-size: 8.196px;"><div class="slide-titulo" style="font-family: &quot;Noto Sans&quot;; font-size: 300%; height: 25%; padding: 0% 8%;"><div><span style="border-radius: var(--round-border-medio);">Lucas 2</span></div></div><div id="paragrafo-slide" class="slide-paragrafo" style="font-family: &quot;Noto Sans&quot;; font-size: 150%; padding: 0.5% 8% 8%; line-height: 1.7;"><div style="border-radius: var(--round-border-medio);">As configurações do estilo desse slide serão aplicadas aos demais, exceto quando configurações específicas de cada slide se sobrepuserem às deste. 
+
+Este slide não será exportado nem exibido no modo de apresentação.</div></div></div><div class="container-setas"><div class="movimentar-slide"></div><div class="movimentar-slide"></div></div><button id="ativar-tela-cheia" style="opacity: 0.3; width: 56px; height: 56px; right: 3vh; bottom: 2.6vh;"><svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" class="icone-botao" size="60" height="60" width="60" xmlns="http://www.w3.org/2000/svg"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"></path></svg></button></div><div id="preview-fake" style="width: 546.4px; height: 307.2px;"><div class="tampao" style="background-color: rgb(255, 255, 255); opacity: 0.2;"></div><img id="fundo-preview" src="/static/media/Aquarela.1d7673ff.jpg" alt=""><div class="texto-preview" style="font-size: 8.196px;"><div class="slide-titulo" style="font-family: &quot;Noto Sans&quot;; font-size: 300%; height: 25%; padding: 0% 8%;"><div><span style="border-radius: var(--round-border-medio);">Lucas 2</span></div></div><div id="paragrafo-slide" class="slide-paragrafo" style="font-family: &quot;Noto Sans&quot;; font-size: 150%; padding: 0.5% 8% 8%; line-height: 1.7;"><div style="border-radius: var(--round-border-medio);">As configurações do estilo desse slide serão aplicadas aos demais, exceto quando configurações específicas de cada slide se sobrepuserem às deste. 
+
+Este slide não será exportado nem exibido no modo de apresentação.</div></div></div><div class="container-setas"><div class="movimentar-slide"></div><div class="movimentar-slide"></div></div><button id="ativar-tela-cheia" style="opacity: 0.3; width: 56px; height: 56px; right: 3vh; bottom: 2.6vh;"><svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" class="icone-botao" size="60" height="60" width="60" xmlns="http://www.w3.org/2000/svg"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"></path></svg></button></div><div id="preview-fake" style="width: 546.4px; height: 307.2px;"><div class="tampao" style="background-color: rgb(255, 255, 255); opacity: 0.2;"></div><img id="fundo-preview" src="/static/media/Aquarela.1d7673ff.jpg" alt=""><div class="texto-preview" style="font-size: 8.196px;"><div class="slide-titulo" style="font-family: &quot;Noto Sans&quot;; font-size: 300%; height: 25%; padding: 0% 8%;"><div><span style="border-radius: var(--round-border-medio);">Lucas 2</span></div></div><div id="paragrafo-slide" class="slide-paragrafo" style="font-family: &quot;Noto Sans&quot;; font-size: 150%; padding: 0.5% 8% 8%; line-height: 1.7;"><div style="border-radius: var(--round-border-medio);">As configurações do estilo desse slide serão aplicadas aos demais, exceto quando configurações específicas de cada slide se sobrepuserem às deste. 
+
+Este slide não será exportado nem exibido no modo de apresentação.</div></div></div><div class="container-setas"><div class="movimentar-slide"></div><div class="movimentar-slide"></div></div><button id="ativar-tela-cheia" style="opacity: 0.3; width: 56px; height: 56px; right: 3vh; bottom: 2.6vh;"><svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" class="icone-botao" size="60" height="60" width="60" xmlns="http://www.w3.org/2000/svg"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"></path></svg></button></div><div id="preview-fake" style="width: 546.4px; height: 307.2px;"><div class="tampao" style="background-color: rgb(255, 255, 255); opacity: 0.2;"></div><img id="fundo-preview" src="/static/media/Aquarela.1d7673ff.jpg" alt=""><div class="texto-preview" style="font-size: 8.196px;"><div class="slide-titulo" style="font-family: &quot;Noto Sans&quot;; font-size: 300%; height: 25%; padding: 0% 8%;"><div><span style="border-radius: var(--round-border-medio);">Lucas 2</span></div></div><div id="paragrafo-slide" class="slide-paragrafo" style="font-family: &quot;Noto Sans&quot;; font-size: 150%; padding: 0.5% 8% 8%; line-height: 1.7;"><div style="border-radius: var(--round-border-medio);">As configurações do estilo desse slide serão aplicadas aos demais, exceto quando configurações específicas de cada slide se sobrepuserem às deste. 
+
+Este slide não será exportado nem exibido no modo de apresentação.</div></div></div><div class="container-setas"><div class="movimentar-slide"></div><div class="movimentar-slide"></div></div><button id="ativar-tela-cheia" style="opacity: 0.3; width: 56px; height: 56px; right: 3vh; bottom: 2.6vh;"><svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" class="icone-botao" size="60" height="60" width="60" xmlns="http://www.w3.org/2000/svg"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"></path></svg></button></div><div id="preview-fake" style="width: 546.4px; height: 307.2px;"><div class="tampao" style="background-color: rgb(255, 255, 255); opacity: 0.2;"></div><img id="fundo-preview" src="/static/media/Aquarela.1d7673ff.jpg" alt=""><div class="texto-preview" style="font-size: 8.196px;"><div class="slide-titulo" style="font-family: &quot;Noto Sans&quot;; font-size: 300%; height: 25%; padding: 0% 8%;"><div><span style="border-radius: var(--round-border-medio);">Lucas 2</span></div></div><div id="paragrafo-slide" class="slide-paragrafo" style="font-family: &quot;Noto Sans&quot;; font-size: 150%; padding: 0.5% 8% 8%; line-height: 1.7;"><div style="border-radius: var(--round-border-medio);">As configurações do estilo desse slide serão aplicadas aos demais, exceto quando configurações específicas de cada slide se sobrepuserem às deste. 
+
+Este slide não será exportado nem exibido no modo de apresentação.</div></div></div><div class="container-setas"><div class="movimentar-slide"></div><div class="movimentar-slide"></div></div><button id="ativar-tela-cheia" style="opacity: 0.3; width: 56px; height: 56px; right: 3vh; bottom: 2.6vh;"><svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" class="icone-botao" size="60" height="60" width="60" xmlns="http://www.w3.org/2000/svg"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"></path></svg></button></div><div id="preview-fake" style="width: 546.4px; height: 307.2px;"><div class="tampao" style="background-color: rgb(255, 255, 255); opacity: 0.2;"></div><img id="fundo-preview" src="/static/media/Aquarela.1d7673ff.jpg" alt=""><div class="texto-preview" style="font-size: 8.196px;"><div class="slide-titulo" style="font-family: &quot;Noto Sans&quot;; font-size: 300%; height: 25%; padding: 0% 8%;"><div><span style="border-radius: var(--round-border-medio);">Lucas 2</span></div></div><div id="paragrafo-slide" class="slide-paragrafo" style="font-family: &quot;Noto Sans&quot;; font-size: 150%; padding: 0.5% 8% 8%; line-height: 1.7;"><div style="border-radius: var(--round-border-medio);">As configurações do estilo desse slide serão aplicadas aos demais, exceto quando configurações específicas de cada slide se sobrepuserem às deste. 
+
+Este slide não será exportado nem exibido no modo de apresentação.</div></div></div><div class="container-setas"><div class="movimentar-slide"></div><div class="movimentar-slide"></div></div><button id="ativar-tela-cheia" style="opacity: 0.3; width: 56px; height: 56px; right: 3vh; bottom: 2.6vh;"><svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" class="icone-botao" size="60" height="60" width="60" xmlns="http://www.w3.org/2000/svg"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"></path></svg></button></div><div id="preview-fake" style="width: 546.4px; height: 307.2px;"><div class="tampao" style="background-color: rgb(255, 255, 255); opacity: 0.2;"></div><img id="fundo-preview" src="/static/media/Aquarela.1d7673ff.jpg" alt=""><div class="texto-preview" style="font-size: 8.196px;"><div class="slide-titulo" style="font-family: &quot;Noto Sans&quot;; font-size: 300%; height: 25%; padding: 0% 8%;"><div><span style="border-radius: var(--round-border-medio);">Lucas 2</span></div></div><div id="paragrafo-slide" class="slide-paragrafo" style="font-family: &quot;Noto Sans&quot;; font-size: 150%; padding: 0.5% 8% 8%; line-height: 1.7;"><div style="border-radius: var(--round-border-medio);">As configurações do estilo desse slide serão aplicadas aos demais, exceto quando configurações específicas de cada slide se sobrepuserem às deste. 
+
+Este slide não será exportado nem exibido no modo de apresentação.</div></div></div><div class="container-setas"><div class="movimentar-slide"></div><div class="movimentar-slide"></div></div><button id="ativar-tela-cheia" style="opacity: 0.3; width: 56px; height: 56px; right: 3vh; bottom: 2.6vh;"><svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" class="icone-botao" size="60" height="60" width="60" xmlns="http://www.w3.org/2000/svg"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"></path></svg></button></div><div id="preview-fake" style="width: 546.4px; height: 307.2px;"><div class="tampao" style="background-color: rgb(255, 255, 255); opacity: 0.2;"></div><img id="fundo-preview" src="/static/media/Aquarela.1d7673ff.jpg" alt=""><div class="texto-preview" style="font-size: 8.196px;"><div class="slide-titulo" style="font-family: &quot;Noto Sans&quot;; font-size: 300%; height: 25%; padding: 0% 8%;"><div><span style="border-radius: var(--round-border-medio);">Lucas 2</span></div></div><div id="paragrafo-slide" class="slide-paragrafo" style="font-family: &quot;Noto Sans&quot;; font-size: 150%; padding: 0.5% 8% 8%; line-height: 1.7;"><div style="border-radius: var(--round-border-medio);">As configurações do estilo desse slide serão aplicadas aos demais, exceto quando configurações específicas de cada slide se sobrepuserem às deste. 
+
+Este slide não será exportado nem exibido no modo de apresentação.</div></div></div><div class="container-setas"><div class="movimentar-slide"></div><div class="movimentar-slide"></div></div><button id="ativar-tela-cheia" style="opacity: 0.3; width: 56px; height: 56px; right: 3vh; bottom: 2.6vh;"><svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" class="icone-botao" size="60" height="60" width="60" xmlns="http://www.w3.org/2000/svg"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"></path></svg></button></div><div id="preview-fake" style="width: 546.4px; height: 307.2px;"><div class="tampao" style="background-color: rgb(255, 255, 255); opacity: 0.2;"></div><img id="fundo-preview" src="/static/media/Aquarela.1d7673ff.jpg" alt=""><div class="texto-preview" style="font-size: 8.196px;"><div class="slide-titulo" style="font-family: &quot;Noto Sans&quot;; font-size: 300%; height: 25%; padding: 0% 8%;"><div><span style="border-radius: var(--round-border-medio);">Lucas 2</span></div></div><div id="paragrafo-slide" class="slide-paragrafo" style="font-family: &quot;Noto Sans&quot;; font-size: 150%; padding: 0.5% 8% 8%; line-height: 1.7;"><div style="border-radius: var(--round-border-medio);">As configurações do estilo desse slide serão aplicadas aos demais, exceto quando configurações específicas de cada slide se sobrepuserem às deste. 
+
+Este slide não será exportado nem exibido no modo de apresentação.</div></div></div><div class="container-setas"><div class="movimentar-slide"></div><div class="movimentar-slide"></div></div><button id="ativar-tela-cheia" style="opacity: 0.3; width: 56px; height: 56px; right: 3vh; bottom: 2.6vh;"><svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" class="icone-botao" size="60" height="60" width="60" xmlns="http://www.w3.org/2000/svg"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"></path></svg></button></div><div id="preview-fake" style="width: 546.4px; height: 307.2px;"><div class="tampao" style="background-color: rgb(255, 255, 255); opacity: 0.2;"></div><img id="fundo-preview" src="/static/media/Aquarela.1d7673ff.jpg" alt=""><div class="texto-preview" style="font-size: 8.196px;"><div class="slide-titulo" style="font-family: &quot;Noto Sans&quot;; font-size: 300%; height: 25%; padding: 0% 8%;"><div><span style="border-radius: var(--round-border-medio);">Lucas 2</span></div></div><div id="paragrafo-slide" class="slide-paragrafo" style="font-family: &quot;Noto Sans&quot;; font-size: 150%; padding: 0.5% 8% 8%; line-height: 1.7;"><div style="border-radius: var(--round-border-medio);">As configurações do estilo desse slide serão aplicadas aos demais, exceto quando configurações específicas de cada slide se sobrepuserem às deste. 
+
+Este slide não será exportado nem exibido no modo de apresentação.</div></div></div><div class="container-setas"><div class="movimentar-slide"></div><div class="movimentar-slide"></div></div><button id="ativar-tela-cheia" style="opacity: 0.3; width: 56px; height: 56px; right: 3vh; bottom: 2.6vh;"><svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" class="icone-botao" size="60" height="60" width="60" xmlns="http://www.w3.org/2000/svg"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"></path></svg></button></div></body>

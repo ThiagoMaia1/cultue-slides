@@ -8,7 +8,7 @@ class Carregando extends React.Component {
     }
 
     componentDidMount() {
-        this.idTimer = setInterval(() => this.rodar(), 10)
+        this.idTimer = setInterval(() => this.rodar(), 20)
     }
 
     componentWillUnmount() {

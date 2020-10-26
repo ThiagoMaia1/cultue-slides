@@ -16,6 +16,9 @@ class Preview extends Component {
         this.larguraTela = Math.max(wWidth, wHeight);
         this.alturaTela = Math.min(wWidth, wHeight);
         this.state = {screen: {...small}}
+
+        if (this.props.slidePreviewFake) {}
+
         document.addEventListener('fullscreenchange', () => {
             if (document.fullscreenElement) {
                 if (this.props.slidePreview.eMestre) this.offsetSlide(1);
@@ -80,8 +83,10 @@ class Preview extends Component {
         return (
             <div className='borda-slide-mestre' style={{height: this.alturaTela*this.state.screen.proporcao + 0.051*window.innerHeight, 
                                                         visibility: this.props.slidePreview.eMestre ? '' : 'hidden', 
+                                                        display: this.props.slidePreviewFake ? 'none' : '',
                                                         ...this.realcarElemento('tampao', 'fora')}}>
-                <div id='preview' style={{width: this.larguraTela*this.state.screen.proporcao, 
+                <div id={'preview' + (this.props.slidePreviewFake ? '-fake' : '')} ref={this.props.refPreview}
+                    style={{width: this.larguraTela*this.state.screen.proporcao, 
                                         height: this.alturaTela*this.state.screen.proporcao,
                                         ...this.realcarElemento('tampao', 'dentro')}}>
                     <div className='tampao' style={this.props.slidePreview.estilo.tampao}>

@@ -27,6 +27,8 @@ class ItemListaMusica extends React.Component {
         )
     }
 };
+  
+export default ItemListaMusica;
 
 // const ItemListaMusica = props => {
 
@@ -48,5 +50,3 @@ class ItemListaMusica extends React.Component {
 
 // };
   
-  
-export default ItemListaMusica;

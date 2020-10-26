@@ -3,6 +3,7 @@ import ComboLetra from './../LetrasMusica/ComboLetra';
 import TextoBiblico from './../TextoBiblico/TextoBiblico';
 import AdicionarTitulo from './AdicionarTitulo';
 import AdicionarImagem from './../AdicionarImagem/AdicionarImagem';
+import AdicionarVideo from './../AdicionarVideo/AdicionarVideo';
 // import { GrChapterAdd } from 'react-icons/gr';
 
 class Adicionar extends Component {
@@ -13,7 +14,6 @@ class Adicionar extends Component {
     }
 
     render() {
-        var Desenv = (<h4>Recurso em desenvolvimento</h4>)
         return (
             <>
                 <div id="div-botoes">
@@ -25,7 +25,7 @@ class Adicionar extends Component {
                     <button className="botao-azul itens" onClick={() => this.props.callback(TextoBiblico)}>Texto Bíblico</button>
                     <button className="botao-azul itens" onClick={() => this.props.callback(ComboLetra)}>Música</button>
                     <button className="botao-azul itens" onClick={() => this.props.callback(AdicionarImagem)}>Ima- gem</button>
-                    <button className="botao-azul itens" onClick={() => this.props.callback(Desenv)}>Vídeo</button>
+                    <button className="botao-azul itens" onClick={() => this.props.callback(AdicionarVideo)}>Vídeo</button>
                 </div>
                 
             </>

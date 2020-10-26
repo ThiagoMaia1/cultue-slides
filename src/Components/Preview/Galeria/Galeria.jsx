@@ -67,7 +67,7 @@ class Galeria extends Component {
                 <div className={'container-carrossel-fundos'} style={{display: this.state.galeriaVisivel ? '' : 'none'}}
                      onClick={e => e.stopPropagation()}>
                     <Carrossel tamanhoIcone={100} tamanhoMaximo='96vw' style={{zIndex: '45'}} corGradiente='var(--azul-forte)'
-                               percentualBeirada={0.04}>
+                               percentualBeirada={0.03}>
                         <div className='galeria-fundos'>
                             <div className='div-img' onClick={this.abrirPopup}>
                                 <div id='botao-enviar-fundo' className='imagem-galeria'>Enviar Fundo Personalizado</div>

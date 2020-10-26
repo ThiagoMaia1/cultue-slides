@@ -40,13 +40,13 @@ export default class Element {
     }
   
     criarSlides = (texto, estiloMestre, nSlide = 0, estGlobal = null) => {
+      if (this.eMestre) return;
       if (this.slides[nSlide].eMestre) nSlide++;
       if (this.tipo === 'Imagem') {
         this.dividirImagens();
       } else {
         this.dividirTexto(texto, nSlide, estiloMestre, estGlobal);
       }
-      if (this.eMestre) return;
       if (this.slides.length > 1 && !this.slides[0].eMestre) {
         this.slides.unshift({estilo: {...estiloMestre}, texto: textoMestre, eMestre: true});
         this.slides[1].estilo = {...new Estilo()};
