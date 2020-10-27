@@ -52,6 +52,7 @@ class Img extends Component {
 };
 
 const mapStateToProps = function(state) {
+    state = state.present;
     var sel = state.selecionado
     return {slidePreview: state.slidePreview, slideSelecionado: state.elementos[sel.elemento].slides[sel.slide]}
 }

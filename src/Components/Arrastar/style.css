@@ -80,6 +80,19 @@ ol {
   width: 100%;
 }
 
+.container-icone-colapsar {
+  display: inline;
+  color: inherit;
+  flex: 1;
+}
+
+.icone-colapsar {
+  height: 0px;
+  float: right;
+  cursor: pointer;
+  color: inherit;
+}
+
 #slide-mestre {
   -webkit-user-select: none;
   -khtml-user-select: none;
@@ -109,6 +122,8 @@ ol {
 
 .lista-slides {
   background: var(--platinum);
+  display: flex;
+  width: 100%;
 }
 
 .lista-slides:hover {

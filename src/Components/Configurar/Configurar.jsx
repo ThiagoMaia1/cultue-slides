@@ -55,7 +55,8 @@ class Configurar extends Component {
 }
 
 const mapStateToProps = function (state) {
-  return {elementos: state.elementos}
+  state = state.present;
+  return {elementos: state.elementos};
 }
 
 export default connect(mapStateToProps)(Configurar);

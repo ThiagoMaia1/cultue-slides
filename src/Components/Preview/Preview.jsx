@@ -134,8 +134,8 @@ const Img = ({imagem}) => {
 };
 
 const mapStateToProps = function (state) {
+    state = state.present;
     return {slidePreview: state.slidePreview, realce: state.realce, elementos: state.elementos}
-    
 }
 
 export default connect(mapStateToProps)(Preview);

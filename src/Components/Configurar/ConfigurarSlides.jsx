@@ -34,12 +34,12 @@ const listaBotoesAlinhamento = [{direcao: 'left', titulo: 'Alinhado à Esquerda'
                                 {direcao: 'justify', titulo: 'Justificado', icone: BsJustify}
 ];
 
-const listaSliders = [{rotulo: 'Fonte', aba: 'paragrafo', atributo: 'fontSize', min: 1, max: 3.5, step: 0.01,  recalcular: true},
-                      {rotulo: 'Margem', aba: 'paragrafo', atributo: 'padding', min: 0, max: 0.4, step: 0.01,  recalcular: true},
+const listaSliders = [{rotulo: 'Fonte', aba: 'paragrafo', atributo: 'fontSize', min: 1, max: 3.5, step: 0.01,  redividir: true},
+                      {rotulo: 'Margem', aba: 'paragrafo', atributo: 'padding', min: 0, max: 0.4, step: 0.01,  redividir: true},
                       {rotulo: 'Espaçamento', aba: 'paragrafo', atributo: 'lineHeight', min: 0.5, max: 3, step: 0.1},
-                      {rotulo: 'Fonte', aba: 'titulo', atributo: 'fontSize', min: 1, max: 7, step: 0.01,  recalcular: true},
-                      {rotulo: 'Margem', aba: 'titulo', atributo: 'padding', min: 0, max: 0.4, step: 0.01,  recalcular: true},
-                      {rotulo: 'Altura', aba: 'titulo', atributo: 'height', min: 0.1, max: 1, step: 0.01,  recalcular: true},
+                      {rotulo: 'Fonte', aba: 'titulo', atributo: 'fontSize', min: 1, max: 7, step: 0.01,  redividir: true},
+                      {rotulo: 'Margem', aba: 'titulo', atributo: 'padding', min: 0, max: 0.4, step: 0.01,  redividir: true},
+                      {rotulo: 'Altura', aba: 'titulo', atributo: 'height', min: 0.1, max: 1, step: 0.01,  redividir: true},
                       {rotulo: 'Opacidade', aba: 'tampao', atributo: 'opacity', min: 0, max: 1, step: 0.05},
                       {rotulo: 'Margem', aba: 'imagem', atributo: 'padding', min: 0, max: 0.25, step: 0.01},
                       {rotulo: 'Altura', aba: 'imagem', atributo: 'height', min: 0, max: 1, step: 0.01},
@@ -118,7 +118,7 @@ class ConfigurarSlides extends Component {
       listaSliders.map(s => (
         <Slider rotulo={s.rotulo} min={s.min} max={s.max} step={s.step} unidade='%'
                 defaultValue={this.props.slideSelecionado.estilo[this.state.aba.nomeCodigo][s.atributo]}
-                callbackFunction={valor => this.atualizarEstilo(this.state.aba.nomeCodigo, s.atributo, valor +'', s.recalcular)} 
+                callbackFunction={valor => this.atualizarEstilo(this.state.aba.nomeCodigo, s.atributo, valor +'', s.redividir)} 
                 style={{display: (this.state.aba.nomeCodigo === s.aba ? '' : 'none')}}/>
     )));
   }
@@ -168,12 +168,11 @@ class ConfigurarSlides extends Component {
     this.atualizarEstilo(this.state.aba.nomeCodigo, atributo.nomeAtributo, v, true)
   }
 
-  atualizarEstilo = (nomeObjeto, nomeAtributo, valor, recalcular = false) => {
+  atualizarEstilo = (nomeObjeto, nomeAtributo, valor, redividir = false) => {
     var sel = this.props.selecionado;
     var estiloObjeto = {};
     estiloObjeto[nomeAtributo] = valor
-    this.props.dispatch({type: 'atualizar-estilo', objeto: nomeObjeto, valor: estiloObjeto})
-    if (recalcular) this.props.dispatch({type: 'redividir-slides', selecionado: sel})
+    this.props.dispatch({type: 'atualizar-estilo', objeto: nomeObjeto, valor: estiloObjeto, redividir: redividir, selecionado: sel})
   }
 
   limparEstilo = () => {
@@ -184,9 +183,8 @@ class ConfigurarSlides extends Component {
     } else {
       if (this.eObjetoVazio(estiloAnterior[this.state.aba.nomeCodigo])) return;
     }
-    this.props.dispatch({type: 'limpar-estilo', selecionado: this.props.selecionado, objeto: obj})
-    if (!this.eObjetoVazio(estiloAnterior.texto) || !this.eObjetoVazio(estiloAnterior.paragrafo) || !this.eObjetoVazio(estiloAnterior.titulo))
-      this.props.dispatch({type: 'redividir-slides', selecionado: this.props.selecionado})
+    var redividir = (!this.eObjetoVazio(estiloAnterior.texto) || !this.eObjetoVazio(estiloAnterior.paragrafo) || !this.eObjetoVazio(estiloAnterior.titulo));
+    this.props.dispatch({type: 'limpar-estilo', selecionado: this.props.selecionado, objeto: obj, redividir: redividir})
   }
 
   aplicarEstiloAoMestre = () => {
@@ -275,6 +273,7 @@ class ConfigurarSlides extends Component {
 }
 
 const mapStateToProps = function (state) {
+  state = state.present;
   var sel = state.selecionado;
   return {slideSelecionado: state.elementos[sel.elemento].slides[sel.slide], selecionado: state.selecionado, slidePreview: state.slidePreview}
 }

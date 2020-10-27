@@ -300,7 +300,8 @@ class ExportadorHTML extends Component {
 }
 
 const mapStateToProps = function (state) {
-    return {state: state}
+  state = state.present;
+  return {state: state};
 }
 
 export default connect(mapStateToProps)(ExportadorHTML);

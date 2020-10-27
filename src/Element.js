@@ -40,6 +40,7 @@ export default class Element {
     }
   
     criarSlides = (texto, estiloMestre, nSlide = 0, estGlobal = null) => {
+      
       if (this.eMestre) return;
       if (this.slides[nSlide].eMestre) nSlide++;
       if (this.tipo === 'Imagem') {
@@ -54,10 +55,12 @@ export default class Element {
         this.slides[1].estilo = this.slides[0].estilo;
         this.slides.shift();
       }
+      return this;
     }
   
-    dividirTexto = (texto, nSlide, estElemento, estGlobal = null) => {//Divide o texto a ser incluído em quantos slides forem necessários, mantendo a estilização de cada slide.
+    dividirTexto = (texto, nSlide, estElemento, estGlobal = null) => {
       
+      //Divide o texto a ser incluído em quantos slides forem necessários, mantendo a estilização de cada slide.
       if (nSlide === this.slides.length) {
         this.slides.push({estilo: {...new Estilo()}, texto: ''});
       } else if (nSlide > this.slides.length) {
@@ -66,7 +69,6 @@ export default class Element {
       }
       var slide = this.slides[nSlide];  
       if (nSlide === 0) slide.eMestre = this.eMestre; 
-  
       var estSlide = slide.estilo;
       estGlobal = estGlobal ? estGlobal : estiloPadrao;
       
