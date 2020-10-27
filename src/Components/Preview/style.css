@@ -6,7 +6,7 @@
     box-shadow: var(--box-shadow);
 }
 
-#preview, #preview-fake {
+#preview {
     color: initial;
     visibility: initial;
     position: relative;

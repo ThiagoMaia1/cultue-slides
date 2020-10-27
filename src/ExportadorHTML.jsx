@@ -1,11 +1,105 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { capitalize } from './Element';
-import Preview from './Components/Preview/Preview'
+import Preview, { toggleFullscreen as fullScreen } from './Components/Preview/Preview'
 import { proporcaoPadTop } from './Element';
+
+const toggleFullscreen = fullScreen;
+
+const downloadArquivoTexto = function(nomeArquivo, conteudoArquivo) {
+  let blobx = new Blob([conteudoArquivo], { type: 'text/plain' }); // ! Blob
+  let elemx = window.document.createElement('a');
+  elemx.href = window.URL.createObjectURL(blobx); // ! createObjectURL
+  elemx.download = nomeArquivo;
+  elemx.style.display = 'none';
+  document.body.appendChild(elemx);
+  elemx.click();
+  document.body.removeChild(elemx);
+}
+
+function getBase64Image(img) {
+  var canvas = document.createElement("canvas");
+  canvas.width = img.width;
+  canvas.height = img.height;
+  var ctx = canvas.getContext("2d");
+  ctx.drawImage(img, 0, 0);
+  return canvas.toDataURL("image/png");
+  //return dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
+}
+
+const getDate = function() {
+  var data = new Date(); 
+  return data.getFullYear() +  
+         String((data.getMonth()+1)).padStart(2,'0') + 
+         String(data.getDate()).padStart(2,'0') + ' ' +
+         String(data.getHours()).padStart(2,'0') + "h" +   
+         String(data.getMinutes()).padStart(2,'0') + "m" + 
+         String(data.getSeconds()).padStart(2,'0') + 's';
+}
+
+function scriptHTML () {
+
+  function offsetSlide(offset) {
+    var [ classAtivo, idPreviewFake ] = [ 'slide-ativo', 'preview-fake']
+    var atual = document.getElementsByClassName(classAtivo)[0];
+    var n = Number(atual.id.replace(idPreviewFake, "")) + offset;
+    var novo = document.getElementById(idPreviewFake + n);
+    if (novo) {
+      novo.classList.add(classAtivo);
+      atual.classList.remove(classAtivo);
+    }
+  }
+
+  function alternarTransparenciaBotao() {
+    document.getElementById('ativar-tela-cheia').style.opacity = document.fullscreenElement ? '0' : '';
+  }
+  
+  document.addEventListener("click", function (event) {
+    var el = event.target;
+    if (el.matches(".movimentar-slide")) {
+      if (el.matches(".esquerda")) {
+        offsetSlide(-1);
+      } else {
+        offsetSlide(1);
+      }
+    }
+    if (el.parentElement.matches('#ativar-tela-cheia')) {
+      alternarTransparenciaBotao();
+      toggleFullscreen(document.body);
+    }
+  }, false);
+
+  document.addEventListener('fullscreenchange', alternarTransparenciaBotao, false);
+
+  document.addEventListener("keydown", function (event) {
+    switch (event.code) {
+      case 'ArrowLeft':
+      case 'ArrowUp':
+        offsetSlide(-1);
+        break;
+      case 'Enter':
+      case 'Space':
+      case 'ArrowRight':
+      case 'ArrowDown':
+        offsetSlide(1);
+        break;
+      case 'Escape':
+        if (document.fullscreenElement) toggleFullscreen();
+        break;
+      default:
+        break;
+    }
+  }, false);
+} 
+
+const styleSheet = '.slide-ativo {z-index: 39;}' +
+             '.preview-fake {background-color: white; position: absolute}' +
+             '#ativar-tela-cheia {opacity: 0.2; right: 4vh; bottom: 4vh; width: 10vh; height: 10vh;}' +
+             '#ativar-tela-cheia:hover {opacity: 0.8;}';
 
 export function selecionadoOffset (elementos, selecionado, offset, apresentacao = undefined) {
     if (apresentacao === undefined) apresentacao = !!document.fullscreenElement; 
+    if (elementos.length === 1) apresentacao = false;
     var elem = elementos.flatMap((e, i) => { 
       return e.slides.map((s, j) => ({elemento: i, slide: j, eMestre: s.eMestre})); //Gera um array ordenado com todos os slides que existem representados por objetos do tipo "selecionado".
     })
@@ -84,36 +178,68 @@ class ExportadorHTML extends Component {
       super(props);
       this.ref = React.createRef();
       this.simboloHTML = '</>';
-      this.state = {slidePreviewFake: true};
+      this.state = {slidePreviewFake: true, previews: []};
+      this.styleSheet = styleSheet;
+      this.script = '' + scriptHTML;
     }
 
     exportarHTML = () => {
       var e = {elemento: 0, slide: 0};
       var eAnt = {};
-      this.stringArquivo = document.body.parentElement.innerHTML.split(/(?<=<\/head>)/g)[0] + '<body>';
+      var contador = 1;
+      var imagens = [];
+      var previews = [];
+      
       while (!(e.elemento === eAnt.elemento && e.slide === eAnt.slide)) {
         eAnt = {...e};
         e = selecionadoOffset(this.props.state.elementos, e, 1, true);
-        this.setState({slidePreviewFake: getSlidePreview(this.props.state, e)});
-        this.stringArquivo = this.stringArquivo + this.ref.current.outerHTML;
+        previews.push({...getSlidePreview(this.props.state, e), indice: contador});
+        contador++;
       }
-      console.log(this.stringArquivo + '</body>');
+      
+      previews.push({
+        tipo: '', texto: 'Fim da apresentação. Pressione F11 para sair do modo de tela cheia.',
+        titulo: '',
+        selecionado: {elemento: 999, slide: 0},
+        estilo: {
+          titulo: {paddingTop: '50%'},
+          paragrafo: {fontSize: '150%', color: '#ffffff', fontFamily: 'Helvetica', textAlign: 'center'},
+          fundo: {src:'./Galeria/Fundos/Cor Sólida.jpg'}, 
+          tampao: {backgroundColor: '#000000', opacity: '1'},
+          texto: {},
+          imagem: {}
+        },
+        indice: contador
+      });
+
+      this.setState({previews: previews.map(s => <Preview slidePreviewFake={s}/>)})
+      setTimeout(() => {
+        console.log(this.pegarImagensRelevantes());
+        this.stringArquivo = document.body.parentElement.innerHTML;
+        var htmlSlides = this.stringArquivo.match(/<div id="preview-fake.*<span id="marcador-fim-slides"><\/span>/)[0];
+        htmlSlides = htmlSlides.replace(/<div class="borda-slide-mestre".*?>/g,'');
+        htmlSlides = htmlSlides.replace(/<div id="texto-slide-mestre".*?<\/div>/g,'');
+        var botaoTelaCheia = htmlSlides.match(/<button id="ativar-tela-cheia".*?<\/button>/)[0].replace(/style=".*?"/,'');
+        htmlSlides = htmlSlides.replace(/<button id="ativar-tela-cheia".*?<\/button>/g,'');
+        this.stringArquivo = this.stringArquivo.split('<div id="root">')[0];
+        this.stringArquivo = this.stringArquivo.replace('</style><style type="text/css">', '');
+        this.stringArquivo = this.stringArquivo.replace('<style type="text/css">', '<style type="text/css">' + this.styleSheet)
+        var script = '<script>' + toggleFullscreen + this.script + '\n scriptHTML(); </script>';
+        this.stringArquivo = this.stringArquivo + botaoTelaCheia + htmlSlides + script + '</body>';
+        downloadArquivoTexto(getDate() + ' Apresentação.html', this.stringArquivo);
+      }, 10);
     }
 
-    {/* <img id=imageid src=https://www.google.de/images/srpr/logo11w.png>
-JavaScript
-
-function getBase64Image(img) {
-  var canvas = document.createElement("canvas");
-  canvas.width = img.width;
-  canvas.height = img.height;
-  var ctx = canvas.getContext("2d");
-  ctx.drawImage(img, 0, 0);
-  var dataURL = canvas.toDataURL("image/png");
-  return dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
-}
-
-var base64 = getBase64Image(document.getElementById("imageid")); */}
+    pegarImagensRelevantes= () => {
+      var imgs = document.querySelectorAll('.preview-fake img');
+      var [ uniques, imgsUnique, l ] = [{}, [], imgs.length];
+      for(var i=0; i<l; i++) {
+        if(uniques[imgs[i].src]) continue;
+        uniques[imgs[i].src] = true;
+        imgsUnique.push(imgs[i]);
+      }
+      return imgsUnique.map(i => ({base64: getBase64Image(i), src: i.src}));
+    }
 
     render() {
         
@@ -121,7 +247,8 @@ var base64 = getBase64Image(document.getElementById("imageid")); */}
           <div className='div-botao-exportar' onClick={this.exportarHTML}> 
             <button id='exportar-html' className='botao-exportar sombrear-selecao'><div id='logo-html'>{this.simboloHTML}</div></button>
             <div className='rotulo-botao-exportar'>HTML</div>
-            <Preview refPreview={this.ref} slidePreviewFake={this.state.slidePreviewFake}/>
+            {this.state.previews}
+            {/* <Preview refPreview={this.ref} slidePreviewFake={this.state.slidePreviewFake}/> */}
           </div>
         )
     }
