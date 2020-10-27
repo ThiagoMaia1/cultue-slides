@@ -141,7 +141,7 @@ class Arrastar extends React.Component {
         <div className='coluna-lista-slides'>
           <div className='gradiente-coluna emcima'></div>
           <div className='gradiente-coluna embaixo'></div>
-          <Carrossel direcao='vertical' tamanhoIcone={50} refGaleria={this.ref} tamanhoMaximo={'55vh'} style={{zIndex: '20', width: '20vw', height: 'auto'}}>
+          <Carrossel direcao='vertical' tamanhoIcone={50} refGaleria={this.ref} tamanhoMaximo={'55vh'} style={{zIndex: '20', width: '21vw', height: 'auto'}}>
               <ol ref={this.ref} id="ordem-elementos">
                 <div id="slide-mestre" className={'itens ' + (this.props.selecionado.elemento === 0 ? 'selecionado' : '')} data-id={0}
                   onClick={() => this.marcarSelecionado(0, 0)}

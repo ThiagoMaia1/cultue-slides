@@ -17,15 +17,33 @@ const downloadArquivoTexto = function(nomeArquivo, conteudoArquivo) {
   document.body.removeChild(elemx);
 }
 
-function getBase64Image(img) {
-  var canvas = document.createElement("canvas");
-  canvas.width = img.width;
-  canvas.height = img.height;
-  var ctx = canvas.getContext("2d");
-  ctx.drawImage(img, 0, 0);
-  return canvas.toDataURL("image/png");
-  //return dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
+function getBase64Image(src, classe, callback) {
+  const imgConverter = new Image();
+  imgConverter.crossOrigin = 'Anonymous';
+  imgConverter.onload = () => {
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    let dataURL;
+    canvas.height = window.screen.height;
+    canvas.width = window.screen.width;
+    ctx.drawImage(imgConverter, 0, 0);
+    dataURL = canvas.toDataURL("image/png");
+    callback(dataURL, classe);
+  };
+
+  imgConverter.src = src;
 }
+
+// function getBase64Image(img) {
+//   var canvas = document.createElement("canvas");
+//   canvas.width = img.width;
+//   canvas.height = img.height;
+//   var ctx = canvas.getContext("2d");
+//   ctx.drawImage(img, 0, 0);
+//   var dataURL = canvas.toDataURL("image/png");
+//   console.log(dataURL);
+//   return dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
+// }
 
 const getDate = function() {
   var data = new Date(); 
@@ -92,7 +110,7 @@ function scriptHTML () {
   }, false);
 } 
 
-const styleSheet = '.slide-ativo {z-index: 39;}' +
+const styleSheet = '.slide-ativo {z-index: 20;}' +
              '.preview-fake {background-color: white; position: absolute}' +
              '#ativar-tela-cheia {opacity: 0.2; right: 4vh; bottom: 4vh; width: 10vh; height: 10vh;}' +
              '#ativar-tela-cheia:hover {opacity: 0.8;}';
@@ -181,13 +199,13 @@ class ExportadorHTML extends Component {
       this.state = {slidePreviewFake: true, previews: []};
       this.styleSheet = styleSheet;
       this.script = '' + scriptHTML;
+      this.cssImagens = [];
     }
 
     exportarHTML = () => {
       var e = {elemento: 0, slide: 0};
       var eAnt = {};
       var contador = 1;
-      var imagens = [];
       var previews = [];
       
       while (!(e.elemento === eAnt.elemento && e.slide === eAnt.slide)) {
@@ -214,31 +232,57 @@ class ExportadorHTML extends Component {
 
       this.setState({previews: previews.map(s => <Preview slidePreviewFake={s}/>)})
       setTimeout(() => {
-        console.log(this.pegarImagensRelevantes());
-        this.stringArquivo = document.body.parentElement.innerHTML;
-        var htmlSlides = this.stringArquivo.match(/<div id="preview-fake.*<span id="marcador-fim-slides"><\/span>/)[0];
-        htmlSlides = htmlSlides.replace(/<div class="borda-slide-mestre".*?>/g,'');
-        htmlSlides = htmlSlides.replace(/<div id="texto-slide-mestre".*?<\/div>/g,'');
-        var botaoTelaCheia = htmlSlides.match(/<button id="ativar-tela-cheia".*?<\/button>/)[0].replace(/style=".*?"/,'');
-        htmlSlides = htmlSlides.replace(/<button id="ativar-tela-cheia".*?<\/button>/g,'');
-        this.stringArquivo = this.stringArquivo.split('<div id="root">')[0];
-        this.stringArquivo = this.stringArquivo.replace('</style><style type="text/css">', '');
-        this.stringArquivo = this.stringArquivo.replace('<style type="text/css">', '<style type="text/css">' + this.styleSheet)
-        var script = '<script>' + toggleFullscreen + this.script + '\n scriptHTML(); </script>';
-        this.stringArquivo = this.stringArquivo + botaoTelaCheia + htmlSlides + script + '</body>';
-        downloadArquivoTexto(getDate() + ' Apresentação.html', this.stringArquivo);
+        this.copiaDOM = document.cloneNode(true);
+        var botoesTelaCheia = [...this.copiaDOM.querySelectorAll('#ativar-tela-cheia')];
+        var botaoTelaCheia = botoesTelaCheia[0].outerHTML;
+        for (var i of botoesTelaCheia) {i.remove();}
+        var setasMovimento = [...this.copiaDOM.querySelectorAll('.container-setas')];
+        var setaMovimento = setasMovimento[0].outerHTML;
+        for (var j of setasMovimento) {j.remove();}
+        var slides = [...this.copiaDOM.querySelectorAll('.preview-fake')];
+        var slidesHtml = slides.map(s => s.outerHTML);
+        this.copiaDOM.body.innerHTML = botaoTelaCheia + setaMovimento + slidesHtml.join('');
+        this.cssImagensBase64();    
       }, 10);
     }
 
-    pegarImagensRelevantes= () => {
-      var imgs = document.querySelectorAll('.preview-fake img');
-      var [ uniques, imgsUnique, l ] = [{}, [], imgs.length];
-      for(var i=0; i<l; i++) {
-        if(uniques[imgs[i].src]) continue;
-        uniques[imgs[i].src] = true;
-        imgsUnique.push(imgs[i]);
+    finalizarArquivoExportacao =  () => {
+      var imagensDOM = [...this.copiaDOM.querySelectorAll('img')];
+      for (var imgDOM of imagensDOM) {
+        var span = document.createElement('span');
+        span.classList.add(imgDOM.className);
+        imgDOM.parentNode.insertBefore(span, imgDOM);
+        imgDOM.remove();
       }
-      return imgsUnique.map(i => ({base64: getBase64Image(i), src: i.src}));
+      var css = this.copiaDOM.createElement("style");
+      css.type = 'text/css';
+      css.innerHTML = styleSheet + this.cssImagens.join('\n');
+      this.copiaDOM.head.appendChild(css);
+      var script = this.copiaDOM.createElement("script");
+      script.innerHTML = toggleFullscreen + this.script + 'scriptHTML();'
+      this.copiaDOM.body.appendChild(script);
+      this.stringArquivo = this.copiaDOM.body.parentElement.innerHTML;
+      downloadArquivoTexto(getDate() + ' Apresentação.html', this.stringArquivo);
+    }
+
+    cssImagensBase64 = () => {
+      var imgs = this.copiaDOM.querySelectorAll('img');
+      var [ uniques, imgsUnique, l ] = [{}, [], imgs.length];
+      for(var i = 0; i < l; i++) {
+        if(!uniques[imgs[i].src]) {
+          uniques[imgs[i].src] = 'classeImagem' + i;
+          imgsUnique.push(imgs[i]);
+        }
+        imgs[i].className = uniques[imgs[i].src];
+      }
+      for (var img of imgsUnique) {
+        getBase64Image(img.src, img.className,
+          (dataURL, classe) => {
+            this.cssImagens.push('.' + classe + '::before{content: url(' + dataURL + ');}')
+            if (this.cssImagens.length === imgsUnique.length) this.finalizarArquivoExportacao();
+          }
+        );
+      }
     }
 
     render() {

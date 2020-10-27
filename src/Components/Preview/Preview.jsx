@@ -118,7 +118,7 @@ class Preview extends Component {
                         onMouseOver={this.tornarBotaoVisivel} onMouseLeave={this.tornarBotaoInvisivel}>
                         {this.state.screen.icone}
                     </button>
-                </div><span id="marcador-fim-slides"></span>
+                </div>
                 <div id="texto-slide-mestre" style={{textAlign: 'center', paddingTop: '0.7vh'}}>Slide-Mestre - {slidePreview.selecionado.elemento === 0 ? 'Global' : slidePreview.nomeLongoElemento}</div>
             </div>
         )
