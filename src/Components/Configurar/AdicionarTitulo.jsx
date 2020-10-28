@@ -3,7 +3,7 @@ import '../LetrasMusica/style.css';
 import Element from '../../Element'
 import { connect } from 'react-redux';
 
-const listaSlidesPadrao = [{titulo: 'Visitantes', subtitulo: 'Sejam bem-vindos à nossa Igreja!'},
+const listaSlidesPadrao = [{titulo: 'Visitantes', subtitulo: 'Sejam bem-vindos à nossa Igreja!\n\n\nuhduhwdowqdijijwjqaaaaaaaaaaaaaaaaaaa\n\na8hsqhhaas\n888888888888888888888888888888888888888888888'},
                            {titulo: 'Avisos', subtitulo: ''}, 
                            {titulo: 'Mensagem', subtitulo: ''}
 ]

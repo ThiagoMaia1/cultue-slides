@@ -12,8 +12,8 @@ class Galeria extends Component {
 
     constructor (props) {
         super(props);
-        this.coordenadasBotao = [ 76, 89, 16, 3];
-        this.coordenadasGaleria = [ 66, 2, 10, 2];
+        this.coordenadasBotao = [ 80, 89, 12, 3];
+        this.coordenadasGaleria = [ 70, 2, 6, 2];
         this.state = {popupCompleto: null, imagens: this.getImagens(), coordenadas: [...this.coordenadasBotao], galeriaVisivel: false};
     }
 
@@ -27,7 +27,7 @@ class Galeria extends Component {
                 if (this.state.galeriaVisivel !== bool)
                     this.setState({galeriaVisivel: bool})
             },
-            c => c[1] < 50
+            c => c[1] < 45
         )
     }
 

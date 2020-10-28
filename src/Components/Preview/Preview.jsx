@@ -2,10 +2,11 @@ import React, { Component } from 'react';
 import './style.css';
 import { connect } from 'react-redux';
 import { MdFullscreen, MdFullscreenExit } from 'react-icons/md'
+import { getTextWidth } from '../../Element';
 
 export const fonteBase = {numero: 0.015*window.screen.width, unidade: 'px', fontFamily: 'Noto Sans'};
 const full = {icone: <MdFullscreenExit className='icone-botao' size={140}/>, proporcao: 1, opacidadeBotao: '0%'}
-export const small = {icone: <MdFullscreen className='icone-botao' size={60}/>, proporcao: 0.4, opacidadeBotao: '30%'}
+export const small = {icone: <MdFullscreen className='icone-botao' size={60}/>, proporcao: 0.45, opacidadeBotao: '30%'}
 
 export function toggleFullscreen (element = null) {        
 
@@ -67,7 +68,7 @@ class Preview extends Component {
                 return;
             }
         }
-        return {boxShadow: (this.props.realce.aba === aba && this.state.screen.proporcao === small.proporcao ? '0px 0px 9px var(--azul-forte)' : ''), 
+        return {boxShadow: (this.props.abaRealce === aba && this.state.screen.proporcao === small.proporcao ? '0px 0px 9px var(--azul-forte)' : ''), 
                     borderRadius: aba === 'tampao' ? 'var(--round-border-grande)' : 'var(--round-border-medio)'};        
     }
 
@@ -76,8 +77,30 @@ class Preview extends Component {
         return {...this.realcarElemento('imagem'), height: e.height*100 + '%', width: e.width*100 + '%'}
     }
 
+    editarTexto = e => {
+        clearTimeout(this.timeoutEditar);
+        this.timeoutEditar = setTimeout(div => {
+            var dados = div.id.split('-');
+            var [ objeto, numero ] = [ dados[1], dados[4] ]; 
+            var objAction = {type: 'editar-slide', objeto: objeto, valor: div.innerHTML};
+            if (numero) objAction.numero = numero;
+            this.props.dispatch(objAction);
+        }, 1000, e.target);
+    }
+
+    ativarRealce = e => {
+        var aba = e.target.id.split('-')[0];
+        this.props.dispatch({type: 'ativar-realce', abaRealce: aba});
+    }
+
     render() {
         var slidePreview = this.props.slidePreviewFake || this.props.slidePreview;
+        var sel = slidePreview.selecionado;
+        var spansSlide = this.props.slidePreview.textoArray.map((t, i) => (
+            <span contenteditable="true" id={'paragrafo-textoArray-' + sel.elemento + '-' + sel.slide + '-' + i} 
+                onInput={this.editarTexto} onFocus={this.ativarRealce}
+            >{t}</span>
+        ));
         return (
             <div className='borda-slide-mestre' style={{height: this.alturaTela*this.state.screen.proporcao + 0.051*window.innerHeight, 
                                                         visibility: slidePreview.eMestre ? '' : 'hidden', 
@@ -95,10 +118,13 @@ class Preview extends Component {
                     <Img imagem={slidePreview.estilo.fundo} />
                     <div className='texto-preview' style={{fontSize: fonteBase.numero*this.state.screen.proporcao + fonteBase.unidade}}>
                         <div className='slide-titulo' style={slidePreview.estilo.titulo}>
-                            <div><span style={this.realcarElemento('titulo')}>{slidePreview.titulo}</span></div>
+                            <div><span id='titulo' onInput={this.editarTexto} onFocus={this.ativarRealce} contentEditable='true'
+                                style={this.realcarElemento('titulo')}>{slidePreview.titulo}</span></div>
                         </div>
                         <div id='paragrafo-slide' className='slide-paragrafo' style={slidePreview.estilo.paragrafo}>
-                            <div style={this.realcarElemento('paragrafo')}>{slidePreview.texto}</div>
+                            <div style={this.realcarElemento('paragrafo')}>
+                                {spansSlide}
+                            </div>
                         </div>
                     </div>
                     {slidePreview.imagem ? 
@@ -107,7 +133,7 @@ class Preview extends Component {
                                  style={this.getEstiloImagem()}/>
                         </div>: 
                         null}
-                    <div className='container-setas'>
+                    <div className='container-setas' style={{display: this.state.screen.proporcao === small.proporcao ? 'none' : ''}}>
                         <div className='movimentar-slide esquerda' onClick={() => this.offsetSlide(-1)}></div>
                         <div className='movimentar-slide direita' onClick={() => this.offsetSlide(1)}></div>
                     </div>
@@ -135,7 +161,7 @@ const Img = ({imagem}) => {
 
 const mapStateToProps = function (state) {
     state = state.present;
-    return {slidePreview: state.slidePreview, realce: state.realce, elementos: state.elementos}
+    return {slidePreview: state.slidePreview, abaRealce: state.abaRealce, elementos: state.elementos}
 }
 
 export default connect(mapStateToProps)(Preview);

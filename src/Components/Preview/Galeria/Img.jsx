@@ -27,9 +27,9 @@ class Img extends Component {
         var fundo = {...img.fundo};
         if (fundo.src && fundo.src.substr(0, 4) !== 'blob' && fundo.src.match(/Galeria/) === null) 
             fundo.src = fundo.src.replace('./','./Galeria/');
-        this.props.dispatch({type: 'atualizar-estilo', objeto: 'fundo', valor: fundo});
-        this.props.dispatch({type: 'atualizar-estilo', objeto: 'tampao', valor: img.tampao});
-        this.props.dispatch({type: 'atualizar-estilo', objeto: 'texto', valor: {color: img.texto.color}});
+        this.props.dispatch({type: 'editar-slide', objeto: 'fundo', valor: fundo});
+        this.props.dispatch({type: 'editar-slide', objeto: 'tampao', valor: img.tampao});
+        this.props.dispatch({type: 'editar-slide', objeto: 'texto', valor: {color: img.texto.color}});
     }
 
     render () {

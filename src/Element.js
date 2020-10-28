@@ -34,7 +34,7 @@ export default class Element {
       
       var est = {...new Estilo(), ...estilo};
       if (this.tipo === 'Título' && texto.filter(t => t !== '').length === 0) est.titulo.height = '1';
-      this.slides = [{estilo: {...est}, eMestre: true, texto: textoMestre}];
+      this.slides = [{estilo: {...est}, eMestre: true, textoArray: [textoMestre]}];
       this.criarSlides(this.texto, est);
 
     }
@@ -49,7 +49,7 @@ export default class Element {
         this.dividirTexto(texto, nSlide, estiloMestre, estGlobal);
       }
       if (this.slides.length > 1 && !this.slides[0].eMestre) {
-        this.slides.unshift({estilo: {...estiloMestre}, texto: textoMestre, eMestre: true});
+        this.slides.unshift({estilo: {...estiloMestre}, textoArray: [textoMestre], eMestre: true});
         this.slides[1].estilo = {...new Estilo()};
       } else if (this.slides.length === 2 && this.slides[0].eMestre) {
         this.slides[1].estilo = this.slides[0].estilo;
@@ -62,7 +62,7 @@ export default class Element {
       
       //Divide o texto a ser incluído em quantos slides forem necessários, mantendo a estilização de cada slide.
       if (nSlide === this.slides.length) {
-        this.slides.push({estilo: {...new Estilo()}, texto: ''});
+        this.slides.push({estilo: {...new Estilo()}, textoArray: []});
       } else if (nSlide > this.slides.length) {
         console.log('Tentativa de criar slide além do limite: ' + nSlide);
         return;
@@ -90,25 +90,16 @@ export default class Element {
       var estiloFonte = [(estT.fontStyle || ''), (estT.fontWeight || ''), estP.fontSize*fonteBase.numero + fonteBase.unidade, estT.fontFamily];
       estiloFonte = estiloFonte.filter(a => a !== '').join(' ');
       var caseTexto = estT.caseTexto || estP.caseTexto;
-      var linhas = [''];
-      
+      var tArray = [];
+
       for (var i = 0; i < texto.length; i++) {
-        var palavras = texto[i].split(/(?=\n)|(?<=\n)| +/);
-        for (var k = 0; k < palavras.length; k++) {
-          if (linhas.join('') === '' && palavras[k] === '\n') continue; //Se é a primeira linha não precisa de line break antes.
-          linhas[linhas.length-1] = linhas[linhas.length-1] + (linhas[linhas.length-1] === '' ? '' : ' ') + palavras[k];
-          var proximaPalavra = (k+1 === palavras.length ? (i+1 === texto.length ? '' : texto[i+1].replace('\n', '\n ').split(/ +/)[0]) : palavras[k+1]);
-          if (getTextWidth(linhas[linhas.length-1], proximaPalavra, estiloFonte, larguraLinha, caseTexto) > larguraLinha) {
-            linhas.push('');
-          }    
-        }
-        if (linhas.length+1 >= nLinhas || proximaPalavra === '' || 
-           (linhas.join('') !== '' && //Se próximo versículo (exceto sozinho) vai ultrapassar o slide, conclui slide atual.
-           (Math.ceil(getTextWidth(linhas[linhas.length-1], (texto[i+1] || ''), estiloFonte, larguraLinha, caseTexto) + 50)/larguraLinha) > nLinhas - (linhas.length-1))) {
-            var textoSlide = linhas.join(' ').replace(/\n /g,'\n');
-            this.slides[nSlide].texto = textoSlide;
+        //Se finalizou ou próximo versículo (exceto sozinho) vai ultrapassar o slide, conclui slide atual.
+        tArray.push(texto[i]);
+        var larguraComProximo = getTextWidth(tArray.join(''), (texto[i+1] || ''), estiloFonte, larguraLinha, caseTexto);
+        if (i+1 >= texto.length || 
+           (tArray.join('') !== '' && (larguraComProximo > (nLinhas*larguraLinha - 0.2*larguraLinha)))) {
             this.slides[nSlide].textoArray = texto.slice(0, i+1);
-            if (proximaPalavra !== '') {
+            if (i+1 < texto.length) {
               this.dividirTexto(texto.slice(i+1), nSlide+1, estElemento, estGlobal);
             } else {
               this.slides = this.slides.slice(0, nSlide+1);
@@ -141,7 +132,7 @@ export default class Element {
     }
 }
   
-function getTextWidth(texto, proximaPalavra, fontSize, larguraLinha, caseTexto) {
+export function getTextWidth(texto, proximaPalavra, fontSize, larguraLinha, caseTexto) {
     var enes = proximaPalavra.split('\n').length-1;
     if (enes > 0) return enes*(larguraLinha + 1);
     var canvas = getTextWidth.canvas || (getTextWidth.canvas = document.createElement("canvas"));

@@ -10,8 +10,8 @@ class MenuExportacao extends Component {
 
     constructor (props) {
         super(props);
-        this.coordenadasBotao = [ 76, 3, 16, 89];
-        this.coordenadasMenu = [ 58, 3, 16, 78];
+        this.coordenadasBotao = [ 80, 3, 12, 89];
+        this.coordenadasMenu = [ 62, 3, 12, 78];
         this.state = {coordenadas: [...this.coordenadasBotao], menuVisivel: false, tamIcones: window.innerWidth*0.027 + 'px'};
     }
 
@@ -25,7 +25,7 @@ class MenuExportacao extends Component {
                 if (this.state.menuVisivel !== bool)
                     this.setState({menuVisivel: bool})
             },
-            c => c[0] < 67,
+            c => c[0] < 70,
             1.72
         )
     }

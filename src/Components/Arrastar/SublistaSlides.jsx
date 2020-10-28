@@ -15,14 +15,14 @@ class SublistaSlides extends Component {
                 return elemento.titulo || slide.imagem.alt;
             case 'Texto-Bíblico':
                 var n = 0;
-                var palavras = slide.texto.split(' ');
+                var palavras = slide.textoArray[0].split(' ');
                 do {
                     var verso = reverterSuperscrito(palavras[n]);
                     n++;
                 } while (isNaN(verso))
                 return 'v. ' + verso.padStart(2, 0);
             default:
-                return slide.texto.substr(0, 50);
+                return slide.textoArray[0].substr(0, 50);
         }
     }
 

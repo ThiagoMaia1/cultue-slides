@@ -162,7 +162,7 @@ export function getSlidePreview (state, selecionado = null) {
       nomeLongoElemento: tipo.replace('-', ' ') + ': ' + ((tipo === 'Imagem' && !state.elementos[sel.elemento].titulo) ? state.elementos[sel.elemento].imagens[0].alt : state.elementos[sel.elemento].titulo),
       nomeLongoSlide: '',
       selecionado: {...sel},
-      texto: capitalize(slide.texto, estiloParagrafo.caseTexto),
+      textoArray: slide.textoArray.map(t => capitalize(t, estiloParagrafo.caseTexto)),
       titulo: titulo,
       eMestre: slide.eMestre,
       imagem: slide.imagem,
