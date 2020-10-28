@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import './style.css';
 import { connect } from 'react-redux';
-import { MdFullscreen, MdFullscreenExit } from 'react-icons/md'
-import { getTextWidth } from '../../Element';
+import { MdFullscreen, MdFullscreenExit } from 'react-icons/md';
 
 export const fonteBase = {numero: 0.015*window.screen.width, unidade: 'px', fontFamily: 'Noto Sans'};
 const full = {icone: <MdFullscreenExit className='icone-botao' size={140}/>, proporcao: 1, opacidadeBotao: '0%'}

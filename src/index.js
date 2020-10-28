@@ -27,6 +27,7 @@
 //   ✔️ Editar texto direto no slide.
 //   Exportar como HTML.
 //   Botão para zerar/começar nova apresentação.
+//   Popup mais bonito.
 //   Incorporar vídeos do youtube.
 //   Exportar como PDF.
 //   Exportar como Power Point.
@@ -142,10 +143,12 @@ export const reducerElementos = function (state = defaultList, action) {
 
 function undoable(reducer) {
 
+  var presenteInicial = reducer(undefined, {})
   const initialState = {
     past: [],
-    present: reducer(undefined, {}),
-    future: []
+    present: presenteInicial,
+    future: [],
+    slidePreview: getSlidePreview(presenteInicial)
   }
   
   const getSelecionadoValido = (selecionado, elementos) => {
@@ -160,42 +163,47 @@ function undoable(reducer) {
   }
 
   return function (state = initialState, action) {
-    const { past, present, future } = state
-    // console.log(state.present);
-    // console.log(deepSpreadPresente(state.present))
+    const { past, present, future } = state;
     switch (action.type) {
       case 'UNDO':
         if (past.length === 0) return state;
         const previous = past[past.length - 1]
         const newPast = past.slice(0, past.length - 1)
+        present = {...present, elementos: [...previous.elementos], selecionado: getSelecionadoValido(previous.selecionado, previous.elementos)}
         return {
           past: newPast,
-          present: {...present, elementos: [...previous.elementos], selecionado: getSelecionadoValido(previous.selecionado, previous.elementos)},
-          future: [present, ...future]
+          present: present,
+          future: [present, ...future],
+          slidePreview: getSlidePreview(present)
         }
       case 'REDO':
         if (future.length === 0) return state;
         const next = future[0]
         const newFuture = future.slice(1)
+        present = {...present, elementos: [...next.elementos], selecionado: getSelecionadoValido(next.selecionado, next.elementos)}
         return {
           past: [...past, present],
-          present: {...present, elementos: [...next.elementos], selecionado: getSelecionadoValido(next.selecionado, next.elementos)},
-          future: newFuture
+          present: present,
+          future: newFuture,
+          slidePreview: getSlidePreview(present)          
         }
       default:
+        present = deepSpreadPresente(present);
         const newPresent = reducer(present, action);
         var a = action.type;
         if (a === 'definir-selecao' || a === 'offset-selecao' || a === 'ativar-realce') {
           return {
             past: [...past],
-            present: deepSpreadPresente(newPresent),
-            future: []
+            present: newPresent,
+            future: [],
+            slidePreview: getSlidePreview(newPresent)  
           }
         }
         return {
-          past: [...past, deepSpreadPresente(present)],
-          present: deepSpreadPresente(newPresent),
-          future: []
+          past: [...past, present],
+          present: newPresent,
+          future: [],
+          slidePreview: getSlidePreview(newPresent)  
         }
     }
   }
@@ -204,7 +212,6 @@ function undoable(reducer) {
 function deepSpreadPresente(present) {
   var elementos = [];
   var selecionado = {...present.selecionado};
-  var slidePreview = {...present.slidePreview};
 
   for (var e of present.elementos) {
     var slides = [];
@@ -217,8 +224,8 @@ function deepSpreadPresente(present) {
     }
     elementos.push({...e, slides: slides});
   }
-  var nState = {...present, elementos: elementos, selecionado: selecionado, slidePreview: slidePreview, abaRealce: present.abaRealce};
-  return {...nState, slidePreview: getSlidePreview(nState, nState.selecionado)};
+  var nState = {...present, elementos: elementos, selecionado: selecionado, abaRealce: present.abaRealce};
+  return {...nState, slidePreview: getSlidePreview(nState)};
 }
 
 export let store = createStore(undoable(reducerElementos), /* preloadedState, */
