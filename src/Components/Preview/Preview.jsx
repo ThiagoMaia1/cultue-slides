@@ -67,7 +67,7 @@ class Preview extends Component {
                 return;
             }
         }
-        return {boxShadow: (this.props.abaRealce === aba && this.state.screen.proporcao === small.proporcao ? '0px 0px 9px var(--azul-forte)' : ''), 
+        return {boxShadow: (this.props.abaAtiva === aba && this.state.screen.proporcao === small.proporcao ? '0px 0px 9px var(--azul-forte)' : ''), 
                     borderRadius: aba === 'tampao' ? 'var(--round-border-grande)' : 'var(--round-border-medio)'};        
     }
 
@@ -89,16 +89,20 @@ class Preview extends Component {
 
     ativarRealce = e => {
         var aba = e.target.id.split('-')[0];
-        this.props.dispatch({type: 'ativar-realce', abaRealce: aba});
+        this.props.dispatch({type: 'ativar-realce', abaAtiva: aba});
     }
 
     render() {
         var slidePreview = this.props.slidePreviewFake || this.props.slidePreview;
         var sel = slidePreview.selecionado;
-        var spansSlide = this.props.slidePreview.textoArray.map((t, i) => (
-            <span contenteditable="true" id={'paragrafo-textoArray-' + sel.elemento + '-' + sel.slide + '-' + i} 
-                onInput={this.editarTexto} onFocus={this.ativarRealce}
-            >{t}</span>
+        var spansSlide = slidePreview.textoArray.map((t, i) => (
+            <>
+                <span contentEditable={!slidePreview.eMestre} id={'paragrafo-textoArray-' + sel.elemento + '-' + sel.slide + '-' + i} 
+                    key={i} onInput={this.editarTexto} onFocus={this.ativarRealce}
+                >{t}</span>
+                {slidePreview.tipo !== 'Texto-Bíblico' && i !== slidePreview.textoArray.length && t.substr(0,4) !== '\n\n' ? 
+                    <><br></br><br></br></> : null}
+            </>
         ));
         return (
             <div className='borda-slide-mestre' style={{height: this.alturaTela*this.state.screen.proporcao + 0.051*window.innerHeight, 
@@ -117,7 +121,7 @@ class Preview extends Component {
                     <Img imagem={slidePreview.estilo.fundo} />
                     <div className='texto-preview' style={{fontSize: fonteBase.numero*this.state.screen.proporcao + fonteBase.unidade}}>
                         <div className='slide-titulo' style={slidePreview.estilo.titulo}>
-                            <div><span id='titulo' onInput={this.editarTexto} onFocus={this.ativarRealce} contentEditable='true'
+                            <div><span id='textoTitulo' onInput={this.editarTexto} onFocus={this.ativarRealce} contentEditable='true'
                                 style={this.realcarElemento('titulo')}>{slidePreview.titulo}</span></div>
                         </div>
                         <div id='paragrafo-slide' className='slide-paragrafo' style={slidePreview.estilo.paragrafo}>
@@ -159,8 +163,8 @@ const Img = ({imagem}) => {
 };
 
 const mapStateToProps = function (state) {
-    state = state.present;
-    return {slidePreview: state.slidePreview, abaRealce: state.abaRealce, elementos: state.elementos}
+    state = state;
+    return {slidePreview: state.slidePreview, abaAtiva: state.present.abaAtiva, elementos: state.present.elementos}
 }
 
 export default connect(mapStateToProps)(Preview);

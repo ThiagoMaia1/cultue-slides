@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import './slider.css';
+import { connect } from 'react-redux'
 
 class Slider extends Component {
 
@@ -14,29 +15,36 @@ class Slider extends Component {
             this.min = Number(this.props.min);
             this.virar = -1;
         }
-        this.state = {...props, 
-            coordenadaX: this.valorFlutuante(this.props.defaultValue), 
-            valor: this.getValorUnidade(this.props.defaultValue)};
+        this.ref = React.createRef();
+        this.state = {valor: props.defaultValue, selecionado: props.selecionado, ref: this.ref};
     }
 
-    valorFlutuante(valor) {
+    setValor = e => {
+        clearTimeout(this.timeoutCallback);
+        var valor = e.target.value;
+        this.setState({valor: valor});
+        this.timeoutCallback = setTimeout(this.props.callbackFunction, 100, valor);
+    }
+    
+    static getDerivedStateFromProps(props, state) {
+        if (props.selecionado.elemento !== state.selecionado.elemento || props.selecionado.slide || state.selecionado.slide) {
+            state.ref.current.value = props.defaultValue;
+            return {valor: props.defaultValue, selecionado: props.selecionado};
+        }
+        return null;
+    }
+
+    getCoordenada() {
+        var valor = this.state.valor;
         var distancia = this.max - this.min;
-        var setar = true;
-        if (!valor) {
-            valor = this.min + distancia/2;
-            setar = false;
-        }
+        if (!valor) valor = this.min + distancia/2;
         var posicao = (valor - this.min)/distancia;
-        if (setar) {
-            this.props.callbackFunction(valor);
-            this.setState({valor: this.getValorUnidade(valor)});
-        }
-        var coordenadaX = (1.10 - posicao)*58 + "%";
-        this.setState({coordenadaX: coordenadaX});
-        return coordenadaX;
+        var coordenada = (1.10 - posicao)*58 + "%";
+        return coordenada;
     }
 
-    getValorUnidade(valor) {
+    getValorUnidade() {
+        var valor = this.state.valor;
         if (isNaN(valor)) return '-';
         if (this.props.unidade) {
             if (this.props.unidade === '%') {
@@ -48,24 +56,39 @@ class Slider extends Component {
         return valor;
     }
 
+    dispatchUndoRedo = e => {
+        if (e.ctrlKey) {
+            if (!e.shiftKey && e.key === 'z') {
+                this.props.dispatch({type: 'UNDO'});
+            } else if (e.key === 'y' || e.shiftKey && e.key === 'z') {
+                this.props.dispatch({type: 'REDO'});
+            } 
+        }
+    }
+
+    
     render() {
         return (
             <div className='container-range' style={this.props.style}>
                 <div className='rotulo-range'>{this.props.rotulo}</div>
                 <div className='frame-range'>
-                    <input type="range" 
+                    <input type="range"
+                        ref={this.ref} 
                         min={this.min}
                         step={this.props.step} 
                         max={this.max} 
+                        defaultValue={this.state.valor}
                         className="slider"
-                        defaultValue={this.state.defaultValue} 
-                        onInput={e => this.valorFlutuante(e.target.value)}
+                        onInput={this.setValor}
+                        onKeyDown={this.dispatchUndoRedo}
                         style={{transform: 'rotate(' + (this.virar*90) + 'deg)'}}></input>
-                    <div style={{top: this.state.coordenadaX}} className='valor-flutuante'>{this.state.valor}</div>
+                    <div style={{top: this.getCoordenada()}} className='valor-flutuante'>
+                        {this.getValorUnidade()}
+                    </div>
                 </div>
             </div>
         );
     }
 }
 
-export default Slider;
+export default connect()(Slider);

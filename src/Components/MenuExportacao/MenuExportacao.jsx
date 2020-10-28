@@ -31,6 +31,10 @@ class MenuExportacao extends Component {
     }
 
     render() {
+        var estiloDivOculta = {};
+        if (!this.state.menuVisivel) {
+           estiloDivOculta = {overflow: 'hidden', width: '1px', height: '1px'}
+        }
         return (
             <div id='menu-exportacao' className='botao-azul' onClick={this.abrirMenu}
                  style={{top: this.state.coordenadas[0] + 'vh', right: this.state.coordenadas[1] + 'vw', bottom: this.state.coordenadas[2] + 'vh', left: this.state.coordenadas[3] + 'vw',
@@ -38,11 +42,11 @@ class MenuExportacao extends Component {
                 <div className='colapsar-menu exportacao' style={{display: this.state.menuVisivel ? '' : 'none'}}
                     onClick={this.abrirMenu}>◢
                 </div>
-                <div id='opcoes-menu-exportacao' style={{display: this.state.menuVisivel ? '' : 'none'}} onClick={e => e.stopPropagation()}>
+                <div id='opcoes-menu-exportacao' style={estiloDivOculta} onClick={e => e.stopPropagation()}>
                     <ExportadorHTML/>
                     <div className='div-botao-exportar'> 
                             <div className='container-logo-pptx'>
-                                <img id='logo-pptx' className='logo-exportacao' src={require('./Logos/Logo PowerPoint.png')} alt='Logo PowerPoint'/>
+                                <img id='logo-pptx' className='logo-exportacao' src={require('./Logos/Logo PowerPoint.svg')} alt='Logo PowerPoint'/>
                                 <button id='exportar-pptx' className='botao-exportar sombrear-selecao'/>
                             </div>
                         <div className='rotulo-botao-exportar'>PowerPoint</div>

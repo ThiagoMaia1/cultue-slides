@@ -25,13 +25,14 @@
 //   ✔️ Navegar slides clicando à direita ou esquerda.
 //   ✔️ Enviar imagem para fundo.
 //   ✔️ Editar texto direto no slide.
+//   ✔️ Permitir desfazer ações da store (Ctrl + Z).
 //   Exportar como HTML.
 //   Botão para zerar/começar nova apresentação.
 //   Popup mais bonito.
 //   Incorporar vídeos do youtube.
 //   Exportar como PDF.
 //   Exportar como Power Point.
-//   Permitir desfazer ações da store (Ctrl + Z).
+
 //   Possibilidade de editar elemento (retornando à tela da query).
 //   Marcador de repetições de estrofes nos slides de música/slide de refrão repetido.
 //   Atalhos em geral.
@@ -49,19 +50,18 @@ import hotkeys from 'hotkeys-js';
 import Element, { estiloPadrao, textoMestre, Estilo } from './Element.js';
 import { selecionadoOffset, getSlidePreview } from './ExportadorHTML';
 
-var defaultSemPreview = {elementos: [new Element("Slide-Mestre", "Slide-Mestre", [textoMestre], null, {...estiloPadrao}, true)],
+var defaultList = {elementos: [new Element("Slide-Mestre", "Slide-Mestre", [textoMestre], null, {...estiloPadrao}, true)],
   selecionado: {elemento: 0, slide: 0}, 
-  abaRealce: 'texto'
+  abaAtiva: 'texto'
 };
-
-const defaultList = {...defaultSemPreview, slidePreview: getSlidePreview(defaultSemPreview)};
 
 export const reducerElementos = function (state = defaultList, action) {
 
   const redividirSlides = (elementos, sel) => {
     if (elementos.length !== 1) {
       const redividir = (e, s) => {
-        return (e.criarSlides(e.getArrayTexto(s), e.slides[0].estilo, s, elementos[0].slides[0].estilo));
+        var arrayTexto = e.getArrayTexto(s);
+        return e.criarSlides.call(e, arrayTexto, e.slides[0].estilo, s, elementos[0].slides[0].estilo);
       }
         var [ i, slide, repetir ] = (sel.elemento === 0 ? [ 1, 0, 1 ] : [ sel.elemento, sel.slide, 0]);
       do {
@@ -73,22 +73,18 @@ export const reducerElementos = function (state = defaultList, action) {
     return elementos;
   }
 
-  var nState;
   var el = [...state.elementos];
   var sel = action.selecionado || state.selecionado;
   switch (action.type) {
     case "inserir":
-      nState = {elementos: [...state.elementos, action.elemento], selecionado: {elemento: state.elementos.length, slide: 0}};
-      return {...nState, slidePreview: getSlidePreview(nState), abaRealce: state.abaRealce};
+      return {elementos: [...state.elementos, action.elemento], selecionado: {elemento: state.elementos.length, slide: 0}, abaAtiva: state.abaAtiva};
     case "deletar":
       el.splice(Number(action.elemento), 1);
       var novaSelecao = {elemento: state.selecionado.elemento, slide: 0};
       if (state.selecionado.elemento >= el.length) novaSelecao.elemento = state.selecionado.elemento-1 
-      nState = {elementos: el, selecionado: {...novaSelecao}};
-      return {...nState, slidePreview: getSlidePreview(nState), abaRealce: state.abaRealce};
+      return {elementos: el, selecionado: {...novaSelecao}, abaAtiva: state.abaAtiva};
     case "reordenar":
-      nState = {elementos: action.novaOrdemElementos, selecionado: sel};
-      return {...nState, slidePreview: getSlidePreview(nState), abaRealce: state.abaRealce};  
+      return {elementos: action.novaOrdemElementos, selecionado: sel, abaAtiva: state.abaAtiva};
     case "editar-slide": {
       var e = el[sel.elemento];
       var s = {...e.slides[sel.slide]};
@@ -96,8 +92,18 @@ export const reducerElementos = function (state = defaultList, action) {
       if (action.objeto === 'estilo') {
         est = {...action.valor};
       } else if (action.objeto === 'textoArray') {
-        s.textoArray[action.numero] = action.valor;
-      } else if(action.objeto === 'titulo') {
+        if (action.valor === '') {
+          s.textoArray.splice(action.numero, 1);
+        } else {
+          var quebra = action.valor.split(/(?<=\n\n)/);
+          if (quebra.length > 1) {
+            s.textoArray.splice(action.numero, 1, quebra.filter(q => /\S/.test(q)));
+            s.textoArray = s.textoArray.flat();
+          } else {
+            s.textoArray[action.numero] = action.valor;
+          }
+        }
+      } else if(action.objeto === 'textoTitulo') {
         s.titulo = action.valor;
       } else {
         est = {...s.estilo};
@@ -105,11 +111,9 @@ export const reducerElementos = function (state = defaultList, action) {
       }
       s.estilo = {...est};
       e.slides[sel.slide] = {...s};
-      el[sel.elemento] = {...e}; 
-      
-      if (action.redividir) el = redividirSlides(el, sel);
-      nState = {elementos: [...el], selecionado: sel}; //Para que o getSlidePreview use os valores já atualizados.
-      return {...nState, slidePreview: getSlidePreview(nState), abaRealce: state.abaRealce}; 
+      // el[sel.elemento] = {...e}; 
+      if (action.redividir) var nEl = redividirSlides(el, sel);
+      return {elementos: [...nEl], selecionado: sel, abaAtiva: state.abaAtiva};
     }
     case "limpar-estilo": {
       if (sel.elemento === 0 && sel.slide === 0) {
@@ -124,18 +128,15 @@ export const reducerElementos = function (state = defaultList, action) {
         el[sel.elemento].slides[sel.slide].estilo = new Estilo();
       }
       if (action.redividir) el = redividirSlides(el, sel);
-      nState = {elementos: [...el], selecionado: action.selecionado};
-      return {...nState, slidePreview: getSlidePreview(nState), abaRealce: state.abaRealce};
+      return {elementos: [...el], selecionado: action.selecionado, abaAtiva: state.abaAtiva};
     }
     case "ativar-realce": {
-      return {...state, abaRealce: action.abaRealce}
+      return {...state, abaAtiva: action.abaAtiva};
     }
     case "definir-selecao":
-      nState = {elementos: state.elementos, selecionado: sel};
-      return {...nState, slidePreview: getSlidePreview(nState), abaRealce: state.abaRealce};
+      return {elementos: state.elementos, selecionado: sel, abaAtiva: state.abaAtiva};
     case "offset-selecao":
-      nState = {elementos: state.elementos, selecionado: {...selecionadoOffset(state.elementos, state.selecionado, action.offset)}};
-      return {...nState, slidePreview: getSlidePreview(nState), abaRealce: state.abaRealce};
+      return {elementos: state.elementos, selecionado: {...selecionadoOffset(state.elementos, state.selecionado, action.offset)}, abaAtiva: state.abaAtiva};
     default:
       return state;
   }
@@ -164,32 +165,33 @@ function undoable(reducer) {
 
   return function (state = initialState, action) {
     const { past, present, future } = state;
+    var presenteRetorno;
     switch (action.type) {
       case 'UNDO':
         if (past.length === 0) return state;
         const previous = past[past.length - 1]
-        const newPast = past.slice(0, past.length - 1)
-        present = {...present, elementos: [...previous.elementos], selecionado: getSelecionadoValido(previous.selecionado, previous.elementos)}
+        const newPast = past.slice(Math.max(0, past.length-50), past.length - 1)
+        presenteRetorno = {...present, elementos: [...previous.elementos], selecionado: getSelecionadoValido(previous.selecionado, previous.elementos)}
         return {
           past: newPast,
-          present: present,
+          present: presenteRetorno,
           future: [present, ...future],
-          slidePreview: getSlidePreview(present)
+          slidePreview: getSlidePreview(presenteRetorno)
         }
       case 'REDO':
         if (future.length === 0) return state;
         const next = future[0]
         const newFuture = future.slice(1)
-        present = {...present, elementos: [...next.elementos], selecionado: getSelecionadoValido(next.selecionado, next.elementos)}
+        presenteRetorno = {...present, elementos: [...next.elementos], selecionado: getSelecionadoValido(next.selecionado, next.elementos)}
         return {
           past: [...past, present],
-          present: present,
+          present: presenteRetorno,
           future: newFuture,
-          slidePreview: getSlidePreview(present)          
+          slidePreview: getSlidePreview(presenteRetorno)          
         }
       default:
-        present = deepSpreadPresente(present);
-        const newPresent = reducer(present, action);
+        presenteRetorno = deepSpreadPresente(present);
+        const newPresent = reducer(presenteRetorno, action);
         var a = action.type;
         if (a === 'definir-selecao' || a === 'offset-selecao' || a === 'ativar-realce') {
           return {
@@ -224,7 +226,7 @@ function deepSpreadPresente(present) {
     }
     elementos.push({...e, slides: slides});
   }
-  var nState = {...present, elementos: elementos, selecionado: selecionado, abaRealce: present.abaRealce};
+  var nState = {...present, elementos: elementos, selecionado: selecionado, abaAtiva: present.abaAtiva};
   return {...nState, slidePreview: getSlidePreview(nState)};
 }
 

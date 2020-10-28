@@ -18,7 +18,8 @@ const listaEstilosTexto = [{apelido:'Negrito', nomeAtributo: 'fontWeight', valor
 ];
                            
 const listaFontes = ['Montserrat', 'Roboto', 'Source Sans Pro', 'Noto Sans', 'Helvetica', 'Arial', 'Times New Roman', 'Courier', 'Courier New', 'Verdana', 
-                     'Tahoma', 'Arial Black', 'Georgia', 'Impact']
+                     'Tahoma', 'Arial Black', 'Georgia', 'Impact'
+]
 
 const listaBotoesAbas = [{nomeCodigo: 'texto', nomeInterface: 'Texto'},
                          {nomeCodigo: 'titulo', nomeInterface: 'Título', maxFonte: '7'}, 
@@ -46,8 +47,6 @@ const listaSliders = [{rotulo: 'Fonte', aba: 'paragrafo', atributo: 'fontSize', 
                       {rotulo: 'Largura', aba: 'imagem', atributo: 'width', min: 0, max: 1, step: 0.01}
 ]
 
-const blocoShadow = {boxShadow: '1px 3px 7px rgba(0, 0, 0, 0.5)'}
-
 class ConfigurarSlides extends Component {
   constructor(props) {
     super(props);
@@ -67,13 +66,12 @@ class ConfigurarSlides extends Component {
         if (a.nomeCodigo === 'imagem') return null;
       }
       var tampar;
-      if (this.props.abaRealce === a.nomeCodigo) tampar = (<div className='tampar-shadow'></div>);
+      if (this.props.abaAtiva === a.nomeCodigo) tampar = (<div className='tampar-shadow'></div>);
       return (<>
-          <button className='botao-aba' data-id={i+1} 
-            onClick={this.selecionarAba.bind(this)}
-            style={this.props.abaRealce === a ? blocoShadow : null}>
+          <button className='botao-aba' data-id={i+1} key={i+1}
+            onClick={this.selecionarAba.bind(this)}>
               {a.nomeInterface}
-            {tampar}
+              {tampar}
           </button>
       </>)});
   }
@@ -105,27 +103,29 @@ class ConfigurarSlides extends Component {
                 onClick={() => {
                   var direcao = b.direcao;
                   if (this.props.slideSelecionado.estilo[aba].textAlign === direcao) direcao = '';
-                  this.atualizarEstilo(this.props.abaRealce, 'textAlign', direcao)
+                  this.atualizarEstilo(this.props.abaAtiva, 'textAlign', direcao)
                 }}>
                 <Icone size={this.state.tamIcones}/>
         </button>
     )});
   }
 
-  gerarSliders = () => {
-    return (
-      listaSliders.map(s => (
-        <Slider rotulo={s.rotulo} min={s.min} max={s.max} step={s.step} unidade='%'
-                defaultValue={this.props.slideSelecionado.estilo[this.props.abaRealce][s.atributo]}
-                callbackFunction={valor => this.atualizarEstilo(this.props.abaRealce, s.atributo, valor +'', s.redividir)} 
-                style={{display: (this.props.abaRealce === s.aba ? '' : 'none')}}/>
-    )));
+  reducerListaSliders = (resultado, s) => {
+    var abaAtiva = this.props.abaAtiva;
+    if (s.aba === abaAtiva) 
+      resultado.push(
+        <Slider key={s.atributo + '-' + s.aba} atributo={s.atributo} objeto={s.aba} rotulo={s.rotulo} min={s.min} max={s.max} step={s.step} unidade='%' selecionado={this.props.selecionado}
+                defaultValue={this.props.slideSelecionado.estilo[abaAtiva][s.atributo]}
+                callbackFunction={valor => this.atualizarEstilo(abaAtiva, s.atributo, valor + '', s.redividir)} 
+                style={{display: (abaAtiva === s.aba ? '' : 'none')}}/>
+      );
+    return resultado;
   }
 
   selecionarAba = e => {
     var aba = listaBotoesAbas[e.target.dataset.id].nomeCodigo;
-    if (aba === this.props.abaRealce) aba = listaBotoesAbas[0].nomeCodigo;
-    this.props.dispatch({type: 'ativar-realce', abaRealce: aba});
+    if (aba === this.props.abaAtiva) aba = listaBotoesAbas[0].nomeCodigo;
+    this.props.dispatch({type: 'ativar-realce', abaAtiva: aba});
   }
   
   ativarPainelCor = callback => {
@@ -140,7 +140,7 @@ class ConfigurarSlides extends Component {
   }
 
   mudarCorFonte = (cor) => {
-    this.atualizarEstilo(this.props.abaRealce, 'color', cor.hex);
+    this.atualizarEstilo(this.props.abaAtiva, 'color', cor.hex);
   }
 
   mudarCorFundo = (cor) => {
@@ -148,22 +148,22 @@ class ConfigurarSlides extends Component {
   }
 
   mudarFonte = (e) => {
-    this.atualizarEstilo(this.props.abaRealce, 'fontFamily', e.target.value, true)
+    this.atualizarEstilo(this.props.abaAtiva, 'fontFamily', e.target.value, true)
   }
 
   mudarCaseTexto = () => {
     var i = this.state.caseTexto + 1;
     if (i >= casesTexto.length) i = 0; 
     this.setState({caseTexto: i})
-    this.atualizarEstilo(this.props.abaRealce, 'caseTexto', casesTexto[i].valor, true)
+    this.atualizarEstilo(this.props.abaAtiva, 'caseTexto', casesTexto[i].valor, true)
   }
 
   toggleEstiloTexto = (atributo) => {
     var v = atributo.valorNormal;
-    var atributoAplicado = this.props.slideSelecionado.estilo[this.props.abaRealce][atributo.nomeAtributo] || 
-                           this.props.slidePreview.estilo[this.props.abaRealce][atributo.nomeAtributo];
+    var atributoAplicado = this.props.slideSelecionado.estilo[this.props.abaAtiva][atributo.nomeAtributo] || 
+                           this.props.slidePreview.estilo[this.props.abaAtiva][atributo.nomeAtributo];
     if (atributoAplicado !== atributo.valorAlterado) v = atributo.valorAlterado;
-    this.atualizarEstilo(this.props.abaRealce, atributo.nomeAtributo, v, true)
+    this.atualizarEstilo(this.props.abaAtiva, atributo.nomeAtributo, v, true)
   }
 
   atualizarEstilo = (nomeObjeto, nomeAtributo, valor, redividir = false) => {
@@ -175,11 +175,11 @@ class ConfigurarSlides extends Component {
 
   limparEstilo = () => {
     var estiloAnterior = this.props.slideSelecionado.estilo;
-    var obj = this.props.abaRealce;
+    var obj = this.props.abaAtiva;
     if (obj === 'texto') {
       obj = null;
     } else {
-      if (this.eObjetoVazio(estiloAnterior[this.props.abaRealce])) return;
+      if (this.eObjetoVazio(estiloAnterior[this.props.abaAtiva])) return;
     }
     var redividir = (!this.eObjetoVazio(estiloAnterior.texto) || !this.eObjetoVazio(estiloAnterior.paragrafo) || !this.eObjetoVazio(estiloAnterior.titulo));
     this.props.dispatch({type: 'limpar-estilo', selecionado: this.props.selecionado, objeto: obj, redividir: redividir})
@@ -187,7 +187,7 @@ class ConfigurarSlides extends Component {
 
   aplicarEstiloAoMestre = () => {
     var sel = this.props.selecionado;
-    var aba = this.props.abaRealce;
+    var aba = this.props.abaAtiva;
     var valor;
     if (aba === 'texto') {
       aba = 'estilo';
@@ -216,8 +216,8 @@ class ConfigurarSlides extends Component {
             {this.gerarBotoesAbas()}
           </div>
       {this.state.painelCor}
-          <div className='configuracoes' style={this.props.abaRealce !== 'texto' ? blocoShadow : null}>
-            <div className='container-botoes-direita'>
+          <div className='configuracoes'>
+            {/* <div className='container-botoes-direita'> */}
               <div className='botoes-direita'>
                 <button title='Aplicar Estilo ao Slide-Mestre' className={'botao-configuracao bool'} 
                         style={{visibility: this.props.selecionado.elemento === 0 ? 'hidden' : 'visible'}}
@@ -229,9 +229,9 @@ class ConfigurarSlides extends Component {
                   <CgErase size={this.state.tamIcones} />
                 </button>
               </div>
-            </div>
+            {/* </div> */}
             <div className='configuracoes-texto' 
-                 style={{display: (this.props.abaRealce === 'tampao' || this.props.abaRealce === 'imagem' ? 'none' : '')}}>
+                 style={{display: (this.props.abaAtiva === 'tampao' || this.props.abaAtiva === 'imagem' ? 'none' : '')}}>
               <div className='linha-configuracoes-texto'>
                 <button id={'cor-texto'} className={'botao-configuracao bool'} onMouseOver={() => this.ativarPainelCor(this.mudarCorFonte)}>
                   <span className='a-cor-texto' style={{color: this.props.slideSelecionado.estilo.texto.color}}>A</span>
@@ -240,18 +240,18 @@ class ConfigurarSlides extends Component {
                 <button title={casesTexto[this.state.caseTexto].valor} id='botao-case' className={'botao-configuracao bool'} 
                         onClick={this.mudarCaseTexto}>{casesTexto[this.state.caseTexto].icone}</button>
                 <select className={'botao-configuracao combo-fonte'} onChange={this.mudarFonte} 
-                        defaultValue={this.props.slideSelecionado.estilo[this.props.abaRealce].fontFamily || fonteBase.fontFamily}
-                        style={{fontFamily: this.props.slideSelecionado.estilo[this.props.abaRealce].fontFamily || fonteBase.fontFamily}}>
+                        defaultValue={this.props.slideSelecionado.estilo[this.props.abaAtiva].fontFamily || fonteBase.fontFamily}
+                        style={{fontFamily: this.props.slideSelecionado.estilo[this.props.abaAtiva].fontFamily || fonteBase.fontFamily}}>
                           {this.listaFontes}
                 </select>
               </div>
               <div className='linha-configuracoes-texto'>
-                {this.gerarBotoesEstiloTexto(this.props.abaRealce)}
-                <div className='botao-configuracao'>{this.gerarBotoesAlinhamento(this.props.abaRealce)}</div>
+                {this.gerarBotoesEstiloTexto(this.props.abaAtiva)}
+                <div className='botao-configuracao'>{this.gerarBotoesAlinhamento(this.props.abaAtiva)}</div>
               </div>
             </div>
             <button className={'botao-configuracao bool'} onMouseOver={() => this.ativarPainelCor(this.mudarCorFundo)}
-                    style={{display: (this.props.abaRealce === 'tampao' ? '' : 'none')}}>
+                    style={{display: (this.props.abaAtiva === 'tampao' ? '' : 'none')}}>
                 <div className='container-cor-fundo'>
                   <div className='cor-fundo'>
                     <img id='img-quadriculado' alt='' src={require('./Quadriculado PNG.png')} className='quadriculado-imitando-transparente'/>
@@ -262,7 +262,7 @@ class ConfigurarSlides extends Component {
                 </div>
             </button>
             <div className='div-sliders'>
-              {this.gerarSliders()}
+              {listaSliders.reduce(this.reducerListaSliders, [])}
             </div>
           </div>
       </div>
@@ -271,9 +271,12 @@ class ConfigurarSlides extends Component {
 }
 
 const mapStateToProps = function (state) {
-  state = state.present;
-  var sel = state.selecionado;
-  return {slideSelecionado: state.elementos[sel.elemento].slides[sel.slide], selecionado: state.selecionado, slidePreview: state.slidePreview, abaRealce: state.abaRealce}
+  var sel = state.present.selecionado;
+  return {slideSelecionado: state.present.elementos[sel.elemento].slides[sel.slide], 
+          selecionado: state.present.selecionado, 
+          slidePreview: state.slidePreview, 
+          abaAtiva: state.present.abaAtiva
+  }
 }
 
 export default connect(mapStateToProps)(ConfigurarSlides);

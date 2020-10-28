@@ -43,7 +43,7 @@ class Configurar extends Component {
             </div>
             <div style={{display: this.state.menuVisivel ? '' : 'none'}} 
                  className='menu-configuracoes' 
-                 onClick={e => e.stopPropagation()} c>
+                 onClick={e => e.stopPropagation()}>
                    <ConfigurarSlides />
             </div>
             <div style={{display: this.state.menuVisivel ? 'none' : ''}} className='div-titulo-botao'>

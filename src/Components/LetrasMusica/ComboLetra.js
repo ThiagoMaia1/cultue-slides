@@ -54,8 +54,8 @@ class ComboLetra extends Component {
             
         vagalumeLetra.addEventListener('load', () => {
             var musica = vagalumeLetra.response.mus[0];
-            var letra = musica.text.split(/(?=\n\n)/); //Separa em paragrafos
-            var letraLinhas = letra.map(l => ({paragrafo: l.replace('\n\n','\n'), linhas: l.split('\n').length-1})); //Conta \n no parágrafo.
+            var letra = musica.text.split(/\n\n/); //Separa em paragrafos
+            var letraLinhas = letra.map(l => ({paragrafo: l, linhas: l.split('\n').length-1})); //Conta \n no parágrafo.
             var linhasTotais = letraLinhas.reduce((ac, p) => ac + p.linhas, 0) + 2.5;
             var linhasMetade = Math.ceil(linhasTotais/2);
             var [ letraEsquerda, letraDireita, contLinhas ]  = [[], [], 0];

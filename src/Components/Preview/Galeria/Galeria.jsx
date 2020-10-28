@@ -72,8 +72,8 @@ class Galeria extends Component {
                             <div className='div-img' onClick={this.abrirPopup}>
                                 <div id='botao-enviar-fundo' className='imagem-galeria'>Enviar Fundo Personalizado</div>
                             </div>
-                            {this.state.imagens.map(imagem => (
-                                <Img key={imagem.id} imagem={imagem} />
+                            {this.state.imagens.map((imagem, i) => (
+                                <Img key={i} imagem={imagem} />
                                 ))
                             }
                         </div>

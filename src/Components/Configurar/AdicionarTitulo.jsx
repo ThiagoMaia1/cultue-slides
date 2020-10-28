@@ -12,7 +12,7 @@ class AdicionarTitulo extends Component {
     
     gerarListaSlidesPadrao = () => 
         listaSlidesPadrao.map(s => (
-            <button className='botao' 
+            <button className='botao' key={s.titulo} 
                     onClick={() => {
                         document.getElementById('titulo').value = s.titulo === '✕ Limpar' ? '' : s.titulo;
                         document.getElementById('subtitulo').value = s.subtitulo
@@ -26,7 +26,7 @@ class AdicionarTitulo extends Component {
             alert("Título não pode ser vazio.");
             return;
         }
-        this.props.dispatch({type: "inserir", elemento: new Element( "Título", titulo, [...subtitulo.split(/(?=\n\n)/)])});
+        this.props.dispatch({type: "inserir", elemento: new Element( "Título", titulo, [...subtitulo.split('\n\n')])});
     }
 
     limparInputs = () => {
