@@ -210,6 +210,7 @@ class ConfigurarSlides extends Component {
   }
   
 	render() {
+    var aba = this.props.abaAtiva;
     return (
       <div id='painel-configuracao'>
           <div id='abas'>
@@ -217,41 +218,39 @@ class ConfigurarSlides extends Component {
           </div>
       {this.state.painelCor}
           <div className='configuracoes'>
-            {/* <div className='container-botoes-direita'> */}
-              <div className='botoes-direita'>
-                <button title='Aplicar Estilo ao Slide-Mestre' className={'botao-configuracao bool'} 
-                        style={{visibility: this.props.selecionado.elemento === 0 ? 'hidden' : 'visible'}}
-                        onClick={this.aplicarEstiloAoMestre}>
-                  <RiMastercardLine size={this.state.tamIcones} />
-                </button>
-                <button title='Limpar Estilos do Slide' className={'botao-configuracao bool'} 
-                        onClick={this.limparEstilo}>
-                  <CgErase size={this.state.tamIcones} />
-                </button>
-              </div>
-            {/* </div> */}
+            <div className='botoes-direita'>
+              <button title='Aplicar Estilo ao Slide-Mestre' className={'botao-configuracao bool'} 
+                      style={{visibility: this.props.selecionado.elemento === 0 ? 'hidden' : 'visible'}}
+                      onClick={this.aplicarEstiloAoMestre}>
+                <RiMastercardLine size={this.state.tamIcones} />
+              </button>
+              <button title='Limpar Estilos do Slide' className={'botao-configuracao bool'} 
+                      onClick={this.limparEstilo}>
+                <CgErase size={this.state.tamIcones} />
+              </button>
+            </div>
             <div className='configuracoes-texto' 
-                 style={{display: (this.props.abaAtiva === 'tampao' || this.props.abaAtiva === 'imagem' ? 'none' : '')}}>
+                 style={{display: (aba === 'tampao' || aba === 'imagem' ? 'none' : '')}}>
               <div className='linha-configuracoes-texto'>
                 <button id={'cor-texto'} className={'botao-configuracao bool'} onMouseOver={() => this.ativarPainelCor(this.mudarCorFonte)}>
-                  <span className='a-cor-texto' style={{color: this.props.slideSelecionado.estilo.texto.color}}>A</span>
-                  <div className='cor-texto' style={{backgroundColor: this.props.slideSelecionado.estilo.texto.color}}></div>
+                  <span className='a-cor-texto' style={{color: this.props.slideSelecionado.estilo[aba].color}}>A</span>
+                  <div className='cor-texto' style={{backgroundColor: this.props.slideSelecionado.estilo[aba].color}}></div>
                 </button>
                 <button title={casesTexto[this.state.caseTexto].valor} id='botao-case' className={'botao-configuracao bool'} 
                         onClick={this.mudarCaseTexto}>{casesTexto[this.state.caseTexto].icone}</button>
                 <select className={'botao-configuracao combo-fonte'} onChange={this.mudarFonte} 
-                        defaultValue={this.props.slideSelecionado.estilo[this.props.abaAtiva].fontFamily || fonteBase.fontFamily}
-                        style={{fontFamily: this.props.slideSelecionado.estilo[this.props.abaAtiva].fontFamily || fonteBase.fontFamily}}>
+                        defaultValue={this.props.slideSelecionado.estilo[aba].fontFamily || fonteBase.fontFamily}
+                        style={{fontFamily: this.props.slideSelecionado.estilo[aba].fontFamily || fonteBase.fontFamily}}>
                           {this.listaFontes}
                 </select>
               </div>
               <div className='linha-configuracoes-texto'>
-                {this.gerarBotoesEstiloTexto(this.props.abaAtiva)}
-                <div className='botao-configuracao'>{this.gerarBotoesAlinhamento(this.props.abaAtiva)}</div>
+                {this.gerarBotoesEstiloTexto(aba)}
+                <div className='botao-configuracao'>{this.gerarBotoesAlinhamento(aba)}</div>
               </div>
             </div>
             <button className={'botao-configuracao bool'} onMouseOver={() => this.ativarPainelCor(this.mudarCorFundo)}
-                    style={{display: (this.props.abaAtiva === 'tampao' ? '' : 'none')}}>
+                    style={{display: (aba === 'tampao' ? '' : 'none')}}>
                 <div className='container-cor-fundo'>
                   <div className='cor-fundo'>
                     <img id='img-quadriculado' alt='' src={require('./Quadriculado PNG.png')} className='quadriculado-imitando-transparente'/>

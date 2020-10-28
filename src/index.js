@@ -59,13 +59,9 @@ export const reducerElementos = function (state = defaultList, action) {
 
   const redividirSlides = (elementos, sel) => {
     if (elementos.length !== 1) {
-      const redividir = (e, s) => {
-        var arrayTexto = e.getArrayTexto(s);
-        return e.criarSlides.call(e, arrayTexto, e.slides[0].estilo, s, elementos[0].slides[0].estilo);
-      }
         var [ i, slide, repetir ] = (sel.elemento === 0 ? [ 1, 0, 1 ] : [ sel.elemento, sel.slide, 0]);
       do {
-        elementos[i] = (redividir(elementos[i], slide));
+        elementos[i].criarSlides(elementos[i].getArrayTexto(slide), elementos[i].slides[0].estilo, slide, elementos[0].slides[0].estilo);
         i++;
       } while (repetir && i < elementos.length)
     }
@@ -86,11 +82,11 @@ export const reducerElementos = function (state = defaultList, action) {
     case "reordenar":
       return {elementos: action.novaOrdemElementos, selecionado: sel, abaAtiva: state.abaAtiva};
     case "editar-slide": {
-      var e = el[sel.elemento];
-      var s = {...e.slides[sel.slide]};
+      var e = {...el[sel.elemento]};
+      var s = e.slides[sel.slide];
       var est = s.estilo;
       if (action.objeto === 'estilo') {
-        est = {...action.valor};
+        s.estilo = {...action.valor};
       } else if (action.objeto === 'textoArray') {
         if (action.valor === '') {
           s.textoArray.splice(action.numero, 1);
@@ -106,14 +102,11 @@ export const reducerElementos = function (state = defaultList, action) {
       } else if(action.objeto === 'textoTitulo') {
         s.titulo = action.valor;
       } else {
-        est = {...s.estilo};
         est[action.objeto] = {...est[action.objeto], ...action.valor};
       }
-      s.estilo = {...est};
-      e.slides[sel.slide] = {...s};
-      // el[sel.elemento] = {...e}; 
-      if (action.redividir) var nEl = redividirSlides(el, sel);
-      return {elementos: [...nEl], selecionado: sel, abaAtiva: state.abaAtiva};
+      el[sel.elemento] = e;
+      if (action.redividir) var el = redividirSlides(el, sel);
+      return {elementos: [...el], selecionado: sel, abaAtiva: state.abaAtiva};
     }
     case "limpar-estilo": {
       if (sel.elemento === 0 && sel.slide === 0) {
