@@ -63,7 +63,7 @@ class Arrastar extends React.Component {
       if(fazer) this.props.dispatch({type: 'criar-nova-apresentacao'});
       this.setState({popupConfirmacao: null});
     }
-    this.setState({popupConfirmacao: (<PopupConfirmacao titulo='Atenção' pergunta={pergunta} callback={callback}/>)});
+    this.setState({popupConfirmacao: (<PopupConfirmacao titulo='Atenção' pergunta={pergunta} callback={callback} botoes='simNao'/>)});
   }
 
   marcarSelecionado = (item, slide) => {

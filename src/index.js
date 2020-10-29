@@ -19,7 +19,7 @@
 //   ✔️ Zerar sliders ao limpar formatação.
 //   ✔️ Reduzir logo PowerPoint.
 //   Incluir webfonts na combo de fontes disponíveis.
-//   Carrossel do Input Imagem não vai até o finals.
+//   Carrossel do Input Imagem não vai até o final.
 //   Carrossel da lista de slides.
 //   Redividir slides não está funcionando.
 //   Dividir slides calculando errado \n\n nos textos bíblicos.

@@ -77,6 +77,10 @@ ol {
   position: relative;
 }
 
+.itens:hover {
+  background: var(--platinum-forte);
+}
+
 .container-icone-colapsar {
   display: inline;
   color: inherit;

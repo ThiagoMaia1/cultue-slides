@@ -29,10 +29,11 @@ class ItemListaSlides extends Component {
         var pergunta = "Deseja excluir " + (elemento.tipo.slice(-1) === 'o' ? 'o ' : 'a ') 
                         + elemento.tipo.toLowerCase().replace('-',' ') + " '" + elemento.titulo + "'?";
         const callback = fazer => {
+        if (fazer !== -1)
           if(fazer) this.props.dispatch({type: 'deletar', elemento: this.props.ordem});
-          this.setState({popupConfirmacao: null});
+        this.setState({popupConfirmacao: null});
         }
-        this.setState({popupConfirmacao: (<PopupConfirmacao titulo='Atenção' pergunta={pergunta} callback={callback}/>)});         
+        this.setState({popupConfirmacao: (<PopupConfirmacao titulo='Atenção' pergunta={pergunta} callback={callback} botoes='simNao'/>)});         
     }
 
     render () {

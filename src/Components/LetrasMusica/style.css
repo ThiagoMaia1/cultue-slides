@@ -9,13 +9,11 @@
 .combo-popup {
     position: static;
     border-radius: var(--round-border-pequeno);
-    font-size: 15px;
-    font-weight: 500;
-    padding: 10px 15px;
+    padding: 1.2vh 1.2vh;
     width: 100%;
-    border: 1px solid #999999;
+    border: 0.2vh solid #999999;
     outline: 0;
-    margin-bottom: 3px;
+    margin: 0.5vh 0.5vh 0.8vh 0;
 }
 
 .container-opcoes-musica {

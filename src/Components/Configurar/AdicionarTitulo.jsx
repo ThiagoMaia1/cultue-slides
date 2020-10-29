@@ -23,6 +23,7 @@ class AdicionarTitulo extends Component {
                     onClick={() => {
                         this.refTitulo.current.value = s.titulo;
                         this.refTextoSlide.current.value = s.textoSlide;
+                        this.onChange();
                     }}>{s.titulo}</button>
     ));
 
@@ -39,7 +40,7 @@ class AdicionarTitulo extends Component {
         this.refTitulo.current.focus();
     }
 
-    toggleBotoes = () => {
+    onChange = () => {
         var visiveis = (this.refTitulo.current.value + this.refTextoSlide.current.value !== '') 
         this.setState({botoesVisiveis: visiveis})
     }
@@ -50,7 +51,7 @@ class AdicionarTitulo extends Component {
 
     render () {
         return (
-            <div className='conteudo-popup' onChange={this.toggleBotoes}>
+            <div className='conteudo-popup' onChange={this.onChange}>
                 <div>
                     <h4 className='titulo-popup'>Adicionar Slide de Texto</h4>
                     <input ref={this.refTitulo} id="input-titulo" className='combo-popup' type='text' placeholder='Título do slide' />

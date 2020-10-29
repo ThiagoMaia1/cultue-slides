@@ -12,9 +12,9 @@ class Popup extends React.Component {
   render() {
     return (
       <>
-        <div id="fundo-popup" onClick={() => this.props.ocultarPopup()}>
+        <div id="fundo-popup" onClick={() => this.props.ocultarPopup(-1)}>
           <div className='popup' onClick={(e) => e.stopPropagation()} style={this.tamanho}>
-            <button id='fechar' onClick={() => this.props.ocultarPopup()}>✕</button>
+            <button id='fechar' onClick={() => this.props.ocultarPopup(-1)}>✕</button>
             {this.props.children}
           </div>
         </div>
