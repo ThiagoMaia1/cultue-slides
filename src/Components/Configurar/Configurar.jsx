@@ -20,31 +20,32 @@ class Configurar extends Component {
         coor,
         this.coordenadasBotao,
         this.coordenadasMenu,
-        c => this.setState({coordenadas: [c[0], c[1], (c[1] === this.coordenadasMenu[1] ? 'auto' : c[2]), c[3]]}),
+        c => this.setState({coordenadas: [c[0], c[1], (c[3] <= this.coordenadasMenu[3]+10 ? 'auto' : c[2]), c[3]]}),
         bool => {
             if (this.state.menuVisivel !== bool)
                 this.setState({menuVisivel: bool})
         },
-        c => c[3] < 80
+        c => c[3] < 85
     )
 }
 
 	render() {
+    var estiloMenuVisivel = {};
+    if (this.state.menuVisivel) {
+      estiloMenuVisivel = {pointerEvents: 'none', background: 'var(--azul-forte)', paddingBottom: '2.5vh'}
+    }
+    var c = this.state.coordenadas;
+    var estiloCoordenadas = {top: c[0] + 'vh', right: c[1] + 'vw', 
+                             bottom: c[2] + (c[2] === 'auto' ? '' : 'vh'), left: c[3] + 'vw'}
 		return (
       <div id='botao-menu-configurar' className='botao-azul' onClick={this.abrirMenu}
-              style={{top: this.state.coordenadas[0] + 'vh', right: this.state.coordenadas[1] + 'vw', 
-                      bottom: this.state.coordenadas[2] + (this.state.coordenadas[2] === 'auto' ? '' : 'vh'), 
-                      left: this.state.coordenadas[3] + 'vw',
-                    pointerEvents: this.state.menuVisivel ? 'none' : 'all', background: this.state.menuVisivel ? 'var(--azul-forte)' : '',
-                    paddingBottom: this.state.menuVisivel ? '2.5vh' : ''}}>
-            <div className='colapsar-menu configurar' 
-                 onClick={this.abrirMenu} 
-                 style={{display: this.state.menuVisivel ? '' : 'none'}}>◥
-            </div>
-            <div style={{display: this.state.menuVisivel ? '' : 'none'}} 
-                 className='menu-configuracoes' 
-                 onClick={e => e.stopPropagation()}>
-                   <ConfigurarSlides />
+              style={{...estiloCoordenadas, ...estiloMenuVisivel}}>
+            <div style={{display: this.state.menuVisivel ? '' : 'none'}}> 
+              <div className='colapsar-menu configurar' onClick={this.abrirMenu}>◥</div>
+              <div className='menu-configuracoes' 
+                  onClick={e => e.stopPropagation()}>
+                    <ConfigurarSlides />
+              </div>
             </div>
             <div style={{display: this.state.menuVisivel ? 'none' : ''}} className='div-titulo-botao'>
               Configurar Estilo

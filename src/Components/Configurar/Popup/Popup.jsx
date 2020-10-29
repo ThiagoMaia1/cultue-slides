@@ -5,17 +5,16 @@ class Popup extends React.Component {
   
   constructor (props) {
     super(props);
-    this.state = {...props}
+    console.log(props.tamanho)
+    if (props.tamanho !== 'pequeno') this.tamanho = {height: '65%', width: '50%'};
   }
 
   render() {
     return (
       <>
         <div id="fundo-popup" onClick={() => this.props.ocultarPopup()}>
-          <div className='popup' onClick={(e) => e.stopPropagation()}>
-            <div className='cabecalho-popup'>
-              <button id='fechar' onClick={() => this.props.ocultarPopup()}>✕</button>
-            </div>
+          <div className='popup' onClick={(e) => e.stopPropagation()} style={this.tamanho}>
+            <button id='fechar' onClick={() => this.props.ocultarPopup()}>✕</button>
             {this.props.children}
           </div>
         </div>

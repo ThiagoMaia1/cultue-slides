@@ -202,7 +202,11 @@
     z-index: 30;
     padding: 1vh;
     width: 40vh;
-    height: 
+    height: 55px;
+}
+
+.flexbox-fix {
+    visibility: hidden;
 }
 
 .compact-picker span div {
@@ -216,6 +220,7 @@
 
 .lista-slides-padrao {
     display: flex;
+    padding-top: 1.5vh;
 }
 
 .lista-slides-padrao button {
@@ -223,7 +228,6 @@
 }
 
 .titulo-secao-popup {
-    margin: 1.7vh 0 0 0.7vh;
     padding: 0.9vh 1.5vh;
 }
 

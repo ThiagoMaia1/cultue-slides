@@ -21,7 +21,7 @@ class Adicionar extends Component {
                         <div><div id='p-adicionar-slide'>Adicionar um Slide</div>
                         <GrChapterAdd size={50}/></div>
                     </div> */}
-                    <button className="botao-azul itens" onClick={() => this.props.callback(AdicionarTitulo)}>Título</button>
+                    <button className="botao-azul itens" onClick={() => this.props.callback(AdicionarTitulo)}>Texto Livre</button>
                     <button className="botao-azul itens" onClick={() => this.props.callback(TextoBiblico)}>Texto Bíblico</button>
                     <button className="botao-azul itens" onClick={() => this.props.callback(ComboLetra)}>Música</button>
                     <button className="botao-azul itens" onClick={() => this.props.callback(AdicionarImagem)}>Ima- gem</button>

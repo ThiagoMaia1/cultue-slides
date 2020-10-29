@@ -11,28 +11,27 @@ html, body, .app {
 }
 #fundo-popup {
   position: fixed;
+  height: 110%;
   width: 100%;
-  height: 100%;
-  top: 0;
+  top: -10%;
   left: 0;
   right: 0;
   bottom: 0;
   margin: auto;
   background-color: rgba(255,255,255, 0.5);
   z-index: 140;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .popup {
   display: flex;
   flex-direction: column;
   position: absolute;
-  left: 25%;
-  right: 25%;
-  top: 12%;
-  bottom: 28%;
   background: white;
   border-radius: var(--round-border-grande);
-  padding: 1.5vw;
+  padding: 3vh;
   box-shadow: var(--box-shadow);
   z-index: 150;
 }
@@ -47,12 +46,12 @@ html, body, .app {
 }
 
 #fechar{
-  position: relative;
-  float: right;
-  outline: 3px;
+  position: absolute;
+  top: 3vh;
+  right: 3vh;
   text-align: center;
-  margin: 3px;
-  padding: 5px 8px;
+  line-height: 100%;
+  padding: 1vh;
   background: var(--platinum);
   border-radius: var(--round-border-pequeno);
   font-weight: 650;
@@ -64,12 +63,10 @@ html, body, .app {
 }
 
 .botao {
-  margin: 1.7vh 0 0 0;
-  padding: 0.9vh 1.5vh;
+  padding: 1.1vh 1.5vh;
   background: var(--azul-forte);
   border-radius: var(--round-border-pequeno);
   cursor: default;
-  overflow: visible;
   text-align: center;
   display: block;
   -webkit-user-select: none;
@@ -85,23 +82,16 @@ html, body, .app {
   background: var(--azul-oxford);;
 }
 
-.botao-limpar-input {
-  margin: 1.7vh 0 0 1vh;
-  padding: 0.9vh 1.5vh;
+.botao.limpar-input {
   background: var(--vermelho-fraco);
-  border-radius: var(--round-border-pequeno);
-  cursor: default;
-  overflow: visible;
-  text-align: center;
-  display: block;
-  color: white;
 }
 
-.botao-limpar-input:hover {
+.botao.limpar-input:hover {
   background: var(--vermelho-forte);
 }
 
 .container-botoes-popup {
+  padding-top: 1.5vh;
   display: flex;
   justify-content: space-between;
 }
@@ -123,8 +113,6 @@ html, body, .app {
 }
 
 .container-preview {
-  /* flex: 1 0 0; */
-  /* overflow: auto; */
   display: block;
   overflow: auto;
   white-space: pre-wrap;
@@ -137,7 +125,15 @@ html, body, .app {
   width: 100%;
 }
 
-#subtitulo {
+#input-texto-slide {
   flex: 1 0 0;
   margin-top: 0.5vh;
+}
+
+.pergunta-popup-pequeno {
+  margin: 1.5vh 3.5vh 3.5vh;
+}
+
+.popup-confirmacao .botao {
+  min-width: 10vh;
 }

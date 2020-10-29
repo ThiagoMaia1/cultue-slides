@@ -23,7 +23,7 @@
   box-shadow: var(--box-shadow);
   border-radius: var(--round-border-medio);
   text-align: center;
-  z-index: 50;
+  z-index: 75;
   -webkit-user-select: none;
   -khtml-user-select: none;
   -webkit-touch-callout: none;

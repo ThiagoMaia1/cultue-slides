@@ -1,0 +1,9 @@
+.color-picker {
+    position: relative;
+    background-color: white;
+    border-radius: var(--round-border-pequeno);
+    box-shadow: var(--box-shadow);
+    z-index: 30;
+    padding: 1vh;
+    width: 40vh;
+}

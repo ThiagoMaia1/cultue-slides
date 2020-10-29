@@ -88,7 +88,7 @@ class Preview extends Component {
     }
 
     ativarRealce = e => {
-        var aba = e.target.id.split('-')[0];
+        var aba = e.target.id.split('-')[0].replace('textoTitulo', 'titulo');
         this.props.dispatch({type: 'ativar-realce', abaAtiva: aba});
     }
 
@@ -121,7 +121,7 @@ class Preview extends Component {
                     <Img imagem={slidePreview.estilo.fundo} />
                     <div className='texto-preview' style={{fontSize: fonteBase.numero*this.state.screen.proporcao + fonteBase.unidade}}>
                         <div className='slide-titulo' style={slidePreview.estilo.titulo}>
-                            <div><span id='textoTitulo' onInput={this.editarTexto} onFocus={this.ativarRealce} contentEditable='true'
+                            <div><span id='textoTitulo' onInput={this.editarTexto} onFocus={this.ativarRealce} contentEditable={!slidePreview.eMestre}
                                 style={this.realcarElemento('titulo')}>{slidePreview.titulo}</span></div>
                         </div>
                         <div id='paragrafo-slide' className='slide-paragrafo' style={slidePreview.estilo.paragrafo}>
@@ -163,7 +163,6 @@ const Img = ({imagem}) => {
 };
 
 const mapStateToProps = function (state) {
-    state = state;
     return {slidePreview: state.slidePreview, abaAtiva: state.present.abaAtiva, elementos: state.present.elementos}
 }
 

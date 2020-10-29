@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import livros from './Livros.json';
+// import livros from './Livros.json';
 import versoes from './Versoes.json';
 import './style.css';
 import { extrairReferencias, RefInvalida } from "./referenciaBiblica"
@@ -16,13 +16,31 @@ class TextoBiblico extends Component {
 
     constructor (props) {
         super(props);
+        this.versao = versaoPadrao;
+        this.ref = React.createRef();
         this.state = {
-            botaoValidosVisivel: 'hidden',
-            versiculos: [],
+            botoesVisiveis: false,
+            versiculosPronto: [],
             carregando: null
         }
-        this.versao = versaoPadrao;
     }    
+    
+    buscarReferencia(e) {
+        var str = e.target.value
+        if (e.key === 'Enter' && !(!str || /^\s*$/.test(str))) { 
+            var refer = [...extrairReferencias(str)];
+            if (refer != null) {
+                if (refer.length === 1 && refer[0].cap === null && refer[0].strInicial.substr(1).match(/[0-9]/g) === null) {
+                    if (refer[0].livro !== null) {
+                        //alterar opções no input seguinte
+                        // this.setState({comboCaps: refer[0].livro.chapters});
+                    }
+                } else if (refer != null){
+                    this.requestVersos(refer);
+                }
+            }
+        }
+    }
 
     requestVersos(ref) {
         this.setState({carregando:<Carregando style={{backgroundColor:'white'}} />})
@@ -94,23 +112,25 @@ class TextoBiblico extends Component {
         bibleApi.filtro = filtro;
         bibleApi.responseType = 'json';
         bibleApi.addEventListener('load', () => {
-            if (bibleApi.response.hasOwnProperty('verses')) {
-                this.lastVersiculos = bibleApi.response.verses.map(v => ({vers: v.number, texto: v.text}))
-                for (var x of this.lastVersiculos) {
-                    x.cap = bibleApi.response.chapter.number ;
-                    x.livro = bibleApi.response.book.name;
+            var resp = bibleApi.response;
+            var filtro = bibleApi.filtro;
+            if (resp.hasOwnProperty('verses')) {
+                var lastVersiculos = resp.verses.map(v => ({vers: v.number, texto: v.text}))
+                for (var x of lastVersiculos) {
+                    x.cap = resp.chapter.number ;
+                    x.livro = resp.book.name;
                 }
-                if (bibleApi.filtro !== null) {
-                    this.lastVersiculos = this.lastVersiculos.filter(
-                        v => (((v.cap > bibleApi.filtro[0] || v.vers >= bibleApi.filtro[1]) || (v.cap >= bibleApi.filtro[0] && bibleApi.filtro[1] == null)) &&
-                        ((v.cap < bibleApi.filtro[2] || v.vers <= bibleApi.filtro[3]) || (v.cap <= bibleApi.filtro[2] && bibleApi.filtro[3] == null)))
+                if (filtro !== null) {
+                    lastVersiculos = lastVersiculos.filter(
+                        v => (((v.cap > filtro[0] || v.vers >= filtro[1]) || (v.cap >= filtro[0] && filtro[1] == null)) &&
+                        ((v.cap < filtro[2] || v.vers <= filtro[3]) || (v.cap <= filtro[2] && filtro[3] == null)))
                     )
                 }
             } else {
-                this.lastVersiculos.push({cap: bibleApi.response.chapter, livro: bibleApi.response.book.name, vers: bibleApi.response.number, texto: bibleApi.response.text});
+                lastVersiculos = {cap: resp.chapter, livro: resp.book.name, vers: resp.number, texto: resp.text};
             }
             
-            this.versiculos.push({versos: this.lastVersiculos, ordem: ordem});
+            this.versiculos.push({versos: lastVersiculos, ordem: ordem});
             this.tratarVersiculos()
         })
         
@@ -120,21 +140,20 @@ class TextoBiblico extends Component {
     }
 
     tratarVersiculos() {
-        if (this.versiculos.length === this.contadorRef) {
-            this.versiculos = this.versiculos.sort((a, b) => {
-                if(a.ordem < b.ordem) {
-                    return -1;
-                } else if(a.ordem > b.ordem) {
-                    return 1;
-                } else {
-                    return 0;
-                }
-            })
-            this.versiculos = this.versiculos.flatMap(v => v.versos);
-            this.setState({versiculos: this.versiculos, carregando: null, 
-                           botaoValidosVisivel: this.versiculosValidos(this.versiculos).length > 0 ? 'visible' : 'hidden'
-            });
-        }
+        if (this.versiculos.length !== this.contadorRef) return;
+        this.versiculos = this.versiculos.sort((a, b) => {
+            if(a.ordem < b.ordem) {
+                return -1;
+            } else if(a.ordem > b.ordem) {
+                return 1;
+            } else {
+                return 0;
+            }
+        })
+        this.versiculos = this.versiculos.flatMap(v => v.versos);
+        this.setState({versiculosPronto: this.versiculos, carregando: null, 
+                       botoesVisiveis: !!this.versiculosValidos(this.versiculos).length
+        });
     }
     
     versiculosValidos(versiculos) {
@@ -148,27 +167,8 @@ class TextoBiblico extends Component {
 
     onClick() {
         this.props.dispatch({ type: 'inserir', 
-            elemento: new Element('Texto-Bíblico', this.referenciaLimpa, formatarVersiculosSlide(this.versiculosValidos(this.versiculos)))});
-            
-        console.log(JSON.stringify(formatarVersiculosSlide(this.versiculosValidos(this.versiculos))));
-        // console.log("Texto Incluído!");
-    }
-
-    buscarReferencia(e) {
-        var str = e.target.value
-        if (e.key === 'Enter' && !(!str || /^\s*$/.test(str))) { 
-            var refer = [...(extrairReferencias(str))];
-            if (refer != null) {
-                if (refer.length === 1 && refer[0].cap === null && refer[0].strInicial.substr(1).match(/[0-9]/g) === null) {
-                    if (refer[0].livro !== null) {
-                        //alterar opções no input seguinte
-                        // this.setState({comboCaps: refer[0].livro.chapters});
-                    }
-                } else if (refer != null){
-                    this.requestVersos(refer);
-                }
-            }
-        }
+            elemento: new Element('Texto-Bíblico', this.referenciaLimpa, 
+                                  formatarVersiculosSlide(this.versiculosValidos(this.state.versiculosPronto)))});
     }
 
     getVersao(termo) {
@@ -183,6 +183,17 @@ class TextoBiblico extends Component {
         this.versao = this.getVersao(e.target.value);
     }
     
+    limparInput = () => {
+        var combo = this.ref.current;
+        combo.value = '';
+        combo.focus();
+        this.setState({versiculosPronto: [], botoesVisiveis: false})
+    }
+
+    componentDidMount() {
+        setTimeout(() => {this.ref.current.focus();}, 1)
+    }
+
     render () {
         return (
             <div className='conteudo-popup'>
@@ -194,22 +205,27 @@ class TextoBiblico extends Component {
                             {versoes.map(v => (<option key={v.version} value={v.nome}>{v.nome}</option>))}
                         </select>
                         {this.state.carregando}
-                        <input className='combo-popup' type='text' list="livros" onKeyDown={e => this.buscarReferencia(e)} />
-                        <datalist id="livros">
+                        <input ref={this.ref} className='combo-popup' type='text' onKeyDown={e => this.buscarReferencia(e)} 
+                            placeholder='Digite uma ou mais referências separadas por vírgula. (Ex: "Jo3:16, mc10")' />
+                        {/* <datalist id="livros">
                             {livros.map(l => (<option key={l.abbrevPt} value={l.name}></option>))}
-                        </datalist>
+                        </datalist> */}
                     </div>
                 </div>
                 {/* Seleção por capítulo e versículo tem funções salvas no módulo ComboCapVers.jsx */}
                 <div className='container-versiculos'>
-                    {formatarVersiculos(this.state.versiculos)}
+                    {formatarVersiculos(this.state.versiculosPronto)}
                     {/* <div className='texto-inserir'>
                     </div> */}
                 </div>
-                <div>
-                    <button className='botao' style={{visibility: this.state.botaoValidosVisivel}} onClick={() => this.onClick()}>
-                        Inserir Texto Bíblico</button>
-                </div>
+                {this.state.botoesVisiveis ? <div className='container-botoes-popup'>
+                    <button className='botao' style={{visibility: this.state.botoesVisiveis}} onClick={() => this.onClick()}>
+                        Inserir Texto Bíblico
+                    </button>
+                    <button className='botao limpar-input' onClick={this.limparInput}>
+                        ✕ Limpar
+                    </button>
+                </div> : null}
             </div>
         )
     }

@@ -43,14 +43,14 @@ const listaSliders = [{rotulo: 'Fonte', aba: 'paragrafo', atributo: 'fontSize', 
                       {rotulo: 'Altura', aba: 'titulo', atributo: 'height', min: 0.1, max: 1, step: 0.01,  redividir: true},
                       {rotulo: 'Opacidade', aba: 'tampao', atributo: 'opacity', min: 0, max: 1, step: 0.05},
                       {rotulo: 'Margem', aba: 'imagem', atributo: 'padding', min: 0, max: 0.25, step: 0.01},
-                      {rotulo: 'Altura', aba: 'imagem', atributo: 'height', min: 0, max: 1, step: 0.01},
-                      {rotulo: 'Largura', aba: 'imagem', atributo: 'width', min: 0, max: 1, step: 0.01}
+                      {rotulo: 'Altura', aba: 'imagem', atributo: 'height', min: 0, max: 2, step: 0.01},
+                      {rotulo: 'Largura', aba: 'imagem', atributo: 'width', min: 0, max: 2, step: 0.01}
 ]
 
 class ConfigurarSlides extends Component {
   constructor(props) {
     super(props);
-    this.state = {...props, painelCor: null, caseTexto: 0, tamIcones: window.innerHeight*0.022 + 'px'};
+    this.state = {painelCor: null, caseTexto: 0, tamIcones: window.innerHeight*0.022 + 'px', recalcularSliders: Symbol()};
     this.listaFontes = listaFontes.sort().map(f => 
         <option className='opcoes-fonte' value={f} style={{fontFamily: f}}>{f}</option>                  
     )
@@ -115,7 +115,7 @@ class ConfigurarSlides extends Component {
     if (s.aba === abaAtiva) 
       resultado.push(
         <Slider key={s.atributo + '-' + s.aba} atributo={s.atributo} objeto={s.aba} rotulo={s.rotulo} min={s.min} max={s.max} step={s.step} unidade='%' selecionado={this.props.selecionado}
-                defaultValue={this.props.slideSelecionado.estilo[abaAtiva][s.atributo]}
+                defaultValue={this.props.slideSelecionado.estilo[abaAtiva][s.atributo]} recalcular={this.state.recalcularSliders}
                 callbackFunction={valor => this.atualizarEstilo(abaAtiva, s.atributo, valor + '', s.redividir)} 
                 style={{display: (abaAtiva === s.aba ? '' : 'none')}}/>
       );
@@ -160,8 +160,7 @@ class ConfigurarSlides extends Component {
 
   toggleEstiloTexto = (atributo) => {
     var v = atributo.valorNormal;
-    var atributoAplicado = this.props.slideSelecionado.estilo[this.props.abaAtiva][atributo.nomeAtributo] || 
-                           this.props.slidePreview.estilo[this.props.abaAtiva][atributo.nomeAtributo];
+    var atributoAplicado = this.props.slidePreview.estilo[this.props.abaAtiva][atributo.nomeAtributo];
     if (atributoAplicado !== atributo.valorAlterado) v = atributo.valorAlterado;
     this.atualizarEstilo(this.props.abaAtiva, atributo.nomeAtributo, v, true)
   }
@@ -183,6 +182,7 @@ class ConfigurarSlides extends Component {
     }
     var redividir = (!this.eObjetoVazio(estiloAnterior.texto) || !this.eObjetoVazio(estiloAnterior.paragrafo) || !this.eObjetoVazio(estiloAnterior.titulo));
     this.props.dispatch({type: 'limpar-estilo', selecionado: this.props.selecionado, objeto: obj, redividir: redividir})
+    setTimeout(() => this.setState({recalcularSliders: Symbol()}), 5);
   }
 
   aplicarEstiloAoMestre = () => {

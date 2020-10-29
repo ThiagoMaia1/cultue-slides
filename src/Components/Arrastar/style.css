@@ -9,7 +9,7 @@
   width: 100%;
   height: 3vh;
   position: absolute;
-  z-index: 25;
+  z-index: 60;
   pointer-events: none;
 }
 
@@ -67,10 +67,6 @@ ol {
   overflow: visible;
 }
 
-.bloco-reordenar:last-child, .bloco-reordenar:first-child {
-  z-index: 30;
-}
-
 .itens {
   margin: 0.5vh 0.5vh 0 0;
   padding: 1.2vh 1.2vh;
@@ -78,6 +74,7 @@ ol {
   border-radius: var(--round-border-pequeno);
   cursor: default;
   width: 100%;
+  position: relative;
 }
 
 .container-icone-colapsar {
@@ -151,11 +148,6 @@ ol {
   margin-top: -3vh;
 }
 
-.div-excluir {
-  position: relative;
-  width: 100%;
-}
-
 .excluir-elemento {
   font-size: 50%;
   right: 0.6vh;
@@ -176,6 +168,20 @@ ol {
 
 .excluir-elemento:hover {
   opacity: 1;
+}
+
+#criar-nova-apresentacao {
+  font-size: 100%;
+  font-weight: 600;
+  padding-top: 0.9vh;
+  background-color: white;
+  color: black;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -webkit-touch-callout: none;
+  -moz-user-select: none;
+  -o-user-select: none;
+  user-select: none;
 }
 
 .container-adicionar {
@@ -223,5 +229,5 @@ ol {
   height: 100%;
   width: 100%;
   position: relative;
-  z-index: 40;
+  z-index: 70;
 }

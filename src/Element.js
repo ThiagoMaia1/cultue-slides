@@ -126,7 +126,7 @@ export default class Element {
         this.slides[0].texto = '';
       } else {
         for (var img of this.imagens) {
-          this.slides.push({estilo: {...new Estilo()}, imagem: img});
+          this.slides.push({estilo: {...new Estilo()}, imagem: img, textoArray: []});
         }
       }
     }

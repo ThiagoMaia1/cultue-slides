@@ -16,9 +16,15 @@
 //   ✔️ Rolar a lista lateral igual a galeria. 
 //   ✔️ Ícone menor na galeria.
 //   ✔️ 'Null' no título do slide quando a referência é como: lc3-5.
-//   Zerar sliders ao limpar formatação.
+//   ✔️ Zerar sliders ao limpar formatação.
+//   ✔️ Reduzir logo PowerPoint.
 //   Incluir webfonts na combo de fontes disponíveis.
-//   Reduzir logo PowerPoint.
+//   Carrossel do Input Imagem não vai até o finals.
+//   Carrossel da lista de slides.
+//   Redividir slides não está funcionando.
+//   Dividir slides calculando errado \n\n nos textos bíblicos.
+//   Alterar nome do tipo de slide de "Título" para "Texto Livre".
+//   Slider as vezes da problema com a 'ref'.
 //
 // Features:
 //   ✔️ Envio de imagens.
@@ -26,20 +32,20 @@
 //   ✔️ Enviar imagem para fundo.
 //   ✔️ Editar texto direto no slide.
 //   ✔️ Permitir desfazer ações da store (Ctrl + Z).
+//   ✔️ Botão para zerar/começar nova apresentação.
+//   ✔️ Popup de confirmação.
 //   Exportar como HTML.
-//   Botão para zerar/começar nova apresentação.
-//   Popup mais bonito.
 //   Incorporar vídeos do youtube.
 //   Exportar como PDF.
 //   Exportar como Power Point.
-
 //   Possibilidade de editar elemento (retornando à tela da query).
 //   Marcador de repetições de estrofes nos slides de música/slide de refrão repetido.
 //   Atalhos em geral.
 //   Combo de número de capítulos e versículos da bíblia.
 //   Login para salvar preferências.
-//   Criar slide a partir de lista com separador.
+//   Criar slides a partir de lista com separador.
 //   Navegação pelas setas causar rolagem na lista de slides.
+//   ColorPicker personalizado.
 
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -50,7 +56,11 @@ import hotkeys from 'hotkeys-js';
 import Element, { estiloPadrao, textoMestre, Estilo } from './Element.js';
 import { selecionadoOffset, getSlidePreview } from './ExportadorHTML';
 
-var defaultList = {elementos: [new Element("Slide-Mestre", "Slide-Mestre", [textoMestre], null, {...estiloPadrao}, true)],
+const criarNovaApresentacao = () => {
+  return [new Element("Slide-Mestre", "Slide-Mestre", [textoMestre], null, {...estiloPadrao}, true)];
+}
+
+var defaultList = {elementos: criarNovaApresentacao(),
   selecionado: {elemento: 0, slide: 0}, 
   abaAtiva: 'texto'
 };
@@ -81,6 +91,8 @@ export const reducerElementos = function (state = defaultList, action) {
       return {elementos: el, selecionado: {...novaSelecao}, abaAtiva: state.abaAtiva};
     case "reordenar":
       return {elementos: action.novaOrdemElementos, selecionado: sel, abaAtiva: state.abaAtiva};
+    case "criar-nova-apresentacao":
+      return {elementos: criarNovaApresentacao(), selecionado: {elemento: 0, slide: 0}, abaAtiva: state.abaAtiva};
     case "editar-slide": {
       var e = {...el[sel.elemento]};
       var s = e.slides[sel.slide];
@@ -105,7 +117,7 @@ export const reducerElementos = function (state = defaultList, action) {
         est[action.objeto] = {...est[action.objeto], ...action.valor};
       }
       el[sel.elemento] = e;
-      if (action.redividir) var el = redividirSlides(el, sel);
+      if (action.redividir) el = redividirSlides(el, sel);
       return {elementos: [...el], selecionado: sel, abaAtiva: state.abaAtiva};
     }
     case "limpar-estilo": {

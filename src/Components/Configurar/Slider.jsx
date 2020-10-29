@@ -16,7 +16,7 @@ class Slider extends Component {
             this.virar = -1;
         }
         this.ref = React.createRef();
-        this.state = {valor: props.defaultValue, selecionado: props.selecionado, ref: this.ref};
+        this.state = {valor: props.defaultValue, selecionado: props.selecionado, ref: this.ref, recalcular: props.recalcular};
     }
 
     setValor = e => {
@@ -27,9 +27,10 @@ class Slider extends Component {
     }
     
     static getDerivedStateFromProps(props, state) {
-        if (props.selecionado.elemento !== state.selecionado.elemento || props.selecionado.slide || state.selecionado.slide) {
+        if (props.selecionado.elemento !== state.selecionado.elemento || props.selecionado.slide !== state.selecionado.slide ||
+            props.recalcular !== state.recalcular) {
             state.ref.current.value = props.defaultValue;
-            return {valor: props.defaultValue, selecionado: props.selecionado};
+            return ({valor: props.defaultValue, selecionado: props.selecionado, recalcular: props.recalcular});
         }
         return null;
     }
@@ -60,12 +61,11 @@ class Slider extends Component {
         if (e.ctrlKey) {
             if (!e.shiftKey && e.key === 'z') {
                 this.props.dispatch({type: 'UNDO'});
-            } else if (e.key === 'y' || e.shiftKey && e.key === 'z') {
+            } else if (e.key === 'y' || (e.shiftKey && e.key === 'z')) {
                 this.props.dispatch({type: 'REDO'});
             } 
         }
     }
-
     
     render() {
         return (

@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import Adicionar from '../Configurar/Adicionar';
 import Carrossel from '../Carrossel/Carrossel';
 import Popup from '../Configurar/Popup/Popup';
+import PopupConfirmacao from '../Configurar/Popup/PopupConfirmacao';
 import ItemListaSlides from './ItemListaSlides';
 
 class Arrastar extends React.Component {
@@ -56,6 +57,15 @@ class Arrastar extends React.Component {
     }});
   }
 
+  zerarApresentacao = () => {
+    var pergunta = "Deseja excluir todos os slides?";
+    const callback = fazer => {
+      if(fazer) this.props.dispatch({type: 'criar-nova-apresentacao'});
+      this.setState({popupConfirmacao: null});
+    }
+    this.setState({popupConfirmacao: (<PopupConfirmacao titulo='Atenção' pergunta={pergunta} callback={callback}/>)});
+  }
+
   marcarSelecionado = (item, slide) => {
     var sel = this.props.selecionado;
     if (sel.elemento === item && sel.slide === slide) {
@@ -87,13 +97,15 @@ class Arrastar extends React.Component {
         <div className='coluna-lista-slides'>
           <div className='gradiente-coluna emcima'></div>
           <div className='gradiente-coluna embaixo'></div>
-          <Carrossel direcao='vertical' tamanhoIcone={50} refGaleria={this.ref} tamanhoMaximo={'55vh'} style={{zIndex: '20', width: '21vw', height: 'auto'}}>
+          <Carrossel direcao='vertical' tamanhoIcone={50} refGaleria={this.ref} tamanhoMaximo={'55vh'} style={{zIndex: '50', width: '21vw', height: 'auto'}}>
               <ol ref={this.ref} id="ordem-elementos">
                 <div id="slide-mestre" className={'itens ' + (this.props.selecionado.elemento === 0 ? 'selecionado' : '')} data-id={0}
                   onClick={() => this.marcarSelecionado(0, 0)}
                   onDragOver={this.dragOver.bind(this)}
                   style={{marginBottom: this.state.placeholder.posicao === 0 ? this.state.placeholder.tamanho + 'px' : '', 
-                  display: this.props.elementos.length === 1 ? 'none' : ''}}>Slide-Mestre
+                  display: this.props.elementos.length === 1 ? 'none' : ''}}>
+                  <div data-id={0} id='criar-nova-apresentacao' className='excluir-elemento' onClick={() => this.zerarApresentacao()}>*</div>
+                  Slide-Mestre
                 </div>
                 {this.props.elementos.map((elemento, i) => {
                   if (i === 0) return null;
@@ -110,6 +122,7 @@ class Arrastar extends React.Component {
           </div>
         </div>
         {this.state.popupCompleto}
+        {this.state.popupConfirmacao}
       </>
     )
   }
