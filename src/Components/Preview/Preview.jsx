@@ -95,15 +95,34 @@ class Preview extends Component {
     render() {
         var slidePreview = this.props.slidePreviewFake || this.props.slidePreview;
         var sel = slidePreview.selecionado;
-        var spansSlide = slidePreview.textoArray.map((t, i) => (
-            <>
-                <span contentEditable={!slidePreview.eMestre} id={'paragrafo-textoArray-' + sel.elemento + '-' + sel.slide + '-' + i} 
-                    key={i} onInput={this.editarTexto} onFocus={this.ativarRealce}
-                >{t}</span>
-                {slidePreview.tipo !== 'Texto-Bíblico' && i !== slidePreview.textoArray.length && t.substr(0,4) !== '\n\n' ? 
-                    <><br></br><br></br></> : null}
-            </>
-        ));
+        var spansSlide = slidePreview.textoArray.map((t, i) => {
+            var estiloDivEstrofe = {display: 'block', width: '100%'};
+            if (slidePreview.tipo === 'Música') {
+                if (/\$\d\$/.test(t)) return null;
+                var estrofeMultiplicada;
+                if (i+1 < slidePreview.textoArray.length) {
+                    var vezes = slidePreview.textoArray[i+1].replace(/\$/g, ''); 
+                    if (!isNaN(vezes)) {
+                        estrofeMultiplicada = <span className='marcador-estrofe'>x{vezes}</span>
+                    }
+                }
+            } else if (slidePreview.tipo === 'Texto-Bíblico') {
+                estiloDivEstrofe = {display: 'inline'};
+            }
+            var tA = slidePreview.textoArray;
+            var ultimoComTexto = tA.length - (/\$\d\$/.test(tA[tA.length-1]) ? 2 : 1); 
+            return (
+                <div className='container-estrofe' style={estiloDivEstrofe}>
+                    <div className='wraper-estrofe'>
+                        <span contentEditable={!slidePreview.eMestre} id={'paragrafo-textoArray-' + sel.elemento + '-' + sel.slide + '-' + i} 
+                            key={i} onInput={this.editarTexto} onFocus={this.ativarRealce}>
+                        {t}</span>
+                        {estrofeMultiplicada}
+                    </div>
+                    {slidePreview.tipo !== 'Texto-Bíblico' && i !== ultimoComTexto && t.substr(0,4) !== '\n\n' ? 
+                        <div><br></br></div> : null}
+                </div>
+        )});
         return (
             <div className='borda-slide-mestre' style={{height: this.alturaTela*this.state.screen.proporcao + 0.051*window.innerHeight, 
                                                         visibility: slidePreview.eMestre ? '' : 'hidden', 
@@ -127,7 +146,7 @@ class Preview extends Component {
                         </div>
                         <div id='paragrafo-slide' className='slide-paragrafo' style={slidePreview.estilo.paragrafo}>
                             <div style={this.realcarElemento('paragrafo')}>
-                                {spansSlide}
+                                <div style={{width: 'fit-content'}}>{spansSlide}</div>
                             </div>
                         </div>
                     </div>

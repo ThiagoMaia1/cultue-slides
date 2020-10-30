@@ -29,6 +29,7 @@ export default class Element {
   constructor(tipo, titulo, texto = [], imagens = [], estilo = {}, eMestre = false) {     
     this.tipo = tipo;
     this.titulo = titulo;
+    if (tipo === 'Música') texto = marcarEstrofesRepetidas(texto);
     this.texto = texto;
     this.imagens = imagens;
     this.eMestre = eMestre;
@@ -102,7 +103,6 @@ export default class Element {
     var pad = Number(estP.padding) // Variáveis relacionadas ao tamanho do slide.
     var larguraLinha = window.screen.width*(1-pad*2);
     var alturaLinha = Number(estP.lineHeight)*Number(estP.fontSize)*fonteBase.numero;
-    console.log(alturaLinha);
     var alturaParagrafo = window.screen.height*(1-Number(estTitulo.height)-pad*(1 + proporcaoPadTop));
     var nLinhas = alturaParagrafo/alturaLinha;
     if (nLinhas % 1 > 0.7) {
@@ -111,12 +111,13 @@ export default class Element {
       nLinhas = Math.floor(nLinhas);
     }
 
-    var estiloFonte = [(estT.fontStyle || ''), (estT.fontWeight || ''), estP.fontSize*fonteBase.numero + fonteBase.unidade, estT.fontFamily];
+    var estiloFonte = [(estT.fontStyle || ''), (estT.fontWeight || ''), estP.fontSize*fonteBase.numero + fonteBase.unidade, "'" + estT.fontFamily + "'"];
     estiloFonte = estiloFonte.filter(a => a !== '').join(' ');
     var caseTexto = estT.caseTexto || estP.caseTexto;
     var separador = thisP.tipo === 'Texto-Bíblico' ? '' : '\n\n';
     var { contLinhas, widthResto } = getLinhas(texto[0], estiloFonte, larguraLinha, caseTexto);
     var i;
+    slide.larguraMaximaLinha = 0;
 
     for (i = 0; i < texto.length; i++) {
       if (i+1 >= texto.length) {
@@ -125,31 +126,79 @@ export default class Element {
       }
       var linhas = getLinhas(separador + texto[i+1], estiloFonte, larguraLinha, caseTexto, widthResto)
       contLinhas += linhas.contLinhas;
+      slide.larguraMaximaLinha = Math.max(linhas.maxWidth, slide.larguraMaximaLinha);
       widthResto = /\n/.test(separador) ? 0 : linhas.widthResto;        
       if ((contLinhas + (widthResto > 0 ? 1 : 0)) > nLinhas) { //Se próximo versículo vai ultrapassar o slide, conclui slide atual.
         thisP.dividirTexto(texto.slice(i+1), nSlide+1, estElemento, estGlobal, thisP);
         break;
       }
     }
+    slide.larguraLinha = larguraLinha;
     thisP.slides[nSlide].textoArray = texto.slice(0, i+1);
   }
 }
   
+const marcarEstrofesRepetidas = texto => {
+
+  const limparTexto = t => retiraAcentos(t).toLowerCase().replace(/[^a-z]/g,'');
+
+  var textoAjeitado = [...texto];
+  for (var j = 0; j < textoAjeitado.length; j++) {
+    var separadoPorMultiplicador = textoAjeitado[j].split(/\((?= ?[2-9].{0,15})|(?<=\( ?[2-9]).{0,15}\)| (?=[2-9] ?(?:[xX]|[vV][eE][zZ][eE][sS]))|(?<=[2-9]) ?(?:[xX]|[vV][eE][zZ][eE][sS])/g);
+    separadoPorMultiplicador = separadoPorMultiplicador.reduce((resultado, t) => {
+      if(t) {
+        if (!isNaN(t)) t = '$' + t + '$';
+        resultado.push(t.trim());
+      } 
+      return resultado}, []
+      );
+      textoAjeitado.splice(j, 1, ...separadoPorMultiplicador);
+  }
+  var estrofeAnterior = limparTexto(textoAjeitado[0]);
+  var estrofeAtual;
+  var cont;
+  for (var i = 1; i < textoAjeitado.length; i++) {
+    if (/\$\d\$/.test(textoAjeitado[i])) continue;
+    estrofeAtual = limparTexto(textoAjeitado[i]);
+    if (estrofeAtual === estrofeAnterior) {
+      cont = textoAjeitado[i-1].replace('$', '');
+      if (!isNaN(cont)) {
+        cont = Number(cont) + 1;
+      } else {
+        cont = 2;
+      }
+      textoAjeitado[i] = '$' + cont + '$';
+      if (/\$\d\$/.test(textoAjeitado[i-1])) {
+        textoAjeitado.splice(i-1, 1); 
+        i--;
+      }
+    } else {
+      cont = 1;
+      estrofeAnterior = estrofeAtual;
+    }
+  }
+  return textoAjeitado;
+}
+
 export function getLinhas(texto, fontStyle, larguraLinha, caseTexto, widthInicial = 0) {
+  
+  if (/\$\d\$/.test(texto)) return {contLinhas: 0, widthResto: 0, maxWidth: 0}; 
   texto = capitalize(texto, caseTexto);
   var widthResto = widthInicial;
   var trechos = texto.split('\n');
   var linhas;
   var contLinhas = trechos.length-1;
+  var maxWidth = 0;
   for (var t of trechos) {
     if (!t) continue;
     linhas = linhasTrecho(t, fontStyle, larguraLinha, widthResto);
     contLinhas += linhas.length-1;
+    maxWidth = Math.max(...linhas, maxWidth);
     widthResto = 0;
   }
   if (trechos[trechos.length-1] !== '')
     widthResto = linhas[linhas.length-1];
-  return {contLinhas: contLinhas, widthResto: widthResto};
+  return {contLinhas: contLinhas, widthResto: widthResto, maxWidth: maxWidth};
 }
 
 function linhasTrecho(texto, fontStyle, larguraLinha, widthInicial = 0) {
@@ -192,3 +241,23 @@ export function capitalize (string, caseTexto) {
       return string;
   }
 }
+
+function retiraAcentos(str) {
+  var com_acento = "ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝŔÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûüýþÿŕ";
+  var sem_acento = "AAAAAAACEEEEIIIIDNOOOOOOUUUUYRsBaaaaaaaceeeeiiiionoooooouuuuybyr";
+  var novastr="";
+  for(var i = 0; i < str.length; i++) {
+      var troca = false;
+      for (var a = 0; a < com_acento.length; a++) {
+          if (str.substr(i,1) === com_acento.substr(a, 1)) {
+              novastr += sem_acento.substr(a, 1);
+              troca=true;
+              break;
+          }
+      }
+      if (!troca) {
+          novastr += str.substr(i, 1);
+      }
+  }
+  return novastr;
+}  

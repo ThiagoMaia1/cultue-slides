@@ -5,7 +5,6 @@ class Popup extends React.Component {
   
   constructor (props) {
     super(props);
-    console.log(props.tamanho)
     if (props.tamanho !== 'pequeno') this.tamanho = {height: '65%', width: '50%'};
   }
 

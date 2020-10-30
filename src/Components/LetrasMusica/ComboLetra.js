@@ -17,7 +17,7 @@ class ComboLetra extends Component {
     constructor (props) {
         super(props);
         this.state = {opcoes: [], listaAtiva: false, letraMusica:{}, botaoVisivel: 'hidden', 
-                      carregando: null, idBuscarLetra: null}
+                      carregando: null, idBuscarLetra: null, divisivel: false}
     }
     onKeyUp(e) {
         clearTimeout(timer);
@@ -63,14 +63,14 @@ class ComboLetra extends Component {
                 contLinhas += letraLinhas[i].linhas;
                 
                 if (contLinhas <= linhasMetade) {
-                    letraEsquerda.push(<div className={'paragrafo-musica-esquerda'}>{letraLinhas[i].paragrafo}</div>);
+                    letraEsquerda.push(<div className={'paragrafo-musica-esquerda'}>{letraLinhas[i].paragrafo}<br></br><br></br></div>);
                 } else {
-                    letraDireita.push(<div className={'paragrafo-musica-direita'}>{letraLinhas[i].paragrafo}</div>);
+                    letraDireita.push(<div className={'paragrafo-musica-direita'}>{letraLinhas[i].paragrafo}<br></br><br></br></div>);
                 }
             }
             letraDireita.push(
                 <div className={'paragrafo-musica-direita link-letra'}>
-                    <i><b><br></br>Fonte: </b>
+                    <i><b>Fonte: </b>
                     <a href={musica.url} target="_blank" rel="noopener noreferrer" >
                         {musica.url}
                     </a></i>
@@ -118,6 +118,20 @@ class ComboLetra extends Component {
                             <div className='paragrafos-direita'>
                                 {this.state.letraMusica.direita}
                             </div>
+                        </div>
+                    </div>
+                    <div className='checkboxes-popup'>
+                        <div>
+                            <input id='omitir-repetidos' type='checkbox'></input>
+                            <label for='omitir-repetidos'>Omitir Duplicações</label>
+                        </div>
+                        <div>
+                            <input id='ativar-marcadores-estrofe-duplicada' type='checkbox'></input>
+                            <label for='ativar-marcadores-estrofe-duplicada'>Multiplicadores</label>
+                        </div>
+                        <div>
+                            <input id='dividir-slide-colunas' type='checkbox' disabled={this.state.divisivel ? '' : 'disabled'}></input>
+                            <label for='dividir-slide-colunas' style={this.state.divisivel ? null : {color: "gray"}}>Dividir em Colunas</label>
                         </div>
                     </div>
                     <div className='container-botoes-popup'>

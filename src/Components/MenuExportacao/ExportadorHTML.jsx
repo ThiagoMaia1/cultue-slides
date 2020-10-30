@@ -70,7 +70,6 @@ function scriptHTML () {
   
   document.addEventListener("click", function (event) {
     var el = event.target;
-    console.log(el);
     if (el.matches(".movimentar-slide")) {
       if (el.matches(".esquerda")) {
         offsetSlide(-1);

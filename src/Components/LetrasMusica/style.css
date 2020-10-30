@@ -57,3 +57,8 @@
     font-size: 80%;
     max-width: 23vw;
 }
+
+.checkboxes-popup{
+    display: flex;
+    justify-content: space-around;
+}

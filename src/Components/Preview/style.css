@@ -107,3 +107,16 @@ img {
     display: flex;
     justify-content: space-between;
 }
+
+.wraper-estrofe {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.marcador-estrofe {
+    font-size: 140%;
+    margin-left: 2vh;
+    font-weight: 500;
+    opacity: 0.9;
+}

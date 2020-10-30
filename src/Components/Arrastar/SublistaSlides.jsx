@@ -10,19 +10,20 @@ class SublistaSlides extends Component {
     }
 
     getRotuloSlide = (elemento, slide) => {
+        var t0 = slide.textoArray.filter(t => !/\$\d\$/.test(t))[0];
         switch (elemento.tipo) {
             case 'Imagem':
                 return elemento.titulo || slide.imagem.alt;
             case 'Texto-Bíblico':
                 var n = 0;
-                var palavras = slide.textoArray[0].split(' ');
+                var palavras = t0.split(' ');
                 do {
                     var verso = reverterSuperscrito(palavras[n]);
                     n++;
                 } while (isNaN(verso))
                 return 'v. ' + verso.padStart(2, 0);
             default:
-                return slide.textoArray[0].substr(0, 50);
+                return t0.substr(0, 50);
         }
     }
 

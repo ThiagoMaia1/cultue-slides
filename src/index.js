@@ -40,17 +40,20 @@
 //   ✔️ Botão para zerar/começar nova apresentação.
 //   ✔️ Popup de confirmação.
 //   ✔️ Exportar como HTML.
+//   ✔️ Marcador de repetições de estrofes nos slides de música/slide de refrão repetido.
+//   Dividir música em colunas.
 //   Incorporar vídeos do youtube.
-//   Exportar como PDF.
 //   Exportar como Power Point.
-//   Possibilidade de editar elemento (retornando à tela da query).
-//   Marcador de repetições de estrofes nos slides de música/slide de refrão repetido.
+//   Enviar por e-mail.
+//   Gerar link compartilhável.
+//   Exportar como PDF.
 //   Atalhos em geral.
-//   Combo de número de capítulos e versículos da bíblia.
 //   Login para salvar preferências.
 //   Criar slides a partir de lista com separador.
 //   Navegação pelas setas causar rolagem na lista de slides.
 //   ColorPicker personalizado.
+//   Combo de número de capítulos e versículos da bíblia.
+//   Possibilidade de editar elemento (retornando à tela da query).
 
 import React from 'react';
 import ReactDOM from 'react-dom';
