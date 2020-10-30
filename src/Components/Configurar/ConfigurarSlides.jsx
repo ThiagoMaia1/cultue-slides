@@ -37,7 +37,7 @@ const listaBotoesAlinhamento = [{direcao: 'left', titulo: 'Alinhado à Esquerda'
 
 const listaSliders = [{rotulo: 'Fonte', aba: 'paragrafo', atributo: 'fontSize', min: 1, max: 3.5, step: 0.01,  redividir: true},
                       {rotulo: 'Margem', aba: 'paragrafo', atributo: 'padding', min: 0, max: 0.4, step: 0.01,  redividir: true},
-                      {rotulo: 'Espaçamento', aba: 'paragrafo', atributo: 'lineHeight', min: 0.5, max: 3, step: 0.1},
+                      {rotulo: 'Espaçamento', aba: 'paragrafo', atributo: 'lineHeight', min: 0.5, max: 3, step: 0.1,  redividir: true},
                       {rotulo: 'Fonte', aba: 'titulo', atributo: 'fontSize', min: 1, max: 7, step: 0.01,  redividir: true},
                       {rotulo: 'Margem', aba: 'titulo', atributo: 'padding', min: 0, max: 0.4, step: 0.01,  redividir: true},
                       {rotulo: 'Altura', aba: 'titulo', atributo: 'height', min: 0.1, max: 1, step: 0.01,  redividir: true},
@@ -111,14 +111,21 @@ class ConfigurarSlides extends Component {
   }
 
   reducerListaSliders = (resultado, s) => {
-    var abaAtiva = this.props.abaAtiva;
-    if (s.aba === abaAtiva) 
-      resultado.push(
-        <Slider key={s.atributo + '-' + s.aba} atributo={s.atributo} objeto={s.aba} rotulo={s.rotulo} min={s.min} max={s.max} step={s.step} unidade='%' selecionado={this.props.selecionado}
-                defaultValue={this.props.slideSelecionado.estilo[abaAtiva][s.atributo]} recalcular={this.state.recalcularSliders}
-                callbackFunction={valor => this.atualizarEstilo(abaAtiva, s.atributo, valor + '', s.redividir)} 
-                style={{display: (abaAtiva === s.aba ? '' : 'none')}}/>
-      );
+    if (s.aba !== this.props.abaAtiva) return resultado; 
+    var valorPreview = this.props.slidePreview.estilo[s.aba][s.atributo];
+    valorPreview = valorPreview === undefined ? '' : valorPreview;
+    if (s.aba === 'paragrafo' && s.atributo === 'padding') 
+      valorPreview = valorPreview.split(' ')[1];
+    if (/%/.test(valorPreview))
+      valorPreview = Number(valorPreview.replace('%',''))/100;
+    resultado.push(
+      <Slider key={s.atributo + '-' + s.aba} atributo={s.atributo} objeto={s.aba} rotulo={s.rotulo} min={s.min} max={s.max} step={s.step} unidade='%' selecionado={this.props.selecionado}
+              defaultValue={this.props.slideSelecionado.estilo[s.aba][s.atributo]} 
+              valorPreview={Number(valorPreview)}
+              recalcular={this.state.recalcularSliders}
+              callbackFunction={valor => this.atualizarEstilo(s.aba, s.atributo, valor + '', s.redividir)}
+              style={{display: (this.props.abaAtiva === s.aba ? '' : 'none')}}/>
+    );
     return resultado;
   }
 

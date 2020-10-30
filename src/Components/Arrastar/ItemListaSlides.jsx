@@ -36,6 +36,12 @@ class ItemListaSlides extends Component {
         this.setState({popupConfirmacao: (<PopupConfirmacao titulo='Atenção' pergunta={pergunta} callback={callback} botoes='simNao'/>)});         
     }
 
+    static getDerivedStateFromProps(props, state) {
+        if ((props.elemento.slides.length > 1) !== state.colapsa) {
+            return {colapsa: (props.elemento.slides.length > 1)}
+        }
+    }
+
     render () {
         var elemento = this.props.elemento;
         var i = this.props.ordem;

@@ -18,13 +18,18 @@
 //   ✔️ 'Null' no título do slide quando a referência é como: lc3-5.
 //   ✔️ Zerar sliders ao limpar formatação.
 //   ✔️ Reduzir logo PowerPoint.
+//   ✔️ Redividir slides não está funcionando.
+//   ✔️ Dividir slides calculando errado \n\n nos textos bíblicos.
+//   Dividir slides chegando na borda.
+//   Combobox fonte letra não atualiza direito seu estilo.
 //   Incluir webfonts na combo de fontes disponíveis.
 //   Carrossel do Input Imagem não vai até o final.
 //   Carrossel da lista de slides.
-//   Redividir slides não está funcionando.
-//   Dividir slides calculando errado \n\n nos textos bíblicos.
 //   Alterar nome do tipo de slide de "Título" para "Texto Livre".
 //   Slider as vezes da problema com a 'ref'.
+//   Fontes que não suportam números superscritos.
+//   Exportação de slides de imagem como html.
+//   TextoMestre nos slides de imagem.
 //
 // Features:
 //   ✔️ Envio de imagens.
@@ -34,7 +39,7 @@
 //   ✔️ Permitir desfazer ações da store (Ctrl + Z).
 //   ✔️ Botão para zerar/começar nova apresentação.
 //   ✔️ Popup de confirmação.
-//   Exportar como HTML.
+//   ✔️ Exportar como HTML.
 //   Incorporar vídeos do youtube.
 //   Exportar como PDF.
 //   Exportar como Power Point.
@@ -54,7 +59,7 @@ import App from './App';
 import { createStore } from 'redux';
 import hotkeys from 'hotkeys-js';
 import Element, { estiloPadrao, textoMestre, Estilo } from './Element.js';
-import { selecionadoOffset, getSlidePreview } from './ExportadorHTML';
+import { selecionadoOffset, getSlidePreview } from './Components/MenuExportacao/ExportadorHTML'
 
 const criarNovaApresentacao = () => {
   return [new Element("Slide-Mestre", "Slide-Mestre", [textoMestre], null, {...estiloPadrao}, true)];
@@ -71,7 +76,8 @@ export const reducerElementos = function (state = defaultList, action) {
     if (elementos.length !== 1) {
         var [ i, slide, repetir ] = (sel.elemento === 0 ? [ 1, 0, 1 ] : [ sel.elemento, sel.slide, 0]);
       do {
-        elementos[i].criarSlides(elementos[i].getArrayTexto(slide), elementos[i].slides[0].estilo, slide, elementos[0].slides[0].estilo);
+        var e = elementos[i];
+        e.criarSlides(e.getArrayTexto(slide, e), e.slides[0].estilo, slide, elementos[0].slides[0].estilo, e);
         i++;
       } while (repetir && i < elementos.length)
     }
@@ -231,8 +237,7 @@ function deepSpreadPresente(present) {
     }
     elementos.push({...e, slides: slides});
   }
-  var nState = {...present, elementos: elementos, selecionado: selecionado, abaAtiva: present.abaAtiva};
-  return {...nState, slidePreview: getSlidePreview(nState)};
+  return {...present, elementos: elementos, selecionado: selecionado, abaAtiva: present.abaAtiva};
 }
 
 export let store = createStore(undoable(reducerElementos), /* preloadedState, */

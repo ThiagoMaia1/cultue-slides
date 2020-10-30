@@ -25,140 +25,170 @@ export const textoMestre = 'As configurações do estilo desse slide serão apli
 
   
 export default class Element {
-    constructor(tipo, titulo, texto = [], imagens = [], estilo = {}, eMestre = false) {     
-      this.tipo = tipo;
-      this.titulo = titulo;
-      this.texto = texto;
-      this.imagens = imagens;
-      this.eMestre = eMestre;
-      
-      var est = {...new Estilo(), ...estilo};
-      if (this.tipo === 'Título' && texto.filter(t => t !== '').length === 0) est.titulo.height = '1';
-      this.slides = [{estilo: {...est}, eMestre: true, textoArray: [textoMestre]}];
-      this.criarSlides(this.texto, est);
+  
+  constructor(tipo, titulo, texto = [], imagens = [], estilo = {}, eMestre = false) {     
+    this.tipo = tipo;
+    this.titulo = titulo;
+    this.texto = texto;
+    this.imagens = imagens;
+    this.eMestre = eMestre;
+    
+    var est = {...new Estilo(), ...estilo};
+    if (this.tipo === 'Título' && texto.filter(t => t !== '').length === 0) est.titulo.height = '1';
+    this.slides = [{estilo: {...est}, eMestre: true, textoArray: [textoMestre]}];
+    this.criarSlides(this.texto, est);
 
-    }
-  
-    criarSlides = (texto, estiloMestre, nSlide = 0, estGlobal = null) => {
-      
-      if (this.eMestre) return;
-      if (this.slides[nSlide].eMestre) nSlide++;
-      if (this.tipo === 'Imagem') {
-        this.dividirImagens();
-      } else {
-        this.dividirTexto(texto, nSlide, estiloMestre, estGlobal);
-      }
-      if (this.slides.length > 1 && !this.slides[0].eMestre) {
-        this.slides.unshift({estilo: {...estiloMestre}, textoArray: [textoMestre], eMestre: true});
-        this.slides[1].estilo = {...new Estilo()};
-      } else if (this.slides.length === 2 && this.slides[0].eMestre) {
-        this.slides[1].estilo = this.slides[0].estilo;
-        this.slides.shift();
-      }
-      return this;
-    }
-  
-    dividirTexto = (texto, nSlide, estElemento, estGlobal = null) => {
-      
-      //Divide o texto a ser incluído em quantos slides forem necessários, mantendo a estilização de cada slide.
-      if (nSlide === this.slides.length) {
-        this.slides.push({estilo: {...new Estilo()}, textoArray: []});
-      } else if (nSlide > this.slides.length) {
-        console.log('Tentativa de criar slide além do limite: ' + nSlide);
-        return;
-      }
-      var slide = this.slides[nSlide];  
-      if (nSlide === 0) slide.eMestre = this.eMestre; 
-      var estSlide = slide.estilo;
-      estGlobal = estGlobal ? estGlobal : estiloPadrao;
-      
-      var estP = {...estGlobal.paragrafo, ...estElemento.paragrafo , ...estSlide.paragrafo};
-      var estT = {...estGlobal.texto, ...estElemento.texto, ...estSlide.texto};
-      var estTitulo = {...estGlobal.titulo, ...estElemento.titulo, ...estSlide.titulo};
-      
-      var pad = Number(estP.padding) // Variáveis relacionadas ao tamanho do slide.
-      var larguraLinha = window.screen.width*(1-pad*2);
-      var alturaLinha = Number(estP.lineHeight)*Number(estP.fontSize)*fonteBase.numero; 
-      var alturaParagrafo = window.screen.height*(1-Number(estTitulo.height)-pad*(1 + proporcaoPadTop));
-      var nLinhas = alturaParagrafo/alturaLinha;
-      if (nLinhas % 1 > 0.7) {
-        nLinhas = Math.ceil(nLinhas);
-      } else {
-        nLinhas = Math.floor(nLinhas);
-      }
-  
-      var estiloFonte = [(estT.fontStyle || ''), (estT.fontWeight || ''), estP.fontSize*fonteBase.numero + fonteBase.unidade, estT.fontFamily];
-      estiloFonte = estiloFonte.filter(a => a !== '').join(' ');
-      var caseTexto = estT.caseTexto || estP.caseTexto;
-      var tArray = [];
+  }
 
-      for (var i = 0; i < texto.length; i++) {
-        //Se finalizou ou próximo versículo (exceto sozinho) vai ultrapassar o slide, conclui slide atual.
-        tArray.push(texto[i]);
-        var larguraComProximo = getTextWidth(tArray.join(''), (texto[i+1] || ''), estiloFonte, larguraLinha, caseTexto);
-        if (i+1 >= texto.length || 
-           (tArray.join('') !== '' && (larguraComProximo > (nLinhas*larguraLinha - 0.2*larguraLinha)))) {
-            this.slides[nSlide].textoArray = texto.slice(0, i+1);
-            if (i+1 < texto.length) {
-              this.dividirTexto(texto.slice(i+1), nSlide+1, estElemento, estGlobal);
-            } else {
-              this.slides = this.slides.slice(0, nSlide+1);
-            }
-            return;
-        }
+  criarSlides = (texto, estiloMestre, nSlide = 0, estGlobal = null, thisP = this) => {
+    
+    if (thisP.eMestre) return;
+    if (thisP.slides[nSlide].eMestre) nSlide++;
+    if (thisP.tipo === 'Imagem') {
+      thisP.dividirImagens();
+    } else {
+      thisP.dividirTexto(texto, nSlide, estiloMestre, estGlobal, thisP);
+    }
+    if (thisP.slides.length > 1 && !thisP.slides[0].eMestre) {
+      thisP.slides.unshift({estilo: {...estiloMestre}, textoArray: [textoMestre], eMestre: true});
+      thisP.slides[1].estilo = {...new Estilo()};
+    } else if (thisP.slides.length === 2 && thisP.slides[0].eMestre) {
+      thisP.slides[1].estilo = thisP.slides[0].estilo;
+      thisP.slides.shift();
+    }
+    return thisP;
+  }
+
+  
+  getArrayTexto = (nSlide = 0, thisP = this) => {
+    if (thisP.slides[nSlide].eMestre) nSlide++;
+    var arrayTexto = [];
+    while (nSlide < thisP.slides.length) {
+      arrayTexto.push(thisP.slides[nSlide].textoArray);
+      nSlide++;
+    }
+    return arrayTexto.flat();
+  }
+
+  dividirImagens = (thisP = this) => {
+    if (thisP.imagens.length === 1) {
+      thisP.slides[0].imagem = thisP.imagens[0];
+      thisP.slides[0].eMestre = false;
+      thisP.slides[0].texto = '';
+    } else {
+      for (var img of thisP.imagens) {
+        thisP.slides.push({estilo: {...new Estilo()}, imagem: img, textoArray: []});
       }
     }
-  
-    getArrayTexto = (nSlide = 0) => {
-      if (this.slides[nSlide].eMestre) nSlide++;
-      var arrayTexto = [];
-      while (nSlide < this.slides.length) {
-        arrayTexto.push(this.slides[nSlide].textoArray);
-        nSlide++;
-      }
-      return arrayTexto.flat();
+  }
+
+  dividirTexto = (texto, nSlide, estElemento, estGlobal = null, thisP = this) => {
+    
+    //Divide o texto a ser incluído em quantos slides forem necessários, mantendo a estilização de cada slide.
+    if (nSlide === thisP.slides.length) {
+      thisP.slides.push({estilo: {...new Estilo()}, textoArray: []});
+    } else if (nSlide > thisP.slides.length) {
+      console.log('Tentativa de criar slide além do limite: ' + nSlide);
+      return;
+    }
+    var slide = thisP.slides[nSlide];  
+    var estSlide = slide.estilo;
+    estGlobal = estGlobal ? estGlobal : estiloPadrao;
+    
+    var estP = {...estGlobal.paragrafo, ...estElemento.paragrafo , ...estSlide.paragrafo};
+    var estT = {...estGlobal.texto, ...estElemento.texto, ...estSlide.texto};
+    var estTitulo = {...estGlobal.titulo, ...estElemento.titulo, ...estSlide.titulo};
+    
+    var pad = Number(estP.padding) // Variáveis relacionadas ao tamanho do slide.
+    var larguraLinha = window.screen.width*(1-pad*2);
+    var alturaLinha = Number(estP.lineHeight)*Number(estP.fontSize)*fonteBase.numero;
+    console.log(alturaLinha);
+    var alturaParagrafo = window.screen.height*(1-Number(estTitulo.height)-pad*(1 + proporcaoPadTop));
+    var nLinhas = alturaParagrafo/alturaLinha;
+    if (nLinhas % 1 > 0.7) {
+      nLinhas = Math.ceil(nLinhas);
+    } else {
+      nLinhas = Math.floor(nLinhas);
     }
 
-    dividirImagens = () => {
-      if (this.imagens.length === 1) {
-        this.slides[0].imagem = this.imagens[0];
-        this.slides[0].eMestre = false;
-        this.slides[0].texto = '';
-      } else {
-        for (var img of this.imagens) {
-          this.slides.push({estilo: {...new Estilo()}, imagem: img, textoArray: []});
-        }
+    var estiloFonte = [(estT.fontStyle || ''), (estT.fontWeight || ''), estP.fontSize*fonteBase.numero + fonteBase.unidade, estT.fontFamily];
+    estiloFonte = estiloFonte.filter(a => a !== '').join(' ');
+    var caseTexto = estT.caseTexto || estP.caseTexto;
+    var separador = thisP.tipo === 'Texto-Bíblico' ? '' : '\n\n';
+    var { contLinhas, widthResto } = getLinhas(texto[0], estiloFonte, larguraLinha, caseTexto);
+    var i;
+
+    for (i = 0; i < texto.length; i++) {
+      if (i+1 >= texto.length) {
+        thisP.slides = thisP.slides.slice(0, nSlide+1);
+        break;
+      }
+      var linhas = getLinhas(separador + texto[i+1], estiloFonte, larguraLinha, caseTexto, widthResto)
+      contLinhas += linhas.contLinhas;
+      widthResto = /\n/.test(separador) ? 0 : linhas.widthResto;        
+      if ((contLinhas + (widthResto > 0 ? 1 : 0)) > nLinhas) { //Se próximo versículo vai ultrapassar o slide, conclui slide atual.
+        thisP.dividirTexto(texto.slice(i+1), nSlide+1, estElemento, estGlobal, thisP);
+        break;
       }
     }
+    thisP.slides[nSlide].textoArray = texto.slice(0, i+1);
+  }
 }
   
-export function getTextWidth(texto, proximaPalavra, fontSize, larguraLinha, caseTexto) {
-    var enes = proximaPalavra.split('\n').length-1;
-    if (enes > 0) return enes*(larguraLinha + 1);
-    var canvas = getTextWidth.canvas || (getTextWidth.canvas = document.createElement("canvas"));
-    var context = canvas.getContext("2d");
-    context.font = fontSize;
-    var txt = capitalize(texto.replace('\n',' ') + ' ' + proximaPalavra, caseTexto)
-    var metrics = context.measureText(txt);
-    return metrics.width-3; //-3 porque parece que existe uma pequena tolerância.
+export function getLinhas(texto, fontStyle, larguraLinha, caseTexto, widthInicial = 0) {
+  texto = capitalize(texto, caseTexto);
+  var widthResto = widthInicial;
+  var trechos = texto.split('\n');
+  var linhas;
+  var contLinhas = trechos.length-1;
+  for (var t of trechos) {
+    if (!t) continue;
+    linhas = linhasTrecho(t, fontStyle, larguraLinha, widthResto);
+    contLinhas += linhas.length-1;
+    widthResto = 0;
+  }
+  if (trechos[trechos.length-1] !== '')
+    widthResto = linhas[linhas.length-1];
+  return {contLinhas: contLinhas, widthResto: widthResto};
+}
+
+function linhasTrecho(texto, fontStyle, larguraLinha, widthInicial = 0) {
+  var palavras = texto.split(' ');
+  var arrayP = [];
+  var widthParcial = 0;
+  for (var i = 0; i < palavras.length; i++) {
+    arrayP.push(palavras[i]);
+    widthParcial += canvasTextWidth(' ' + palavras[i+1], fontStyle);
+    if (widthInicial + widthParcial> larguraLinha) {
+      return [1, ...linhasTrecho(palavras.slice(i+2).join(' '), fontStyle, larguraLinha)];
+    }
+  }
+  return [widthParcial];
+}
+
+function canvasTextWidth(texto, fontStyle) {
+  var canvas = canvasTextWidth.canvas || (canvasTextWidth.canvas = document.createElement("canvas"));
+  var context = canvas.getContext("2d");
+  context.font = fontStyle;
+  var metrics = context.measureText(texto);
+  return metrics.width;
 }
 
 export function capitalize (string, caseTexto) {
 
-    const primeiraMaiuscula = string => {
-      if (typeof string !== 'string') return '';
-      return string.charAt(0).toUpperCase() + string.slice(1);
-    }
-  
-    switch (caseTexto) {
-      case 'Maiúsculas':
-        return string.toUpperCase();
-      case 'Minúsculas':
-        return string.toLowerCase();
-      case 'Primeira Maiúscula':
-        return primeiraMaiuscula(string);
-      default:
-        return string;
-    }
+  const primeiraMaiuscula = string => {
+    if (typeof string !== 'string') return '';
+    return string.charAt(0).toUpperCase() + string.slice(1);
   }
-  
+
+  switch (caseTexto) {
+    case 'Maiúsculas':
+      return string.toUpperCase();
+    case 'Minúsculas':
+      return string.toLowerCase();
+    case 'Primeira Maiúscula':
+      return primeiraMaiuscula(string);
+    default:
+      return string;
+  }
+}

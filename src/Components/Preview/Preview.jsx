@@ -110,7 +110,7 @@ class Preview extends Component {
                                                         display: this.props.slidePreviewFake ? 'none' : '',
                                                         ...this.realcarElemento('tampao', 'fora')}}>
                 <div ref={this.ref} id={'preview' + (this.props.slidePreviewFake ? '-fake' + slidePreview.indice : '')} 
-                     className={(this.props.slidePreviewFake ? 'preview-fake ' : '') + (slidePreview.indice === 1 ? 'slide-ativo' : '')}
+                     className={(this.props.slidePreviewFake ? 'preview-fake ' : '') + (slidePreview.indice === 0 ? 'slide-ativo' : '')}
                      style={{width: this.larguraTela*this.state.screen.proporcao, 
                             height: this.alturaTela*this.state.screen.proporcao,
                             ...this.realcarElemento('tampao', 'dentro')}}>
@@ -121,7 +121,8 @@ class Preview extends Component {
                     <Img imagem={slidePreview.estilo.fundo} />
                     <div className='texto-preview' style={{fontSize: fonteBase.numero*this.state.screen.proporcao + fonteBase.unidade}}>
                         <div className='slide-titulo' style={slidePreview.estilo.titulo}>
-                            <div><span id='textoTitulo' onInput={this.editarTexto} onFocus={this.ativarRealce} contentEditable={!slidePreview.eMestre}
+                            <div><span id='textoTitulo' onInput={this.editarTexto} onFocus={this.ativarRealce} 
+                                contentEditable={!this.props.elementos[this.props.nElemento].eMestre}
                                 style={this.realcarElemento('titulo')}>{slidePreview.titulo}</span></div>
                         </div>
                         <div id='paragrafo-slide' className='slide-paragrafo' style={slidePreview.estilo.paragrafo}>
@@ -163,7 +164,7 @@ const Img = ({imagem}) => {
 };
 
 const mapStateToProps = function (state) {
-    return {slidePreview: state.slidePreview, abaAtiva: state.present.abaAtiva, elementos: state.present.elementos}
+    return {slidePreview: state.slidePreview, abaAtiva: state.present.abaAtiva, elementos: state.present.elementos, nElemento: state.present.selecionado.elemento}
 }
 
 export default connect(mapStateToProps)(Preview);

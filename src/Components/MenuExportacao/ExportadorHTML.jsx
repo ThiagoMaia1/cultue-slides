@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { capitalize } from './Element';
-import Preview, { toggleFullscreen as fullScreen } from './Components/Preview/Preview'
-import { proporcaoPadTop } from './Element';
+import { capitalize } from '../../Element';
+import Preview, { toggleFullscreen as fullScreen } from '../Preview/Preview'
+import { proporcaoPadTop } from '../../Element';
 
 const toggleFullscreen = fullScreen;
 
@@ -18,32 +18,28 @@ const downloadArquivoTexto = function(nomeArquivo, conteudoArquivo) {
 }
 
 function getBase64Image(src, classe, callback) {
-  const imgConverter = new Image();
-  imgConverter.crossOrigin = 'Anonymous';
-  imgConverter.onload = () => {
+  const img = new Image();
+  img.crossOrigin = 'Anonymous';
+  img.onload = () => {
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d');
     let dataURL;
-    canvas.height = window.screen.height;
-    canvas.width = window.screen.width;
-    ctx.drawImage(imgConverter, 0, 0);
+    var iw = img.width;
+    var ih = img.height;
+    var minW = window.screen.width;
+    var minH = window.screen.height;
+    var scale = Math.max((minW/iw), (minH/ih));
+    var iwScaled = iw*scale;
+    var ihScaled = ih*scale;
+    canvas.width = iwScaled;
+    canvas.height = ihScaled;
+    ctx.drawImage(img, (minW - iwScaled)/2, (minH - ihScaled)/2, iwScaled, ihScaled);
     dataURL = canvas.toDataURL("image/png");
     callback(dataURL, classe);
   };
 
-  imgConverter.src = src;
+  img.src = src;
 }
-
-// function getBase64Image(img) {
-//   var canvas = document.createElement("canvas");
-//   canvas.width = img.width;
-//   canvas.height = img.height;
-//   var ctx = canvas.getContext("2d");
-//   ctx.drawImage(img, 0, 0);
-//   var dataURL = canvas.toDataURL("image/png");
-//   console.log(dataURL);
-//   return dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
-// }
 
 const getDate = function() {
   var data = new Date(); 
@@ -74,6 +70,7 @@ function scriptHTML () {
   
   document.addEventListener("click", function (event) {
     var el = event.target;
+    console.log(el);
     if (el.matches(".movimentar-slide")) {
       if (el.matches(".esquerda")) {
         offsetSlide(-1);
@@ -113,14 +110,14 @@ function scriptHTML () {
 const styleSheet = '.slide-ativo {z-index: 20;}' +
              '.preview-fake {background-color: white; position: absolute}' +
              '#ativar-tela-cheia {opacity: 0.2; right: 4vh; bottom: 4vh; width: 10vh; height: 10vh;}' +
-             '#ativar-tela-cheia:hover {opacity: 0.8;}';
+             '#ativar-tela-cheia:hover {opacity: 0.8;}' + 
+             '.tampao {z-index: 1;}' + 
+             '.texto-preview {z-index: 2;}';
 
 export function selecionadoOffset (elementos, selecionado, offset, apresentacao = undefined) {
     if (apresentacao === undefined) apresentacao = !!document.fullscreenElement; 
     if (elementos.length === 1) apresentacao = false;
-    var elem = elementos.flatMap((e, i) => { 
-      return e.slides.map((s, j) => ({elemento: i, slide: j, eMestre: s.eMestre})); //Gera um array ordenado com todos os slides que existem representados por objetos do tipo "selecionado".
-    })
+    var elem = slidesOrdenados(elementos, !apresentacao);
     for (var i = 0; i < elem.length; i++) { //Acha o selecionado atual.
       if (elem[i].elemento === selecionado.elemento && elem[i].slide === selecionado.slide) {
         var novoIndex = i + offset;
@@ -128,21 +125,21 @@ export function selecionadoOffset (elementos, selecionado, offset, apresentacao 
           novoIndex = 0;
         } else if (novoIndex >= elem.length) { 
           novoIndex = elem.length-1;
-        }
-        if (apresentacao) { //Se for slide mestre, pula um a mais pra frente ou pra trás com base no offset informado.
-          while (elem[novoIndex].eMestre) {
-            offset = offset > 0 ? 1 : -1;
-            novoIndex += offset;
-            if (novoIndex >= elem.length || novoIndex <= 0) {
-              novoIndex = i;
-              offset = -offset; 
-            }
-          }
         }         
         break;
       }
     }
     return {elemento: elem[novoIndex].elemento, slide: elem[novoIndex].slide};
+}
+
+const slidesOrdenados = (elementos, incluirMestre = false) => {
+  var elem = elementos.flatMap((e, i) => { 
+    return e.slides.map((s, j) => ({elemento: i, slide: j, eMestre: s.eMestre})); //Gera um array ordenado com todos os slides que existem representados por objetos do tipo "selecionado".
+  })
+  if (!incluirMestre) {
+    elem = elem.filter(e => !e.eMestre);
+  }
+  return elem;
 }
 
 export function getSlidePreview (state, selecionado = null) {
@@ -203,20 +200,13 @@ class ExportadorHTML extends Component {
     }
 
     exportarHTML = () => {
-      var e = {elemento: 0, slide: 0};
-      var eAnt = {};
-      var contador = 1;
-      var previews = [];
-      
-      while (!(e.elemento === eAnt.elemento && e.slide === eAnt.slide)) {
-        eAnt = {...e};
-        e = selecionadoOffset(this.props.state.elementos, e, 1, true);
-        previews.push({...getSlidePreview(this.props.state, e), indice: contador});
-        contador++;
-      }
+      var sOrdenados = slidesOrdenados(this.props.state.elementos, false);
+      var previews = sOrdenados.map((s, i) => (
+        {...getSlidePreview(this.props.state, s), indice: i}
+      ));
       
       previews.push({
-        tipo: '', texto: 'Fim da apresentação. Pressione F11 para sair do modo de tela cheia.',
+        tipo: '', textoArray: ['Fim da apresentação. Pressione F11 para sair do modo de tela cheia.'],
         titulo: '',
         selecionado: {elemento: 999, slide: 0},
         estilo: {
@@ -227,7 +217,7 @@ class ExportadorHTML extends Component {
           texto: {},
           imagem: {}
         },
-        indice: contador
+        indice: previews.length
       });
 
       this.setState({previews: previews.map(s => <Preview slidePreviewFake={s}/>)})
@@ -237,12 +227,13 @@ class ExportadorHTML extends Component {
         var botaoTelaCheia = botoesTelaCheia[0].outerHTML;
         for (var i of botoesTelaCheia) {i.remove();}
         var setasMovimento = [...this.copiaDOM.querySelectorAll('.container-setas')];
-        var setaMovimento = setasMovimento[0].outerHTML;
+        var setaMovimento = setasMovimento[1].outerHTML;
         for (var j of setasMovimento) {j.remove();}
         var slides = [...this.copiaDOM.querySelectorAll('.preview-fake')];
         var slidesHtml = slides.map(s => s.outerHTML);
         this.copiaDOM.body.innerHTML = botaoTelaCheia + setaMovimento + slidesHtml.join('');
-        this.cssImagensBase64();    
+        this.cssImagensBase64();
+        this.setState({previews: null});    
       }, 10);
     }
 
@@ -278,7 +269,7 @@ class ExportadorHTML extends Component {
       for (var img of imgsUnique) {
         getBase64Image(img.src, img.className,
           (dataURL, classe) => {
-            this.cssImagens.push('.' + classe + '::before{content: url(' + dataURL + ');}')
+            this.cssImagens.push('.' + classe + '::before{content: url(' + dataURL + '); position: absolute; z-index: 0;}')
             if (this.cssImagens.length === imgsUnique.length) this.finalizarArquivoExportacao();
           }
         );
@@ -288,11 +279,10 @@ class ExportadorHTML extends Component {
     render() {
         
         return (
-          <div className='div-botao-exportar' onClick={this.exportarHTML}> 
+          <div className='div-botao-exportar' onClick={() => this.props.conferirClick(this.exportarHTML)}> 
             <button id='exportar-html' className='botao-exportar sombrear-selecao'><div id='logo-html'>{this.simboloHTML}</div></button>
             <div className='rotulo-botao-exportar'>HTML</div>
             {this.state.previews}
-            {/* <Preview refPreview={this.ref} slidePreviewFake={this.state.slidePreviewFake}/> */}
           </div>
         )
     }

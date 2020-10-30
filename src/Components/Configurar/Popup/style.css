@@ -78,7 +78,7 @@ html, body, .app {
   color: white;
 }
 
-.botao:hover {
+.botao:hover, .botao:focus {
   background: var(--azul-oxford);;
 }
 
@@ -86,8 +86,17 @@ html, body, .app {
   background: var(--vermelho-fraco);
 }
 
-.botao.limpar-input:hover {
+.botao.limpar-input:hover, .botao.limpar-input:focus {
   background: var(--vermelho-forte);
+}
+
+.botao.neutro {
+  background: var(--platinum);
+  color: black;
+}
+
+.botao.neutro:hover, .botao.neutro:focus {
+  background: var(--platinum-forte);
 }
 
 .container-botoes-popup {

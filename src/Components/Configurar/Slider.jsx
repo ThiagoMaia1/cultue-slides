@@ -29,7 +29,7 @@ class Slider extends Component {
     static getDerivedStateFromProps(props, state) {
         if (props.selecionado.elemento !== state.selecionado.elemento || props.selecionado.slide !== state.selecionado.slide ||
             props.recalcular !== state.recalcular) {
-            state.ref.current.value = props.defaultValue;
+            state.ref.current.value = props.valorPreview;
             return ({valor: props.defaultValue, selecionado: props.selecionado, recalcular: props.recalcular});
         }
         return null;
@@ -38,7 +38,7 @@ class Slider extends Component {
     getCoordenada() {
         var valor = this.state.valor;
         var distancia = this.max - this.min;
-        if (!valor) valor = this.min + distancia/2;
+        if (!valor) valor = this.props.valorPreview;
         var posicao = (valor - this.min)/distancia;
         var coordenada = (1.10 - posicao)*58 + "%";
         return coordenada;
@@ -77,7 +77,7 @@ class Slider extends Component {
                         min={this.min}
                         step={this.props.step} 
                         max={this.max} 
-                        defaultValue={this.state.valor}
+                        defaultValue={this.state.valor || this.props.valorPreview}
                         className="slider"
                         onInput={this.setValor}
                         onKeyDown={this.dispatchUndoRedo}

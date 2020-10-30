@@ -4,7 +4,7 @@ import './style.css';
 
 const botoes = {botaoSim: {texto: 'Sim', parametroCallback: 1}, 
                 botaoNao: {texto: '✕ Não', parametroCallback: 0, classe: 'limpar-input'}, 
-                botaoCancelar: {texto: 'Cancelar', parametroCallback: -1, classe: 'itens'},
+                botaoCancelar: {texto: 'Cancelar', parametroCallback: -1, classe: 'neutro'},
                 botaoOK: {texto: 'OK', parametroCallback: 1}
 }
                 
@@ -31,10 +31,13 @@ class PopupConfirmacao extends React.Component {
         <Popup tamanho='pequeno' ocultarPopup={() => this.props.callback(false)}>   
           <div className='popup-confirmacao'>
             <div className='conteudo-popup'>
-                <h4 className='titulo-popup'>Atenção</h4>
+                <h4 className='titulo-popup'>{this.props.titulo}</h4>
                 <div className='pergunta-popup-pequeno'>{this.props.pergunta}</div>
             </div>
-            <div className='container-botoes-popup'>{botoesJSX}</div>
+            <div className='container-botoes-popup' 
+                 style={botoesJSX.length === 1 ? {justifyContent: 'center'} : null }>
+                   {botoesJSX}
+            </div>
           </div>
         </Popup>
     );

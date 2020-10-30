@@ -109,7 +109,7 @@ class Arrastar extends React.Component {
                 </div>
                 {this.props.elementos.map((elemento, i) => {
                   if (i === 0) return null;
-                  return(<ItemListaSlides elemento={elemento} ordem={i} placeholder={this.state.placeholder} ultimo={i === this.props.elementos.length - 1}
+                  return(<ItemListaSlides elemento={elemento} ordem={i} key={i} placeholder={this.state.placeholder} ultimo={i === this.props.elementos.length - 1}
                           dragStart={this.dragStart} dragEnd={this.dragEnd} dragOver={this.dragOver} marcarSelecionado={this.marcarSelecionado}/>)
                 })}
               </ol>
