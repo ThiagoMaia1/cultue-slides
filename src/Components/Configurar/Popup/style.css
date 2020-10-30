@@ -146,3 +146,7 @@ html, body, .app {
 .popup-confirmacao .botao {
   min-width: 10vh;
 }
+
+.popup-confirmacao {
+  color: black;
+}

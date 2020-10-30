@@ -62,7 +62,7 @@ import App from './App';
 import { createStore } from 'redux';
 import hotkeys from 'hotkeys-js';
 import Element, { estiloPadrao, textoMestre, Estilo } from './Element.js';
-import { selecionadoOffset, getSlidePreview } from './Components/MenuExportacao/ExportadorHTML'
+import { selecionadoOffset, getSlidePreview } from './Components/MenuExportacao/Exportador'
 
 const criarNovaApresentacao = () => {
   return [new Element("Slide-Mestre", "Slide-Mestre", [textoMestre], null, {...estiloPadrao}, true)];

@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import './MenuExportacao.css';
 import { toggleAnimacao } from '../Animacao/animacaoCoordenadas.js';
 import { BsLink45Deg } from 'react-icons/bs';
 import { IoMdMail } from 'react-icons/io';
-import ExportadorHTML from './ExportadorHTML';
-import PopupConfirmacao from '../Configurar/Popup/PopupConfirmacao';
+import ExportarHTML from './ExportarHTML';
+import ExportarPptx from './ExportarPptx';
 
 class MenuExportacao extends Component {
 
@@ -35,18 +34,6 @@ class MenuExportacao extends Component {
         )
     }
 
-    conferirClick = callback => {
-        if (this.props.exportavel) {
-            callback();
-        } else {
-            this.setState({popupConfirmacao: (
-                <PopupConfirmacao titulo='Apresentação Vazia' botoes='OK'
-                                pergunta={'Insira pelo menos um slide antes de exportar.'} 
-                                callback={() => this.setState({popupConfirmacao: null})}/>
-            )});
-        }
-    }
-
     render() {
         var estiloDivOculta = {};
         if (!this.state.menuVisivel) {
@@ -54,7 +41,6 @@ class MenuExportacao extends Component {
         }
         return (
             <>
-                {this.state.popupConfirmacao}
                 <div id='menu-exportacao' className='botao-azul' onClick={this.abrirMenu}
                     style={{top: this.state.coordenadas[0] + 'vh', right: this.state.coordenadas[1] + 'vw', 
                     bottom: this.state.coordenadas[2] + 'vh', left: this.state.coordenadas[3] + 'vw',
@@ -63,14 +49,8 @@ class MenuExportacao extends Component {
                         onClick={this.abrirMenu}>◢
                     </div>
                     <div id='opcoes-menu-exportacao' style={estiloDivOculta} onClick={e => e.stopPropagation()}>
-                        <ExportadorHTML conferirClick={this.conferirClick}/>
-                        <div className='div-botao-exportar'> 
-                                <div className='container-logo-pptx'>
-                                    <img id='logo-pptx' className='logo-exportacao' src={require('./Logos/Logo PowerPoint.svg')} alt='Logo PowerPoint'/>
-                                    <button id='exportar-pptx' className='botao-exportar sombrear-selecao'/>
-                                </div>
-                            <div className='rotulo-botao-exportar'>PowerPoint</div>
-                        </div>
+                        <ExportarHTML/>
+                        <ExportarPptx/>
                         <div className='div-botao-exportar'> 
                             <button id='exportar-pdf' className='botao-exportar sombrear-selecao'>
                                 <img id='logo-pdf' src={require('./Logos/Logo PDF.png')} alt='Logo PDF'></img>
@@ -97,8 +77,4 @@ class MenuExportacao extends Component {
     }
 }
 
-const mapStateToProps = function (state) {
-    return {exportavel: state.present.elementos.length > 1};
-}
-
-export default connect(mapStateToProps)(MenuExportacao);
+export default MenuExportacao;
