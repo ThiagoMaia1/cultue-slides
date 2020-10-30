@@ -82,11 +82,12 @@ const styleSheet = '.slide-ativo {z-index: 20;}' +
              '.texto-preview {z-index: 2;}' +
              '#paragrafo-textoArray-999-0-0 {padding-left: 7vw;}';
 
-class ExportadorHTML extends Component {
+class ExportarHTML extends Component {
     
     constructor (props) {
       super(props);
-      this.simboloHTML = '</>';
+      var simboloHTML = '</>';
+      this.logo = <div id='logo-html'>{simboloHTML}</div>
       this.state = {slidePreviewFake: true, previews: []};
       this.styleSheet = styleSheet;
       this.script = '' + scriptHTML;
@@ -170,7 +171,7 @@ class ExportadorHTML extends Component {
         
         return (
           <>
-            <Exportador id='exportar-html' callback={this.exportarHTML} logo={<div id='logo-html'>{this.simboloHTML}</div>} rotulo='HTML'/>
+            <Exportador id='exportar-html' callback={this.exportarHTML} logo={this.logo} rotulo='HTML'/>
             {this.state.previews}
           </>
         )
@@ -178,5 +179,5 @@ class ExportadorHTML extends Component {
 
 }
 
-export default ExportadorHTML;
+export default ExportarHTML;
 

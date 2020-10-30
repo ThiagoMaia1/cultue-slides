@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import './MenuExportacao.css';
 import { toggleAnimacao } from '../Animacao/animacaoCoordenadas.js';
-import { BsLink45Deg } from 'react-icons/bs';
-import { IoMdMail } from 'react-icons/io';
 import ExportarHTML from './ExportarHTML';
 import ExportarPptx from './ExportarPptx';
+import ExportarPDF from './ExportarPDF';
+import ExportarEmail from './ExportarEmail';
+import ExportarLink from './ExportarLink';
 
 class MenuExportacao extends Component {
 
@@ -51,24 +52,9 @@ class MenuExportacao extends Component {
                     <div id='opcoes-menu-exportacao' style={estiloDivOculta} onClick={e => e.stopPropagation()}>
                         <ExportarHTML/>
                         <ExportarPptx/>
-                        <div className='div-botao-exportar'> 
-                            <button id='exportar-pdf' className='botao-exportar sombrear-selecao'>
-                                <img id='logo-pdf' src={require('./Logos/Logo PDF.png')} alt='Logo PDF'></img>
-                            </button>
-                            <div className='rotulo-botao-exportar'>PDF</div>
-                        </div>
-                        <div className='div-botao-exportar'> 
-                            <button id='exportar-email' className='botao-exportar sombrear-selecao'>
-                                <IoMdMail size={this.state.tamIcones}/>
-                            </button>
-                            <div className='rotulo-botao-exportar'>E-mail</div>
-                        </div>
-                        <div className='div-botao-exportar'> 
-                            <button id='exportar-link' className='botao-exportar sombrear-selecao'>
-                                <BsLink45Deg size={this.state.tamIcones}/>
-                            </button>
-                            <div className='rotulo-botao-exportar'>Link</div>
-                        </div>
+                        <ExportarPDF/>
+                        <ExportarEmail tamIcones={this.state.tamIcones}/>
+                        <ExportarLink tamIcones={this.state.tamIcones}/> 
                     </div>
                     <div style={{display: this.state.menuVisivel ? 'none' : ''}}>Exportar Slides</div>
                 </div>

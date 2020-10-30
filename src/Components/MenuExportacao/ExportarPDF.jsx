@@ -10,27 +10,24 @@ const styleSheet = '.slide-ativo {z-index: 20;}' +
              '.texto-preview {z-index: 2;}' +
              '#paragrafo-textoArray-999-0-0 {padding-left: 7vw;}';
 
-class ExportarPptx extends Component {
+class ExportadorPDF extends Component {
     
     constructor (props) {
       super(props);
       this.state = {slidePreviewFake: true, previews: []};
       this.styleSheet = styleSheet;
       this.logo = (
-        <div className='container-logo-pptx'>
-          <img id='logo-pptx' className='logo-exportacao' src={require('./Logos/Logo PowerPoint.svg')} alt='Logo PowerPoint'/>
-          <div id='exportar-pptx' className='botao-exportar'></div>
-        </div>
+        <img id='logo-pdf' src={require('./Logos/Logo PDF.png')} alt='Logo PDF'></img>
       )
     }
 
-    exportarPptx = previews => {
+    exportarPDF = previews => {
       
     }
    
     finalizarArquivoExportacao =  () => {
       
-      downloadArquivoTexto(getDate() + ' Apresentação.Pptx', this.stringArquivo);
+      downloadArquivoTexto(getDate() + ' Apresentação.PDF', this.stringArquivo);
     }
 
     // cssImagensBase64 = () => {
@@ -55,11 +52,11 @@ class ExportarPptx extends Component {
 
     render() {
         return (
-          <Exportador id='exportar-pptx' callback={this.exportarPptx} logo={this.logo} rotulo='PowerPoint'/>
+          <Exportador id='exportar-pdf' callback={this.exportarPDF} logo={this.logo} rotulo='PDF'/>
         )
     }
 
 }
 
-export default ExportarPptx;
+export default ExportadorPDF;
 
