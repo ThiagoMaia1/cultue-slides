@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Exportador from './Exportador';
-import { downloadArquivoTexto, getDate } from './Exportador';
+import { downloadArquivoTexto } from './Exportador';
 import { toggleFullscreen as fullScreen } from '../Preview/Preview'
 
 const toggleFullscreen = fullScreen;

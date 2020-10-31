@@ -75,7 +75,7 @@ export default class Element {
     if (thisP.imagens.length === 1) {
       thisP.slides[0].imagem = thisP.imagens[0];
       thisP.slides[0].eMestre = false;
-      thisP.slides[0].texto = '';
+      thisP.slides[0].textoArray = [];
     } else {
       for (var img of thisP.imagens) {
         thisP.slides.push({estilo: {...new Estilo()}, imagem: img, textoArray: []});

@@ -3,7 +3,7 @@ import Exportador from './Exportador';
 import pptxgen from "pptxgenjs";
 
 const atributosHtmlPptx = {textAlign: v => {
-                            if (v = 'justify') v = 'left';
+                            if (v === 'justify') v = 'left';
                             return {align: v}},
                            padding: v => ({margin: v}),
                            color: v => ({color: v.replace('#')}),

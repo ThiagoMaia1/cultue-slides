@@ -21,7 +21,8 @@
 //   ✔️ Redividir slides não está funcionando.
 //   ✔️ Dividir slides calculando errado \n\n nos textos bíblicos.
 //   ✔️ Combobox fonte letra não atualiza direito seu estilo.
-//   Atualizar apenas preview nos sliders, atualizar store apenas ao perder foco.
+//   ✔️ Atualizar apenas preview nos sliders, atualizar store apenas ao perder foco.
+//   ✔️ TextoMestre nos slides de imagem.
 //   Dividir slides chegando na borda.
 //   Incluir webfonts na combo de fontes disponíveis.
 //   Carrossel do Input Imagem não vai até o final.
@@ -29,7 +30,6 @@
 //   Alterar nome do tipo de slide de "Título" para "Texto Livre".
 //   Fontes que não suportam números superscritos.
 //   Exportação de slides de imagem como html.
-//   TextoMestre nos slides de imagem.
 //   Alinhamento de texto não funciona desde que mudei as divs dos paragrafos.
 //
 // Features:
@@ -55,6 +55,8 @@
 //   ColorPicker personalizado.
 //   Combo de número de capítulos e versículos da bíblia.
 //   Possibilidade de editar elemento (retornando à tela da query).
+//   Calcular resolução do datashow.
+//   Editar tamanho da imagem direto no preview.
 
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -74,20 +76,20 @@ var defaultList = {elementos: criarNovaApresentacao(),
   abaAtiva: 'texto'
 };
 
-export const reducerElementos = function (state = defaultList, action) {
-
-  const redividirSlides = (elementos, sel) => {
-    if (elementos.length !== 1) {
-        var [ i, slide, repetir ] = (sel.elemento === 0 ? [ 1, 0, 1 ] : [ sel.elemento, sel.slide, 0]);
-      do {
-        var e = elementos[i];
-        e.criarSlides(e.getArrayTexto(slide, e), e.slides[0].estilo, slide, elementos[0].slides[0].estilo, e);
-        i++;
-      } while (repetir && i < elementos.length)
-    }
-    
-    return elementos;
+const redividirSlides = (elementos, sel) => {
+  if (elementos.length !== 1) {
+      var [ i, slide, repetir ] = (sel.elemento === 0 ? [ 1, 0, 1 ] : [ sel.elemento, sel.slide, 0]);
+    do {
+      var e = elementos[i];
+      e.criarSlides(e.getArrayTexto(slide, e), e.slides[0].estilo, slide, elementos[0].slides[0].estilo, e);
+      i++;
+    } while (repetir && i < elementos.length)
   }
+  
+  return elementos;
+}
+
+export const reducerElementos = function (state = defaultList, action) {
 
   var el = [...state.elementos];
   var sel = action.selecionado || state.selecionado;
@@ -167,52 +169,58 @@ function undoable(reducer) {
     slidePreview: getSlidePreview(presenteInicial)
   }
   
-  const getSelecionadoValido = (selecionado, elementos) => {
-    var [selE, selS] = [ selecionado.elemento, selecionado.slide ];
-    while ((selE + 1) > elementos.length) {
-      selE--;
-    }
-    while (!elementos[selE].slides[selS]) {
-      selS--;
-    }
-    return {elemento: selE, slide: selS};
-  }
+  // const getSelecionadoValido = (selecionado, elementos) => {
+  //   var [selE, selS] = [ selecionado.elemento, selecionado.slide ];
+  //   while ((selE + 1) > elementos.length) {
+  //     selE--;
+  //   }
+  //   while (!elementos[selE].slides[selS]) {
+  //     selS--;
+  //   }
+  //   return {elemento: selE, slide: selS};
+  // }
 
   return function (state = initialState, action) {
-    const { past, present, future } = state;
-    var presenteRetorno;
+    var { past, present, future, previousTemp } = state;
+    var newPresent;
     switch (action.type) {
       case 'UNDO':
         if (past.length === 0) return state;
         const previous = past[past.length - 1]
         const newPast = past.slice(Math.max(0, past.length-50), past.length - 1)
-        presenteRetorno = {...present, elementos: [...previous.elementos], selecionado: getSelecionadoValido(previous.selecionado, previous.elementos)}
         return {
           past: newPast,
-          present: presenteRetorno,
+          present: previous,
           future: [present, ...future],
-          slidePreview: getSlidePreview(presenteRetorno)
+          previousTemp: null,
+          slidePreview: getSlidePreview(previous)
         }
       case 'REDO':
         if (future.length === 0) return state;
         const next = future[0]
         const newFuture = future.slice(1)
-        presenteRetorno = {...present, elementos: [...next.elementos], selecionado: getSelecionadoValido(next.selecionado, next.elementos)}
         return {
           past: [...past, present],
-          present: presenteRetorno,
+          present: next,
           future: newFuture,
-          slidePreview: getSlidePreview(presenteRetorno)          
+          previousTemp: null,
+          slidePreview: getSlidePreview(next)          
         }
+      case 'editar-slide-temporariamente':
+        newPresent = reducer(deepSpreadPresente(present), {...action, type: 'editar-slide'})
+        return {...state, 
+          present: newPresent, 
+          previousTemp: previousTemp || deepSpreadPresente(present), 
+          slidePreview: getSlidePreview(newPresent)};
       default:
-        presenteRetorno = deepSpreadPresente(present);
-        const newPresent = reducer(presenteRetorno, action);
-        var a = action.type;
-        if (a === 'definir-selecao' || a === 'offset-selecao' || a === 'ativar-realce') {
+        newPresent = reducer(deepSpreadPresente(present), action);
+        if (previousTemp) present = previousTemp;
+        if (houveMudanca(present, newPresent)) {
           return {
             past: [...past],
             present: newPresent,
             future: [],
+            previousTemp: null,
             slidePreview: getSlidePreview(newPresent)  
           }
         }
@@ -220,10 +228,15 @@ function undoable(reducer) {
           past: [...past, present],
           present: newPresent,
           future: [],
+          previousTemp: null,
           slidePreview: getSlidePreview(newPresent)  
         }
     }
   }
+}
+
+function houveMudanca(estado1, estado2) {
+  return JSON.stringify(estado1.elementos) === JSON.stringify(estado2.elementos);
 }
 
 function deepSpreadPresente(present) {

@@ -55,6 +55,7 @@ html, body, .app {
   background: var(--platinum);
   border-radius: var(--round-border-pequeno);
   font-weight: 650;
+  z-index: 250;
 }
 
 #fechar:hover {
@@ -116,15 +117,22 @@ html, body, .app {
   display: flex;
   flex-direction: column;
   margin-top: 1.5vh;
-  overflow: auto;
-  flex: 1;
+  flex: 1 0;
   justify-content: space-between;
+}
+
+.wraper-popup {
+  position: relative;
+  width: 100%;
 }
 
 .container-preview {
   display: block;
   overflow: auto;
   white-space: pre-wrap;
+  flex: 1 1 100%;
+  background: white;
+  z-index: 1;
 }
 
 .texto-inserir {

@@ -21,8 +21,7 @@
     width: 100%; 
     background: white;
     display: block;
-    position: relative;
-    min-height: 168px;
+    position: absolute;
 }
 
 .opcoes-musica {

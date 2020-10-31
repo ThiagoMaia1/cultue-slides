@@ -120,3 +120,13 @@ img {
     font-weight: 500;
     opacity: 0.9;
 }
+
+/* .div-imagem-slide {
+    resize: both;
+    overflow: hidden;
+}
+
+.div-imagem-slide:active {
+    width: 0;
+    height: 0;
+} */

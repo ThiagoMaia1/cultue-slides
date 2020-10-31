@@ -5,7 +5,6 @@ import { CgErase } from 'react-icons/cg';
 import { RiMastercardLine } from 'react-icons/ri'
 import { BsTextLeft, BsTextCenter, BsTextRight, BsJustify} from 'react-icons/bs';
 import { CompactPicker } from 'react-color';
-import { fonteBase } from '../Preview/Preview';
 import Slider from './Slider';
 
 const casesTexto = [{valor: 'Nenhum', icone: (<span style={{color: '#999'}}>Aa</span>)}, {valor: 'Primeira Maiúscula', icone: 'Aa'}, 
@@ -52,7 +51,7 @@ class ConfigurarSlides extends Component {
     super(props);
     this.ref = React.createRef();
     this.state = {painelCor: null, caseTexto: 0, tamIcones: window.innerHeight*0.022 + 'px', 
-                  recalcularSliders: Symbol(), ref: this.ref, selecionado: this.props.selecionado};
+                  ref: this.ref, selecionado: this.props.selecionado};
     this.listaFontes = listaFontes.sort().map(f => 
         <option className='opcoes-fonte' value={f} style={{fontFamily: f}}>{f}</option>                  
     )
@@ -114,18 +113,16 @@ class ConfigurarSlides extends Component {
 
   reducerListaSliders = (resultado, s) => {
     if (s.aba !== this.props.abaAtiva) return resultado; 
-    var valorPreview = this.props.slidePreview.estilo[s.aba][s.atributo];
-    valorPreview = valorPreview === undefined ? '' : valorPreview;
-    if (s.aba === 'paragrafo' && s.atributo === 'padding') 
-      valorPreview = valorPreview.split(' ')[1];
-    if (/%/.test(valorPreview))
-      valorPreview = Number(valorPreview.replace('%',''))/100;
+    var valorAplicado = this.props.slidePreview.estilo[s.aba][s.atributo];
+    valorAplicado = valorAplicado === undefined ? '' : valorAplicado;
+    if (s.atributo === 'padding') 
+      valorAplicado = valorAplicado.split(' ')[1];
+    if (/%/.test(valorAplicado))
+      valorAplicado = Number(valorAplicado.replace('%',''))/100;
     resultado.push(
-      <Slider key={s.atributo + '-' + s.aba} atributo={s.atributo} objeto={s.aba} rotulo={s.rotulo} min={s.min} max={s.max} step={s.step} unidade='%' selecionado={this.props.selecionado}
-              defaultValue={this.props.slideSelecionado.estilo[s.aba][s.atributo]} 
-              valorPreview={Number(valorPreview)}
-              recalcular={this.state.recalcularSliders}
-              callbackFunction={valor => this.atualizarEstilo(s.aba, s.atributo, valor + '', s.redividir)}
+      <Slider key={s.atributo + '-' + s.aba} atributo={s.atributo} objeto={s.aba} rotulo={s.rotulo} min={s.min} max={s.max} step={s.step} unidade='%'
+              valorAplicado={Number(valorAplicado)}
+              callback={(valor, temp = false) => this.atualizarEstilo(s.aba, s.atributo, valor + '', s.redividir, temp)}
               style={{display: (this.props.abaAtiva === s.aba ? '' : 'none')}}/>
     );
     return resultado;
@@ -174,11 +171,12 @@ class ConfigurarSlides extends Component {
     this.atualizarEstilo(this.props.abaAtiva, atributo.nomeAtributo, v, true)
   }
 
-  atualizarEstilo = (nomeObjeto, nomeAtributo, valor, redividir = false) => {
+  atualizarEstilo = (nomeObjeto, nomeAtributo, valor, redividir = false, temp = false) => {
     var sel = this.props.selecionado;
     var estiloObjeto = {};
     estiloObjeto[nomeAtributo] = valor
-    this.props.dispatch({type: 'editar-slide', objeto: nomeObjeto, valor: estiloObjeto, redividir: redividir, selecionado: sel})
+    var actionType = 'editar-slide' + (temp ? '-temporariamente' : '');
+    this.props.dispatch({type: actionType, objeto: nomeObjeto, valor: estiloObjeto, redividir: redividir, selecionado: sel})
   }
 
   limparEstilo = () => {
@@ -190,8 +188,7 @@ class ConfigurarSlides extends Component {
       if (this.eObjetoVazio(estiloAnterior[this.props.abaAtiva])) return;
     }
     var redividir = (!this.eObjetoVazio(estiloAnterior.texto) || !this.eObjetoVazio(estiloAnterior.paragrafo) || !this.eObjetoVazio(estiloAnterior.titulo));
-    this.props.dispatch({type: 'limpar-estilo', selecionado: this.props.selecionado, objeto: obj, redividir: redividir})
-    setTimeout(() => this.setState({recalcularSliders: Symbol()}), 5);
+    this.props.dispatch({type: 'limpar-estilo', selecionado: this.props.selecionado, objeto: obj, redividir: redividir});
   }
 
   aplicarEstiloAoMestre = () => {

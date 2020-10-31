@@ -79,35 +79,35 @@ export const slidesOrdenados = (elementos, incluirMestre = false) => {
 }
 
 export function getSlidePreview (state, selecionado = null) {
-    const sel = selecionado || state.selecionado;
-    const global = state.elementos[0].slides[0];
-    const elemento = state.elementos[sel.elemento].slides[0];
-    const slide = state.elementos[sel.elemento].slides[sel.slide];
-  
-    var estiloTexto = {...global.estilo.texto, ...elemento.estilo.texto, ...slide.estilo.texto};
-    //Pra dividir o padding-top.
-    var estiloParagrafo = {...estiloTexto, ...global.estilo.paragrafo, ...elemento.estilo.paragrafo, ...slide.estilo.paragrafo};
-    var estiloTitulo = {...estiloTexto, ...global.estilo.titulo, ...elemento.estilo.titulo, ...slide.estilo.titulo};
-    var tipo = state.elementos[sel.elemento].tipo;
-    var titulo = capitalize(state.elementos[sel.elemento].titulo, estiloTitulo.caseTexto);
-  
-    return {tipo: tipo,
-      nomeLongoElemento: tipo.replace('-', ' ') + ': ' + ((tipo === 'Imagem' && !state.elementos[sel.elemento].titulo) ? state.elementos[sel.elemento].imagens[0].alt : state.elementos[sel.elemento].titulo),
-      nomeLongoSlide: '',
-      selecionado: {...sel},
-      textoArray: slide.textoArray.map(t => capitalize(t, estiloParagrafo.caseTexto)),
-      titulo: titulo,
-      eMestre: slide.eMestre,
-      imagem: slide.imagem,
-      estilo: {
-        titulo: {...estiloTitulo, ...getEstiloPad(estiloTitulo, 'titulo'), fontSize: estiloTitulo.fontSize*100 + '%', height: estiloTitulo.height*100 + '%'},
-        paragrafo: {...getEstiloPad(estiloParagrafo, 'paragrafo'), fontSize: estiloParagrafo.fontSize*100 + '%'},
-        fundo: {...global.estilo.fundo, ...elemento.estilo.fundo, ...slide.estilo.fundo}, 
-        tampao: {...global.estilo.tampao, ...elemento.estilo.tampao, ...slide.estilo.tampao},
-        texto: {...estiloTexto},
-        imagem: {...global.estilo.imagem, ...elemento.estilo.imagem, ...slide.estilo.imagem}
-      }
-    };
+  const sel = selecionado || state.selecionado;
+  const global = state.elementos[0].slides[0];
+  const elemento = state.elementos[sel.elemento].slides[0];
+  const slide = {...state.elementos[sel.elemento].slides[sel.slide]};
+
+  var estiloTexto = {...global.estilo.texto, ...elemento.estilo.texto, ...slide.estilo.texto};
+  //Pra dividir o padding-top.
+  var estiloParagrafo = {...estiloTexto, ...global.estilo.paragrafo, ...elemento.estilo.paragrafo, ...slide.estilo.paragrafo};
+  var estiloTitulo = {...estiloTexto, ...global.estilo.titulo, ...elemento.estilo.titulo, ...slide.estilo.titulo};
+  var tipo = state.elementos[sel.elemento].tipo;
+  var titulo = capitalize(state.elementos[sel.elemento].titulo, estiloTitulo.caseTexto);
+
+  return {tipo: tipo,
+    nomeLongoElemento: tipo.replace('-', ' ') + ': ' + ((tipo === 'Imagem' && !state.elementos[sel.elemento].titulo) ? state.elementos[sel.elemento].imagens[0].alt : state.elementos[sel.elemento].titulo),
+    nomeLongoSlide: '',
+    selecionado: {...sel},
+    textoArray: slide.textoArray.map(t => capitalize(t, estiloParagrafo.caseTexto)),
+    titulo: titulo,
+    eMestre: slide.eMestre,
+    imagem: slide.imagem,
+    estilo: {
+      titulo: {...estiloTitulo, ...getEstiloPad(estiloTitulo, 'titulo'), fontSize: estiloTitulo.fontSize*100 + '%', height: estiloTitulo.height*100 + '%'},
+      paragrafo: {...getEstiloPad(estiloParagrafo, 'paragrafo'), fontSize: estiloParagrafo.fontSize*100 + '%'},
+      fundo: {...global.estilo.fundo, ...elemento.estilo.fundo, ...slide.estilo.fundo}, 
+      tampao: {...global.estilo.tampao, ...elemento.estilo.tampao, ...slide.estilo.tampao},
+      texto: {...estiloTexto},
+      imagem: {...global.estilo.imagem, ...elemento.estilo.imagem, ...slide.estilo.imagem}
+    }
+  };
 }
   
 function getEstiloPad (estilo, objeto) {
@@ -171,7 +171,7 @@ class Exportador extends Component {
   }
 
   getImagensBase64 = () => {
-    var [ uniques, imgsUnique, l ] = [{}, [], 0];
+    var [ uniques, imgsUnique] = [{}, []];
     var i;
     for (var p of this.previews) {
       var imgs = this.copiaDOM.querySelectorAll('#preview-fake' + p.indice + ' img');

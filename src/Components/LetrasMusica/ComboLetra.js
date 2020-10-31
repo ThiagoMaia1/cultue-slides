@@ -3,8 +3,9 @@ import { connect } from 'react-redux';
 import './style.css';
 import Carregando from './Carregando.jsx';
 import ItemListaMusica from './ItemListaMusica.jsx';
-import Element from '../../Element'
-import logoVagalume from './Logo Vagalume.png'
+import Element from '../../Element';
+import logoVagalume from './Logo Vagalume.png';
+import Checkbox from '../Checkbox/Checkbox';
 
 const url = 'https://api.vagalume.com.br/'
 // const apiKey = 'a15ff8771c7c1a484b2c0fcfed2d3289'
@@ -17,7 +18,13 @@ class ComboLetra extends Component {
     constructor (props) {
         super(props);
         this.state = {opcoes: [], listaAtiva: false, letraMusica:{}, botaoVisivel: 'hidden', 
-                      carregando: null, idBuscarLetra: null, divisivel: false}
+                      carregando: null, idBuscarLetra: null, divisivel: false,
+                      dividirEmColunas: false, multiplicadores: true, omitirDuplicacoes: true
+                    }
+        this.listaCheckboxes = [{label: 'Omitir Duplicações', opcao: 'omitirDuplicacoes'},
+                                {label: 'Multiplicadores', opcao: 'multiplicadores'},
+                                {label: 'Dividir em Colunas', opcao: 'dividirEmColunas', disabled: () => this.state.divisivel}
+];
     }
     onKeyUp(e) {
         clearTimeout(timer);
@@ -76,7 +83,7 @@ class ComboLetra extends Component {
                     </a></i>
                 </div>)
             this.setState({letraMusica: {esquerda: letraEsquerda, direita: letraDireita}, idBuscarLetra: null, botaoVisivel: 'visible', 
-                            elemento: new Element('Música', vagalumeLetra.response.mus[0].name, letra)})
+                           listaAtiva: false, elemento: new Element('Música', vagalumeLetra.response.mus[0].name, letra)})
             })
             
         vagalumeLetra.open('GET', url + 'search.php?musid=' + id);
@@ -87,21 +94,29 @@ class ComboLetra extends Component {
         this.props.dispatch({type: 'inserir', elemento: this.state.elemento});
     }
 
+    toggleCheckbox = opcao => {
+        const obj = {};
+        obj[opcao] = !this.state[opcao];
+        this.setState(obj);
+    }
+
     render () {
         return (
             <div className='conteudo-popup'>
-                <div style={{width: '100%'}}>
+                <div className='wraper-popup'>
                     <div>
                         <h4 className='titulo-popup'>Pesquisa de Música</h4>
-                        <div style={{position: 'relative'}}>
+                        <div className='wraper-popup'>
                             {this.state.carregando}
-                            <input className='combo-popup' type='text' autoComplete='off' placeholder='Pesquise por nome, artista ou trecho' onKeyUp={e => this.onKeyUp(e)} />
+                            <input className='combo-popup' onFocus={() => this.setState({listaAtiva: true})} type='text' autoComplete='off' placeholder='Pesquise por nome, artista ou trecho' onKeyUp={e => this.onKeyUp(e)} />
                         </div>
                     </div>
-                    <div className='container-opcoes-musica'>
+                    <div className='wraper-popup'>
                         <div id='div-logo-vagalume'><a href='https://www.vagalume.com.br/' target="_blank" rel="noopener noreferrer">
                             <img id='logo-vagalume' src={logoVagalume} alt='Logo Vagalume'/>
                         </a></div>
+                    </div>
+                    <div className='container-opcoes-musica' style={this.state.listaAtiva ? null : {display: 'none'}}>
                         <div className='opcoes-musica'>
                             {this.state.opcoes.map(mus => 
                                 <ItemListaMusica musica={mus} buscarLetra={this.buscarLetra} idBuscarLetra={this.state.idBuscarLetra}/>
@@ -109,30 +124,22 @@ class ComboLetra extends Component {
                         </div>
                     </div>
                 </div>
-                <div className='container-divisao-popup'>
-                    <div className='container-preview'>
-                        <div className='texto-inserir'>
-                            <div className='paragrafos-esquerda'>
-                                {this.state.letraMusica.esquerda}
-                            </div>
-                            <div className='paragrafos-direita'>
-                                {this.state.letraMusica.direita}
-                            </div>
+                <div className='container-preview'>
+                    <div className='texto-inserir'>
+                        <div className='paragrafos-esquerda'>
+                            {this.state.letraMusica.esquerda}
+                        </div>
+                        <div className='paragrafos-direita'>
+                            {this.state.letraMusica.direita}
                         </div>
                     </div>
+                </div>
+                <div className='container-divisao-popup'>
                     <div className='checkboxes-popup'>
-                        <div>
-                            <input id='omitir-repetidos' type='checkbox'></input>
-                            <label for='omitir-repetidos'>Omitir Duplicações</label>
-                        </div>
-                        <div>
-                            <input id='ativar-marcadores-estrofe-duplicada' type='checkbox'></input>
-                            <label for='ativar-marcadores-estrofe-duplicada'>Multiplicadores</label>
-                        </div>
-                        <div>
-                            <input id='dividir-slide-colunas' type='checkbox' disabled={this.state.divisivel ? '' : 'disabled'}></input>
-                            <label for='dividir-slide-colunas' style={this.state.divisivel ? null : {color: "gray"}}>Dividir em Colunas</label>
-                        </div>
+                        {this.listaCheckboxes.map(c => 
+                            <Checkbox label={c.label} checked={this.state[c.opcao]} disabled={c.disabled}
+                                      onClick={() => this.toggleCheckbox(c.opcao)}/>
+                        )}
                     </div>
                     <div className='container-botoes-popup'>
                         <button className='botao' style={{visibility: String(this.state.botaoVisivel)}} onClick={e => this.onClick(e)}>Inserir Música</button>

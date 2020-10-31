@@ -16,37 +16,33 @@ class Slider extends Component {
             this.virar = -1;
         }
         this.ref = React.createRef();
-        this.state = {valor: props.defaultValue, selecionado: props.selecionado, ref: this.ref, recalcular: props.recalcular};
+        this.state = {ref: this.ref};
     }
 
-    setValor = e => {
+    setValor = () => {
         clearTimeout(this.timeoutCallback);
-        var valor = e.target.value;
-        this.setState({valor: valor});
-        this.timeoutCallback = setTimeout(this.props.callbackFunction, 100, valor);
+        this.props.callback(this.ref.current.value, true);
+        this.timeoutCallback = setTimeout(this.mudancaPermanente, 300);
     }
     
     static getDerivedStateFromProps(props, state) {
-        if (props.selecionado.elemento !== state.selecionado.elemento || props.selecionado.slide !== state.selecionado.slide ||
-            props.recalcular !== state.recalcular) {
-            state.ref.current.value = props.valorPreview;
-            return ({valor: props.defaultValue, selecionado: props.selecionado, recalcular: props.recalcular});
+        if (state.ref.current && state.ref.current.value !== props.valorAplicado) {
+            state.ref.current.value = props.valorAplicado;
         }
         return null;
     }
 
     getCoordenada() {
-        var valor = this.state.valor;
+        var valor = this.props.valorAplicado;
         var distancia = this.max - this.min;
-        if (!valor) valor = this.props.valorPreview;
+        if (!valor) valor = this.props.valorAplicado;
         var posicao = (valor - this.min)/distancia;
         var coordenada = (1.10 - posicao)*58 + "%";
         return coordenada;
     }
 
     getValorUnidade() {
-        var valor = this.state.valor;
-        if (isNaN(valor)) return '-';
+        var valor = this.props.valorAplicado;
         if (this.props.unidade) {
             if (this.props.unidade === '%') {
                 return Math.round(valor*100) + '%';
@@ -60,13 +56,20 @@ class Slider extends Component {
     dispatchUndoRedo = e => {
         if (e.ctrlKey) {
             if (!e.shiftKey && e.key === 'z') {
+                clearTimeout(this.timeoutCallback);
+                this.mudancaPermanente();
                 this.props.dispatch({type: 'UNDO'});
             } else if (e.key === 'y' || (e.shiftKey && e.key === 'z')) {
                 this.props.dispatch({type: 'REDO'});
             } 
         }
     }
-    
+
+    mudancaPermanente = () => {
+        if (this.props.previous)
+            this.props.callback(this.ref.current.value, false);
+    }
+
     render() {
         return (
             <div className='container-range' style={this.props.style}>
@@ -77,11 +80,12 @@ class Slider extends Component {
                         min={this.min}
                         step={this.props.step} 
                         max={this.max} 
-                        defaultValue={this.state.valor || this.props.valorPreview}
+                        defaultValue={this.props.valorAplicado}
                         className="slider"
                         onInput={this.setValor}
                         onKeyDown={this.dispatchUndoRedo}
-                        style={{transform: 'rotate(' + (this.virar*90) + 'deg)'}}></input>
+                        style={{transform: 'rotate(' + (this.virar*90) + 'deg)'}}
+                        onBlur={this.mudancaPermanente}></input>
                     <div style={{top: this.getCoordenada()}} className='valor-flutuante'>
                         {this.getValorUnidade()}
                     </div>
@@ -91,4 +95,8 @@ class Slider extends Component {
     }
 }
 
-export default connect()(Slider);
+const mapStateToProps = state => {
+    return {previous: !!state.previousTemp}
+}
+
+export default connect(mapStateToProps)(Slider);
