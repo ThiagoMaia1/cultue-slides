@@ -20,9 +20,9 @@
 //   ✔️ Reduzir logo PowerPoint.
 //   ✔️ Redividir slides não está funcionando.
 //   ✔️ Dividir slides calculando errado \n\n nos textos bíblicos.
+//   ✔️ Combobox fonte letra não atualiza direito seu estilo.
 //   Atualizar apenas preview nos sliders, atualizar store apenas ao perder foco.
 //   Dividir slides chegando na borda.
-//   Combobox fonte letra não atualiza direito seu estilo.
 //   Incluir webfonts na combo de fontes disponíveis.
 //   Carrossel do Input Imagem não vai até o final.
 //   Carrossel da lista de slides.

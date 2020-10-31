@@ -50,7 +50,9 @@ const listaSliders = [{rotulo: 'Fonte', aba: 'paragrafo', atributo: 'fontSize', 
 class ConfigurarSlides extends Component {
   constructor(props) {
     super(props);
-    this.state = {painelCor: null, caseTexto: 0, tamIcones: window.innerHeight*0.022 + 'px', recalcularSliders: Symbol()};
+    this.ref = React.createRef();
+    this.state = {painelCor: null, caseTexto: 0, tamIcones: window.innerHeight*0.022 + 'px', 
+                  recalcularSliders: Symbol(), ref: this.ref, selecionado: this.props.selecionado};
     this.listaFontes = listaFontes.sort().map(f => 
         <option className='opcoes-fonte' value={f} style={{fontFamily: f}}>{f}</option>                  
     )
@@ -215,6 +217,14 @@ class ConfigurarSlides extends Component {
   eObjetoVazio(objeto) {
     return JSON.stringify(objeto) === "{}";
   }
+
+  static getDerivedStateFromProps(props, state) {
+    if (props.selecionado.elemento !== state.selecionado.elemento || props.selecionado.slide !== state.selecionado.slide) {
+        state.ref.current.value = props.slidePreview.estilo[props.abaAtiva].fontFamily;
+        return {selecionado: props.selecionado};
+    }
+    return null;
+  }
   
 	render() {
     var aba = this.props.abaAtiva;
@@ -245,9 +255,9 @@ class ConfigurarSlides extends Component {
                 </button>
                 <button title={casesTexto[this.state.caseTexto].valor} id='botao-case' className={'botao-configuracao bool'} 
                         onClick={this.mudarCaseTexto}>{casesTexto[this.state.caseTexto].icone}</button>
-                <select className={'botao-configuracao combo-fonte'} onChange={this.mudarFonte} 
-                        defaultValue={this.props.slideSelecionado.estilo[aba].fontFamily || fonteBase.fontFamily}
-                        style={{fontFamily: this.props.slideSelecionado.estilo[aba].fontFamily || fonteBase.fontFamily}}>
+                <select className={'botao-configuracao combo-fonte'} onChange={this.mudarFonte} ref={this.ref}
+                        defaultValue={this.props.slidePreview.estilo[aba].fontFamily}
+                        style={{fontFamily: this.props.slidePreview.estilo[aba].fontFamily}}>
                           {this.listaFontes}
                 </select>
               </div>
