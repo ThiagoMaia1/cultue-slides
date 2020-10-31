@@ -11,6 +11,7 @@
     "bootstrap": "^4.5.2",
     "firebase": "^7.24.0",
     "hotkeys-js": "^3.8.1",
+    "pptxgenjs": "^3.3.1",
     "react": "^16.13.1",
     "react-color": "^2.18.1",
     "react-dom": "^16.13.1",

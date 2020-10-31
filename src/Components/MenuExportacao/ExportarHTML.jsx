@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import Preview, { toggleFullscreen as fullScreen } from '../Preview/Preview'
 import Exportador from './Exportador';
-import { downloadArquivoTexto, getBase64Image, getDate } from './Exportador';
+import { downloadArquivoTexto, getDate } from './Exportador';
+import { toggleFullscreen as fullScreen } from '../Preview/Preview'
 
 const toggleFullscreen = fullScreen;
 
@@ -80,7 +80,7 @@ const styleSheet = '.slide-ativo {z-index: 20;}' +
              '#ativar-tela-cheia:hover {opacity: 0.8;}' + 
              '.tampao {z-index: 1;}' + 
              '.texto-preview {z-index: 2;}' +
-             '#paragrafo-textoArray-999-0-0 {padding-left: 7vw;}';
+             '#paragrafo-textoArray-999-0-0 {padding-left: 5.5vw;}';
 
 class ExportarHTML extends Component {
     
@@ -94,86 +94,43 @@ class ExportarHTML extends Component {
       this.cssImagens = [];
     }
 
-    exportarHTML = previews => {
-      
-      previews.push({
-        tipo: '', textoArray: ['Fim da apresentação. Pressione F11 para sair do modo de tela cheia.'],
-        titulo: '',
-        selecionado: {elemento: 999, slide: 0},
-        estilo: {
-          titulo: {paddingTop: '52%'},
-          paragrafo: {fontSize: '150%', color: '#ffffff', fontFamily: 'Helvetica', textAlign: 'center'},
-          fundo: {src:'./Galeria/Fundos/Cor Sólida.jpg'}, 
-          tampao: {backgroundColor: '#000000', opacity: '1'},
-          texto: {},
-          imagem: {}
-        },
-        indice: previews.length
-      });
+    exportarHTML = (copiaDOM, imagensBase64, _previews, nomeArquivo) => {
 
-      this.setState({previews: previews.map(s => <Preview slidePreviewFake={s}/>)})
-      setTimeout(() => {
-        this.copiaDOM = document.cloneNode(true);
-        var botoesTelaCheia = [...this.copiaDOM.querySelectorAll('#ativar-tela-cheia')];
-        var botaoTelaCheia = botoesTelaCheia[0].outerHTML;
-        for (var i of botoesTelaCheia) {i.remove();}
-        var setasMovimento = [...this.copiaDOM.querySelectorAll('.container-setas')];
-        var setaMovimento = setasMovimento[1].outerHTML;
-        for (var j of setasMovimento) {j.remove();}
-        var slides = [...this.copiaDOM.querySelectorAll('.preview-fake')];
-        var slidesHtml = slides.map(s => s.outerHTML);
-        this.copiaDOM.body.innerHTML = botaoTelaCheia + setaMovimento + slidesHtml.join('');
-        this.cssImagensBase64();
-        this.setState({previews: null});    
-      }, 10);
-    }
-
-    finalizarArquivoExportacao =  () => {
-      var imagensDOM = [...this.copiaDOM.querySelectorAll('img')];
+      var botoesTelaCheia = [...copiaDOM.querySelectorAll('#ativar-tela-cheia')];
+      var botaoTelaCheia = botoesTelaCheia[0].outerHTML;
+      for (var i of botoesTelaCheia) {i.remove();}
+      var setasMovimento = [...copiaDOM.querySelectorAll('.container-setas')];
+      var setaMovimento = setasMovimento[1].outerHTML;
+      for (var j of setasMovimento) {j.remove();}
+      var slides = [...copiaDOM.querySelectorAll('.preview-fake')];
+      var slidesHtml = slides.map(s => s.outerHTML);
+      copiaDOM.body.innerHTML = botaoTelaCheia + setaMovimento + slidesHtml.join('');
+      for (var img of imagensBase64) { //Criar o css para as imagens.
+        var { classe, data } = img;
+        this.cssImagens.push('.' + classe + '::before{content: url(' + data + '); position: absolute; z-index: 0;}')
+      }
+      var imagensDOM = [...copiaDOM.querySelectorAll('img')]; //Substituir Imagens por spans, para que o fundo seja definido pelo css.
       for (var imgDOM of imagensDOM) {
         var span = document.createElement('span');
         span.classList.add(imgDOM.className);
         imgDOM.parentNode.insertBefore(span, imgDOM);
         imgDOM.remove();
       }
-      var css = this.copiaDOM.createElement("style");
+      var css = copiaDOM.createElement("style"); //Inserir arquivo CSS no DOM.
       css.type = 'text/css';
       css.innerHTML = styleSheet + this.cssImagens.join('\n');
-      this.copiaDOM.head.appendChild(css);
-      var script = this.copiaDOM.createElement("script");
+      copiaDOM.head.appendChild(css);
+      var script = copiaDOM.createElement("script");
       script.innerHTML = toggleFullscreen + this.script + 'scriptHTML();'
-      this.copiaDOM.body.appendChild(script);
-      this.stringArquivo = this.copiaDOM.body.parentElement.innerHTML;
-      downloadArquivoTexto(getDate() + ' Apresentação.html', this.stringArquivo);
-    }
-
-    cssImagensBase64 = () => {
-      var imgs = this.copiaDOM.querySelectorAll('img');
-      var [ uniques, imgsUnique, l ] = [{}, [], imgs.length];
-      for(var i = 0; i < l; i++) {
-        if(!uniques[imgs[i].src]) {
-          uniques[imgs[i].src] = 'classeImagem' + i;
-          imgsUnique.push(imgs[i]);
-        }
-        imgs[i].className = uniques[imgs[i].src];
-      }
-      for (var img of imgsUnique) {
-        getBase64Image(img.src, img.className,
-          (dataURL, classe) => {
-            this.cssImagens.push('.' + classe + '::before{content: url(' + dataURL + '); position: absolute; z-index: 0;}')
-            if (this.cssImagens.length === imgsUnique.length) this.finalizarArquivoExportacao();
-          }
-        );
-      }
+      copiaDOM.body.appendChild(script);
+      this.stringArquivo = copiaDOM.body.parentElement.innerHTML;
+      downloadArquivoTexto(nomeArquivo, this.stringArquivo);
     }
 
     render() {
         
         return (
-          <>
-            <Exportador id='exportar-html' callback={this.exportarHTML} logo={this.logo} rotulo='HTML'/>
-            {this.state.previews}
-          </>
+          <Exportador formato='html' callback={this.exportarHTML} logo={this.logo} rotulo='HTML' criarSlideFinal={true}/>
         )
     }
 

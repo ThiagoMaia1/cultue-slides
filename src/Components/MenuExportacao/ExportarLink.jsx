@@ -4,21 +4,21 @@ import { BsLink45Deg } from 'react-icons/bs';
 
 class ExportarLink extends Component {
     
-    constructor (props) {
-      super(props);
-      this.state = {slidePreviewFake: true, previews: []};
-      this.logo = <BsLink45Deg size={this.props.tamIcones}/>
-    }
+  constructor (props) {
+    super(props);
+    this.state = {slidePreviewFake: true, previews: []};
+  }
 
-    exportarLink = previews => {
+  exportarLink = previews => {
       
-    }
+  }
 
-    render() {
-        return (
-          <Exportador id='exportar-link' callback={this.exportarLink} logo={this.logo} rotulo='Link'/>
-        )
-    }
+  render() {
+      return (
+        <Exportador formato='link' callback={this.exportarLink} 
+          logo={<BsLink45Deg size={this.props.tamIcones}/>} rotulo='Link'/>
+      )
+  }
 
 }
 

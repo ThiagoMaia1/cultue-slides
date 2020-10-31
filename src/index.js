@@ -20,16 +20,17 @@
 //   ✔️ Reduzir logo PowerPoint.
 //   ✔️ Redividir slides não está funcionando.
 //   ✔️ Dividir slides calculando errado \n\n nos textos bíblicos.
+//   Atualizar apenas preview nos sliders, atualizar store apenas ao perder foco.
 //   Dividir slides chegando na borda.
 //   Combobox fonte letra não atualiza direito seu estilo.
 //   Incluir webfonts na combo de fontes disponíveis.
 //   Carrossel do Input Imagem não vai até o final.
 //   Carrossel da lista de slides.
 //   Alterar nome do tipo de slide de "Título" para "Texto Livre".
-//   Slider as vezes da problema com a 'ref'.
 //   Fontes que não suportam números superscritos.
 //   Exportação de slides de imagem como html.
 //   TextoMestre nos slides de imagem.
+//   Alinhamento de texto não funciona desde que mudei as divs dos paragrafos.
 //
 // Features:
 //   ✔️ Envio de imagens.

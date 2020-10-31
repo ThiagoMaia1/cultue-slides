@@ -4,21 +4,21 @@ import { IoMdMail } from 'react-icons/io';
 
 class ExportarEmail extends Component {
     
-    constructor (props) {
-      super(props);
-      this.state = {slidePreviewFake: true, previews: []};
-      this.logo = <IoMdMail size={this.props.tamIcones}/>
-    }
+  constructor (props) {
+    super(props);
+    this.state = {slidePreviewFake: true, previews: []};
+  }
 
-    exportarEmail = previews => {
-      
-    }
+  exportarEmail = previews => {
+    
+  }
 
-    render() {
-        return (
-          <Exportador id='exportar-email' callback={this.exportarEmail} logo={this.logo} rotulo='E-mail'/>
-        )
-    }
+  render() {
+      return (
+        <Exportador formato='email' callback={this.exportarEmail} 
+          logo={<IoMdMail size={this.props.tamIcones}/>} rotulo='E-mail'/>
+      )
+  }
 
 }
 

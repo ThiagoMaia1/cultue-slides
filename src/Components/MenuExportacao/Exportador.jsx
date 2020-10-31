@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { capitalize } from '../../Element';
 import { proporcaoPadTop } from '../../Element';
 import PopupConfirmacao from '../Configurar/Popup/PopupConfirmacao';
+import Preview from '../Preview/Preview'
 
 export const downloadArquivoTexto = function(nomeArquivo, conteudoArquivo) {
   let blobx = new Blob([conteudoArquivo], { type: 'text/plain' }); // ! Blob
@@ -15,7 +16,7 @@ export const downloadArquivoTexto = function(nomeArquivo, conteudoArquivo) {
   document.body.removeChild(elemx);
 }
 
-export function getBase64Image(src, classe, callback) {
+export function getBase64Image(src, classe, total, callback) {
   const img = new Image();
   img.crossOrigin = 'Anonymous';
   img.onload = () => {
@@ -33,7 +34,7 @@ export function getBase64Image(src, classe, callback) {
     canvas.height = ihScaled;
     ctx.drawImage(img, (minW - iwScaled)/2, (minH - ihScaled)/2, iwScaled, ihScaled);
     dataURL = canvas.toDataURL("image/png");
-    callback(dataURL, classe);
+    callback(dataURL, classe, total, src);
   };
 
   img.src = src;
@@ -122,41 +123,32 @@ function getEstiloPad (estilo, objeto) {
     return {...estilo, padding: String(padTop).substr(0, 5) + ('% ' + pad).repeat(rep) + '%'};
 }
 
+const slideFinal = {
+  tipo: '', textoArray: ['Fim da apresentação. Pressione F11 para sair do modo de tela cheia.'],
+  titulo: '',
+  selecionado: {elemento: 999, slide: 0},
+  estilo: {
+    titulo: {paddingTop: '52%'},
+    paragrafo: {fontSize: '150%', color: '#ffffff', fontFamily: 'Helvetica', textAlign: 'center'},
+    fundo: {src:'./Galeria/Fundos/Cor Sólida.jpg'}, 
+    tampao: {backgroundColor: '#000000', opacity: '1'},
+    texto: {},
+    imagem: {}
+  }
+}
+
 class Exportador extends Component {
     
   constructor (props) {
     super(props);
     this.ref = React.createRef();
     this.state = {slidePreviewFake: true, previews: [], popupConfirmacao: null};
+    this.imagensBase64 = [];
   } 
 
-  cssImagensBase64 = () => {
-    var imgs = this.copiaDOM.querySelectorAll('img');
-    var [ uniques, imgsUnique, l ] = [{}, [], imgs.length];
-    for(var i = 0; i < l; i++) {
-      if(!uniques[imgs[i].src]) {
-        uniques[imgs[i].src] = 'classeImagem' + i;
-        imgsUnique.push(imgs[i]);
-      }
-      imgs[i].className = uniques[imgs[i].src];
-    }
-    for (var img of imgsUnique) {
-      getBase64Image(img.src, img.className,
-        (dataURL, classe) => {
-          this.cssImagens.push('.' + classe + '::before{content: url(' + dataURL + '); position: absolute; z-index: 0;}')
-          if (this.cssImagens.length === imgsUnique.length) this.finalizarArquivoExportacao();
-        }
-      );
-    }
-  }
-
-  conferirClick = callback => {
+  conferirClick = () => {
     if (this.props.exportavel) {
-        var sOrdenados = slidesOrdenados(this.props.state.elementos, false);
-        var previews = sOrdenados.map((s, i) => (
-          {...getSlidePreview(this.props.state, s), indice: i}
-        ));
-        callback(previews);
+        this.getCopiaDom();
     } else {
         this.setState({popupConfirmacao: (
             <PopupConfirmacao titulo='Apresentação Vazia' botoes='OK'
@@ -166,12 +158,59 @@ class Exportador extends Component {
     }
   }
 
+  getCopiaDom = () => {
+    var sOrdenados = slidesOrdenados(this.props.state.elementos, false);
+    this.previews = sOrdenados.map((s, i) => ({...getSlidePreview(this.props.state, s), indice: i}));
+    if (this.props.criarSlideFinal) this.previews.push({...slideFinal, indice: this.previews.length});
+    this.setState({previews: this.previews.map(s => <Preview slidePreviewFake={s}/>)})
+    setTimeout(() => {
+      this.copiaDOM = document.cloneNode(true);
+      this.getImagensBase64();
+    }, 10);
+    
+  }
+
+  getImagensBase64 = () => {
+    var [ uniques, imgsUnique, l ] = [{}, [], 0];
+    var i;
+    for (var p of this.previews) {
+      var imgs = this.copiaDOM.querySelectorAll('#preview-fake' + p.indice + ' img');
+      for(i = 0; i < imgs.length; i++) {
+        if(!uniques[imgs[i].src]) {
+          uniques[imgs[i].src] = 'classeImagem' + i;
+          imgsUnique.push(imgs[i]);
+        }
+        var classe = uniques[imgs[i].src];
+        imgs[i].className = classe;
+        var classesPai = imgs[i].parentElement.classlist;
+        if (classesPai && classesPai.includes('div-imagem-slide')) {
+          p.classeImagem = classe;
+        } else {
+          p.classeImagemFundo = classe;
+        }
+      }
+    }
+    for (var j = 0; j < imgsUnique.length; j++) {
+      getBase64Image(imgsUnique[j].src, imgsUnique[j].className, imgsUnique.length,
+        (dataURL, classe, total, src) => {
+          this.imagensBase64.push({data: dataURL, classe: classe});
+          if (total === this.imagensBase64.length) {
+            var nomeArquivo = getDate() + ' Apresentação.' + this.props.formato;
+            this.props.callback(this.copiaDOM, this.imagensBase64, this.previews, nomeArquivo);
+            this.setState({previews: null});
+          }
+        }
+      );
+    }
+  }
+
   render() {
       return (
         <>
+          {this.state.previews}
           {this.state.popupConfirmacao}
-          <div className='div-botao-exportar' onClick={() => this.conferirClick(this.props.callback)}> 
-            <button id={this.props.id} className='botao-exportar sombrear-selecao'>{this.props.logo}</button>
+          <div className='div-botao-exportar' onClick={this.conferirClick}> 
+            <button id={'exportar-' + this.props.formato} className='botao-exportar sombrear-selecao'>{this.props.logo}</button>
             <div className='rotulo-botao-exportar'>{this.props.rotulo}</div>
           </div>
         </>
