@@ -26,18 +26,23 @@ class TextoBiblico extends Component {
     }    
     
     buscarReferencia(e) {
-        var str = e.target.value
+        var str = e.target.value;
         if (e.key === 'Enter' && !(!str || /^\s*$/.test(str))) { 
-            var refer = [...extrairReferencias(str)];
-            if (refer != null) {
-                if (refer.length === 1 && refer[0].cap === null && refer[0].strInicial.substr(1).match(/[0-9]/g) === null) {
-                    if (refer[0].livro !== null) {
-                        //alterar opções no input seguinte
-                        // this.setState({comboCaps: refer[0].livro.chapters});
-                    }
-                } else if (refer != null){
-                    this.requestVersos(refer);
+            this.identificarReferencia();
+        }
+    }
+
+    identificarReferencia = () => {
+        var str = this.ref.current.value;
+        var refer = [...extrairReferencias(str)];
+        if (refer != null) {
+            if (refer.length === 1 && refer[0].cap === null && refer[0].strInicial.substr(1).match(/[0-9]/g) === null) {
+                if (refer[0].livro !== null) {
+                    //alterar opções no input seguinte
+                    // this.setState({comboCaps: refer[0].livro.chapters});
                 }
+            } else if (refer != null){
+                this.requestVersos(refer);
             }
         }
     }
@@ -181,6 +186,7 @@ class TextoBiblico extends Component {
 
     mudarVersao (e) {
         this.versao = this.getVersao(e.target.value);
+        this.identificarReferencia();
     }
     
     limparInput = () => {
