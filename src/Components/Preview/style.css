@@ -111,7 +111,7 @@ img {
 .wraper-estrofe {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-start;
 }
 
 .marcador-estrofe {
@@ -119,6 +119,23 @@ img {
     margin-left: 2vh;
     font-weight: 500;
     opacity: 0.9;
+}
+
+.dividido-colunas {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    height: 100%;
+    overflow: hidden;
+}
+
+.dividido-colunas > div {
+    max-width: 48%;
+    margin-right: 4%;
+}
+
+.dividido-colunas .wraper-estrofe {
+    width: auto;
 }
 
 /* .div-imagem-slide {

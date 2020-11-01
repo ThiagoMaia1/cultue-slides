@@ -81,7 +81,7 @@ class Preview extends Component {
         this.timeoutEditar = setTimeout(div => {
             var dados = div.id.split('-');
             var [ objeto, numero ] = [ dados[1], dados[4] ]; 
-            var objAction = {type: 'editar-slide', objeto: objeto, valor: div.innerHTML};
+            var objAction = {type: 'editar-slide', objeto: objeto, valor: div.innerHTML, redividir: true};
             if (numero) objAction.numero = numero;
             this.props.dispatch(objAction);
         }, 1000, e.target);
@@ -97,13 +97,13 @@ class Preview extends Component {
         var sel = slidePreview.selecionado;
         var spansSlide = slidePreview.textoArray.map((t, i) => {
             var estiloDivEstrofe = {display: 'block', width: '100%'};
-            if (slidePreview.tipo === 'Música') {
+            if (slidePreview.tipo === 'Música' && slidePreview.estilo.paragrafo.multiplicadores) {
                 if (/\$\d\$/.test(t)) return null;
                 var estrofeMultiplicada;
                 if (i+1 < slidePreview.textoArray.length) {
                     var vezes = slidePreview.textoArray[i+1].replace(/\$/g, ''); 
                     if (!isNaN(vezes)) {
-                        estrofeMultiplicada = <span className='marcador-estrofe'>x{vezes}</span>
+                        estrofeMultiplicada = <span className='marcador-estrofe'>✕{vezes}</span>
                     }
                 }
             } else if (slidePreview.tipo === 'Texto-Bíblico') {
@@ -145,8 +145,9 @@ class Preview extends Component {
                                 style={this.realcarElemento('titulo')}>{slidePreview.titulo}</span></div>
                         </div>
                         <div id='paragrafo-slide' className='slide-paragrafo' style={slidePreview.estilo.paragrafo}>
-                            <div style={this.realcarElemento('paragrafo')}>
-                                <div style={{width: 'fit-content'}}>{spansSlide}</div>
+                            <div style={{...this.realcarElemento('paragrafo')}} 
+                                 className={slidePreview.estilo.paragrafo.duasColunas ? 'dividido-colunas' : ''}>
+                                {spansSlide}
                             </div>
                         </div>
                     </div>

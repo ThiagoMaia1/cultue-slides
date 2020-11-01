@@ -31,6 +31,7 @@
 //   Fontes que não suportam números superscritos.
 //   Exportação de slides de imagem como html.
 //   Alinhamento de texto não funciona desde que mudei as divs dos paragrafos.
+//   Redividir quando o texto de um slide é deletado.
 //
 // Features:
 //   ✔️ Envio de imagens.
@@ -42,21 +43,21 @@
 //   ✔️ Popup de confirmação.
 //   ✔️ Exportar como HTML.
 //   ✔️ Marcador de repetições de estrofes nos slides de música/slide de refrão repetido.
-//   Dividir música em colunas.
-//   Incorporar vídeos do youtube.
+//   ✔️ Dividir música em colunas.
 //   Exportar como Power Point.
-//   Enviar por e-mail.
+//   Incorporar vídeos do youtube.
 //   Gerar link compartilhável.
+//   Enviar por e-mail.
+//   Calcular resolução do datashow.
 //   Exportar como PDF.
 //   Atalhos em geral.
-//   Login para salvar preferências.
+//   Possibilidade de editar elemento (retornando à tela da query).
 //   Criar slides a partir de lista com separador.
+//   Editar tamanho da imagem direto no preview.
+//   Combo de número de capítulos e versículos da bíblia.
 //   Navegação pelas setas causar rolagem na lista de slides.
 //   ColorPicker personalizado.
-//   Combo de número de capítulos e versículos da bíblia.
-//   Possibilidade de editar elemento (retornando à tela da query).
-//   Calcular resolução do datashow.
-//   Editar tamanho da imagem direto no preview.
+//   Login para salvar preferências.
 
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -168,17 +169,6 @@ function undoable(reducer) {
     future: [],
     slidePreview: getSlidePreview(presenteInicial)
   }
-  
-  // const getSelecionadoValido = (selecionado, elementos) => {
-  //   var [selE, selS] = [ selecionado.elemento, selecionado.slide ];
-  //   while ((selE + 1) > elementos.length) {
-  //     selE--;
-  //   }
-  //   while (!elementos[selE].slides[selS]) {
-  //     selS--;
-  //   }
-  //   return {elemento: selE, slide: selS};
-  // }
 
   return function (state = initialState, action) {
     var { past, present, future, previousTemp } = state;

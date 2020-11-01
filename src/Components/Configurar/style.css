@@ -205,6 +205,21 @@
     height: 55px;
 }
 
+.icone-duas-colunas {
+    display: flex;
+    justify-content: space-between;
+    transform: scaleY(1.2);
+}
+
+.icone-duas-colunas > * {
+    transform: scaleX(0.9);
+    flex: 1 0;
+}
+
+.icone-duas-colunas:last-child {
+    left: -1vh;
+}
+
 .flexbox-fix {
     visibility: hidden;
 }

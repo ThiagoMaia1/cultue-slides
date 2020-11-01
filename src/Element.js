@@ -29,12 +29,12 @@ export default class Element {
   constructor(tipo, titulo, texto = [], imagens = [], estilo = {}, eMestre = false) {     
     this.tipo = tipo;
     this.titulo = titulo;
-    if (tipo === 'Música') texto = marcarEstrofesRepetidas(texto);
     this.texto = texto;
     this.imagens = imagens;
     this.eMestre = eMestre;
     
     var est = {...new Estilo(), ...estilo};
+    console.log(est);
     if (this.tipo === 'Título' && texto.filter(t => t !== '').length === 0) est.titulo.height = '1';
     this.slides = [{estilo: {...est}, eMestre: true, textoArray: [textoMestre]}];
     this.criarSlides(this.texto, est);
@@ -105,6 +105,10 @@ export default class Element {
     var alturaLinha = Number(estP.lineHeight)*Number(estP.fontSize)*fonteBase.numero;
     var alturaParagrafo = window.screen.height*(1-Number(estTitulo.height)-pad*(1 + proporcaoPadTop));
     var nLinhas = alturaParagrafo/alturaLinha;
+    var coluna = 0;
+    if (slide.estilo.paragrafo.duasColunas) {
+      larguraLinha = larguraLinha*0.48;
+    }
     if (nLinhas % 1 > 0.7) {
       nLinhas = Math.ceil(nLinhas);
     } else {
@@ -115,9 +119,11 @@ export default class Element {
     estiloFonte = estiloFonte.filter(a => a !== '').join(' ');
     var caseTexto = estT.caseTexto || estP.caseTexto;
     var separador = thisP.tipo === 'Texto-Bíblico' ? '' : '\n\n';
+    if (thisP.tipo === 'Música' && estP.omitirRepeticoes) texto = marcarEstrofesRepetidas(texto);
+    console.log(thisP.tipo === 'Música');
+    console.log(estP.omitirRepeticoes);
     var { contLinhas, widthResto } = getLinhas(texto[0], estiloFonte, larguraLinha, caseTexto);
     var i;
-    slide.larguraMaximaLinha = 0;
 
     for (i = 0; i < texto.length; i++) {
       if (i+1 >= texto.length) {
@@ -126,14 +132,13 @@ export default class Element {
       }
       var linhas = getLinhas(separador + texto[i+1], estiloFonte, larguraLinha, caseTexto, widthResto)
       contLinhas += linhas.contLinhas;
-      slide.larguraMaximaLinha = Math.max(linhas.maxWidth, slide.larguraMaximaLinha);
       widthResto = /\n/.test(separador) ? 0 : linhas.widthResto;        
       if ((contLinhas + (widthResto > 0 ? 1 : 0)) > nLinhas) { //Se próximo versículo vai ultrapassar o slide, conclui slide atual.
+        if (slide.duasColunas && coluna === 0) [ contLinhas, widthResto, coluna ] = [ 0, 0, 1 ]; 
         thisP.dividirTexto(texto.slice(i+1), nSlide+1, estElemento, estGlobal, thisP);
         break;
       }
     }
-    slide.larguraLinha = larguraLinha;
     thisP.slides[nSlide].textoArray = texto.slice(0, i+1);
   }
 }
@@ -182,23 +187,21 @@ const marcarEstrofesRepetidas = texto => {
 
 export function getLinhas(texto, fontStyle, larguraLinha, caseTexto, widthInicial = 0) {
   
-  if (/\$\d\$/.test(texto)) return {contLinhas: 0, widthResto: 0, maxWidth: 0}; 
+  if (/\$\d\$/.test(texto)) return {contLinhas: 0, widthResto: 0}; 
   texto = capitalize(texto, caseTexto);
   var widthResto = widthInicial;
   var trechos = texto.split('\n');
   var linhas;
   var contLinhas = trechos.length-1;
-  var maxWidth = 0;
   for (var t of trechos) {
     if (!t) continue;
     linhas = linhasTrecho(t, fontStyle, larguraLinha, widthResto);
     contLinhas += linhas.length-1;
-    maxWidth = Math.max(...linhas, maxWidth);
     widthResto = 0;
   }
   if (trechos[trechos.length-1] !== '')
     widthResto = linhas[linhas.length-1];
-  return {contLinhas: contLinhas, widthResto: widthResto, maxWidth: maxWidth};
+  return {contLinhas: contLinhas, widthResto: widthResto};
 }
 
 function linhasTrecho(texto, fontStyle, larguraLinha, widthInicial = 0) {

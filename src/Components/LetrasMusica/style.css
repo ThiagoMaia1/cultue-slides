@@ -26,6 +26,12 @@
 
 .opcoes-musica {
     position: relative;
+    overflow-y: auto;
+    max-height: 30vh;
+}
+
+.item-lista-musica {
+    width: 99%;
 }
 
 #div-logo-vagalume {

@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { CgErase } from 'react-icons/cg';
 import { RiMastercardLine } from 'react-icons/ri'
 import { BsTextLeft, BsTextCenter, BsTextRight, BsJustify} from 'react-icons/bs';
+import { VscCollapseAll } from 'react-icons/vsc';
 import { CompactPicker } from 'react-color';
 import Slider from './Slider';
 
@@ -11,11 +12,6 @@ const casesTexto = [{valor: 'Nenhum', icone: (<span style={{color: '#999'}}>Aa</
                     {valor: 'Maiúsculas', icone: 'AA'}, {valor: 'Minúsculas', icone: 'aa'}
 ];
 
-const listaEstilosTexto = [{apelido:'Negrito', nomeAtributo: 'fontWeight', valorNormal: '500', valorAlterado: '650'}, 
-                           {apelido:'Itálico', nomeAtributo: 'fontStyle', valorNormal: 'normal', valorAlterado: 'italic'},
-                           {apelido:'Sublinhado', nomeAtributo: 'textDecorationLine', valorNormal: 'none', valorAlterado: 'underline'}
-];
-                           
 const listaFontes = ['Montserrat', 'Roboto', 'Source Sans Pro', 'Noto Sans', 'Helvetica', 'Arial', 'Times New Roman', 'Courier', 'Courier New', 'Verdana', 
                      'Tahoma', 'Arial Black', 'Georgia', 'Impact'
 ]
@@ -55,6 +51,14 @@ class ConfigurarSlides extends Component {
     this.listaFontes = listaFontes.sort().map(f => 
         <option className='opcoes-fonte' value={f} style={{fontFamily: f}}>{f}</option>                  
     )
+    this.listaEstilosTexto = [{apelido:'Negrito', nomeAtributo: 'fontWeight', valorNormal: '500', valorAlterado: '650'}, 
+                              {apelido:'Itálico', nomeAtributo: 'fontStyle', valorNormal: 'normal', valorAlterado: 'italic'},
+                              {apelido:'Sublinhado', nomeAtributo: 'textDecorationLine', valorNormal: 'none', valorAlterado: 'underline'},
+                              {apelido: 'Duas Colunas', nomeAtributo: 'duasColunas', valorNormal: false, valorAlterado: true, 
+                                simbolo: <div className='icone-duas-colunas'><BsJustify size={this.state.tamIcones}/><BsJustify size={this.state.tamIcones}/></div>, objeto: 'paragrafo'}, 
+                              {apelido: 'Multiplicadores', nomeAtributo: 'multiplicadores', valorNormal: false, valorAlterado: true, simbolo: 'x2', tipo: 'Música', objeto: 'paragrafo'},
+                              {apelido: 'Juntar Estrofes Repetidas', nomeAtributo: 'omitirRepeticoes', valorNormal: false, valorAlterado: true, simbolo: <VscCollapseAll size={1.2*this.state.tamIcones}/>, tipo: 'Música', objeto: 'paragrafo'}
+    ];
   }
 
   gerarBotoesAbas = () => {
@@ -77,19 +81,20 @@ class ConfigurarSlides extends Component {
       </>)});
   }
 
-  gerarBotoesEstiloTexto = aba => {
-       
-    return listaEstilosTexto.map(e => {
+  gerarBotoesEstiloTexto = aba => (
+    this.listaEstilosTexto.map(e => {
+      if (e.tipo && e.tipo !== this.props.slidePreview.tipo) return null;
       var objEstilo = {};
       objEstilo[e.nomeAtributo] = e.valorAlterado;
       return (
         <button title={e.apelido} 
         className={'botao-configuracao bool ' + (this.props.slideSelecionado.estilo[aba][e.nomeAtributo] === e.valorAlterado ? ' clicado' : '')} 
         onClick={() => this.toggleEstiloTexto(e)} 
-        style={objEstilo}>{e.apelido[0]}</button>
+        style={objEstilo}>{e.simbolo ? e.simbolo : e.apelido[0]}</button>
       )
-    });
-  }
+    })
+  )
+
 
   gerarBotoesAlinhamento = aba => {
     return listaBotoesAlinhamento.map((b, i) => {
@@ -164,11 +169,12 @@ class ConfigurarSlides extends Component {
     this.atualizarEstilo(this.props.abaAtiva, 'caseTexto', casesTexto[i].valor, true)
   }
 
-  toggleEstiloTexto = (atributo) => {
-    var v = atributo.valorNormal;
-    var atributoAplicado = this.props.slidePreview.estilo[this.props.abaAtiva][atributo.nomeAtributo];
-    if (atributoAplicado !== atributo.valorAlterado) v = atributo.valorAlterado;
-    this.atualizarEstilo(this.props.abaAtiva, atributo.nomeAtributo, v, true)
+  toggleEstiloTexto = (opcao) => {
+    var obj = opcao.objeto || this.props.abaAtiva 
+    var v = opcao.valorNormal;
+    var atributoAplicado = this.props.slidePreview.estilo[obj][opcao.nomeAtributo];
+    if (atributoAplicado !== opcao.valorAlterado) v = opcao.valorAlterado;
+    this.atualizarEstilo(obj, opcao.nomeAtributo, v, true)
   }
 
   atualizarEstilo = (nomeObjeto, nomeAtributo, valor, redividir = false, temp = false) => {

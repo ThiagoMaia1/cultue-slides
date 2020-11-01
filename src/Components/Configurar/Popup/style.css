@@ -126,16 +126,20 @@ html, body, .app {
   width: 100%;
 }
 
+#div-logo-vagalume {
+  margin-top: 7vh;
+}
+
 .container-preview {
   display: block;
   overflow: auto;
   white-space: pre-wrap;
   flex: 1 1 100%;
-  background: white;
   z-index: 1;
 }
 
 .texto-inserir {
+  background: white;
   display: flex;
   flex-direction: row;
   justify-content: space-evenly;

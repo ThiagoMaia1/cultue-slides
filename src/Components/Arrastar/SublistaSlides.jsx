@@ -10,7 +10,7 @@ class SublistaSlides extends Component {
     }
 
     getRotuloSlide = (elemento, slide) => {
-        var t0 = slide.textoArray.filter(t => !/\$\d\$/.test(t))[0];
+        var t0 = slide.textoArray.filter(t => !/\$\d\$/.test(t))[0] || '';
         switch (elemento.tipo) {
             case 'Imagem':
                 return elemento.titulo || slide.imagem.alt;

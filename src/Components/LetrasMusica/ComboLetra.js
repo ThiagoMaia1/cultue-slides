@@ -7,30 +7,28 @@ import Element from '../../Element';
 import logoVagalume from './Logo Vagalume.png';
 import Checkbox from '../Checkbox/Checkbox';
 
-const url = 'https://api.vagalume.com.br/'
-// const apiKey = 'a15ff8771c7c1a484b2c0fcfed2d3289'
+const url = 'https://api.vagalume.com.br/';
 var vagalumeLetra;
-let timer = 0;
-// var generoMusica = [];
 
 class ComboLetra extends Component {
 
     constructor (props) {
         super(props);
-        this.state = {opcoes: [], listaAtiva: false, letraMusica:{}, botaoVisivel: 'hidden', 
+        this.state = {opcoes: [], listaAtiva: false, letraMusica:{}, botoesVisiveis: false, 
                       carregando: null, idBuscarLetra: null, divisivel: false,
-                      dividirEmColunas: false, multiplicadores: true, omitirDuplicacoes: true
+                      duasColunas: false, multiplicadores: true, omitirRepeticoes: true
                     }
-        this.listaCheckboxes = [{label: 'Omitir Duplicações', opcao: 'omitirDuplicacoes'},
+        this.listaCheckboxes = [{label: 'Omitir Repetições', opcao: 'omitirRepeticoes'},
                                 {label: 'Multiplicadores', opcao: 'multiplicadores'},
-                                {label: 'Dividir em Colunas', opcao: 'dividirEmColunas', disabled: () => this.state.divisivel}
-];
+                                {label: 'Dividir em Colunas', opcao: 'duasColunas'}
+        ];
     }
+
     onKeyUp(e) {
-        clearTimeout(timer);
+        clearTimeout(this.timer);
         this.toggleCarregador(true);
         var termo = e.target.value        
-        timer = setTimeout(() => this.pegarMusicas(termo), 200);
+        this.timer = setTimeout(() => this.pegarMusicas(termo), 200);
     }
     
     toggleCarregador (estado) {
@@ -46,7 +44,7 @@ class ComboLetra extends Component {
             this.toggleCarregador(false);
         });
         
-        vagalume.open('GET', url + 'search.excerpt?q=' + encodeURIComponent(termo) + '&limit=4');
+        vagalume.open('GET', url + 'search.excerpt?q=' + encodeURIComponent(termo) + '&limit=15');
         vagalume.send();
 
     }    
@@ -82,22 +80,45 @@ class ComboLetra extends Component {
                         {musica.url}
                     </a></i>
                 </div>)
-            this.setState({letraMusica: {esquerda: letraEsquerda, direita: letraDireita}, idBuscarLetra: null, botaoVisivel: 'visible', 
-                           listaAtiva: false, elemento: new Element('Música', vagalumeLetra.response.mus[0].name, letra)})
-            })
+                console.log(this.getEstiloParagrafo());
+            this.setState({letraMusica: {esquerda: letraEsquerda, direita: letraDireita}, idBuscarLetra: null, botoesVisiveis: true, 
+                           listaAtiva: false, 
+                           elemento: new Element('Música', vagalumeLetra.response.mus[0].name, letra, null, 
+                                     {paragrafo: {...this.getEstiloParagrafo()}}
+                           )
+            });
+        })
             
         vagalumeLetra.open('GET', url + 'search.php?musid=' + id);
         vagalumeLetra.send();
     }
 
+    getEstiloParagrafo = () => (
+        this.listaCheckboxes.reduce((resultado, c) => {
+            var obj = {};
+            obj[c.opcao] = this.state[c.opcao];
+            return {...resultado, ...obj};
+        }, {})
+    )
+    
     onClick(e) {
         this.props.dispatch({type: 'inserir', elemento: this.state.elemento});
+    }
+
+    limparInput = () => {
+        this.refCombo.value = '';
+        this.refCombo.focus();
+        this.setState({listaAtiva: true, letraMusica: {}, botoesVisiveis: false, opcoes: []})
     }
 
     toggleCheckbox = opcao => {
         const obj = {};
         obj[opcao] = !this.state[opcao];
         this.setState(obj);
+    }
+
+    componentDidMount() {
+        if (this.refCombo) this.refCombo.focus();
     }
 
     render () {
@@ -108,13 +129,17 @@ class ComboLetra extends Component {
                         <h4 className='titulo-popup'>Pesquisa de Música</h4>
                         <div className='wraper-popup'>
                             {this.state.carregando}
-                            <input className='combo-popup' onFocus={() => this.setState({listaAtiva: true})} type='text' autoComplete='off' placeholder='Pesquise por nome, artista ou trecho' onKeyUp={e => this.onKeyUp(e)} />
+                            <input ref={el => this.refCombo = el} className='combo-popup' type='text' autoComplete='off'
+                                   onFocus={() => this.setState({listaAtiva: true})} onKeyUp={e => this.onKeyUp(e)}
+                                   placeholder='Pesquise por nome, artista ou trecho'/>
                         </div>
                     </div>
                     <div className='wraper-popup'>
-                        <div id='div-logo-vagalume'><a href='https://www.vagalume.com.br/' target="_blank" rel="noopener noreferrer">
-                            <img id='logo-vagalume' src={logoVagalume} alt='Logo Vagalume'/>
-                        </a></div>
+                        <div id='div-logo-vagalume'>
+                            <a href='https://www.vagalume.com.br/' target="_blank" rel="noopener noreferrer">
+                                <img id='logo-vagalume' src={logoVagalume} alt='Logo Vagalume'/>
+                            </a>
+                        </div>
                     </div>
                     <div className='container-opcoes-musica' style={this.state.listaAtiva ? null : {display: 'none'}}>
                         <div className='opcoes-musica'>
@@ -142,7 +167,11 @@ class ComboLetra extends Component {
                         )}
                     </div>
                     <div className='container-botoes-popup'>
-                        <button className='botao' style={{visibility: String(this.state.botaoVisivel)}} onClick={e => this.onClick(e)}>Inserir Música</button>
+                        <button className='botao' onClick={e => this.onClick(e)} 
+                                style={this.state.botoesVisiveis ? null : {visibility: 'hidden'}}>
+                                    Inserir Música
+                        </button>
+                        <button className='botao limpar-input' onClick={this.limparInput}>✕ Limpar</button>
                     </div>
                 </div>
             </div>
@@ -152,28 +181,32 @@ class ComboLetra extends Component {
 
 export default connect()(ComboLetra);
 
-    //Filtrar apenas músicas gospel (requisições demais, e requisição está com problema, API do vagalume foi descontinuado)
-    // filtrarGenero(vagalume, index) {
-    //     if (index >= vagalume.length || this.state.opcoes.length >= 5) {
-    //         this.toggleCarregador(false);
-    //         return;
-    //     }
-    //     generoMusica.push(new XMLHttpRequest())
-    //     generoMusica[generoMusica.length - 1].responseType = 'json';
-        
-    //     generoMusica[generoMusica.length - 1].addEventListener('load', () => {
-    //         for (var i in generoMusica[generoMusica.length - 1].response.artist.genre) {
-    //             if (i.name = /gospel/g) {
-    //                 this.setState({opcoes: [...this.state.opcoes, vagalume[index]]});
-    //             }
-    //         }    
-    //         this.toggleCarregador(false);
-    //     })
-        
-    //     console.log(url + encodeURIComponent(vagalume[index].url.split('/')[1]) + '/index.js&apikey=' + apiKey);
-    //     generoMusica[generoMusica.length - 1].open('POST', url + encodeURIComponent(vagalume[index].url.split('/')[1]) + '/index.js&apikey=' + apiKey);
-    //     generoMusica[generoMusica.length - 1].setRequestHeader('Access-Control-Allow-Origin', '*');
-    //     generoMusica[generoMusica.length - 1].setRequestHeader('Access-Control-Allow-Credentials', 'true');
-    //     generoMusica[generoMusica.length - 1].send();
-    //     this.filtrarGenero(vagalume, index + 1)
-    // }
+// const apiKey = 'a15ff8771c7c1a484b2c0fcfed2d3289'
+// var generoMusica = [];
+//Filtrar apenas músicas gospel (requisições demais, e requisição está com problema, API do vagalume foi descontinuado)
+// filtrarGenero(vagalume, index) {
+//     if (index >= vagalume.length || this.state.opcoes.length >= 5) {
+//         this.toggleCarregador(false);
+//         return;
+//     }
+//     generoMusica.push(new XMLHttpRequest())
+//     generoMusica[generoMusica.length - 1].responseType = 'json';
+    
+//     generoMusica[generoMusica.length - 1].addEventListener('load', () => {
+//         for (var i in generoMusica[generoMusica.length - 1].response.artist.genre) {
+//             if (i.name = /gospel/g) {
+//                 this.setState({opcoes: [...this.state.opcoes, vagalume[index]]});
+//             }
+//         }    
+//         this.toggleCarregador(false);
+//     })
+    
+//     console.log(url + encodeURIComponent(vagalume[index].url.split('/')[1]) + '/index.js&apikey=' + apiKey);
+//     generoMusica[generoMusica.length - 1].open('POST', url + encodeURIComponent(vagalume[index].url.split('/')[1]) + '/index.js&apikey=' + apiKey);
+//     generoMusica[generoMusica.length - 1].setRequestHeader('Access-Control-Allow-Origin', '*');
+//     generoMusica[generoMusica.length - 1].setRequestHeader('Access-Control-Allow-Credentials', 'true');
+//     generoMusica[generoMusica.length - 1].send();
+//     this.filtrarGenero(vagalume, index + 1)
+// }
+
+
