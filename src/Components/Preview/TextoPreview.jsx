@@ -19,7 +19,7 @@ import { RefInvalida } from "../TextoBiblico/referenciaBiblica"
 //             formatarVersiculos(elemento.texto);
 //         case 'Música':
 //             formatarMusica(elemento.texto);
-//         case 'Título':
+//         case 'Texto-Livre':
 
 //         case 'Imagem':
 

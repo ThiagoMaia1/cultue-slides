@@ -31,7 +31,7 @@ class AdicionarTitulo extends Component {
         var titulo = this.refTitulo.current.value;
         var textoSlide = this.refTextoSlide.current.value;
         this.props.dispatch({type: "inserir", 
-                             elemento: new Element( "Título", titulo, [...textoSlide.split('\n\n')])});
+                             elemento: new Element( "Texto-Livre", titulo, [...textoSlide.split('\n\n')])});
     }
 
     limparInputs = () => {

@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { capitalize } from '../../Element';
-import { proporcaoPadTop } from '../../Element';
 import PopupConfirmacao from '../Configurar/Popup/PopupConfirmacao';
 import Preview from '../Preview/Preview'
 
@@ -83,10 +82,17 @@ export function getSlidePreview (state, selecionado = null) {
   const global = state.elementos[0].slides[0];
   const elemento = state.elementos[sel.elemento].slides[0];
   const slide = {...state.elementos[sel.elemento].slides[sel.slide]};
-  const estiloAplicavel = obj => ({...global.estilo[obj], ...elemento.estilo[obj], ...slide.estilo[obj]});
+  const estiloAplicavel = obj => {
+    var estilo = {...global.estilo[obj], ...elemento.estilo[obj], ...slide.estilo[obj]};
+    for (var k of Object.keys(estilo)) {    
+      if (k === 'height' || k === 'fontSize' || /padding/.test(k)) {
+        estilo[k] = estilo[k]*100 + '%';
+      }
+    }
+    return estilo;
+  } 
 
   var estiloTexto = estiloAplicavel('texto');
-  //Pra dividir o padding-top.
   var estiloParagrafo = {...estiloTexto, ...estiloAplicavel('paragrafo')};
   var estiloTitulo = {...estiloTexto, ...estiloAplicavel('titulo')};
   var tipo = state.elementos[sel.elemento].tipo;
@@ -94,13 +100,13 @@ export function getSlidePreview (state, selecionado = null) {
 
   return {...slide,
     tipo: tipo,
-    nomeLongoElemento: tipo.replace('-', ' ') + ': ' + ((tipo === 'Imagem' && !state.elementos[sel.elemento].titulo) ? state.elementos[sel.elemento].imagens[0].alt : state.elementos[sel.elemento].titulo),
+    nomeLongoElemento: tipo.replace('-', ' ') + ': ' + ((tipo === 'Imagem' && !titulo) ? state.elementos[sel.elemento].imagens[0].alt : titulo),
     selecionado: {...sel},
     textoArray: slide.textoArray.map(t => capitalize(t, estiloParagrafo.caseTexto)),
     titulo: titulo,
     estilo: {
-      titulo: {...estiloTitulo, ...getEstiloPad(estiloTitulo, 'titulo'), fontSize: estiloTitulo.fontSize*100 + '%', height: estiloTitulo.height*100 + '%'},
-      paragrafo: {...getEstiloPad(estiloParagrafo, 'paragrafo'), fontSize: estiloParagrafo.fontSize*100 + '%'},
+      titulo: {...estiloTitulo},
+      paragrafo: {...estiloParagrafo},
       fundo: estiloAplicavel('fundo'), 
       tampao: estiloAplicavel('tampao'),
       texto: estiloTexto,
@@ -109,18 +115,6 @@ export function getSlidePreview (state, selecionado = null) {
   };
 }
   
-function getEstiloPad (estilo, objeto) {
-    var pad = estilo.padding*100; //Separa o padding para o padding-top ser diferente, proporcional à constante proporcaoPadTop.
-    var rep;
-    var padTop;
-    if (objeto === 'titulo') {
-      [ rep, padTop ] = [ 1, 0 ];
-    } else {
-      rep = 3;
-      padTop = pad*proporcaoPadTop || '0.5';
-    }
-    return {...estilo, padding: String(padTop).substr(0, 5) + ('% ' + pad).repeat(rep) + '%'};
-}
 
 const slideFinal = {
   tipo: '', textoArray: ['Fim da apresentação. Pressione F11 para sair do modo de tela cheia.'],

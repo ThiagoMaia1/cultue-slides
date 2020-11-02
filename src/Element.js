@@ -13,17 +13,26 @@ export class Estilo {
   
 export const estiloPadrao = {
     texto: {fontFamily: fonteBase.fontFamily}, 
-    titulo: {fontSize: '3', height: '0.25', padding: '0.08'}, 
-    paragrafo: {fontSize: '1.5', padding: '0.08', lineHeight: '1.7'}, 
+    titulo: {fontSize: 3, height: 0.25, paddingRight: 0.08}, 
+    paragrafo: {fontSize: 1.5, paddingRight: 0.08, lineHeight: 1.7}, 
     fundo: {src: './Galeria/Fundos/Aquarela.jpg'}, 
-    tampao: {backgroundColor: '#fff', opacity: '0.2'},
-    imagem: {padding: '0.02'}
+    tampao: {backgroundColor: '#fff', opacity: 0.2},
+    imagem: {padding: 0.02}
 };
 
 export const proporcaoPadTop = 0;
 export const textoMestre = 'As configurações do estilo desse slide serão aplicadas aos demais, exceto quando configurações específicas de cada slide se sobrepuserem às deste. \n\nEste slide não será exportado nem exibido no modo de apresentação.'
 
-  
+export function getEstiloPad (estilo, objeto) {
+  var pad = estilo[objeto].paddingRight; //Separa o padding para o padding-top ser diferente, proporcional à constante proporcaoPadTop.
+  return {...estilo[objeto],
+          paddingTop: objeto === 'paragrafo' ? (pad*proporcaoPadTop || 0.005): 0, 
+          paddingBottom: objeto === 'paragrafo' ? pad : 0,
+          paddingLeft: pad
+  };
+}
+
+
 export default class Element {
   
   constructor(tipo, titulo, texto = [], imagens = [], estilo = {}, eMestre = false) {     
@@ -34,11 +43,11 @@ export default class Element {
     this.eMestre = eMestre;
     
     var est = {...new Estilo(), ...estilo};
+    est = {...est, paragrafo: getEstiloPad(estilo, 'paragrafo'), titulo: getEstiloPad(estilo, 'titulo')};
     console.log(est);
-    if (this.tipo === 'Título' && texto.filter(t => t !== '').length === 0) est.titulo.height = '1';
+    if (this.tipo === 'Texto-Livre' && texto.filter(t => t !== '').length === 0) est.titulo.height = '1';
     this.slides = [{estilo: {...est}, eMestre: true, textoArray: [textoMestre]}];
     this.criarSlides(this.texto, est);
-
   }
 
   criarSlides = (texto, estiloMestre, nSlide = 0, estGlobal = null, thisP = this) => {
@@ -100,10 +109,11 @@ export default class Element {
     var estT = {...estGlobal.texto, ...estElemento.texto, ...estSlide.texto};
     var estTitulo = {...estGlobal.titulo, ...estElemento.titulo, ...estSlide.titulo};
     
-    var pad = Number(estP.padding) // Variáveis relacionadas ao tamanho do slide.
-    var larguraLinha = window.screen.width*(1-pad*2);
-    var alturaLinha = Number(estP.lineHeight)*Number(estP.fontSize)*fonteBase.numero;
-    var alturaParagrafo = window.screen.height*(1-Number(estTitulo.height)-pad*(1 + proporcaoPadTop));
+    var padV = estP.paddingTop + estP.paddingBottom; // Variáveis relacionadas ao tamanho do slide.
+    var padH = estP.paddingRight + estP.paddingLeft;
+    var larguraLinha = window.screen.width*(1-padH);
+    var alturaLinha = estP.lineHeight*estP.fontSize*fonteBase.numero;
+    var alturaParagrafo = window.screen.height*(1-estTitulo.height-padV);
     var nLinhas = alturaParagrafo/alturaLinha;
     var coluna = 0;
     if (slide.estilo.paragrafo.duasColunas) {
@@ -114,6 +124,7 @@ export default class Element {
     } else {
       nLinhas = Math.floor(nLinhas);
     }
+    slide.estilo.paragrafo.paddingBottom = 1-estTitulo.height-(nLinhas*alturaLinha); 
 
     var estiloFonte = [(estT.fontStyle || ''), (estT.fontWeight || ''), estP.fontSize*fonteBase.numero + fonteBase.unidade, "'" + estT.fontFamily + "'"];
     estiloFonte = estiloFonte.filter(a => a !== '').join(' ');

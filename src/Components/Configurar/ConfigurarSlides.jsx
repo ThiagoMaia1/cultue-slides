@@ -31,10 +31,10 @@ const listaBotoesAlinhamento = [{direcao: 'left', titulo: 'Alinhado à Esquerda'
 ];
 
 const listaSliders = [{rotulo: 'Fonte', aba: 'paragrafo', atributo: 'fontSize', min: 1, max: 3.5, step: 0.01,  redividir: true},
-                      {rotulo: 'Margem', aba: 'paragrafo', atributo: 'padding', min: 0, max: 0.4, step: 0.01,  redividir: true},
+                      {rotulo: 'Margem', aba: 'paragrafo', atributo: 'paddingRight', min: 0, max: 0.4, step: 0.01,  redividir: true},
                       {rotulo: 'Espaçamento', aba: 'paragrafo', atributo: 'lineHeight', min: 0.5, max: 3, step: 0.1,  redividir: true},
                       {rotulo: 'Fonte', aba: 'titulo', atributo: 'fontSize', min: 1, max: 7, step: 0.01,  redividir: true},
-                      {rotulo: 'Margem', aba: 'titulo', atributo: 'padding', min: 0, max: 0.4, step: 0.01,  redividir: true},
+                      {rotulo: 'Margem', aba: 'titulo', atributo: 'paddingRight', min: 0, max: 0.4, step: 0.01,  redividir: true},
                       {rotulo: 'Altura', aba: 'titulo', atributo: 'height', min: 0.1, max: 1, step: 0.01,  redividir: true},
                       {rotulo: 'Opacidade', aba: 'tampao', atributo: 'opacity', min: 0, max: 1, step: 0.05},
                       {rotulo: 'Margem', aba: 'imagem', atributo: 'padding', min: 0, max: 0.25, step: 0.01},
@@ -119,9 +119,6 @@ class ConfigurarSlides extends Component {
   reducerListaSliders = (resultado, s) => {
     if (s.aba !== this.props.abaAtiva) return resultado; 
     var valorAplicado = this.props.slidePreview.estilo[s.aba][s.atributo];
-    valorAplicado = valorAplicado === undefined ? '' : valorAplicado;
-    if (s.atributo === 'padding') 
-      valorAplicado = valorAplicado.split(' ')[1];
     if (/%/.test(valorAplicado))
       valorAplicado = Number(valorAplicado.replace('%',''))/100;
     resultado.push(

@@ -23,11 +23,11 @@
 //   ✔️ Combobox fonte letra não atualiza direito seu estilo.
 //   ✔️ Atualizar apenas preview nos sliders, atualizar store apenas ao perder foco.
 //   ✔️ TextoMestre nos slides de imagem.
+//   ✔️ Alterar nome do tipo de slide de "Título" para "Texto Livre".
 //   Dividir slides chegando na borda.
 //   Incluir webfonts na combo de fontes disponíveis.
 //   Carrossel do Input Imagem não vai até o final.
 //   Carrossel da lista de slides.
-//   Alterar nome do tipo de slide de "Título" para "Texto Livre".
 //   Fontes que não suportam números superscritos.
 //   Exportação de slides de imagem como html.
 //   Alinhamento de texto não funciona desde que mudei as divs dos paragrafos.
@@ -65,7 +65,7 @@ import './index.css';
 import App from './App';
 import { createStore } from 'redux';
 import hotkeys from 'hotkeys-js';
-import Element, { estiloPadrao, textoMestre, Estilo } from './Element.js';
+import Element, { estiloPadrao, textoMestre, Estilo, getEstiloPad } from './Element.js';
 import { selecionadoOffset, getSlidePreview } from './Components/MenuExportacao/Exportador'
 
 const criarNovaApresentacao = () => {
@@ -126,6 +126,10 @@ export const reducerElementos = function (state = defaultList, action) {
         }
       } else if(action.objeto === 'textoTitulo') {
         s.titulo = action.valor;
+      } else if (Object.keys(action.valor)[0] === 'paddingRight') {
+        est[action.objeto].paddingRight = action.valor.paddingRight;
+        est[action.objeto] = getEstiloPad(est, action.objeto);
+        console.log(est)
       } else {
         est[action.objeto] = {...est[action.objeto], ...action.valor};
       }

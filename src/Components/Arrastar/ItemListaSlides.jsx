@@ -26,7 +26,7 @@ class ItemListaSlides extends Component {
     excluirElemento = (e) => {
         e.stopPropagation();
         var elemento = this.props.elemento;
-        var pergunta = "Deseja excluir " + (elemento.tipo.slice(-1) === 'o' ? 'o ' : 'a ') 
+        var pergunta = "Deseja excluir " + (/[oe]/.test(elemento.tipo.slice(-1)) ? 'o ' : 'a ') 
                         + elemento.tipo.toLowerCase().replace('-',' ') + " '" + elemento.titulo + "'?";
         const callback = fazer => {
         if (fazer !== -1)
