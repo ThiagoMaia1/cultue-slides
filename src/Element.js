@@ -15,10 +15,10 @@ export class Estilo {
   
 const estiloPadrao = {
   texto: {fontFamily: fonteBase.fontFamily}, 
-  titulo: {fontSize: 3, height: 0.25, paddingRight: 0.08}, 
+  titulo: {fontSize: 3, height: 0.25, paddingRight: 0.08, textAlign: 'center'}, 
   paragrafo: {fontSize: 1.5, paddingRight: 0.08, lineHeight: 1.9}, 
   fundo: {src: './Galeria/Fundos/Aquarela.jpg'}, 
-  tampao: {backgroundColor: '#fff', opacity: 0.2},
+  tampao: {backgroundColor: '#ffffff', opacity: 0.2},
   imagem: {padding: 0.02}
 };
 
@@ -52,7 +52,6 @@ export default class Element {
     
     var est = {...new Estilo(), ...estilo};
     est = {...est, paragrafo: getPadding(est, 'paragrafo'), titulo: getPadding(est, 'titulo')};
-    console.log(est);
     if (this.tipo === 'Texto-Livre' && texto.filter(t => t !== '').length === 0) est.titulo.height = '1';
     this.slides = [{estilo: {...est}, eMestre: true, textoArray: [textoMestre]}];
     this.criarSlides(this.texto, est);
@@ -148,8 +147,6 @@ export default class Element {
     var caseTexto = estT.caseTexto || estP.caseTexto;
     var separador = thisP.tipo === 'Texto-Bíblico' ? '' : '\n\n';
     if (thisP.tipo === 'Música' && estP.omitirRepeticoes) texto = marcarEstrofesRepetidas(texto);
-    console.log(thisP.tipo === 'Música');
-    console.log(estP.omitirRepeticoes);
     var { contLinhas, widthResto } = getLinhas(texto[0], estiloFonte, larguraLinha, caseTexto);
     var i;
 
@@ -239,8 +236,8 @@ function linhasTrecho(texto, fontStyle, larguraLinha, widthInicial = 0) {
   for (var i = 0; i < palavras.length; i++) {
     arrayP.push(palavras[i]);
     widthParcial += canvasTextWidth(' ' + palavras[i+1], fontStyle);
-    if (widthInicial + widthParcial> larguraLinha) {
-      return [1, ...linhasTrecho(palavras.slice(i+2).join(' '), fontStyle, larguraLinha)];
+    if (widthInicial + widthParcial > larguraLinha) {
+      return [1, ...linhasTrecho(palavras.slice(i+1).join(' '), fontStyle, larguraLinha)];
     }
   }
   return [widthParcial];

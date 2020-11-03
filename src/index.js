@@ -31,7 +31,9 @@
 //   Carrossel da lista de slides.
 //   Fontes que não suportam números superscritos.
 //   Exportação de slides de imagem como html.
-//   Redividir quando o texto de um slide é deletado.
+//   Redividir quando o texto de um slide é todo deletado.
+//   Duas colunas
+//   Botões novos do menu configurações.
 //
 // Features:
 //   ✔️ Envio de imagens.
@@ -44,11 +46,11 @@
 //   ✔️ Exportar como HTML.
 //   ✔️ Marcador de repetições de estrofes nos slides de música/slide de refrão repetido.
 //   ✔️ Dividir música em colunas.
+//   Calcular resolução do datashow.
 //   Exportar como Power Point.
 //   Incorporar vídeos do youtube.
 //   Gerar link compartilhável.
 //   Enviar por e-mail.
-//   Calcular resolução do datashow.
 //   Exportar como PDF.
 //   Atalhos em geral.
 //   Possibilidade de editar elemento (retornando à tela da query).
@@ -129,7 +131,6 @@ export const reducerElementos = function (state = defaultList, action) {
       } else if (Object.keys(action.valor)[0] === 'paddingRight') {
         est[action.objeto].paddingRight = action.valor.paddingRight;
         est[action.objeto] = getPadding(est, action.objeto);
-        console.log(est)
       } else {
         est[action.objeto] = {...est[action.objeto], ...action.valor};
       }

@@ -29,9 +29,9 @@ export function getBase64Image(src, classe, total, callback) {
     var scale = Math.max((minW/iw), (minH/ih));
     var iwScaled = iw*scale;
     var ihScaled = ih*scale;
-    canvas.width = iwScaled;
-    canvas.height = ihScaled;
-    ctx.drawImage(img, (minW - iwScaled)/2, (minH - ihScaled)/2, iwScaled, ihScaled);
+    canvas.width = minW;
+    canvas.height = minH;
+    ctx.drawImage(img, (iw - minW/scale)/2, (ih - minH/scale)/2, minW/scale, minH/scale, 0, 0, minW, minH);
     dataURL = canvas.toDataURL("image/png");
     callback(dataURL, classe, total, src);
   };
@@ -136,7 +136,6 @@ class Exportador extends Component {
     super(props);
     this.ref = React.createRef();
     this.state = {slidePreviewFake: true, previews: [], popupConfirmacao: null};
-    this.imagensBase64 = [];
   } 
 
   conferirClick = () => {
@@ -152,6 +151,7 @@ class Exportador extends Component {
   }
 
   getCopiaDom = () => {
+    this.imagensBase64 = [];
     var sOrdenados = slidesOrdenados(this.props.state.elementos, false);
     this.previews = sOrdenados.map((s, i) => ({...getSlidePreview(this.props.state, s), indice: i}));
     if (this.props.criarSlideFinal) this.previews.push({...slideFinal, indice: this.previews.length});

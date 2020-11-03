@@ -80,7 +80,6 @@ class ComboLetra extends Component {
                         {musica.url}
                     </a></i>
                 </div>)
-                console.log(this.getEstiloParagrafo());
             this.setState({letraMusica: {esquerda: letraEsquerda, direita: letraDireita}, idBuscarLetra: null, botoesVisiveis: true, 
                            listaAtiva: false, 
                            elemento: new Element('Música', vagalumeLetra.response.mus[0].name, letra, null, 
