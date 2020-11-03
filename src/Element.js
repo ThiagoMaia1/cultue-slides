@@ -1,37 +1,45 @@
 import { fonteBase } from './Components/Preview/Preview';
 
-export class Estilo {
-    constructor () {
-      this.texto = {}; 
-      this.titulo = {}; 
-      this.paragrafo = {}; 
-      this.fundo = {}; 
-      this.tampao = {};
-      this.imagem = {};
-    }
-}
-  
-export const estiloPadrao = {
-    texto: {fontFamily: fonteBase.fontFamily}, 
-    titulo: {fontSize: 3, height: 0.25, paddingRight: 0.08}, 
-    paragrafo: {fontSize: 1.5, paddingRight: 0.08, lineHeight: 1.7}, 
-    fundo: {src: './Galeria/Fundos/Aquarela.jpg'}, 
-    tampao: {backgroundColor: '#fff', opacity: 0.2},
-    imagem: {padding: 0.02}
-};
-
-export const proporcaoPadTop = 0;
 export const textoMestre = 'As configurações do estilo desse slide serão aplicadas aos demais, exceto quando configurações específicas de cada slide se sobrepuserem às deste. \n\nEste slide não será exportado nem exibido no modo de apresentação.'
 
-export function getEstiloPad (estilo, objeto) {
-  var pad = estilo[objeto].paddingRight; //Separa o padding para o padding-top ser diferente, proporcional à constante proporcaoPadTop.
+export class Estilo {
+  constructor () {
+    this.texto = {}; 
+    this.titulo = {}; 
+    this.paragrafo = {}; 
+    this.fundo = {}; 
+    this.tampao = {};
+    this.imagem = {};
+  }
+}
+  
+const estiloPadrao = {
+  texto: {fontFamily: fonteBase.fontFamily}, 
+  titulo: {fontSize: 3, height: 0.25, paddingRight: 0.08}, 
+  paragrafo: {fontSize: 1.5, paddingRight: 0.08, lineHeight: 1.9}, 
+  fundo: {src: './Galeria/Fundos/Aquarela.jpg'}, 
+  tampao: {backgroundColor: '#fff', opacity: 0.2},
+  imagem: {padding: 0.02}
+};
+
+const proporcaoPadTop = 0;
+
+export const getEstiloPadrao = () => {
+  var estilo = estiloPadrao;
+  estilo.paragrafo = getPadding(estilo, 'paragrafo');
+  estilo.titulo = getPadding(estilo, 'titulo');  
+  return estilo;
+}
+
+export function getPadding (estilo, objeto) {
+  var pad = estilo[objeto].paddingRight;
+  if (!pad) return {...estilo[objeto]};
   return {...estilo[objeto],
           paddingTop: objeto === 'paragrafo' ? (pad*proporcaoPadTop || 0.005): 0, 
           paddingBottom: objeto === 'paragrafo' ? pad : 0,
           paddingLeft: pad
   };
 }
-
 
 export default class Element {
   
@@ -43,7 +51,7 @@ export default class Element {
     this.eMestre = eMestre;
     
     var est = {...new Estilo(), ...estilo};
-    est = {...est, paragrafo: getEstiloPad(estilo, 'paragrafo'), titulo: getEstiloPad(estilo, 'titulo')};
+    est = {...est, paragrafo: getPadding(est, 'paragrafo'), titulo: getPadding(est, 'titulo')};
     console.log(est);
     if (this.tipo === 'Texto-Livre' && texto.filter(t => t !== '').length === 0) est.titulo.height = '1';
     this.slides = [{estilo: {...est}, eMestre: true, textoArray: [textoMestre]}];
@@ -103,28 +111,37 @@ export default class Element {
     }
     var slide = thisP.slides[nSlide];  
     var estSlide = slide.estilo;
-    estGlobal = estGlobal ? estGlobal : estiloPadrao;
+    estGlobal = estGlobal ? estGlobal : getEstiloPadrao();
     
     var estP = {...estGlobal.paragrafo, ...estElemento.paragrafo , ...estSlide.paragrafo};
     var estT = {...estGlobal.texto, ...estElemento.texto, ...estSlide.texto};
     var estTitulo = {...estGlobal.titulo, ...estElemento.titulo, ...estSlide.titulo};
-    
-    var padV = estP.paddingTop + estP.paddingBottom; // Variáveis relacionadas ao tamanho do slide.
+    // Variáveis relacionadas ao tamanho do slide.
+    var padV = estP.paddingTop + estP.paddingRight; //Right é a base de cálculo, bottom varia.
     var padH = estP.paddingRight + estP.paddingLeft;
     var larguraLinha = window.screen.width*(1-padH);
     var alturaLinha = estP.lineHeight*estP.fontSize*fonteBase.numero;
-    var alturaParagrafo = window.screen.height*(1-estTitulo.height-padV);
+    var alturaSecaoTitulo = estTitulo.height*window.screen.height;
+    var alturaSecaoParagrafo = window.screen.height-alturaSecaoTitulo;
+    var alturaParagrafo = alturaSecaoParagrafo*(1-padV);
     var nLinhas = alturaParagrafo/alturaLinha;
-    var coluna = 0;
-    if (slide.estilo.paragrafo.duasColunas) {
-      larguraLinha = larguraLinha*0.48;
-    }
+  
     if (nLinhas % 1 > 0.7) {
       nLinhas = Math.ceil(nLinhas);
     } else {
       nLinhas = Math.floor(nLinhas);
     }
-    slide.estilo.paragrafo.paddingBottom = 1-estTitulo.height-(nLinhas*alturaLinha); 
+    slide.estilo.paragrafo.paddingBottom = ((alturaSecaoParagrafo-nLinhas*alturaLinha)/window.screen.width)-estP.paddingTop; 
+    
+    var duasColunas = false;
+    if (estP.duasColunas) {
+      larguraLinha = larguraLinha*0.48;
+      if (thisP.tipo === 'Música') {
+        duasColunas = true;       
+      } else {
+        nLinhas = nLinhas*2;
+      }
+    }
 
     var estiloFonte = [(estT.fontStyle || ''), (estT.fontWeight || ''), estP.fontSize*fonteBase.numero + fonteBase.unidade, "'" + estT.fontFamily + "'"];
     estiloFonte = estiloFonte.filter(a => a !== '').join(' ');
@@ -145,7 +162,7 @@ export default class Element {
       contLinhas += linhas.contLinhas;
       widthResto = /\n/.test(separador) ? 0 : linhas.widthResto;        
       if ((contLinhas + (widthResto > 0 ? 1 : 0)) > nLinhas) { //Se próximo versículo vai ultrapassar o slide, conclui slide atual.
-        if (slide.duasColunas && coluna === 0) [ contLinhas, widthResto, coluna ] = [ 0, 0, 1 ]; 
+        if (duasColunas) [ contLinhas, widthResto, duasColunas ] = [ 0, 0, false ]; 
         thisP.dividirTexto(texto.slice(i+1), nSlide+1, estElemento, estGlobal, thisP);
         break;
       }

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Exportador from './Exportador';
 import pptxgen from "pptxgenjs";
+import { fonteBase } from '../Preview/Preview';
 
 const atributosHtmlPptx = {textAlign: v => {
                             if (v === 'justify') v = 'left';
@@ -11,7 +12,8 @@ const atributosHtmlPptx = {textAlign: v => {
                            textWeight: v => {if (v > 550) return{bold: true}},
                            fontStyle: v => {if (v === 'italic') return{italic: true}},
                            textDecorationLine: v => {if (v === 'underline') return {underline: true}},
-                           fontFamily: v => ({fontFace: v})
+                           fontFamily: v => ({fontFace: v}),
+                           fontSize: v => ({fontSize: fonteBase.numero*v}) 
 }
 
 function converterAtributosPptx(atributoHTML, valor) {
@@ -31,7 +33,7 @@ class ExportarPptx extends Component {
     )
   }
 
-  exportarPptx = (copiaDOM, imagensBase64, previews, nomeArquivo) => {
+  exportarPptx = (_copiaDOM, imagensBase64, previews, nomeArquivo) => {
     
     var imagens = imagensBase64.reduce((resultado, img) => {
       resultado[img.classe] = img.data;
@@ -41,7 +43,7 @@ class ExportarPptx extends Component {
     // pptx.defineLayout({name: 'LayoutTela', ...this.getDimensoesInches()});
     // pptx.layout = 'LayoutTela';
     //todo: melhorar isso.
-    var quadro = copiaDOM.getElementById('preview')
+    var quadro = document.getElementById('preview')
     this.alturaQuadro = quadro.offsetHeight;
     this.larguraQuadro = quadro.offsetWidth;
 
@@ -51,14 +53,14 @@ class ExportarPptx extends Component {
       if (p.classeImagem) {
         slide.addImage({data: imagens[p.classeImagemFundo], sizing: {type: 'cover'}});
       }
-      var spanTitulo = copiaDOM.querySelectorAll('#preview-fake' + p.indice + ' #textoTitulo')[0];
+      var spanTitulo = document.querySelectorAll('#preview-fake' + p.indice + ' #textoTitulo')[0];
       var atributosTitulo = Object.keys(p.estilo.titulo);
       var estiloTitulo = {};
       for (var i = 0; i < atributosTitulo.length; i++) {
         estiloTitulo = {...estiloTitulo, ...converterAtributosPptx(atributosTitulo[i], p.estilo.titulo[atributosTitulo[i]])};
       }
       var dimensoes = this.getDimensoesElemento(spanTitulo);
-      slide.addText({text: p.titulo, options: {...estiloTitulo, ...dimensoes}});
+      slide.addText(p.titulo, {...dimensoes, ...estiloTitulo});
       
       // var spansParagrafo = previewsHTML.querySelectorAll('#paragrafo-slide span');
       
@@ -75,9 +77,9 @@ class ExportarPptx extends Component {
     return {x: x, y: y, w: w, h: h};
   }
 
-  getXPercentual = X => 100*X/this.larguraQuadro + '%';
+  getXPercentual = X => Math.ceil(100*X/this.larguraQuadro) + '%';
 
-  getYPercentual = Y => 100*Y/this.alturaQuadro + '%';
+  getYPercentual = Y => Math.ceil(100*Y/this.alturaQuadro) + '%';
 
   getDimensoesInches = () => {
     var divDpi = document.createElement('div');

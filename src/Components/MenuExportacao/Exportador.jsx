@@ -200,12 +200,12 @@ class Exportador extends Component {
   render() {
       return (
         <>
-          {this.state.previews}
           {this.state.popupConfirmacao}
           <div className='div-botao-exportar' onClick={this.conferirClick}> 
             <button id={'exportar-' + this.props.formato} className='botao-exportar sombrear-selecao'>{this.props.logo}</button>
             <div className='rotulo-botao-exportar'>{this.props.rotulo}</div>
           </div>
+          {this.state.previews}
         </>
       )
   }

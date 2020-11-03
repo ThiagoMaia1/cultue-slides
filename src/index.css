@@ -61,11 +61,14 @@ button, input[type="submit"], input[type="reset"], [contentEditable="true"]:focu
 
 [contentEditable="true"]:focus {
   background-color: white;
-  border-radius: 0.5vh;
+  border-radius: var(--round-border-medio);
+  position: relative;
   border: 1px solid gray;
-  padding: 0.3vh;
-  outline: 0px;
+  padding: 0.2vh;
+  outline: 0;
   cursor: text;
+  left: -0.1vh;
+  vertical-align: top;
 }
 
 .quadriculado-imitando-transparente{

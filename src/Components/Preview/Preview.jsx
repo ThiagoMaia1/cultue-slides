@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import './style.css';
 import { connect } from 'react-redux';
 import { MdFullscreen, MdFullscreenExit } from 'react-icons/md';
+import Estrofes from './Estrofes';
 
-export const fonteBase = {numero: 0.015*window.screen.width, unidade: 'px', fontFamily: 'Noto Sans'};
+export const fonteBase = {numero: 0.025*window.screen.height, unidade: 'px', fontFamily: 'Noto Sans'};
 const full = {icone: <MdFullscreenExit className='icone-botao' size={140}/>, proporcao: 1, opacidadeBotao: '0%'}
 export const small = {icone: <MdFullscreen className='icone-botao' size={60}/>, proporcao: 0.45, opacidadeBotao: '30%'}
 
@@ -95,43 +96,16 @@ class Preview extends Component {
     render() {
         var slidePreview = this.props.slidePreviewFake || this.props.slidePreview;
         var sel = slidePreview.selecionado;
-        var spansSlide = slidePreview.textoArray.map((t, i) => {
-            var estiloDivEstrofe = {display: 'block', width: '100%'};
-            if (slidePreview.tipo === 'Música' && slidePreview.estilo.paragrafo.multiplicadores) {
-                if (/\$\d\$/.test(t)) return null;
-                var estrofeMultiplicada;
-                if (i+1 < slidePreview.textoArray.length) {
-                    var vezes = slidePreview.textoArray[i+1].replace(/\$/g, ''); 
-                    if (!isNaN(vezes)) {
-                        estrofeMultiplicada = <span className='marcador-estrofe'>✕{vezes}</span>
-                    }
-                }
-            } else if (slidePreview.tipo === 'Texto-Bíblico') {
-                estiloDivEstrofe = {display: 'inline'};
-            }
-            var tA = slidePreview.textoArray;
-            var ultimoComTexto = tA.length - (/\$\d\$/.test(tA[tA.length-1]) ? 2 : 1); 
-            return (
-                <div className='container-estrofe' style={estiloDivEstrofe}>
-                    <div className='wraper-estrofe'>
-                        <span contentEditable={!slidePreview.eMestre} id={'paragrafo-textoArray-' + sel.elemento + '-' + sel.slide + '-' + i} 
-                            key={i} onInput={this.editarTexto} onFocus={this.ativarRealce}>
-                        {t}</span>
-                        {estrofeMultiplicada}
-                    </div>
-                    {slidePreview.tipo !== 'Texto-Bíblico' && i !== ultimoComTexto && t.substr(0,4) !== '\n\n' ? 
-                        <div><br></br></div> : null}
-                </div>
-        )});
         return (
             <div className='borda-slide-mestre' style={{height: this.alturaTela*this.state.screen.proporcao + 0.051*window.innerHeight, 
-                                                        visibility: slidePreview.eMestre ? '' : 'hidden', 
-                                                        display: this.props.slidePreviewFake ? 'none' : '',
+                                                        visibility: slidePreview.eMestre ? '' : 'hidden',
+                                                        position: this.props.slidePreviewFake ? 'absolute' : '',
                                                         ...this.realcarElemento('tampao', 'fora')}}>
                 <div ref={this.ref} id={'preview' + (this.props.slidePreviewFake ? '-fake' + slidePreview.indice : '')} 
                      className={(this.props.slidePreviewFake ? 'preview-fake ' : '') + (slidePreview.indice === 0 ? 'slide-ativo' : '')}
                      style={{width: this.larguraTela*this.state.screen.proporcao, 
                             height: this.alturaTela*this.state.screen.proporcao,
+                            visibility: this.props.slidePreviewFake ? 'hidden' : '',
                             ...this.realcarElemento('tampao', 'dentro')}}>
                     <div className='tampao' style={slidePreview.estilo.tampao}>
                                     
@@ -146,8 +120,8 @@ class Preview extends Component {
                         </div>
                         <div id='paragrafo-slide' className='slide-paragrafo' style={slidePreview.estilo.paragrafo}>
                             <div style={{...this.realcarElemento('paragrafo')}} 
-                                 className={slidePreview.estilo.paragrafo.duasColunas ? 'dividido-colunas' : ''}>
-                                {spansSlide}
+                                 className={'realce-paragrafo ' + (slidePreview.estilo.paragrafo.duasColunas ? 'dividido-colunas' : '')}>
+                                {<Estrofes selecionado={sel} slidePreview={slidePreview} onInput={this.editarTexto} onFocus={this.ativarRealce}/>}
                             </div>
                         </div>
                     </div>

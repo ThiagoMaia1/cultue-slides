@@ -24,13 +24,13 @@
 //   ✔️ Atualizar apenas preview nos sliders, atualizar store apenas ao perder foco.
 //   ✔️ TextoMestre nos slides de imagem.
 //   ✔️ Alterar nome do tipo de slide de "Título" para "Texto Livre".
-//   Dividir slides chegando na borda.
+//   ✔️ Dividir slides chegando na borda.
+//   ✔️ Alinhamento de texto não funciona desde que mudei as divs dos paragrafos.
 //   Incluir webfonts na combo de fontes disponíveis.
 //   Carrossel do Input Imagem não vai até o final.
 //   Carrossel da lista de slides.
 //   Fontes que não suportam números superscritos.
 //   Exportação de slides de imagem como html.
-//   Alinhamento de texto não funciona desde que mudei as divs dos paragrafos.
 //   Redividir quando o texto de um slide é deletado.
 //
 // Features:
@@ -65,11 +65,11 @@ import './index.css';
 import App from './App';
 import { createStore } from 'redux';
 import hotkeys from 'hotkeys-js';
-import Element, { estiloPadrao, textoMestre, Estilo, getEstiloPad } from './Element.js';
+import Element, { getEstiloPadrao, textoMestre, Estilo, getPadding } from './Element.js';
 import { selecionadoOffset, getSlidePreview } from './Components/MenuExportacao/Exportador'
 
 const criarNovaApresentacao = () => {
-  return [new Element("Slide-Mestre", "Slide-Mestre", [textoMestre], null, {...estiloPadrao}, true)];
+  return [new Element("Slide-Mestre", "Slide-Mestre", [textoMestre], null, {...getEstiloPadrao()}, true)];
 }
 
 var defaultList = {elementos: criarNovaApresentacao(),
@@ -128,7 +128,7 @@ export const reducerElementos = function (state = defaultList, action) {
         s.titulo = action.valor;
       } else if (Object.keys(action.valor)[0] === 'paddingRight') {
         est[action.objeto].paddingRight = action.valor.paddingRight;
-        est[action.objeto] = getEstiloPad(est, action.objeto);
+        est[action.objeto] = getPadding(est, action.objeto);
         console.log(est)
       } else {
         est[action.objeto] = {...est[action.objeto], ...action.valor};
@@ -140,9 +140,9 @@ export const reducerElementos = function (state = defaultList, action) {
     case "limpar-estilo": {
       if (sel.elemento === 0 && sel.slide === 0) {
         if (action.objeto) {
-          el[0].slides[0].estilo[action.objeto] = estiloPadrao[action.objeto];  
+          el[0].slides[0].estilo[action.objeto] = getEstiloPadrao([action.objeto]);  
         } else {
-          el[0].slides[0].estilo = {...estiloPadrao};
+          el[0].slides[0].estilo = {...getEstiloPadrao()};
         }
       } else if (action.objeto) {
         el[sel.elemento].slides[sel.slide].estilo[action.objeto] = {};
