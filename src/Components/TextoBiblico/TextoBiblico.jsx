@@ -7,6 +7,7 @@ import Element from '../../Element'
 import { connect } from 'react-redux'
 import { formatarVersiculos, formatarVersiculosSlide } from '../Preview/TextoPreview.jsx'
 import Carregando from '../LetrasMusica/Carregando.jsx';
+import Carrossel from '../Carrossel/Carrossel'
 
 const url = 'https://bibleapi.co/api';
 const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IlR1ZSBPY3QgMDYgMjAyMCAwMzoxMDo1MCBHTVQrMDAwMC50dGhpYWdvcG1haWFAZ21haWwuY29tIiwiaWF0IjoxNjAxOTUzODUwfQ.J9CusTS1g3uJObw6Hb4da0K4ZmXZgeMKG8QUSH0E4sI"
@@ -219,19 +220,21 @@ class TextoBiblico extends Component {
                     </div>
                 </div>
                 {/* Seleção por capítulo e versículo tem funções salvas no módulo ComboCapVers.jsx */}
-                <div className='container-versiculos'>
-                    {formatarVersiculos(this.state.versiculosPronto)}
-                    {/* <div className='texto-inserir'>
-                    </div> */}
+                <div className='container-versiculos container-carrossel combo-popup'>
+                    <Carrossel tamanhoIcone={45} tamanhoMaximo='100%' direcao='vertical' style={{zIndex: '400'}} percentualBeirada={0.12}>
+                        {formatarVersiculos(this.state.versiculosPronto)}
+                        {/* <div className='texto-inserir'>
+                        </div> */}
+                    </Carrossel>
                 </div>
-                {this.state.botoesVisiveis ? <div className='container-botoes-popup'>
+                <div className='container-botoes-popup' style={this.state.botoesVisiveis ? null : {visibility: 'hidden'}}>
                     <button className='botao' style={{visibility: this.state.botoesVisiveis}} onClick={() => this.onClick()}>
                         Inserir Texto Bíblico
                     </button>
                     <button className='botao limpar-input' onClick={this.limparInput}>
                         ✕ Limpar
                     </button>
-                </div> : null}
+                </div>
             </div>
         )
     }

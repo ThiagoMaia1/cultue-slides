@@ -7,11 +7,16 @@ class ExportarEmail extends Component {
   constructor (props) {
     super(props);
     this.state = {slidePreviewFake: true, previews: []};
+    
   }
 
   exportarEmail = previews => {
     
-  }
+  
+
+  
+
+    }
 
   render() {
       return (

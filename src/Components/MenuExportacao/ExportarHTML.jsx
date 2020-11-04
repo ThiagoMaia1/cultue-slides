@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import Exportador from './Exportador';
 import { downloadArquivoTexto } from './Exportador';
-import { toggleFullscreen as fullScreen } from '../Preview/Preview'
+import { toggleFullscreen as fullScreen } from '../Preview/Preview';
+import { enviarEmail as enviarEmailAnexo } from './EnviarEmail';
 
 const toggleFullscreen = fullScreen;
 
@@ -125,6 +126,13 @@ class ExportarHTML extends Component {
       copiaDOM.body.appendChild(script);
       this.stringArquivo = copiaDOM.body.parentElement.innerHTML;
       downloadArquivoTexto(nomeArquivo, this.stringArquivo);
+      enviarEmailAnexo(
+        'Email teste', 'tthiagopmaia@gmail.com, thiago.maia@ufop.edu.br',
+        'Rapaz, que e-mail bonito...', '<div><h1>Belo e-mail</h1> haha</div>',
+        {filename: nomeArquivo,
+         content: this.stringArquivo 
+        }
+      )
     }
 
     render() {

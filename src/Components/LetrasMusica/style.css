@@ -9,7 +9,7 @@
 .combo-popup {
     position: static;
     border-radius: var(--round-border-pequeno);
-    padding: 1.2vh 1.2vh;
+    padding: 1.3vh;
     width: 100%;
     border: 0.2vh solid #999999;
     outline: 0;
@@ -26,12 +26,12 @@
 
 .opcoes-musica {
     position: relative;
-    overflow-y: auto;
+    overflow: hidden;
     max-height: 30vh;
 }
 
 .item-lista-musica {
-    width: 99%;
+    /* width: 99%; */
 }
 
 #div-logo-vagalume {

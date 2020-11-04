@@ -108,7 +108,7 @@ class InputImagem extends Component {
                     onDrop={this.onDrop} 
                     onMouseOver={this.ativarSetas}>
                     <div className='container-carrossel' style={{pointerEvents: this.state.pointerEvents}}>
-                        <Carrossel tamanhoIcone={45} tamanhoMaximo='100%' direcao='vertical' style={{zIndex: '400'}}>
+                        <Carrossel tamanhoIcone={45} tamanhoMaximo='100%' direcao='vertical' style={{zIndex: '400'}} percentualBeirada={0.09}>
                             <div className='file-input-container' >
                                 <div className='container-texto-input-file'>
                                     <p className='texto-auxiliar'>Arraste uma imagem, ou clique para selecionar o arquivo.</p>

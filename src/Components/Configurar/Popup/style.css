@@ -132,7 +132,7 @@ html, body, .app {
 
 .container-preview {
   display: block;
-  overflow: auto;
+  /* overflow: auto; */
   white-space: pre-wrap;
   flex: 1 1 100%;
   z-index: 1;

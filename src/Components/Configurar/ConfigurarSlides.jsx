@@ -3,7 +3,7 @@ import './style.css';
 import { connect } from 'react-redux';
 import { CgErase } from 'react-icons/cg';
 import { RiMastercardLine } from 'react-icons/ri'
-import { BsTextLeft, BsTextCenter, BsTextRight, BsJustify} from 'react-icons/bs';
+import { BsTextLeft, BsTextCenter, BsTextRight, BsJustify, BsMusicNoteBeamed} from 'react-icons/bs';
 import { VscCollapseAll } from 'react-icons/vsc';
 import { CompactPicker } from 'react-color';
 import Slider from './Slider';
@@ -81,8 +81,9 @@ class ConfigurarSlides extends Component {
       </>)});
   }
 
-  gerarBotoesEstiloTexto = aba => (
-    this.listaEstilosTexto.map(e => {
+  gerarBotoesEstiloTexto = (aba, iIni = 0, iFin = 99) => {
+    var lista = this.listaEstilosTexto.filter((e, i) => i >= iIni && i <= iFin);
+    return lista.map(e => {
       if (e.tipo && e.tipo !== this.props.slidePreview.tipo) return null;
       var objEstilo = {};
       objEstilo[e.nomeAtributo] = e.valorAlterado;
@@ -93,7 +94,7 @@ class ConfigurarSlides extends Component {
         style={objEstilo}>{e.simbolo ? e.simbolo : e.apelido[0]}</button>
       )
     })
-  )
+  }
 
 
   gerarBotoesAlinhamento = aba => {
@@ -236,12 +237,12 @@ class ConfigurarSlides extends Component {
       {this.state.painelCor}
           <div className='configuracoes'>
             <div className='botoes-direita'>
-              <button title='Aplicar Estilo ao Slide-Mestre' className={'botao-configuracao bool'} 
+              <button title='Aplicar Estilo ao Slide-Mestre' className='botao-configuracao bool' 
                       style={{visibility: this.props.selecionado.elemento === 0 ? 'hidden' : 'visible'}}
                       onClick={this.aplicarEstiloAoMestre}>
                 <RiMastercardLine size={this.state.tamIcones} />
               </button>
-              <button title='Limpar Estilos do Slide' className={'botao-configuracao bool'} 
+              <button title='Limpar Estilos do Slide' className='botao-configuracao bool' 
                       onClick={this.limparEstilo}>
                 <CgErase size={this.state.tamIcones} />
               </button>
@@ -249,12 +250,10 @@ class ConfigurarSlides extends Component {
             <div className='configuracoes-texto' 
                  style={{display: (aba === 'tampao' || aba === 'imagem' ? 'none' : '')}}>
               <div className='linha-configuracoes-texto'>
-                <button id={'cor-texto'} className={'botao-configuracao bool'} onMouseOver={() => this.ativarPainelCor(this.mudarCorFonte)}>
+                <button id={'cor-texto'} className='botao-configuracao bool' onMouseOver={() => this.ativarPainelCor(this.mudarCorFonte)}>
                   <span className='a-cor-texto' style={{color: this.props.slideSelecionado.estilo[aba].color}}>A</span>
                   <div className='cor-texto' style={{backgroundColor: this.props.slideSelecionado.estilo[aba].color}}></div>
                 </button>
-                <button title={casesTexto[this.state.caseTexto].valor} id='botao-case' className={'botao-configuracao bool'} 
-                        onClick={this.mudarCaseTexto}>{casesTexto[this.state.caseTexto].icone}</button>
                 <select className={'botao-configuracao combo-fonte'} onChange={this.mudarFonte} ref={this.ref}
                         defaultValue={this.props.slidePreview.estilo[aba].fontFamily}
                         style={{fontFamily: this.props.slidePreview.estilo[aba].fontFamily}}>
@@ -262,11 +261,20 @@ class ConfigurarSlides extends Component {
                 </select>
               </div>
               <div className='linha-configuracoes-texto'>
-                {this.gerarBotoesEstiloTexto(aba)}
+                <button title={casesTexto[this.state.caseTexto].valor} id='botao-case' className='botao-configuracao bool' 
+                          onClick={this.mudarCaseTexto}>{casesTexto[this.state.caseTexto].icone}</button>
                 <div className='botao-configuracao'>{this.gerarBotoesAlinhamento(aba)}</div>
+                {this.gerarBotoesEstiloTexto(aba, 3, 3)}
+              </div>
+              <div className='linha-configuracoes-texto'>
+                {this.gerarBotoesEstiloTexto(aba, 0, 2)}
+                <div id='rotulo-configuracoes-musica' style={this.props.slidePreview.tipo === 'Música' ? null : {display: 'none'}}>
+                  <BsMusicNoteBeamed size={this.state.tamIcones}/>
+                </div>
+                {this.gerarBotoesEstiloTexto(aba, 4)}
               </div>
             </div>
-            <button className={'botao-configuracao bool'} onMouseOver={() => this.ativarPainelCor(this.mudarCorFundo)}
+            <button className='botao-configuracao bool' onMouseOver={() => this.ativarPainelCor(this.mudarCorFundo)}
                     style={{display: (aba === 'tampao' ? '' : 'none')}}>
                 <div className='container-cor-fundo'>
                   <div className='cor-fundo'>

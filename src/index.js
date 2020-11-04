@@ -26,14 +26,14 @@
 //   ✔️ Alterar nome do tipo de slide de "Título" para "Texto Livre".
 //   ✔️ Dividir slides chegando na borda.
 //   ✔️ Alinhamento de texto não funciona desde que mudei as divs dos paragrafos.
+//   ✔️ Botões novos do menu configurações.
+//   ✔️ Carrossel da lista de slides.
+//   ✔️ Carrossel do Input Imagem não vai até o final.
 //   Incluir webfonts na combo de fontes disponíveis.
-//   Carrossel do Input Imagem não vai até o final.
-//   Carrossel da lista de slides.
 //   Fontes que não suportam números superscritos.
 //   Exportação de slides de imagem como html.
 //   Redividir quando o texto de um slide é todo deletado.
 //   Duas colunas
-//   Botões novos do menu configurações.
 //
 // Features:
 //   ✔️ Envio de imagens.

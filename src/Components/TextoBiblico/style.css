@@ -2,11 +2,10 @@
     flex: 1;
     overflow: auto;
     justify-content: start;
-    margin-top: 1.2vh;
     text-align: justify;
     text-justify: inter-word;
-    padding: 1vh 2.5vh 1vh 1vh;
     display: block;
+    padding: 0 2.6vh;
 }
 
 

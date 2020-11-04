@@ -6,6 +6,7 @@ import ItemListaMusica from './ItemListaMusica.jsx';
 import Element from '../../Element';
 import logoVagalume from './Logo Vagalume.png';
 import Checkbox from '../Checkbox/Checkbox';
+import Carrossel from '../Carrossel/Carrossel'
 
 const url = 'https://api.vagalume.com.br/';
 var vagalumeLetra;
@@ -60,6 +61,12 @@ class ComboLetra extends Component {
         vagalumeLetra.addEventListener('load', () => {
             var musica = vagalumeLetra.response.mus[0];
             var letra = musica.text.split(/\n\n/); //Separa em paragrafos
+            if (letra.length === 1) {
+                var linhas = letra[0].split('\n');
+                var metade = Math.floor((linhas.length+2))/2;
+                letra[0] = linhas.slice(0, metade).join('\n');
+                letra[1] = linhas.slice(metade).join('\n');
+            }
             var letraLinhas = letra.map(l => ({paragrafo: l, linhas: l.split('\n').length-1})); //Conta \n no parágrafo.
             var linhasTotais = letraLinhas.reduce((ac, p) => ac + p.linhas, 0) + 2.5;
             var linhasMetade = Math.ceil(linhasTotais/2);
@@ -68,9 +75,9 @@ class ComboLetra extends Component {
                 contLinhas += letraLinhas[i].linhas;
                 
                 if (contLinhas <= linhasMetade) {
-                    letraEsquerda.push(<div className={'paragrafo-musica-esquerda'}>{letraLinhas[i].paragrafo}<br></br><br></br></div>);
+                    letraEsquerda.push(<div className='paragrafo-musica-esquerda'>{letraLinhas[i].paragrafo}<br></br><br></br></div>);
                 } else {
-                    letraDireita.push(<div className={'paragrafo-musica-direita'}>{letraLinhas[i].paragrafo}<br></br><br></br></div>);
+                    letraDireita.push(<div className='paragrafo-musica-direita'>{letraLinhas[i].paragrafo}<br></br><br></br></div>);
                 }
             }
             letraDireita.push(
@@ -140,23 +147,29 @@ class ComboLetra extends Component {
                             </a>
                         </div>
                     </div>
-                    <div className='container-opcoes-musica' style={this.state.listaAtiva ? null : {display: 'none'}}>
-                        <div className='opcoes-musica'>
-                            {this.state.opcoes.map(mus => 
-                                <ItemListaMusica musica={mus} buscarLetra={this.buscarLetra} idBuscarLetra={this.state.idBuscarLetra}/>
-                            )}
-                        </div>
+                    <div className='container-opcoes-musica container-carrossel' style={this.state.listaAtiva ? null : {display: 'none'}}>
+                        <Carrossel tamanhoIcone={45} tamanhoMaximo='100%' direcao='vertical' style={{zIndex: '400'}} percentualBeirada={0.08}>
+                            <div className='opcoes-musica'>
+                                {this.state.opcoes.map(mus => 
+                                    <ItemListaMusica musica={mus} buscarLetra={this.buscarLetra} idBuscarLetra={this.state.idBuscarLetra}/>
+                                )}
+                            </div>
+                        </Carrossel>
                     </div>
                 </div>
-                <div className='container-preview'>
-                    <div className='texto-inserir'>
-                        <div className='paragrafos-esquerda'>
-                            {this.state.letraMusica.esquerda}
+                <div className='container-preview combo-popup container-carrossel'>
+                    <Carrossel tamanhoIcone={45} tamanhoMaximo='100%' direcao='vertical' style={{zIndex: '400'}} percentualBeirada={0.08}>
+                        <div>
+                            <div className='texto-inserir'>
+                                <div className='paragrafos-esquerda'>
+                                    {this.state.letraMusica.esquerda}
+                                </div>
+                                <div className='paragrafos-direita'>
+                                    {this.state.letraMusica.direita}
+                                </div>
+                            </div>
                         </div>
-                        <div className='paragrafos-direita'>
-                            {this.state.letraMusica.direita}
-                        </div>
-                    </div>
+                    </Carrossel>
                 </div>
                 <div className='container-divisao-popup'>
                     <div className='checkboxes-popup'>

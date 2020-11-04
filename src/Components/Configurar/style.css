@@ -146,6 +146,16 @@
     max-width: 20.9vh;
 }
 
+#rotulo-configuracoes-musica {
+    display: inline-block;
+    position: relative;
+    width: 4vh;
+    height: 4vh;
+    margin: 0.9vh 0 0 0.9vh;
+    text-align: center;
+    padding-top: 0.8vh;
+}
+
 .opcoes-fonte {
     height: 4vh;
     border-radius: var(--round-border-pequeno);
