@@ -1,20 +1,25 @@
 import React, { Component } from 'react';
 import './MenuExportacao.css';
 import { toggleAnimacao } from '../Animacao/animacaoCoordenadas.js';
+import Exportador from './Exportador';
 import ExportarHTML from './ExportarHTML';
 import ExportarPptx from './ExportarPptx';
 import ExportarPDF from './ExportarPDF';
 import ExportarEmail from './ExportarEmail';
 import ExportarLink from './ExportarLink';
+import ExportarDownload from './ExportarDownload';
 
 class MenuExportacao extends Component {
 
     constructor (props) {
         super(props);
         this.coordenadasBotao = [ 80, 3, 12, 89];
-        this.coordenadasMenu = [ 62, 3, 12, 78];
+        this.coordenadasMedio = [ 73, 3, 12, 77]
+        this.coordenadasMenu = [ 60, 3, 12, 77];
         this.state = {coordenadas: [...this.coordenadasBotao], 
             menuVisivel: false, 
+            menuFormatos: false,
+            posicaoArrow: null,
             tamIcones: window.innerWidth*0.027 + 'px',
             popupConfirmacao: null    
         };
@@ -24,15 +29,48 @@ class MenuExportacao extends Component {
         toggleAnimacao(
             this.state.coordenadas,
             this.coordenadasBotao,
-            this.coordenadasMenu,
+            this.coordenadasMedio,
             c => this.setState({coordenadas: c}),
             bool => {
                 if (this.state.menuVisivel !== bool)
-                    this.setState({menuVisivel: bool})
+                    this.setState({menuVisivel: bool, menuFormatos: false, posicaoArrow: null, 
+                                   callbackMeio: null, callback: null})
             },
-            c => c[0] < 70,
+            c => c[3] < 84,
             1.72
         )
+    }
+
+    abrirMenuFormatos = () => {
+        toggleAnimacao(
+            this.state.coordenadas,
+            this.coordenadasMenu,
+            this.coordenadasMedio,
+            c => this.setState({coordenadas: c}),
+            bool => {
+                if (this.state.menuFormatos !== bool)
+                    this.setState({menuFormatos: bool})
+            },
+            c => c[0] < 67,
+            0.4
+        )
+    }
+
+    definirMeioExportacao = (callbackMeio, posicaoArrow) => {
+        var posicao = posicaoArrow === this.state.posicaoArrow ? null : posicaoArrow
+        var callback = this.state.callbackMeio ? null : callbackMeio;
+        if ((posicao !== null) !== (this.state.posicaoArrow !== null)) 
+            this.abrirMenuFormatos(posicao);
+        var timeout = (posicao !== null ? 100 : 20);
+        setTimeout(() => this.setState({posicaoArrow: posicao}), timeout);
+        this.setState({callbackMeio: callback});
+    }
+
+    definirCallback = callbackFormato => {
+        var callback = (copiaDOM, imagensBase64, previews, nomeArquivo) => {
+            this.state.callbackMeio(callbackFormato(copiaDOM, imagensBase64, previews, nomeArquivo))
+        }
+        this.setState({callback: callback});
     }
 
     render() {
@@ -49,14 +87,19 @@ class MenuExportacao extends Component {
                     <div className='colapsar-menu exportacao' style={{display: this.state.menuVisivel ? '' : 'none'}}
                         onClick={this.abrirMenu}>◢
                     </div>
-                    <div id='opcoes-menu-exportacao' style={estiloDivOculta} onClick={e => e.stopPropagation()}>
-                        <ExportarHTML/>
-                        <ExportarPptx/>
-                        <ExportarPDF/>
-                        <ExportarEmail tamIcones={this.state.tamIcones}/>
-                        <ExportarLink tamIcones={this.state.tamIcones}/> 
+                    <div id='opcoes-menu-exportacao' className='opcoes-menu-exportacao' style={estiloDivOculta} onClick={e => e.stopPropagation()}>
+                        <ExportarDownload tamIcones={this.state.tamIcones} definirMeioExportacao={this.definirMeioExportacao} posicaoArrow={this.state.posicaoArrow}/>
+                        <ExportarEmail tamIcones={this.state.tamIcones} definirMeioExportacao={this.definirMeioExportacao} posicaoArrow={this.state.posicaoArrow}/>
+                        <ExportarLink tamIcones={this.state.tamIcones} definirMeioExportacao={this.definirMeioExportacao} posicaoArrow={this.state.posicaoArrow}/> 
+                        <div id='formatos-exportacao' className='opcoes-menu-exportacao' 
+                             style={this.state.menuFormatos ? null : {display: 'none'}}>
+                            <ExportarHTML definirCallback={this.definirCallback}/>
+                            <ExportarPptx definirCallback={this.definirCallback}/>
+                            <ExportarPDF definirCallback={this.definirCallback}/>
+                        </div>
                     </div>
-                    <div style={{display: this.state.menuVisivel ? 'none' : ''}}>Exportar Slides</div>
+                    <Exportador callback={this.callback}/>
+                    <div style={{display: this.state.menuVisivel ? 'none' : '', marginBottom: '0.7vw'}}>Exportar Slides</div>
                 </div>
             </>
         )

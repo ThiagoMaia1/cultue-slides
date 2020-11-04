@@ -1,19 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { capitalize } from '../../Element';
-import PopupConfirmacao from '../Configurar/Popup/PopupConfirmacao';
-import Preview from '../Preview/Preview'
-
-export const downloadArquivoTexto = function(nomeArquivo, conteudoArquivo) {
-  let blobx = new Blob([conteudoArquivo], { type: 'text/plain' }); // ! Blob
-  let elemx = window.document.createElement('a');
-  elemx.href = window.URL.createObjectURL(blobx); // ! createObjectURL
-  elemx.download = nomeArquivo;
-  elemx.style.display = 'none';
-  document.body.appendChild(elemx);
-  elemx.click();
-  document.body.removeChild(elemx);
-}
+import Preview from '../Preview/Preview';
 
 export function getBase64Image(src, classe, total, callback) {
   const img = new Image();
@@ -138,19 +126,7 @@ class Exportador extends Component {
     this.state = {slidePreviewFake: true, previews: [], popupConfirmacao: null};
   } 
 
-  conferirClick = () => {
-    if (this.props.exportavel) {
-        this.getCopiaDom();
-    } else {
-        this.setState({popupConfirmacao: (
-            <PopupConfirmacao titulo='Apresentação Vazia' botoes='OK'
-                            pergunta={'Insira pelo menos um slide antes de exportar.'} 
-                            callback={() => this.setState({popupConfirmacao: null})}/>
-        )});
-    }
-  }
-
-  getCopiaDom = () => {
+  getCopiaDOM = () => {
     this.imagensBase64 = [];
     var sOrdenados = slidesOrdenados(this.props.state.elementos, false);
     this.previews = sOrdenados.map((s, i) => ({...getSlidePreview(this.props.state, s), indice: i}));
@@ -197,25 +173,20 @@ class Exportador extends Component {
     }
   }
 
+  static getDerivedStateFromProps = (props, state) => {
+    if (props.callback) 
+      this.getCopiaDOM();
+    return null;
+  }
+
   render() {
-      return (
-        <>
-          {this.state.popupConfirmacao}
-          <div className='div-botao-exportar' onClick={this.conferirClick}> 
-            <button id={'exportar-' + this.props.formato} className='botao-exportar sombrear-selecao'>{this.props.logo}</button>
-            <div className='rotulo-botao-exportar'>{this.props.rotulo}</div>
-          </div>
-          {this.state.previews}
-        </>
-      )
+    return <>{this.state.previews}</>
   }
 
 }
 
 const mapStateToProps = function (state) {
-  state = state.present;
-  return {state: state, exportavel: state.elementos.length > 1};
+  return {state: state.present};
 }
 
 export default connect(mapStateToProps)(Exportador);
-

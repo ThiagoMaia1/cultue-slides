@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
-import Exportador from './Exportador';
-import { downloadArquivoTexto } from './Exportador';
+import BotaoExportador from './BotaoExportador';
 import { toggleFullscreen as fullScreen } from '../Preview/Preview';
-import { enviarEmail as enviarEmailAnexo } from './EnviarEmail';
 
 const toggleFullscreen = fullScreen;
 
@@ -85,62 +83,56 @@ const styleSheet = '.slide-ativo {z-index: 20;}' +
 
 class ExportarHTML extends Component {
     
-    constructor (props) {
-      super(props);
-      var simboloHTML = '</>';
-      this.logo = <div id='logo-html'>{simboloHTML}</div>
-      this.state = {slidePreviewFake: true, previews: []};
-      this.styleSheet = styleSheet;
-      this.script = '' + scriptHTML;
-      this.cssImagens = [];
-    }
+  constructor (props) {
+    super(props);
+    var simboloHTML = '</>';
+    this.logo = <div id='logo-html'>{simboloHTML}</div>
+    this.state = {slidePreviewFake: true, previews: []};
+    this.formato = 'html';
+    this.styleSheet = styleSheet;
+    this.script = '' + scriptHTML;
+    this.cssImagens = [];
+  }
 
-    exportarHTML = (copiaDOM, imagensBase64, _previews, nomeArquivo) => {
+  exportarHTML = (copiaDOM, imagensBase64, _previews, nomeArquivo) => {
 
-      var botoesTelaCheia = [...copiaDOM.querySelectorAll('#ativar-tela-cheia')];
-      var botaoTelaCheia = botoesTelaCheia[0].outerHTML;
-      for (var i of botoesTelaCheia) {i.remove();}
-      var setasMovimento = [...copiaDOM.querySelectorAll('.container-setas')];
-      var setaMovimento = setasMovimento[1].outerHTML;
-      for (var j of setasMovimento) {j.remove();}
-      var slides = [...copiaDOM.querySelectorAll('.preview-fake')];
-      var slidesHtml = slides.map(s => s.outerHTML);
-      copiaDOM.body.innerHTML = botaoTelaCheia + setaMovimento + slidesHtml.join('');
-      for (var img of imagensBase64) { //Criar o css para as imagens.
-        var { classe, data } = img;
-        this.cssImagens.push('.' + classe + '::before{content: url(' + data + '); position: absolute; z-index: 0;}')
-      }
-      var imagensDOM = [...copiaDOM.querySelectorAll('img')]; //Substituir Imagens por spans, para que o fundo seja definido pelo css.
-      for (var imgDOM of imagensDOM) {
-        var span = document.createElement('span');
-        span.classList.add(imgDOM.className);
-        imgDOM.parentNode.insertBefore(span, imgDOM);
-        imgDOM.remove();
-      }
-      var css = copiaDOM.createElement("style"); //Inserir arquivo CSS no DOM.
-      css.type = 'text/css';
-      css.innerHTML = styleSheet + this.cssImagens.join('\n');
-      copiaDOM.head.appendChild(css);
-      var script = copiaDOM.createElement("script");
-      script.innerHTML = toggleFullscreen + this.script + 'scriptHTML();'
-      copiaDOM.body.appendChild(script);
-      this.stringArquivo = copiaDOM.body.parentElement.innerHTML;
-      downloadArquivoTexto(nomeArquivo, this.stringArquivo);
-      enviarEmailAnexo(
-        'Email teste', 'tthiagopmaia@gmail.com, thiago.maia@ufop.edu.br',
-        'Rapaz, que e-mail bonito...', '<div><h1>Belo e-mail</h1> haha</div>',
-        {filename: nomeArquivo,
-         content: this.stringArquivo 
-        }
-      )
+    var botoesTelaCheia = [...copiaDOM.querySelectorAll('#ativar-tela-cheia')];
+    var botaoTelaCheia = botoesTelaCheia[0].outerHTML;
+    for (var i of botoesTelaCheia) {i.remove();}
+    var setasMovimento = [...copiaDOM.querySelectorAll('.container-setas')];
+    var setaMovimento = setasMovimento[1].outerHTML;
+    for (var j of setasMovimento) {j.remove();}
+    var slides = [...copiaDOM.querySelectorAll('.preview-fake')];
+    var slidesHtml = slides.map(s => s.outerHTML);
+    copiaDOM.body.innerHTML = botaoTelaCheia + setaMovimento + slidesHtml.join('');
+    for (var img of imagensBase64) { //Criar o css para as imagens.
+      var { classe, data } = img;
+      this.cssImagens.push('.' + classe + '::before{content: url(' + data + '); position: absolute; z-index: 0;}')
     }
+    var imagensDOM = [...copiaDOM.querySelectorAll('img')]; //Substituir Imagens por spans, para que o fundo seja definido pelo css.
+    for (var imgDOM of imagensDOM) {
+      var span = document.createElement('span');
+      span.classList.add(imgDOM.className);
+      imgDOM.parentNode.insertBefore(span, imgDOM);
+      imgDOM.remove();
+    }
+    var css = copiaDOM.createElement("style"); //Inserir arquivo CSS no DOM.
+    css.type = 'text/css';
+    css.innerHTML = styleSheet + this.cssImagens.join('\n');
+    copiaDOM.head.appendChild(css);
+    var script = copiaDOM.createElement("script");
+    script.innerHTML = toggleFullscreen + this.script + 'scriptHTML();'
+    copiaDOM.body.appendChild(script);
+    this.stringArquivo = copiaDOM.body.parentElement.innerHTML;
+    return {nomeArquivo: nomeArquivo + this.formato, conteudoArquivo: this.stringArquivo};
+  }
 
-    render() {
-        
-        return (
-          <Exportador formato='html' callback={this.exportarHTML} logo={this.logo} rotulo='HTML' criarSlideFinal={true}/>
-        )
-    }
+  render() {
+    return (
+      <BotaoExportador formato={this.formato} onClick={() => this.props.definirCallback(this.exportarHTML)} 
+        logo={this.logo} rotulo={this.formato.toUpperCase()} criarSlideFinal={true}/>
+    )
+  }
 
 }
 

@@ -1,15 +1,19 @@
 #menu-exportacao {
     position: fixed;
     overflow: hidden;
-    justify-content: center;
+    justify-content: flex-end;
     flex-wrap: wrap;
     --diametro-bolinha: 3.7vw;
 }
 
 #opcoes-menu-exportacao {
+    margin-bottom: 0.8vw;
+}
+
+.opcoes-menu-exportacao {
     display: flex;
     flex-direction: row;
-    flex-wrap: wrap;
+    flex-wrap: wrap-reverse;
     align-items: center;
     justify-content: center;
     pointer-events: all;
@@ -71,6 +75,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    position: relative;
 }
 
 #exportar-link {
@@ -82,6 +87,12 @@
     color: white;
     background-color: black;
 }
+
+#exportar-download {
+    color: rgb(0, 103, 199);
+    background-color: rgb(245, 245, 245);
+}
+
 
 .container-logo-pptx {
     position: relative;
@@ -107,4 +118,19 @@
 .colapsar-menu.exportacao {
     bottom: 0.7vh;
     right: 0.7vh;
+}
+
+#formatos-exportacao {
+    background: #14213d;
+    border-radius: var(--round-border-medio);
+}
+
+.arrow-down {
+    position: absolute;
+    top: -1vw;
+    width: 0; 
+    height: 0; 
+    border-left: 1.5vw solid transparent;
+    border-right: 1.5vw solid transparent;
+    border-top: 1.5vw solid #14213d;
 }

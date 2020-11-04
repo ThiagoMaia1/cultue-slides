@@ -1,22 +1,28 @@
 import React, { Component } from 'react';
-import Exportador from './Exportador';
+import BotaoExportador from './BotaoExportador';
 import { BsLink45Deg } from 'react-icons/bs';
+
+const gerarLinkCompartilhavel= () => {
+  //todo;
+  return null;
+}
 
 class ExportarLink extends Component {
     
   constructor (props) {
     super(props);
-    this.state = {slidePreviewFake: true, previews: []};
+    this.posicao = 2;
   }
 
-  exportarLink = previews => {
-      
+  exportarLink = obj => {
+    var { nomeArquivo, conteudoArquivo } = obj;
+    gerarLinkCompartilhavel(nomeArquivo, conteudoArquivo);
   }
 
   render() {
       return (
-        <Exportador formato='link' callback={this.exportarLink} 
-          logo={<BsLink45Deg size={this.props.tamIcones}/>} rotulo='Link'/>
+        <BotaoExportador formato='link' onClick={() => this.props.definirMeioExportacao(this.exportarLink, this.posicao)} 
+          arrow={this.props.posicaoArrow === this.posicao} logo={<BsLink45Deg size={this.props.tamIcones}/>} rotulo='Link'/>
       )
   }
 

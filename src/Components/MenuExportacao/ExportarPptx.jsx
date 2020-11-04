@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Exportador from './Exportador';
+import BotaoExportador from './BotaoExportador';
 import pptxgen from "pptxgenjs";
 import { fonteBase } from '../Preview/Preview';
 
@@ -37,12 +37,12 @@ class ExportarPptx extends Component {
         var opcoesImagem = getDimensaoImagem(p.estilo.imagem);
         slide.addImage({data: imagens[p.classeImagem], sizing: {type: 'contain'}, ...opcoesImagem});
       }
-      // slide.addShape(pptx.ShapeType.rect, 
-      //                {fill: {
-      //                   color: p.estilo.tampao.backgroundColor.replace('#',''), 
-      //                   transparency: (1-Number(p.estilo.tampao.opacity))*100
-      //                }, x: 0, y: 0, w: '100%', h: '100%'}
-      // );
+      slide.addShape(pptx.ShapeType.rect, 
+                     {fill: {
+                        color: p.estilo.tampao.backgroundColor.replace('#',''), 
+                        transparency: (1-Number(p.estilo.tampao.opacity))*100
+                     }, x: 0, y: 0, w: '100%', h: '100%'}
+      );
       var opcoesTitulo = {...getDimensaoTitulo(p.estilo.titulo), ...getAtributos(p.estilo.titulo)};
       slide.addText(p.titulo, opcoesTitulo);
       
@@ -56,7 +56,8 @@ class ExportarPptx extends Component {
 
   render() {
       return (
-        <Exportador formato='pptx' callback={this.exportarPptx} logo={this.logo} rotulo='PowerPoint'/>
+        <BotaoExportador formato='pptx' onClick={() => this.props.definirCallback(this.exportarPptx)} 
+          logo={this.logo} rotulo='PowerPoint'/>
       )
   }
 
