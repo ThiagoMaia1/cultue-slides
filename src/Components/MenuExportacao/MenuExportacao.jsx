@@ -66,18 +66,15 @@ class MenuExportacao extends Component {
         this.setState({callbackMeio: callback});
     }
 
-    definirCallback = callbackFormato => {
+    definirCallback = (callbackFormato, criarSlideFinal = false) => {
         var callback = (copiaDOM, imagensBase64, previews, nomeArquivo) => {
             this.state.callbackMeio(callbackFormato(copiaDOM, imagensBase64, previews, nomeArquivo))
         }
-        this.setState({callback: callback});
+        this.setState({callback: callback, criarSlideFinal: criarSlideFinal});
     }
 
     render() {
-        var estiloDivOculta = {};
-        if (!this.state.menuVisivel) {
-           estiloDivOculta = {overflow: 'hidden', width: '1px', height: '1px'}
-        }
+        var estiloDivOculta = {overflow: 'hidden', width: '1px', height: '1px'}
         return (
             <>
                 <div id='menu-exportacao' className='botao-azul' onClick={this.abrirMenu}
@@ -87,18 +84,19 @@ class MenuExportacao extends Component {
                     <div className='colapsar-menu exportacao' style={{display: this.state.menuVisivel ? '' : 'none'}}
                         onClick={this.abrirMenu}>◢
                     </div>
-                    <div id='opcoes-menu-exportacao' className='opcoes-menu-exportacao' style={estiloDivOculta} onClick={e => e.stopPropagation()}>
+                    <div id='opcoes-menu-exportacao' className='opcoes-menu-exportacao' 
+                         style={this.state.menuVisivel ? null : estiloDivOculta} onClick={e => e.stopPropagation()}>
                         <ExportarDownload tamIcones={this.state.tamIcones} definirMeioExportacao={this.definirMeioExportacao} posicaoArrow={this.state.posicaoArrow}/>
                         <ExportarEmail tamIcones={this.state.tamIcones} definirMeioExportacao={this.definirMeioExportacao} posicaoArrow={this.state.posicaoArrow}/>
                         <ExportarLink tamIcones={this.state.tamIcones} definirMeioExportacao={this.definirMeioExportacao} posicaoArrow={this.state.posicaoArrow}/> 
                         <div id='formatos-exportacao' className='opcoes-menu-exportacao' 
-                             style={this.state.menuFormatos ? null : {display: 'none'}}>
+                             style={this.state.menuFormatos ? null : estiloDivOculta}>
                             <ExportarHTML definirCallback={this.definirCallback}/>
                             <ExportarPptx definirCallback={this.definirCallback}/>
                             <ExportarPDF definirCallback={this.definirCallback}/>
                         </div>
                     </div>
-                    <Exportador callback={this.callback}/>
+                    <Exportador callback={this.state.callback} criarSlideFinal={this.state.criarSlideFinal}/>
                     <div style={{display: this.state.menuVisivel ? 'none' : '', marginBottom: '0.7vw'}}>Exportar Slides</div>
                 </div>
             </>

@@ -11,12 +11,26 @@ class ExportarEmail extends Component {
   }
 
   exportarEmail = obj => {
-    var { nomeArquivo } = obj;
+    var { nomeArquivo, arquivo, formato } = obj;
+    switch (formato) {
+      case 'pptx':
+        arquivo.writeFile(nomeArquivo);
+        break;
+      case 'html':
+        // downloadArquivoTexto(nomeArquivo, arquivo);
+        break;
+      case 'pdf':
+        arquivo.save(nomeArquivo);
+        break;
+      default:
+        return;
+    }
+    
     enviarEmailAnexo(
       'Email teste', 'tthiagopmaia@gmail.com, thiago.maia@ufop.edu.br',
       'Rapaz, que e-mail bonito...', '<div><h1>Belo e-mail</h1> haha</div>',
       {filename: nomeArquivo,
-        content: 'oi' //conteudoArquivo
+        content: 'oi' //arquivo
       }
     )
   }

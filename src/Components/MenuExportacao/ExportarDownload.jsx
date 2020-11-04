@@ -21,8 +21,21 @@ class ExportarDownload extends Component {
   }
 
   exportarDownload = obj => {
-    var { nomeArquivo, conteudoArquivo } = obj;
-    downloadArquivoTexto(nomeArquivo, conteudoArquivo);
+    var { nomeArquivo, arquivo, formato } = obj;
+    switch (formato) {
+      case 'pptx':
+        arquivo.writeFile(nomeArquivo);
+        break;
+      case 'html':
+        downloadArquivoTexto(nomeArquivo, arquivo);
+        break;
+      case 'pdf':
+        arquivo.save(nomeArquivo);
+        break;
+      default:
+        return;
+    }
+      
   }
 
   render() {

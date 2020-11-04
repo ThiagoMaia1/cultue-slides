@@ -109,8 +109,8 @@ const slideFinal = {
   titulo: '',
   selecionado: {elemento: 999, slide: 0},
   estilo: {
-    titulo: {paddingTop: '52%'},
-    paragrafo: {fontSize: '150%', color: '#ffffff', fontFamily: 'Helvetica', textAlign: 'center'},
+    titulo: {height: '90%'},
+    paragrafo: {fontSize: '150%', color: '#ffffff', fontFamily: 'Helvetica', textAlign: 'center', padding: '0%'},
     fundo: {src:'./Galeria/Fundos/Cor Sólida.jpg'}, 
     tampao: {backgroundColor: '#000000', opacity: '1'},
     texto: {},
@@ -123,7 +123,7 @@ class Exportador extends Component {
   constructor (props) {
     super(props);
     this.ref = React.createRef();
-    this.state = {slidePreviewFake: true, previews: [], popupConfirmacao: null};
+    this.state = {slidePreviewFake: true, previews: [], popupConfirmacao: null, callback: null, feito: false};
   } 
 
   getCopiaDOM = () => {
@@ -164,8 +164,8 @@ class Exportador extends Component {
         (dataURL, classe, total, src) => {
           this.imagensBase64.push({data: dataURL, classe: classe});
           if (total === this.imagensBase64.length) {
-            var nomeArquivo = getDate() + ' Apresentação.' + this.props.formato;
-            this.props.callback(this.copiaDOM, this.imagensBase64, this.previews, nomeArquivo);
+            var nomeArquivo = getDate() + ' Apresentação.';
+            this.state.callback(this.copiaDOM, this.imagensBase64, this.previews, nomeArquivo);
             this.setState({previews: null});
           }
         }
@@ -174,12 +174,17 @@ class Exportador extends Component {
   }
 
   static getDerivedStateFromProps = (props, state) => {
-    if (props.callback) 
-      this.getCopiaDOM();
+    if (props.callback && props.callback !== state.callback) {
+      return {callback: props.callback, feito: false}
+    } 
     return null;
   }
 
   render() {
+    if (this.state.callback && !this.state.feito) {
+      this.getCopiaDOM();
+      this.setState({feito: true});
+    }
     return <>{this.state.previews}</>
   }
 

@@ -31,7 +31,6 @@
 //   ✔️ Carrossel do Input Imagem não vai até o final.
 //   Incluir webfonts na combo de fontes disponíveis.
 //   Fontes que não suportam números superscritos.
-//   Exportação de slides de imagem como html.
 //   Redividir quando o texto de um slide é todo deletado.
 //   Duas colunas
 //
@@ -46,20 +45,21 @@
 //   ✔️ Exportar como HTML.
 //   ✔️ Marcador de repetições de estrofes nos slides de música/slide de refrão repetido.
 //   ✔️ Dividir música em colunas.
+//   ✔️ Exportar como Power Point.
+//   Exportar como PDF.
+//   Enviar por e-mail.
 //   Calcular resolução do datashow.
-//   Exportar como Power Point.
+//   Editar tamanho da imagem direto no preview.
+//   Exportação de slides de imagem
 //   Incorporar vídeos do youtube.
 //   Gerar link compartilhável.
-//   Enviar por e-mail.
-//   Exportar como PDF.
 //   Atalhos em geral.
 //   Possibilidade de editar elemento (retornando à tela da query).
+//   Login para salvar preferências.
 //   Criar slides a partir de lista com separador.
-//   Editar tamanho da imagem direto no preview.
 //   Combo de número de capítulos e versículos da bíblia.
 //   Navegação pelas setas causar rolagem na lista de slides.
 //   ColorPicker personalizado.
-//   Login para salvar preferências.
 
 import React from 'react';
 import ReactDOM from 'react-dom';

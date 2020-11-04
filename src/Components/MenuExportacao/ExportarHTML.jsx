@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import BotaoExportador from './BotaoExportador';
 import { toggleFullscreen as fullScreen } from '../Preview/Preview';
+import TratarDadosHTML from './tratarDadosHTML';
 
 const toggleFullscreen = fullScreen;
 
@@ -73,14 +74,6 @@ function scriptHTML () {
   }, false);
 } 
 
-const styleSheet = '.slide-ativo {z-index: 20;}' +
-             '.preview-fake {background-color: white; position: absolute}' +
-             '#ativar-tela-cheia {opacity: 0.2; right: 4vh; bottom: 4vh; width: 10vh; height: 10vh;}' +
-             '#ativar-tela-cheia:hover {opacity: 0.8;}' + 
-             '.tampao {z-index: 1;}' + 
-             '.texto-preview {z-index: 2;}' +
-             '#paragrafo-textoArray-999-0-0 {padding-left: 5.5vw;}';
-
 class ExportarHTML extends Component {
     
   constructor (props) {
@@ -89,22 +82,17 @@ class ExportarHTML extends Component {
     this.logo = <div id='logo-html'>{simboloHTML}</div>
     this.state = {slidePreviewFake: true, previews: []};
     this.formato = 'html';
-    this.styleSheet = styleSheet;
     this.script = '' + scriptHTML;
     this.cssImagens = [];
   }
 
   exportarHTML = (copiaDOM, imagensBase64, _previews, nomeArquivo) => {
 
-    var botoesTelaCheia = [...copiaDOM.querySelectorAll('#ativar-tela-cheia')];
-    var botaoTelaCheia = botoesTelaCheia[0].outerHTML;
-    for (var i of botoesTelaCheia) {i.remove();}
-    var setasMovimento = [...copiaDOM.querySelectorAll('.container-setas')];
-    var setaMovimento = setasMovimento[1].outerHTML;
-    for (var j of setasMovimento) {j.remove();}
-    var slides = [...copiaDOM.querySelectorAll('.preview-fake')];
-    var slidesHtml = slides.map(s => s.outerHTML);
-    copiaDOM.body.innerHTML = botaoTelaCheia + setaMovimento + slidesHtml.join('');
+    var tratado = TratarDadosHTML(copiaDOM);
+    copiaDOM = tratado.copiaDOM;
+    var { botaoTelaCheia, setaMovimento } = tratado;
+    
+    copiaDOM.body.innerHTML = botaoTelaCheia + setaMovimento + copiaDOM.body.innerHTML;
     for (var img of imagensBase64) { //Criar o css para as imagens.
       var { classe, data } = img;
       this.cssImagens.push('.' + classe + '::before{content: url(' + data + '); position: absolute; z-index: 0;}')
@@ -118,19 +106,19 @@ class ExportarHTML extends Component {
     }
     var css = copiaDOM.createElement("style"); //Inserir arquivo CSS no DOM.
     css.type = 'text/css';
-    css.innerHTML = styleSheet + this.cssImagens.join('\n');
+    css.innerHTML = this.cssImagens.join('\n');
     copiaDOM.head.appendChild(css);
     var script = copiaDOM.createElement("script");
     script.innerHTML = toggleFullscreen + this.script + 'scriptHTML();'
     copiaDOM.body.appendChild(script);
     this.stringArquivo = copiaDOM.body.parentElement.innerHTML;
-    return {nomeArquivo: nomeArquivo + this.formato, conteudoArquivo: this.stringArquivo};
+    return {nomeArquivo: nomeArquivo + this.formato, arquivo: this.stringArquivo, formato: this.formato};
   }
 
   render() {
     return (
-      <BotaoExportador formato={this.formato} onClick={() => this.props.definirCallback(this.exportarHTML)} 
-        logo={this.logo} rotulo={this.formato.toUpperCase()} criarSlideFinal={true}/>
+      <BotaoExportador formato={this.formato} onClick={() => this.props.definirCallback(this.exportarHTML, true)} 
+        logo={this.logo} rotulo={this.formato.toUpperCase()}/>
     )
   }
 

@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import BotaoExportador from './BotaoExportador';
-
+import { jsPDF } from "jspdf";
+import TratarDadosHTML from './tratarDadosHTML';
+ 
 class ExportadorPDF extends Component {
     
   constructor (props) {
@@ -12,9 +14,23 @@ class ExportadorPDF extends Component {
     )
   }
 
-  exportarPDF = (_copiaDOM, _imagensBase64, _previews, nomeArquivo) => {
-  
-    return {nomeArquivo: nomeArquivo + this.formato, conteudoArquivo: {}};
+  exportarPDF = (copiaDOM, _imagensBase64, _previews, nomeArquivo) => {
+    
+    const pdf = new jsPDF(({
+      orientation: "landscape",
+      unit: "px",
+      format: [window.screen.width, window.screen.height]
+    }));
+    
+    copiaDOM = TratarDadosHTML(copiaDOM).copiaDOM;
+    // var paginas = copiaDOM.querySelectorAll('.preview-fake');
+
+    pdf.html(copiaDOM.body, {
+      callback: function (pdf) {
+        pdf.save();
+      }
+    });
+    return {nomeArquivo: nomeArquivo + this.formato, arquivo: pdf, formato: this.formato};
   }
 
   render() {

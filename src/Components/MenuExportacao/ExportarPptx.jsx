@@ -7,6 +7,7 @@ class ExportarPptx extends Component {
     
   constructor (props) {
     super(props);
+    this.formato = 'pptx';
     this.logo = (
       <div className='container-logo-pptx'>
         <img id='logo-pptx' className='logo-exportacao' src={require('./Logos/Logo PowerPoint.svg')} alt='Logo PowerPoint'/>
@@ -51,12 +52,12 @@ class ExportarPptx extends Component {
       var opcoesTexto = {...getDimensaoTexto(p.estilo, this.taxaPadTop), ...getAtributos(p.estilo.paragrafo)};
       slide.addText(texto, opcoesTexto);
     }
-    pptx.writeFile(nomeArquivo);
+    return {nomeArquivo: nomeArquivo + this.formato, arquivo: pptx, formato: this.formato}
   }
 
   render() {
       return (
-        <BotaoExportador formato='pptx' onClick={() => this.props.definirCallback(this.exportarPptx)} 
+        <BotaoExportador formato={this.formato} onClick={() => this.props.definirCallback(this.exportarPptx)} 
           logo={this.logo} rotulo='PowerPoint'/>
       )
   }

@@ -105,7 +105,6 @@ class Preview extends Component {
                      className={(this.props.slidePreviewFake ? 'preview-fake ' : '') + (slidePreview.indice === 0 ? 'slide-ativo' : '')}
                      style={{width: this.larguraTela*this.state.screen.proporcao, 
                             height: this.alturaTela*this.state.screen.proporcao,
-                            visibility: this.props.slidePreviewFake ? 'hidden' : '',
                             ...this.realcarElemento('tampao', 'dentro')}}>
                     <div className='tampao' style={slidePreview.estilo.tampao}>
                                     
