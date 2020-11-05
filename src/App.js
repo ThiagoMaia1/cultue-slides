@@ -7,12 +7,14 @@ import { store } from './index';
 import { Provider } from 'react-redux';
 import Configurar from './Components/Configurar/Configurar.jsx';
 import MenuExportacao from './Components/MenuExportacao/MenuExportacao';
+import Login from './Components/Login/Login';
 
 function App() {
 
 
   return (
     <Provider store={store}>
+      {/* <Login fundo={true}/> */}
       <div className="App">
         <div id='organizador'>
           <Arrastar />

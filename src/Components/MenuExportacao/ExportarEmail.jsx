@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 import BotaoExportador from './BotaoExportador';
 import { IoMdMail } from 'react-icons/io';
-import firebase from '../../firebase';
+import { firebaseFunctions } from '../../firebase';
 
-var functions = firebase.functions();
-var enviarEmail = functions.httpsCallable('enviarEmail');
+var enviarEmail = firebaseFunctions.httpsCallable('enviarEmail');
 console.log(enviarEmail);
 
 class ExportarEmail extends Component {

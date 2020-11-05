@@ -1,0 +1,42 @@
+.fundo-login {
+    background-color: var(--platinum);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    z-index: 405;
+}
+/* 
+.fundo-login > div {
+    
+} */
+
+#quadro-login {
+    background-color: white;
+    border-radius: var(--round-border-medio);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5vh;
+    box-shadow: var(--box-shadow);    
+}
+
+#quadro-login (input, hr) {
+    width: 18vw;
+}
+
+#quadro-login button {
+    width: 15vw;
+    margin-top: 2vh;
+}
+
+#quadro-login hr {
+    border-top: 1px solid var(--platinum);
+}
+
+#cadastre-se {
+    text-align: center;
+}

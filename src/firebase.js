@@ -2,6 +2,9 @@
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 
 import firebase from 'firebase';
+import "firebase/auth";
+import "firebase/firestore";
+import "firebase/functions";
 
 var firebaseConfig = {
     apiKey: "AIzaSyCeaxx8Or-S_s18iq0fePw9XkkunZ-RH_4",
@@ -21,3 +24,6 @@ firebase.analytics();
 export default firebase;
 
 export const firebaseStorage = firebase.storage().ref();
+export const firebaseAuth = firebase.auth();
+export const firebaseFunctions = firebase.functions();
+export const firestore = firebase.firestore();

@@ -1,4 +1,4 @@
-// //Falta fazer:
+/*// //Falta fazer:
 // Básico:
 //   ✔️ Corrigir fundo do pop-up nas previews de música e texto bíblico.
 //   ✔️ Corrigir reordenamento. 
@@ -28,13 +28,14 @@
 //   ✔️ Alinhamento de texto não funciona desde que mudei as divs dos paragrafos.
 //   ✔️ Botões novos do menu configurações.
 //   ✔️ Carrossel da lista de slides.
-//   ✔️ Carrossel do Input Imagem não vai até o final.
+//   ✔️ Carrossel do Input Imagem não vai até o final.*/
+// Errinhos:
 //   Incluir webfonts na combo de fontes disponíveis.
 //   Fontes que não suportam números superscritos.
 //   Redividir quando o texto de um slide é todo deletado.
 //   Duas colunas
 //
-// Features:
+/*// Features:
 //   ✔️ Envio de imagens.
 //   ✔️ Navegar slides clicando à direita ou esquerda.
 //   ✔️ Enviar imagem para fundo.
@@ -45,7 +46,7 @@
 //   ✔️ Exportar como HTML.
 //   ✔️ Marcador de repetições de estrofes nos slides de música/slide de refrão repetido.
 //   ✔️ Dividir música em colunas.
-//   ✔️ Exportar como Power Point.
+//   ✔️ Exportar como Power Point.*/
 //   Exportar como PDF.
 //   Enviar por e-mail.
 //   Calcular resolução do datashow.
@@ -60,7 +61,15 @@
 //   Combo de número de capítulos e versículos da bíblia.
 //   Navegação pelas setas causar rolagem na lista de slides.
 //   ColorPicker personalizado.
-//   Propagandas
+//   Tela de propagandas
+//
+// Negócio:
+//   Cadastrar google ads.
+//   Criar logo.
+//   Buscar parceria com ultimato.
+//   Comprar domínio.
+//   Configurar site para ser encontrado pelo google.
+//   Pedir amigos para compartilharem.
 
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -69,10 +78,7 @@ import App from './App';
 import { createStore } from 'redux';
 import hotkeys from 'hotkeys-js';
 import Element, { getEstiloPadrao, textoMestre, Estilo, getPadding } from './Element.js';
-import { selecionadoOffset, getSlidePreview } from './Components/MenuExportacao/Exportador'
-// import firebase from './firebase';
-// const admin = require("firebase-admin");
-// admin.initializeApp();
+import { selecionadoOffset, getSlidePreview } from './Components/MenuExportacao/Exportador';
 
 const criarNovaApresentacao = () => {
   return [new Element("Slide-Mestre", "Slide-Mestre", [textoMestre], null, {...getEstiloPadrao()}, true)];
