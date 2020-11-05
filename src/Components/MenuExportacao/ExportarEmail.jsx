@@ -1,7 +1,11 @@
 import React, { Component } from 'react';
 import BotaoExportador from './BotaoExportador';
 import { IoMdMail } from 'react-icons/io';
-import { enviarEmail as enviarEmailAnexo } from './EnviarEmail';
+import firebase from '../../firebase';
+
+var functions = firebase.functions();
+var enviarEmail = functions.httpsCallable('enviarEmail');
+console.log(enviarEmail);
 
 class ExportarEmail extends Component {
 
@@ -26,18 +30,19 @@ class ExportarEmail extends Component {
         return;
     }
     
-    enviarEmailAnexo(
+    enviarEmail(
       'Email teste', 'tthiagopmaia@gmail.com, thiago.maia@ufop.edu.br',
-      'Rapaz, que e-mail bonito...', '<div><h1>Belo e-mail</h1> haha</div>',
-      {filename: nomeArquivo,
-        content: 'oi' //arquivo
-      }
+      'Rapaz, que e-mail bonito...', '<div><h1>Belo e-mail</h1> haha</div>'
+      // ,
+      // [{filename: 'teste.txt',
+      //   content: 'oi' //arquivo
+      // }]
     )
   }
 
   render() {
       return (
-        <BotaoExportador formato='email' onClick={() => this.props.definirMeioExportacao(this.exportarDownload, this.posicao)} 
+        <BotaoExportador formato='email' onClick={() => this.props.definirMeioExportacao(this.exportarEmail, this.posicao)} 
           arrow={this.props.posicaoArrow === this.posicao} logo={<IoMdMail size={this.props.tamIcones}/>} rotulo='E-mail'/>
       )
   }

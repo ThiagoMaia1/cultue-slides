@@ -60,6 +60,7 @@
 //   Combo de número de capítulos e versículos da bíblia.
 //   Navegação pelas setas causar rolagem na lista de slides.
 //   ColorPicker personalizado.
+//   Propagandas
 
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -69,6 +70,9 @@ import { createStore } from 'redux';
 import hotkeys from 'hotkeys-js';
 import Element, { getEstiloPadrao, textoMestre, Estilo, getPadding } from './Element.js';
 import { selecionadoOffset, getSlidePreview } from './Components/MenuExportacao/Exportador'
+// import firebase from './firebase';
+// const admin = require("firebase-admin");
+// admin.initializeApp();
 
 const criarNovaApresentacao = () => {
   return [new Element("Slide-Mestre", "Slide-Mestre", [textoMestre], null, {...getEstiloPadrao()}, true)];
