@@ -73,7 +73,7 @@ class Slider extends Component {
     render() {
         return (
             <div className='container-range' style={this.props.style}>
-                <div className='rotulo-range'>{this.props.rotulo}</div>
+                <div className='container-rotulo-range'><div className='rotulo-range'>{this.props.rotulo}</div></div>
                 <div className='frame-range'>
                     <input type="range"
                         ref={this.ref} 

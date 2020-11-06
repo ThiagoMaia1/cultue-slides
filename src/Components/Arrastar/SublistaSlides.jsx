@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { reverterSuperscrito } from '../Preview/TextoPreview.jsx';
 import { connect } from 'react-redux';
-import { Estilo } from '../../Element';
+// import { Estilo } from '../../Element';
 
-const estiloVazio = JSON.stringify(new Estilo());
+// const estiloVazio = JSON.stringify(new Estilo());
 const eEstiloVazio = estilo => {
     var keysEstilo = Object.keys(estilo);
     for (var k of keysEstilo) {

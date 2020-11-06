@@ -214,13 +214,16 @@ function undoable(reducer) {
     past: [],
     present: presenteInicial,
     future: [],
-    slidePreview: getSlidePreview(presenteInicial)
+    slidePreview: getSlidePreview(presenteInicial),
+    usuario: {}
   }
 
   return function (state = initialState, action) {
-    var { past, present, future, previousTemp } = state;
+    var { past, present, future, previousTemp, usuario } = state;
     var newPresent;
     switch (action.type) {
+      case 'login':
+        return {...state, usuario: action.usuario}
       case 'UNDO':
         if (past.length === 0) return state;
         const previous = past[past.length - 1]
@@ -230,7 +233,8 @@ function undoable(reducer) {
           present: previous,
           future: [present, ...future],
           previousTemp: null,
-          slidePreview: getSlidePreview(previous)
+          slidePreview: getSlidePreview(previous),
+          usuario: usuario
         }
       case 'REDO':
         if (future.length === 0) return state;
@@ -241,7 +245,8 @@ function undoable(reducer) {
           present: next,
           future: newFuture,
           previousTemp: null,
-          slidePreview: getSlidePreview(next)          
+          slidePreview: getSlidePreview(next),
+          usuario: usuario          
         }
       case 'editar-slide-temporariamente':
         newPresent = reducer(deepSpreadPresente(present), {...action, type: 'editar-slide'})
@@ -258,7 +263,8 @@ function undoable(reducer) {
             present: newPresent,
             future: [],
             previousTemp: null,
-            slidePreview: getSlidePreview(newPresent)  
+            slidePreview: getSlidePreview(newPresent),
+            usuario: usuario  
           }
         }
         if (action.type === 'inserir')
@@ -268,7 +274,8 @@ function undoable(reducer) {
           present: newPresent,
           future: [],
           previousTemp: null,
-          slidePreview: getSlidePreview(newPresent)  
+          slidePreview: getSlidePreview(newPresent),
+          usuario: usuario  
         }
     }
   }

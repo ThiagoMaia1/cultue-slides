@@ -9,6 +9,7 @@ import Configurar from './Components/Configurar/Configurar.jsx';
 import MenuExportacao from './Components/MenuExportacao/MenuExportacao';
 import PopupAdicionar from './Components/PopupAdicionar/PopupAdicionar';
 import Login from './Components/Login/Login';
+import NavBar from './Components/NavBar/NavBar';
 
 class App extends Component {
 
@@ -26,6 +27,7 @@ class App extends Component {
       <Provider store={store}>
         <Login fundo={true} ativo={this.state.loginAtivo} callback={this.toggleLogin}/>
         <PopupAdicionar/>
+        <NavBar/>
         <div className="App">
           <div id='organizador'>
             <Arrastar />

@@ -1,0 +1,38 @@
+#navbar {
+    background-color: var(--platinum);
+    height: 4vh;
+    top: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    box-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+    position: relative;
+    z-index: 300;
+}
+
+#nome-usuario {
+    font-size: 90%;
+    padding-left: 1vw;
+}
+
+#info-usuario:hover, #info-usuario:focus {
+    text-decoration-line: underline;
+}
+
+#info-usuario:hover img {
+    box-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+}
+
+#foto-usuario {
+    object-fit: cover;
+    border-radius: 100px;
+    height: 3vh;
+    width: 3vh;
+}
+
+#info-usuario {
+    display: flex;
+    align-items: center;
+    padding: 1vh 2vw;
+    cursor: pointer;
+}

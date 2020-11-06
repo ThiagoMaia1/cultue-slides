@@ -8,8 +8,8 @@ class Configurar extends Component {
   constructor (props) {
     super(props);
     this.state = {};
-    this.coordenadasBotao = [ 3, 3, 89, 89];
-    this.coordenadasMenu = [ 3, 3, 89, 75];
+    this.coordenadasBotao = [ 7, 3, 85, 89];
+    this.coordenadasMenu = [ 7, 3, 85, 78];
     this.state = {aberto: 'hidden', coordenadas: [...this.coordenadasBotao], menuVisivel: false, tamIcones: window.innerWidth*0.027 + 'px'};
   }
 

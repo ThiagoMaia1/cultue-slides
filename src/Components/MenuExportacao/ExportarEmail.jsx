@@ -4,7 +4,6 @@ import { IoMdMail } from 'react-icons/io';
 import { firebaseFunctions } from '../../firebase';
 
 var enviarEmail = firebaseFunctions.httpsCallable('enviarEmail');
-console.log(enviarEmail);
 
 class ExportarEmail extends Component {
 

@@ -15,7 +15,7 @@
 
 .menu-configuracoes {
     border-radius: var(--round-border-pequeno);
-    width: 21vw;
+    width: 18.3vw;
     pointer-events: all;
     display: flex;
     flex-direction: column;

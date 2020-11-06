@@ -36,7 +36,6 @@
 
 #quadro-login button {
     width: 17vw;
-    margin-bottom: 2vh;
 }
 
 #quadro-login > * {
@@ -50,18 +49,24 @@
 .inputs-login {
     display: flex;
     flex-direction: column;
+    align-items: center;
+}
+
+.inputs-login button {
+    margin-top: 2vh;
 }
 
 #cadastre-se {
     text-align: center;
 }
 
-#quadro-login a {
+#esqueceu-senha {
     color: rgb(1, 126, 204);
     font-size: 90%;
     cursor: pointer;
     float: right;
     margin-bottom: 0;
+    text-align: right;
 }
 
 #comece-usar {
@@ -71,4 +76,17 @@
 #comece-usar div {
     width: 15vw;
     font-size: 300%;
+}
+
+.mensagem-erro{
+    text-align: right;
+    width: 90%;
+}
+
+.mensagem-erro div {
+    color: var(--vermelho-fraco);
+    font-size: 90%;
+    margin-top: 1vh;
+    line-height: 2.5vh;
+    min-height: 2.5vh;
 }
