@@ -25,9 +25,8 @@ class App extends Component {
   render() {
     return (
       <Provider store={store}>
-        <Login fundo={true} ativo={this.state.loginAtivo} callback={this.toggleLogin}/>
-        <PopupAdicionar/>
         <NavBar/>
+        <PopupAdicionar/>
         <div className="App">
           <div id='organizador'>
             <Arrastar />

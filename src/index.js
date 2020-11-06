@@ -35,6 +35,8 @@
 //   Redividir quando o texto de um slide é todo deletado.
 //   Duas colunas
 //   Indicar que há estilização nos slides/elementos.
+//   Pesquisa de letra de música não funciona na produção.
+//   Slide-mestre aparecendo na apresentação.
 //
 /*// Features:
 //   ✔️ Envio de imagens.
@@ -49,9 +51,11 @@
 //   ✔️ Dividir música em colunas.
 //   ✔️ Possibilidade de editar elemento (retornando à tela da query).
 //   ✔️ Atalhos em geral.
+//   ✔️ Login para salvar preferências.
+//   ✔️ Navbar no topo.
 //   ✔️ Exportar como Power Point.*/
+//   Tela perfil do usuário.
 //   Atalho para nova apresentação.
-//   Pesquisa no conteúdo dos slides.
 //   Exportar como PDF.
 //   Enviar por e-mail.
 //   Calcular resolução do datashow.
@@ -59,14 +63,14 @@
 //   Exportação de slides de imagem
 //   Incorporar vídeos do youtube.
 //   Gerar link compartilhável.
-//   Login para salvar preferências.
 //   Criar slides a partir de lista com separador.
 //   Combo de número de capítulos e versículos da bíblia.
 //   Navegação pelas setas causar rolagem na lista de slides.
+//   Pesquisa no conteúdo dos slides.
 //   ColorPicker personalizado.
 //   Tela de propagandas
 //   Adicionar logo da igreja (upload ou a partir de lista de logos famosas de denominações).
-//   Navbar no topo.
+//   Melhorar pesquisa de letra de música usando google.
 //
 // Negócio:
 //   Cadastrar google ads.
@@ -215,7 +219,7 @@ function undoable(reducer) {
     present: presenteInicial,
     future: [],
     slidePreview: getSlidePreview(presenteInicial),
-    usuario: {}
+    usuario: null
   }
 
   return function (state = initialState, action) {

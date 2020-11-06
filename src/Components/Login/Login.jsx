@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import './Login.css';
-import { firebaseAuth/*, googleAuth */} from "../../firebase";
+import { firebaseAuth, googleAuth } from "../../firebase";
 import { gerarDocumentoUsuario } from './UsuarioBD';
 
 function getMensagemErro(error) {
@@ -26,6 +26,10 @@ function getMensagemErro(error) {
     }
 }
 
+const listaCargos = ['Pastor', 'Presbítero', 'Diácono', 'Líder de Jovens', 'Líder de Ministério de Mulheres',
+                     'Líder de Ministério de Homens', 'Secretário(a)', 'Funcionário da Igreja', 'Membro Voluntário', 'Outro'
+]
+
 class Login extends React.Component {
 
     constructor (props) {
@@ -35,6 +39,7 @@ class Login extends React.Component {
 
     entrar = event => {
         event.preventDefault();
+        this.setState({erro: ''});
         if (this.state.cadastrando) { 
             this.criarUsuarioComEmailSenha();
         } else {
@@ -48,7 +53,7 @@ class Login extends React.Component {
     criarUsuarioComEmailSenha = async () => {
         try{
             const { user } = await firebaseAuth.createUserWithEmailAndPassword(this.state.email, this.state.senha);
-            gerarDocumentoUsuario(user, {nomeCompleto: this.state.nomeCompleto});
+            gerarDocumentoUsuario(user, {nomeCompleto: this.state.nomeCompleto, cargo: this.state.cargo});
         }
         catch(error){
             this.setState({erro: getMensagemErro(error)});
@@ -65,11 +70,17 @@ class Login extends React.Component {
 
     componentDidMount = async () => {
         firebaseAuth.onAuthStateChanged(async userAuth => {
+            console.log(this.props.usuario, userAuth);
+          if (!(userAuth || this.props.usuario) || (this.props.usuario && userAuth && userAuth.id === this.props.usuario.id)) return;
           const user = await gerarDocumentoUsuario(userAuth);
           this.props.dispatch({type: 'login', usuario: user});
           this.props.callback();
         });
       };
+
+    acessarPerfilUsuario = () => {
+        //todo
+    }
 
     render() {
         if (!this.props.ativo) return null;
@@ -77,45 +88,62 @@ class Login extends React.Component {
         <div id='container-login' className={this.props.fundo ? 'fundo-login' : ''}>
             <div className='wraper-login'>
                 <div id='quadro-login' className={this.props.fundo ? 'quadro-centralizado' : ''}>
-                    <form className='inputs-login'> 
-                        <input id='username' className='combo-popup' placeholder='E-mail' type='email' value={this.state.email}
-                                onChange={e => this.setState({email: e.target.value})}></input>
-                        <input id='password' className='combo-popup' placeholder='Senha' type='password' value={this.state.senha}
-                                onChange={e => this.setState({senha: e.target.value})}></input>
-                        {this.state.cadastrando ?
-                            <>
-                                <input id='nome-completo' className='combo-popup' placeholder='Nome Completo' type='text' 
-                                    value={this.state.nomeCompleto} onChange={e => this.setState({nomeCompleto: e.target.value})}></input>
-                                {/* <input id='password' className='combo-popup' placeholder='Senha' type='password' value={this.state.senha}
-                                    onChange={e => this.setState({senha: e.target.value})}></input> */}
-                            </> 
-                            : null 
-                            
-                        }
-                        <div className='mensagem-erro'>
-                            <div>{this.state.erro}</div>
-                        </div>
-                        <button className='botao-azul botao' onClick={this.entrar}>Entrar</button>
-                    </form>
-                    {this.state.cadastrando ? null :
+                    {this.props.usuario 
+                        ? <>
+                            <button className='botao-azul botao' onClik={this.acessarPerfilUsuario}>Meu Perfil</button>  
+                            <button className='botao limpar-input' onClick={() => firebaseAuth.signOut()}>✕ Sair</button>
+                          </>
+                        :  
                         <>
-                            <hr></hr>
-                            <button id='login-google' className='botao limpar-input'>Entrar com Google</button>
-                            <button id='cadastre-se' className='itens' onClick={this.cadastrando}>
-                                Cadastre-se
-                            </button>
-                            <button id='esqueceu-senha'>Esqueceu sua senha?</button>
+                            <form className='inputs-login'> 
+                                <input id='username' className='combo-popup' placeholder='E-mail' type='email' value={this.state.email}
+                                        onChange={e => this.setState({email: e.target.value})}></input>
+                                <input id='password' className='combo-popup' placeholder='Senha' type='password' value={this.state.senha}
+                                        onChange={e => this.setState({senha: e.target.value})}></input>
+                                {this.state.cadastrando ?
+                                    <>
+                                        <input id='nome-completo' className='combo-popup' placeholder='Nome Completo' type='text' 
+                                            value={this.state.nomeCompleto} onChange={e => this.setState({nomeCompleto: e.target.value})}></input>
+                                        <select id='cargo-usuario' className='combo-popup' placeholder='Cargo' type='select' value={this.state.cargo}
+                                            onChange={e => this.setState({cargo: e.target.value})}>
+                                                {listaCargos.map((c, i) => <option key={i} value={c}>{c}</option>)}
+                                        </select>
+                                    </> 
+                                    : null 
+                                    
+                                }
+                                <div className='mensagem-erro'>
+                                    <div>{this.state.erro}</div>
+                                </div>
+                                <button className='botao-azul botao' onClick={this.entrar}>Entrar</button>
+                            </form>
+                            {this.state.cadastrando ? null :
+                                <>
+                                    <hr></hr>
+                                    <button id='login-google' className='botao limpar-input' 
+                                            onClick={() => firebaseAuth.signInWithPopup(googleAuth)}>Entrar com Google</button>
+                                    <button id='cadastre-se' className='itens' onClick={this.cadastrando}>
+                                        Cadastre-se
+                                    </button>
+                                    <button id='esqueceu-senha'>Esqueceu sua senha?</button>
+                                </>
+                            }
                         </>
                     }
                 </div>
-                <div id='comece-usar' className='botao-azul' onClick={this.props.callback}>
-                    <div>Comece a Usar</div>
-                </div>
+                {this.props.fundo 
+                    ? <div id='comece-usar' className='botao-azul' onClick={this.props.callback}>
+                          <div>Comece a Usar</div></div>
+                    : null}
             </div>
         </div>
         );
     }
 };
-  
-export default connect()(Login);
+
+const mapStateToProps = state => {
+  return {usuario: state.usuario};
+}
+
+export default connect(mapStateToProps)(Login);
   

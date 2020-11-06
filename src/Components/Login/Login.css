@@ -1,5 +1,6 @@
 #container-login {
     background-color: var(--platinum);
+    border-radius: var(--round-border-medio);
 }
 
 .fundo-login {
