@@ -80,7 +80,7 @@ class ItemListaSlides extends Component {
                             </div>
                         </div>
                         <div className={'fade-estilizado ' + (JSON.stringify(elemento.slides[0].estilo) !== estiloVazio ? 'elemento-slide-estilizado' : '')}>
-                            <b> {i}. {elemento.tipo}: </b>{(elemento.tipo === 'Imagem' && !elemento.titulo) ? elemento.imagens[0].alt : elemento.titulo}
+                            <b> {i}. {getNomeInterfaceTipo(elemento.tipo)}: </b>{(elemento.tipo === 'Imagem' && !elemento.titulo) ? elemento.imagens[0].alt : elemento.titulo}
                         </div>
                         {this.state.colapsa ? 
                             (<div className='container-icone-colapsar'>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import './App.css';
 import Arrastar from './Components/Arrastar/Arrastar';
 import Preview from './Components/Preview/Preview';
@@ -8,26 +8,36 @@ import { Provider } from 'react-redux';
 import Configurar from './Components/Configurar/Configurar.jsx';
 import MenuExportacao from './Components/MenuExportacao/MenuExportacao';
 import PopupAdicionar from './Components/PopupAdicionar/PopupAdicionar';
-// import Login from './Components/Login/Login';
+import Login from './Components/Login/Login';
 
-function App() {
+class App extends Component {
 
+  constructor (props) {
+    super(props);
+    this.state = {loginAtivo: true}
+  }
 
-  return (
-    <Provider store={store}>
-      {/* <Login fundo={true}/> */}
-      <PopupAdicionar/>
-      <div className="App">
-        <div id='organizador'>
-          <Arrastar />
-          <Preview />
-          <Configurar />
+  toggleLogin = () => {
+    this.setState({loginAtivo: !this.state.loginAtivo})
+  }
+
+  render() {
+    return (
+      <Provider store={store}>
+        <Login fundo={true} ativo={this.state.loginAtivo} callback={this.toggleLogin}/>
+        <PopupAdicionar/>
+        <div className="App">
+          <div id='organizador'>
+            <Arrastar />
+            <Preview />
+            <Configurar />
+          </div>
+          <Galeria id='galeria'/>
+          <MenuExportacao />
         </div>
-        <Galeria id='galeria'/>
-        <MenuExportacao />
-      </div>
-    </Provider>
-  );
+      </Provider>
+    );
+  }
 }
 
 export default App;

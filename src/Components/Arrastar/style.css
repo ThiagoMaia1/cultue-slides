@@ -218,9 +218,9 @@ ol {
 }
 
 #div-botoes .itens {
-  min-width: 8.5vh;
-  max-width: 8.5vh;
-  height: 7vh;
+  min-width: 5vw;
+  max-width: 5vw;
+  height: 8vh;
   margin: 1vh 1vh 0 0;
   text-align: center;
   color: var(--platinum-forte);
@@ -229,7 +229,7 @@ ol {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  box-shadow: 3px 6px 7px rgba(0,0,0,0.7);;
+  box-shadow: 3px 6px 7px rgba(0,0,0,0.7);
 }
 
 #div-botoes .itens:hover {
@@ -244,10 +244,10 @@ ol {
   z-index: 70;
 }
 
-.elemento-slide-estilizado {
+/* .elemento-slide-estilizado {
   font-style: italic;
 }
 
 .fade-estilizado {
   transition: backgound-color 2s;
-}
+} */

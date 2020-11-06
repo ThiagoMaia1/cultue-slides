@@ -34,6 +34,7 @@
 //   Fontes que não suportam números superscritos.
 //   Redividir quando o texto de um slide é todo deletado.
 //   Duas colunas
+//   Indicar que há estilização nos slides/elementos.
 //
 /*// Features:
 //   ✔️ Envio de imagens.
@@ -47,7 +48,10 @@
 //   ✔️ Marcador de repetições de estrofes nos slides de música/slide de refrão repetido.
 //   ✔️ Dividir música em colunas.
 //   ✔️ Possibilidade de editar elemento (retornando à tela da query).
+//   ✔️ Atalhos em geral.
 //   ✔️ Exportar como Power Point.*/
+//   Atalho para nova apresentação.
+//   Pesquisa no conteúdo dos slides.
 //   Exportar como PDF.
 //   Enviar por e-mail.
 //   Calcular resolução do datashow.
@@ -55,13 +59,14 @@
 //   Exportação de slides de imagem
 //   Incorporar vídeos do youtube.
 //   Gerar link compartilhável.
-//   Atalhos em geral.
 //   Login para salvar preferências.
 //   Criar slides a partir de lista com separador.
 //   Combo de número de capítulos e versículos da bíblia.
 //   Navegação pelas setas causar rolagem na lista de slides.
 //   ColorPicker personalizado.
 //   Tela de propagandas
+//   Adicionar logo da igreja (upload ou a partir de lista de logos famosas de denominações).
+//   Navbar no topo.
 //
 // Negócio:
 //   Cadastrar google ads.
@@ -77,8 +82,10 @@ import './index.css';
 import App from './App';
 import { createStore } from 'redux';
 import hotkeys from 'hotkeys-js';
-import Element, { getEstiloPadrao, textoMestre, Estilo, getPadding } from './Element.js';
+import Element, { getEstiloPadrao, textoMestre, Estilo, getPadding, tiposElemento } from './Element.js';
 import { selecionadoOffset, getSlidePreview } from './Components/MenuExportacao/Exportador';
+
+const tipos = Object.keys(tiposElemento);
 
 const criarNovaApresentacao = () => {
   return [new Element("Slide-Mestre", "Slide-Mestre", [textoMestre], null, {...getEstiloPadrao()}, true)];
@@ -301,7 +308,9 @@ export let store = createStore(undoable(reducerElementos), /* preloadedState, */
   window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
 );
 
-hotkeys('right,left,up,down,ctrl+z,ctrl+shift+z,ctrl+y', function(event, handler){
+const atalhosAdicionar = {ctrlm: 0, ctrlb: 1, ctrll: 2, ctrli: 3, ctrld: 4};
+
+hotkeys('right,left,up,down,ctrl+z,ctrl+shift+z,ctrl+y,ctrl+n,ctrl+m,ctrl+i,ctrl+b,ctrl+l,ctrl+d', function(event, handler){
   event.preventDefault();
   var offset = 0;
   switch (handler.key) {
@@ -320,8 +329,12 @@ hotkeys('right,left,up,down,ctrl+z,ctrl+shift+z,ctrl+y', function(event, handler
       case 'ctrl+shift+z':
         store.dispatch({type: 'REDO'});
         break;
+      // case 'ctrl+n':
+      //   store.dispatch({type: 'criar-nova-apresentacao'});
       default:
-        offset = 0;
+        var atalho = handler.key.replace('+','');
+        var tipo = tipos[atalhosAdicionar[atalho]];
+        store.dispatch({type: 'ativar-popup-adicionar', popupAdicionar: {tipo: tipo}});
   }
   if (offset !== 0) store.dispatch({type: 'offset-selecao', offset: offset})
 });

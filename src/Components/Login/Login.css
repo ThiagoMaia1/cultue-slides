@@ -1,17 +1,23 @@
-.fundo-login {
+#container-login {
     background-color: var(--platinum);
+}
+
+.fundo-login {
     display: flex;
     align-items: center;
     justify-content: center;
     position: fixed;
+    top: 0;
     height: 100%;
     width: 100%;
     z-index: 405;
 }
-/* 
-.fundo-login > div {
-    
-} */
+
+.wraper-login {
+    display: flex;
+    justify-content: space-between;
+    width: 60%;
+}
 
 #quadro-login {
     background-color: white;
@@ -24,19 +30,45 @@
     box-shadow: var(--box-shadow);    
 }
 
-#quadro-login (input, hr) {
-    width: 18vw;
+#quadro-login input, #quadro-login hr {
+    width: 20vw;
 }
 
 #quadro-login button {
-    width: 15vw;
-    margin-top: 2vh;
+    width: 17vw;
+    margin-bottom: 2vh;
+}
+
+#quadro-login > * {
+    margin-bottom: 2vh;
 }
 
 #quadro-login hr {
     border-top: 1px solid var(--platinum);
 }
 
+.inputs-login {
+    display: flex;
+    flex-direction: column;
+}
+
 #cadastre-se {
     text-align: center;
+}
+
+#quadro-login a {
+    color: rgb(1, 126, 204);
+    font-size: 90%;
+    cursor: pointer;
+    float: right;
+    margin-bottom: 0;
+}
+
+#comece-usar {
+    padding: 10vh;
+}
+
+#comece-usar div {
+    width: 15vw;
+    font-size: 300%;
 }
