@@ -13,7 +13,7 @@ const url = 'https://bibleapi.co/api';
 const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IlR1ZSBPY3QgMDYgMjAyMCAwMzoxMDo1MCBHTVQrMDAwMC50dGhpYWdvcG1haWFAZ21haWwuY29tIiwiaWF0IjoxNjAxOTUzODUwfQ.J9CusTS1g3uJObw6Hb4da0K4ZmXZgeMKG8QUSH0E4sI"
 const versaoPadrao = 'nvi'
 
-class TextoBiblico extends Component {
+class AdicionarTextoBiblico extends Component {
 
     constructor (props) {
         super(props);
@@ -22,19 +22,22 @@ class TextoBiblico extends Component {
         this.state = {
             botoesVisiveis: false,
             versiculosPronto: [],
-            carregando: null
+            carregando: null,
+            termoPesquisa: null,
+            input2: this.props.input2
         }
     }    
     
     buscarReferencia(e) {
         var str = e.target.value;
+        this.setState({termoPesquisa: str});
         if (e.key === 'Enter' && !(!str || /^\s*$/.test(str))) { 
             this.identificarReferencia();
         }
     }
 
-    identificarReferencia = () => {
-        var str = this.ref.current.value;
+    identificarReferencia = str => {
+        if (!str) str = this.ref.current.value;
         var refer = [...extrairReferencias(str)];
         if (refer != null) {
             if (refer.length === 1 && refer[0].cap === null && refer[0].strInicial.substr(1).match(/[0-9]/g) === null) {
@@ -172,9 +175,13 @@ class TextoBiblico extends Component {
     }
 
     onClick() {
+        var popupAdicionar = {input1: this.versao, input2: this.state.termoPesquisa};
         this.props.dispatch({ type: 'inserir', 
-            elemento: new Element('Texto-Bíblico', this.referenciaLimpa, 
-                                  formatarVersiculosSlide(this.versiculosValidos(this.state.versiculosPronto)))});
+                              elemento: new Element('TextoBíblico', this.referenciaLimpa, 
+                                        formatarVersiculosSlide(this.versiculosValidos(this.state.versiculosPronto))),
+                              popupAdicionar: popupAdicionar,
+                              elementoASubstituir: this.props.elementoASubstituir
+                            });
     }
 
     getVersao(termo) {
@@ -202,25 +209,30 @@ class TextoBiblico extends Component {
     }
 
     render () {
+        this.versao = this.props.input1 || this.versao;
+        if (this.state.input2) {
+            this.setState({input2: null});
+            setTimeout(() => this.identificarReferencia(this.props.input2), 0);
+        }
         return (
             <div className='conteudo-popup'>
                 <div>
                     <h4 className='titulo-popup'>Buscar texto bíblico:</h4>
                     <div style={{position: 'relative'}}> 
-                        <select className='combo-popup' defaultValue={this.getVersao(versaoPadrao)} type="text" list="versoes" 
+                        <select className='combo-popup' defaultValue={this.getVersao(this.versao)} type="text" list="versoes" 
                             onChange={e => this.mudarVersao(e)}>
                             {versoes.map(v => (<option key={v.version} value={v.nome}>{v.nome}</option>))}
                         </select>
                         {this.state.carregando}
                         <input ref={this.ref} className='combo-popup' type='text' onKeyDown={e => this.buscarReferencia(e)} 
-                            placeholder='Digite uma ou mais referências separadas por vírgula. (Ex: "Jo3:16, mc10")' />
+                            defaultValue={this.props.input2} placeholder='Digite uma ou mais referências separadas por vírgula. (Ex: "Jo3:16, mc10")' />
                         {/* <datalist id="livros">
                             {livros.map(l => (<option key={l.abbrevPt} value={l.name}></option>))}
                         </datalist> */}
                     </div>
                 </div>
                 {/* Seleção por capítulo e versículo tem funções salvas no módulo ComboCapVers.jsx */}
-                <div className='container-versiculos container-carrossel combo-popup'>
+                <div className='container-versiculos container-carrossel combo-popup' style={this.state.botoesVisiveis ? null : {visibility: 'hidden'}}>
                     <Carrossel tamanhoIcone={45} tamanhoMaximo='100%' direcao='vertical' style={{zIndex: '400'}} percentualBeirada={0.12}>
                         {formatarVersiculos(this.state.versiculosPronto)}
                         {/* <div className='texto-inserir'>
@@ -240,4 +252,4 @@ class TextoBiblico extends Component {
     }
 }
 
-export default connect()(TextoBiblico);
+export default connect()(AdicionarTextoBiblico);

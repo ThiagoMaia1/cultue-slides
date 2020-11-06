@@ -15,11 +15,11 @@ import { RefInvalida } from "../TextoBiblico/referenciaBiblica"
 // function textoPreview (elemento) {
 //     var textoDividido = [];
 //     switch (elemento.tipo) {
-//         case 'Texto-Bíblico':
+//         case 'TextoBíblico':
 //             formatarVersiculos(elemento.texto);
 //         case 'Música':
 //             formatarMusica(elemento.texto);
-//         case 'Texto-Livre':
+//         case 'TextoLivre':
 
 //         case 'Imagem':
 

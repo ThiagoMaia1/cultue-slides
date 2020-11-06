@@ -8,7 +8,7 @@ const listaSlidesPadrao = [{titulo: 'Visitantes', textoSlide: 'Sejam bem-vindos 
                            {titulo: 'Mensagem', textoSlide: ''}
 ]
 
-class AdicionarTitulo extends Component {
+class AdicionarTexto extends Component {
     
     constructor (props) {
         super(props);
@@ -30,8 +30,12 @@ class AdicionarTitulo extends Component {
     onClick () {
         var titulo = this.refTitulo.current.value;
         var textoSlide = this.refTextoSlide.current.value;
+        var popupAdicionar = {input1: titulo, input2: textoSlide};
         this.props.dispatch({type: "inserir", 
-                             elemento: new Element( "Texto-Livre", titulo, [...textoSlide.split('\n\n')])});
+                             elemento: new Element( "TextoLivre", titulo, [...textoSlide.split('\n\n')]),
+                             popupAdicionar: popupAdicionar,
+                             elementoASubstituir: this.props.elementoASubstituir
+                            });
     }
 
     limparInputs = () => {
@@ -54,9 +58,11 @@ class AdicionarTitulo extends Component {
             <div className='conteudo-popup' onChange={this.onChange}>
                 <div>
                     <h4 className='titulo-popup'>Adicionar Slide de Texto</h4>
-                    <input ref={this.refTitulo} id="input-titulo" className='combo-popup' type='text' placeholder='Título do slide' />
+                    <input ref={this.refTitulo} id="input-titulo" className='combo-popup' type='text' placeholder='Título do slide' 
+                        defaultValue={this.props.input1} />
                 </div>
-                <textarea ref={this.refTextoSlide} id="input-texto-slide" className='combo-popup' placeholder='Texto do slide'></textarea>
+                <textarea ref={this.refTextoSlide} id="input-texto-slide" className='combo-popup' placeholder='Texto do slide'
+                    defaultValue={this.props.input2} ></textarea>
                 <div className='lista-slides-padrao'>
                     <div className='titulo-secao-popup'>Slides Padrão: </div>
                     {this.gerarListaSlidesPadrao()}
@@ -70,4 +76,4 @@ class AdicionarTitulo extends Component {
     }
 }
 
-export default connect()(AdicionarTitulo);
+export default connect()(AdicionarTexto);

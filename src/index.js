@@ -46,6 +46,7 @@
 //   ✔️ Exportar como HTML.
 //   ✔️ Marcador de repetições de estrofes nos slides de música/slide de refrão repetido.
 //   ✔️ Dividir música em colunas.
+//   ✔️ Possibilidade de editar elemento (retornando à tela da query).
 //   ✔️ Exportar como Power Point.*/
 //   Exportar como PDF.
 //   Enviar por e-mail.
@@ -55,7 +56,6 @@
 //   Incorporar vídeos do youtube.
 //   Gerar link compartilhável.
 //   Atalhos em geral.
-//   Possibilidade de editar elemento (retornando à tela da query).
 //   Login para salvar preferências.
 //   Criar slides a partir de lista com separador.
 //   Combo de número de capítulos e versículos da bíblia.
@@ -86,7 +86,8 @@ const criarNovaApresentacao = () => {
 
 var defaultList = {elementos: criarNovaApresentacao(),
   selecionado: {elemento: 0, slide: 0}, 
-  abaAtiva: 'texto'
+  abaAtiva: 'texto',
+  popupAdicionar: {}
 };
 
 const redividirSlides = (elementos, sel) => {
@@ -106,20 +107,35 @@ export const reducerElementos = function (state = defaultList, action) {
 
   var el = [...state.elementos];
   var sel = action.selecionado || state.selecionado;
+  var e;
   switch (action.type) {
     case "inserir":
-      return {elementos: [...state.elementos, action.elemento], selecionado: {elemento: state.elementos.length, slide: 0}, abaAtiva: state.abaAtiva};
+      var elNovo = action.elemento;
+      elNovo.input1 = action.popupAdicionar.input1;
+      elNovo.input2 = action.popupAdicionar.input2;
+      var elSub;
+      if (action.elementoASubstituir) {
+        elSub = el[action.elementoASubstituir];
+        for (var i = 0; (i < elSub.slides.length) && i < (elNovo.slides.length) ; i++) {
+          elNovo.slides[i].estilo = elSub.slides[i].estilo;
+        }
+        el.splice(action.elementoASubstituir, 1, elNovo);
+        el = redividirSlides(el, {elemento: action.elementoASubstituir, slide: 0});
+      } else {
+        el.push(elNovo);
+      }
+      return {elementos: [...el], selecionado: {elemento: el.length-1, slide: 0}, abaAtiva: state.abaAtiva, popupAdicionar: {}};
     case "deletar":
       el.splice(Number(action.elemento), 1);
       var novaSelecao = {elemento: state.selecionado.elemento, slide: 0};
       if (state.selecionado.elemento >= el.length) novaSelecao.elemento = state.selecionado.elemento-1 
-      return {elementos: el, selecionado: {...novaSelecao}, abaAtiva: state.abaAtiva};
+      return {elementos: el, selecionado: {...novaSelecao}, abaAtiva: state.abaAtiva, popupAdicionar: state.popupAdicionar};
     case "reordenar":
-      return {elementos: action.novaOrdemElementos, selecionado: sel, abaAtiva: state.abaAtiva};
+      return {elementos: action.novaOrdemElementos, selecionado: sel, abaAtiva: state.abaAtiva, popupAdicionar: state.popupAdicionar};
     case "criar-nova-apresentacao":
-      return {elementos: criarNovaApresentacao(), selecionado: {elemento: 0, slide: 0}, abaAtiva: state.abaAtiva};
+      return {elementos: criarNovaApresentacao(), selecionado: {elemento: 0, slide: 0}, abaAtiva: state.abaAtiva, popupAdicionar: state.popupAdicionar};
     case "editar-slide": {
-      var e = {...el[sel.elemento]};
+      e = {...el[sel.elemento]};
       var s = e.slides[sel.slide];
       var est = s.estilo;
       if (action.objeto === 'estilo') {
@@ -146,30 +162,39 @@ export const reducerElementos = function (state = defaultList, action) {
       }
       el[sel.elemento] = e;
       if (action.redividir) el = redividirSlides(el, sel);
-      return {elementos: [...el], selecionado: sel, abaAtiva: state.abaAtiva};
+      return {elementos: [...el], selecionado: sel, abaAtiva: state.abaAtiva, popupAdicionar: state.popupAdicionar};
     }
     case "limpar-estilo": {
-      if (sel.elemento === 0 && sel.slide === 0) {
-        if (action.objeto) {
-          el[0].slides[0].estilo[action.objeto] = getEstiloPadrao([action.objeto]);  
-        } else {
-          el[0].slides[0].estilo = {...getEstiloPadrao()};
+      const limparEstiloSlide = s => s.estilo = new Estilo();
+      const limparEstiloElemento = e => {
+        for (var s of e.slides) {
+          limparEstiloSlide(s);
         }
-      } else if (action.objeto) {
-        el[sel.elemento].slides[sel.slide].estilo[action.objeto] = {};
-      } else {
-        el[sel.elemento].slides[sel.slide].estilo = new Estilo();
       }
-      if (action.redividir) el = redividirSlides(el, sel);
-      return {elementos: [...el], selecionado: action.selecionado, abaAtiva: state.abaAtiva};
+      if (sel.elemento === 0) {
+        el[0].slides[0].estilo = getEstiloPadrao();
+        for (e of el.slice(1)) {
+          limparEstiloElemento(e);  
+        }
+      } else if (sel.slide === 0) {
+        limparEstiloElemento(el[sel.elemento]);
+      } else {
+        limparEstiloSlide(el[sel.elemento].slides[sel.slide]);
+      }
+      el = redividirSlides(el, sel);
+      return {elementos: [...el], selecionado: action.selecionado, abaAtiva: 'texto', popupAdicionar: state.popupAdicionar};
+    }
+    case "ativar-popup-adicionar": {
+      return {...state, popupAdicionar: {...action.popupAdicionar}};
     }
     case "ativar-realce": {
       return {...state, abaAtiva: action.abaAtiva};
     }
     case "definir-selecao":
-      return {elementos: state.elementos, selecionado: sel, abaAtiva: state.abaAtiva};
+      return {...state, selecionado: sel};
     case "offset-selecao":
-      return {elementos: state.elementos, selecionado: {...selecionadoOffset(state.elementos, state.selecionado, action.offset)}, abaAtiva: state.abaAtiva};
+      sel = {...selecionadoOffset(state.elementos, state.selecionado, action.offset)};
+      return {...state, selecionado: sel};
     default:
       return state;
   }
@@ -220,7 +245,7 @@ function undoable(reducer) {
       default:
         newPresent = reducer(deepSpreadPresente(present), action);
         if (previousTemp) present = previousTemp;
-        if (houveMudanca(present, newPresent)) {
+        if (!houveMudanca(present, newPresent)) {
           return {
             past: [...past],
             present: newPresent,
@@ -229,6 +254,8 @@ function undoable(reducer) {
             slidePreview: getSlidePreview(newPresent)  
           }
         }
+        if (action.type === 'inserir')
+          present.popupAdicionar = {...action.popupAdicionar, tipo: action.elemento.tipo};
         return {
           past: [...past, present],
           present: newPresent,
@@ -241,12 +268,20 @@ function undoable(reducer) {
 }
 
 function houveMudanca(estado1, estado2) {
-  return JSON.stringify(estado1.elementos) === JSON.stringify(estado2.elementos);
+  const keysRelevantes = ['elementos', 'popupAdicionar'];
+  var [ e1, e2 ] = [{}, {}];
+  for (var k of keysRelevantes) {
+    e1[k] = estado1[k];
+    e2[k] = estado2[k];
+  }
+  return JSON.stringify(e1) !== JSON.stringify(e2); 
 }
 
 function deepSpreadPresente(present) {
   var elementos = [];
   var selecionado = {...present.selecionado};
+  var popupAdicionar = {...present.popupAdicionar};
+  var abaAtiva = present.abaAtiva
 
   for (var e of present.elementos) {
     var slides = [];
@@ -259,7 +294,7 @@ function deepSpreadPresente(present) {
     }
     elementos.push({...e, slides: slides});
   }
-  return {...present, elementos: elementos, selecionado: selecionado, abaAtiva: present.abaAtiva};
+  return {...present, elementos: elementos, selecionado: selecionado, abaAtiva: abaAtiva, popupAdicionar: popupAdicionar};
 }
 
 export let store = createStore(undoable(reducerElementos), /* preloadedState, */

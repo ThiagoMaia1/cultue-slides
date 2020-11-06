@@ -7,7 +7,8 @@ import { store } from './index';
 import { Provider } from 'react-redux';
 import Configurar from './Components/Configurar/Configurar.jsx';
 import MenuExportacao from './Components/MenuExportacao/MenuExportacao';
-import Login from './Components/Login/Login';
+import PopupAdicionar from './Components/PopupAdicionar/PopupAdicionar';
+// import Login from './Components/Login/Login';
 
 function App() {
 
@@ -15,6 +16,7 @@ function App() {
   return (
     <Provider store={store}>
       {/* <Login fundo={true}/> */}
+      <PopupAdicionar/>
       <div className="App">
         <div id='organizador'>
           <Arrastar />

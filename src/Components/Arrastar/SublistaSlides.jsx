@@ -1,6 +1,21 @@
 import React, { Component } from 'react';
 import { reverterSuperscrito } from '../Preview/TextoPreview.jsx';
 import { connect } from 'react-redux';
+import { Estilo } from '../../Element';
+
+const estiloVazio = JSON.stringify(new Estilo());
+const eEstiloVazio = estilo => {
+    var keysEstilo = Object.keys(estilo);
+    for (var k of keysEstilo) {
+        var keysObjeto = Object.keys(estilo[k]).filter(k => k !== 'paddingBottom');
+        for (var kO of keysObjeto) {
+            if (estilo[k][kO]) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
 
 class SublistaSlides extends Component {
 
@@ -14,7 +29,7 @@ class SublistaSlides extends Component {
         switch (elemento.tipo) {
             case 'Imagem':
                 return elemento.titulo || slide.imagem.alt;
-            case 'Texto-Bíblico':
+            case 'TextoBíblico':
                 var n = 0;
                 var palavras = t0.split(' ');
                 do {
@@ -36,8 +51,10 @@ class SublistaSlides extends Component {
                 {elemento.slides.map((slide, j) => {
                     if (j === 0) return null; //Pula o slide 0, pois se tem múltiplos slides, o slide 0 é o mestre.
                     return (
-                        <li className={'item-sublista ' + elemento.tipo + ' ' +
-                                       (this.props.selecionado.elemento === i && this.props.selecionado.slide === j ? 'selecionado' : '')}
+                        <li className={'item-sublista ' + elemento.tipo + ' fade-estilizado ' +
+                                       (this.props.selecionado.elemento === i && this.props.selecionado.slide === j ? 'selecionado' : '') + ' ' +
+                                       (eEstiloVazio(slide.estilo) ? '' : 'elemento-slide-estilizado')
+                                    }
                             onClick={() => this.props.marcarSelecionado(i, j)} key={j}>
                             {this.getRotuloSlide(elemento, slide)}
                         </li>

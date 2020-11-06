@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
 import SublistaSlides from './SublistaSlides';
 import { connect } from 'react-redux';
-import { MdKeyboardArrowUp, MdKeyboardArrowDown } from 'react-icons/md';
+import { MdKeyboardArrowUp, MdKeyboardArrowDown, MdEdit } from 'react-icons/md';
 import PopupConfirmacao from '../Configurar/Popup/PopupConfirmacao';
+import { getNomeInterfaceTipo, Estilo } from '../../Element';
+
+const estiloVazio = JSON.stringify(new Estilo());
 
 class ItemListaSlides extends Component {
 
@@ -27,13 +30,26 @@ class ItemListaSlides extends Component {
         e.stopPropagation();
         var elemento = this.props.elemento;
         var pergunta = "Deseja excluir " + (/[oe]/.test(elemento.tipo.slice(-1)) ? 'o ' : 'a ') 
-                        + elemento.tipo.toLowerCase().replace('-',' ') + " '" + elemento.titulo + "'?";
+                        + getNomeInterfaceTipo(elemento.tipo).toLowerCase() + " '" + elemento.titulo + "'?";
         const callback = fazer => {
         if (fazer !== -1)
           if(fazer) this.props.dispatch({type: 'deletar', elemento: this.props.ordem});
         this.setState({popupConfirmacao: null});
         }
         this.setState({popupConfirmacao: (<PopupConfirmacao titulo='Atenção' pergunta={pergunta} callback={callback} botoes='simNao'/>)});         
+    }
+
+    editarElemento = (e) => {
+        e.stopPropagation();
+        var elemento = this.props.elemento;
+        this.props.dispatch({type: 'ativar-popup-adicionar',
+                             popupAdicionar: {
+                                tipo: elemento.tipo,
+                                input1: elemento.input1,
+                                input2: elemento.input2,
+                                elementoASubstituir: this.props.selecionado.elemento
+                             }
+        })
     }
 
     static getDerivedStateFromProps(props, state) {
@@ -57,8 +73,15 @@ class ItemListaSlides extends Component {
                     onDragOver={this.props.dragOver}
                     style={{marginBottom: this.props.placeholder.posicao === i ? this.props.placeholder.tamanho + 'px' : (this.props.ultimo ? '0': '')}}>
                     <div data-id={i} className='itens lista-slides' onClick={() => this.props.marcarSelecionado(i, 0)}>
-                        <div data-id={i} className='excluir-elemento' onClick={e => this.excluirElemento(e)}>✕</div>
-                        <div><b> {i}. {elemento.tipo}: </b>{(elemento.tipo === 'Imagem' && !elemento.titulo) ? elemento.imagens[0].alt : elemento.titulo}</div>
+                        <div className='quadradinho-canto'>
+                            <div data-id={i} className='botao-quadradinho' onClick={e => this.excluirElemento(e)}>✕</div>
+                            <div data-id={i} className='botao-quadradinho' onClick={e => this.editarElemento(e)}>
+                                <MdEdit size={this.state.tamanhoIcone*0.9}/>
+                            </div>
+                        </div>
+                        <div className={'fade-estilizado ' + (JSON.stringify(elemento.slides[0].estilo) !== estiloVazio ? 'elemento-slide-estilizado' : '')}>
+                            <b> {i}. {elemento.tipo}: </b>{(elemento.tipo === 'Imagem' && !elemento.titulo) ? elemento.imagens[0].alt : elemento.titulo}
+                        </div>
                         {this.state.colapsa ? 
                             (<div className='container-icone-colapsar'>
                                 <div className='icone-colapsar' onClick={this.toggleColapsar}>

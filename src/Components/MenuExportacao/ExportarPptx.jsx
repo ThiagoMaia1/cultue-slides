@@ -47,7 +47,7 @@ class ExportarPptx extends Component {
       var opcoesTitulo = {...getDimensaoTitulo(p.estilo.titulo), ...getAtributos(p.estilo.titulo)};
       slide.addText(p.titulo, opcoesTitulo);
       
-      var separador = p.tipo === 'Texto-Bíblico' ? ' ' : '\n\n';
+      var separador = p.tipo === 'TextoBíblico' ? ' ' : '\n\n';
       var texto = p.textoArray.join(separador);
       var opcoesTexto = {...getDimensaoTexto(p.estilo, this.taxaPadTop), ...getAtributos(p.estilo.paragrafo)};
       slide.addText(texto, opcoesTexto);

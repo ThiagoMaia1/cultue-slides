@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { capitalize } from '../../Element';
+import { capitalize, getNomeInterfaceTipo } from '../../Element';
 import Preview from '../Preview/Preview';
 
 export function getBase64Image(src, classe, total, callback) {
@@ -88,7 +88,7 @@ export function getSlidePreview (state, selecionado = null) {
 
   return {...slide,
     tipo: tipo,
-    nomeLongoElemento: tipo.replace('-', ' ') + ': ' + ((tipo === 'Imagem' && !titulo) ? state.elementos[sel.elemento].imagens[0].alt : titulo),
+    nomeLongoElemento: getNomeInterfaceTipo(tipo) + ': ' + ((tipo === 'Imagem' && !titulo) ? state.elementos[sel.elemento].imagens[0].alt : titulo),
     selecionado: {...sel},
     textoArray: slide.textoArray.map(t => capitalize(t, estiloParagrafo.caseTexto)),
     titulo: titulo,

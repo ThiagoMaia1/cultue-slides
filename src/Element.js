@@ -1,4 +1,27 @@
 import { fonteBase } from './Components/Preview/Preview';
+import AdicionarMusica from './Components/LetrasMusica/AdicionarMusica';
+import AdicionarTextoBiblico from './Components/TextoBiblico/AdicionarTextoBiblico';
+import AdicionarTexto from './Components/Configurar/AdicionarTexto';
+import AdicionarImagem from './Components/AdicionarImagem/AdicionarImagem';
+import AdicionarVideo from './Components/AdicionarVideo/AdicionarVideo';
+
+export const tiposElemento = {Música: AdicionarMusica,
+                              TextoBíblico: AdicionarTextoBiblico,
+                              TextoLivre: AdicionarTexto,
+                              Imagem: AdicionarImagem,
+                              Vídeo: AdicionarVideo
+}
+
+export function getNomeInterfaceTipo(nome) {
+  nome = nome.split('');
+  for (var i = 1; i < nome.length; i++) {
+    if(/[A-Z]/.test(nome[i])) {
+      nome.splice(i, 0, [' ']);
+      i++;
+    }
+  }
+  return nome.join('');
+}
 
 export const textoMestre = 'As configurações do estilo desse slide serão aplicadas aos demais, exceto quando configurações específicas de cada slide se sobrepuserem às deste. \n\nEste slide não será exportado nem exibido no modo de apresentação.'
 
@@ -52,7 +75,7 @@ export default class Element {
     
     var est = {...new Estilo(), ...estilo};
     est = {...est, paragrafo: getPadding(est, 'paragrafo'), titulo: getPadding(est, 'titulo')};
-    if (this.tipo === 'Texto-Livre' && texto.filter(t => t !== '').length === 0) est.titulo.height = '1';
+    if (this.tipo === 'TextoLivre' && texto.filter(t => t !== '').length === 0) est.titulo.height = '1';
     this.slides = [{estilo: {...est}, eMestre: true, textoArray: [textoMestre]}];
     this.criarSlides(this.texto, est);
   }
@@ -145,7 +168,7 @@ export default class Element {
     var estiloFonte = [(estT.fontStyle || ''), (estT.fontWeight || ''), estP.fontSize*fonteBase.numero + fonteBase.unidade, "'" + estT.fontFamily + "'"];
     estiloFonte = estiloFonte.filter(a => a !== '').join(' ');
     var caseTexto = estT.caseTexto || estP.caseTexto;
-    var separador = thisP.tipo === 'Texto-Bíblico' ? '' : '\n\n';
+    var separador = thisP.tipo === 'TextoBíblico' ? '' : '\n\n';
     if (thisP.tipo === 'Música' && estP.omitirRepeticoes) texto = marcarEstrofesRepetidas(texto);
     var { contLinhas, widthResto } = getLinhas(texto[0], estiloFonte, larguraLinha, caseTexto);
     var i;

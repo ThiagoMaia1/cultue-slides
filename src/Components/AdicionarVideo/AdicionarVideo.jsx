@@ -14,7 +14,7 @@ class AdicionarVideo extends Component {
     constructor (props) {
         super(props);
         this.state = {opcoes: [], listaAtiva: false, letraMusica:{}, botaoVisivel: 'hidden', 
-                      carregando: null, idBuscarLetra: null}
+                      carregando: null, idBuscarLetra: this.props.input2}
     }
     onKeyUp(e) {
         clearTimeout(timer);
@@ -81,6 +81,8 @@ class AdicionarVideo extends Component {
     }
 
     onClick(e) {
+        // popupAdicionar: popupAdicionar,
+        // elementoASubstituir: this.props.elementoASubstituir
         this.props.dispatch({type: 'inserir', elemento: this.state.elemento});
     }
 
@@ -92,7 +94,8 @@ class AdicionarVideo extends Component {
                         <h4 className='titulo-popup'>Incorporar Vídeo do Youtube</h4>
                         <div style={{position: 'relative'}}>
                             {this.state.carregando}
-                            <input className='combo-popup' type='text' autoComplete='off' placeholder='Pesquise por nome, artista ou trecho' onKeyUp={e => this.onKeyUp(e)} />
+                            <input className='combo-popup' type='text' autoComplete='off' defaultValue={this.props.input1} 
+                                   placeholder='Pesquise por nome, artista ou trecho' onKeyUp={e => this.onKeyUp(e)} />
                         </div>
                     </div>
                     <div className='container-opcoes-musica'>

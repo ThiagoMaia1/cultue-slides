@@ -11,13 +11,14 @@ import Carrossel from '../Carrossel/Carrossel'
 const url = 'https://api.vagalume.com.br/';
 var vagalumeLetra;
 
-class ComboLetra extends Component {
+class AdicionarMusica extends Component {
 
     constructor (props) {
         super(props);
         this.state = {opcoes: [], listaAtiva: false, letraMusica:{}, botoesVisiveis: false, 
-                      carregando: null, idBuscarLetra: null, divisivel: false,
-                      duasColunas: false, multiplicadores: true, omitirRepeticoes: true
+                      carregando: null, idBuscarLetra: this.props.input2, divisivel: false,
+                      duasColunas: false, multiplicadores: true, omitirRepeticoes: true, 
+                      termoPesquisa: null, input2: this.props.input2
                     }
         this.listaCheckboxes = [{label: 'Omitir Repetições', opcao: 'omitirRepeticoes'},
                                 {label: 'Multiplicadores', opcao: 'multiplicadores'},
@@ -28,7 +29,7 @@ class ComboLetra extends Component {
     onKeyUp(e) {
         clearTimeout(this.timer);
         this.toggleCarregador(true);
-        var termo = e.target.value        
+        var termo = e.target.value;
         this.timer = setTimeout(() => this.pegarMusicas(termo), 200);
     }
     
@@ -37,17 +38,21 @@ class ComboLetra extends Component {
     }
 
     pegarMusicas (termo){
+        this.setState({termoPesquisa: termo});
         var vagalume = new XMLHttpRequest()
         vagalume.responseType = 'json';
         
         vagalume.addEventListener('load', () => {    
             this.setState({opcoes: vagalume.response.response.docs});
             this.toggleCarregador(false);
+            if (this.input2) {
+                this.input2 = null;
+                this.buscarLetra(this.state.idBuscarLetra);
+            }
         });
         
         vagalume.open('GET', url + 'search.excerpt?q=' + encodeURIComponent(termo) + '&limit=15');
         vagalume.send();
-
     }    
 
     buscarLetra = id => {
@@ -87,7 +92,7 @@ class ComboLetra extends Component {
                         {musica.url}
                     </a></i>
                 </div>)
-            this.setState({letraMusica: {esquerda: letraEsquerda, direita: letraDireita}, idBuscarLetra: null, botoesVisiveis: true, 
+            this.setState({letraMusica: {esquerda: letraEsquerda, direita: letraDireita}, botoesVisiveis: true, 
                            listaAtiva: false, 
                            elemento: new Element('Música', vagalumeLetra.response.mus[0].name, letra, null, 
                                      {paragrafo: {...this.getEstiloParagrafo()}}
@@ -108,7 +113,12 @@ class ComboLetra extends Component {
     )
     
     onClick(e) {
-        this.props.dispatch({type: 'inserir', elemento: this.state.elemento});
+        var popupAdicionar = {input1: this.state.termoPesquisa, input2: this.state.idBuscarLetra};                           
+        this.props.dispatch({type: 'inserir', 
+                             elemento: this.state.elemento,
+                             popupAdicionar: popupAdicionar,
+                             elementoASubstituir: this.props.elementoASubstituir
+        });
     }
 
     limparInput = () => {
@@ -128,6 +138,7 @@ class ComboLetra extends Component {
     }
 
     render () {
+        if (this.props.input1) setTimeout(() => this.pegarMusicas(this.props.input1), 0);
         return (
             <div className='conteudo-popup'>
                 <div className='wraper-popup'>
@@ -137,7 +148,7 @@ class ComboLetra extends Component {
                             {this.state.carregando}
                             <input ref={el => this.refCombo = el} className='combo-popup' type='text' autoComplete='off'
                                    onFocus={() => this.setState({listaAtiva: true})} onKeyUp={e => this.onKeyUp(e)}
-                                   placeholder='Pesquise por nome, artista ou trecho'/>
+                                   defaultValue={this.props.input1} placeholder='Pesquise por nome, artista ou trecho'/>
                         </div>
                     </div>
                     <div className='wraper-popup'>
@@ -191,7 +202,7 @@ class ComboLetra extends Component {
     }
 }
 
-export default connect()(ComboLetra);
+export default connect()(AdicionarMusica);
 
 // const apiKey = 'a15ff8771c7c1a484b2c0fcfed2d3289'
 // var generoMusica = [];

@@ -1,36 +1,41 @@
 import React, { Component } from 'react';
-import ComboLetra from './../LetrasMusica/ComboLetra';
-import TextoBiblico from './../TextoBiblico/TextoBiblico';
-import AdicionarTitulo from './AdicionarTitulo';
-import AdicionarImagem from './../AdicionarImagem/AdicionarImagem';
-import AdicionarVideo from './../AdicionarVideo/AdicionarVideo';
-// import { GrChapterAdd } from 'react-icons/gr';
+import { connect } from 'react-redux';
+import { tiposElemento, getNomeInterfaceTipo } from '../../Element';
+
+const tipos = Object.keys(tiposElemento);
 
 class Adicionar extends Component {
     
     constructor(props) {
         super(props);
         this.state = {...props};
+        this.listaBotoes = [];
+        for (var i = 0; i < 5; i++) {
+            this.listaBotoes.push(
+                <button key={i} data-id={i} className="botao-azul itens" onClick={e => this.abrirPopup(e)}>
+                    {getNomeInterfaceTipo(tipos[i])}
+                </button>
+            ) 
+        }
     }
 
+    abrirPopup = e => {
+        var i = e.target.dataset.id;
+        var tipo = tipos[i];
+        this.props.onClick();
+        this.props.dispatch({
+            type: 'ativar-popup-adicionar', 
+            popupAdicionar: {tipo: tipo}
+        });
+    }
+    
     render() {
         return (
-            <>
-                <div id="div-botoes">
-                    {/* <div id='container-adicionar-slide' style={{display: this.state.adicionarVisivel ? '' : 'none' }}>
-                        <div><div id='p-adicionar-slide'>Adicionar um Slide</div>
-                        <GrChapterAdd size={50}/></div>
-                    </div> */}
-                    <button className="botao-azul itens" onClick={() => this.props.callback(AdicionarTitulo)}>Texto Livre</button>
-                    <button className="botao-azul itens" onClick={() => this.props.callback(TextoBiblico)}>Texto Bíblico</button>
-                    <button className="botao-azul itens" onClick={() => this.props.callback(ComboLetra)}>Música</button>
-                    <button className="botao-azul itens" onClick={() => this.props.callback(AdicionarImagem)}>Ima- gem</button>
-                    <button className="botao-azul itens" onClick={() => this.props.callback(AdicionarVideo)}>Vídeo</button>
-                </div>
-                
-            </>
+            <div id="div-botoes">
+                {this.listaBotoes}
+            </div>
         )
     }
 }
 
-export default Adicionar;
+export default connect()(Adicionar);

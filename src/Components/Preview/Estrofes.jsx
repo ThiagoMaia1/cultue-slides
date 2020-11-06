@@ -49,7 +49,7 @@ export default function Estrofes(props) {
         }
     }
 
-    if (s.tipo === 'Texto-Bíblico') {
+    if (s.tipo === 'TextoBíblico') {
         estiloDivEstrofe = {display: 'inline'};
         spans = tA.map(getSpan)
     } else {

@@ -3,7 +3,7 @@ import './style.css';
 import { connect } from 'react-redux';
 import Adicionar from '../Configurar/Adicionar';
 import Carrossel from '../Carrossel/Carrossel';
-import Popup from '../Configurar/Popup/Popup';
+// import Popup from '../Configurar/Popup/Popup';
 import PopupConfirmacao from '../Configurar/Popup/PopupConfirmacao';
 import ItemListaSlides from './ItemListaSlides';
 
@@ -83,14 +83,6 @@ class Arrastar extends React.Component {
                                               {position: 'relative'}});
   }
 
-  abrirPopup = ComponenteConteudoPopup => {
-    this.setState({popupCompleto: (
-        <Popup ocultarPopup={() => this.setState({popupCompleto: null})}>
-            <ComponenteConteudoPopup />
-        </Popup>
-    ), painelAdicionar: false});
-  }
-
 	render() {
     return (
       <>
@@ -104,7 +96,7 @@ class Arrastar extends React.Component {
                   onDragOver={this.dragOver.bind(this)}
                   style={{marginBottom: this.state.placeholder.posicao === 0 ? this.state.placeholder.tamanho + 'px' : '', 
                   display: this.props.elementos.length === 1 ? 'none' : ''}}>
-                  <div data-id={0} id='criar-nova-apresentacao' className='excluir-elemento' onClick={() => this.zerarApresentacao()}>*</div>
+                  <div data-id={0} id='criar-nova-apresentacao' className='botao-quadradinho quadradinho-canto' onClick={() => this.zerarApresentacao()}>*</div>
                   Slide-Mestre
                 </div>
                 {this.props.elementos.map((elemento, i) => {
@@ -117,8 +109,10 @@ class Arrastar extends React.Component {
           <div className='tampao-do-overflow' style={this.props.elementos.length === 1 ? {top: '-3vh'} : null}> 
             <div id="adicionar-slide" onClick={this.abrirPainelAdicionar} 
                   className='botao-azul itens lista-slides'>Adicionar Slide</div>
-            {this.state.painelAdicionar ? 
-              <div className='container-adicionar' style={this.state.posicaoPainelAdicionar}><Adicionar callback={this.abrirPopup} /></div> : null} 
+            {(this.state.painelAdicionar || this.props.elementos.length === 1) ? 
+              <div className='container-adicionar' style={this.state.posicaoPainelAdicionar}>
+                <Adicionar onClick={() => this.setState({painelAdicionar: false})}/>
+              </div> : null} 
           </div>
         </div>
         {this.state.popupCompleto}
@@ -130,7 +124,7 @@ class Arrastar extends React.Component {
 
 const mapStateToProps = function (state) {
   state = state.present;
-  return {elementos: state.elementos, selecionado: state.selecionado}
+  return {elementos: state.elementos, selecionado: state.selecionado, popupAdicionar: state.popupAdicionar}
 }
 
 export default connect(mapStateToProps)(Arrastar);
