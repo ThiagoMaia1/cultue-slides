@@ -37,10 +37,10 @@ export const getDate = function() {
          String(data.getSeconds()).padStart(2,'0') + 's';
 }
 
-export function selecionadoOffset (elementos, selecionado, offset, apresentacao = undefined) {
+export function selecionadoOffset (elementos, selecionado, offset, apresentacao) {
     if (apresentacao === undefined) apresentacao = !!document.fullscreenElement; 
     if (elementos.length === 1) apresentacao = false;
-    var elem = slidesOrdenados(elementos, !apresentacao);
+    var elem = slidesOrdenados(elementos, !apresentacao, selecionado);
     for (var i = 0; i < elem.length; i++) { //Acha o selecionado atual.
       if (elem[i].elemento === selecionado.elemento && elem[i].slide === selecionado.slide) {
         var novoIndex = i + offset;
@@ -55,12 +55,12 @@ export function selecionadoOffset (elementos, selecionado, offset, apresentacao 
     return {elemento: elem[novoIndex].elemento, slide: elem[novoIndex].slide};
 }
 
-export const slidesOrdenados = (elementos, incluirMestre = false) => {
+export const slidesOrdenados = (elementos, incluirMestre = false, selecionado = {}) => {
   var elem = elementos.flatMap((e, i) => { 
     return e.slides.map((s, j) => ({elemento: i, slide: j, eMestre: s.eMestre})); //Gera um array ordenado com todos os slides que existem representados por objetos do tipo "selecionado".
   })
   if (!incluirMestre) {
-    elem = elem.filter(e => !e.eMestre);
+    elem = elem.filter(e => (!e.eMestre || (e.elemento === selecionado.elemento && e.slide === selecionado.slide)));
   }
   return elem;
 }

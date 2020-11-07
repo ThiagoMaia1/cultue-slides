@@ -28,6 +28,7 @@
 //   ✔️ Alinhamento de texto não funciona desde que mudei as divs dos paragrafos.
 //   ✔️ Botões novos do menu configurações.
 //   ✔️ Carrossel da lista de slides.
+//   ✔️ Slide-mestre aparecendo na apresentação.
 //   ✔️ Carrossel do Input Imagem não vai até o final.*/
 // Errinhos:
 //   Incluir webfonts na combo de fontes disponíveis.
@@ -36,7 +37,6 @@
 //   Duas colunas
 //   Indicar que há estilização nos slides/elementos.
 //   Pesquisa de letra de música não funciona na produção.
-//   Slide-mestre aparecendo na apresentação.
 //
 /*// Features:
 //   ✔️ Envio de imagens.
@@ -54,7 +54,7 @@
 //   ✔️ Login para salvar preferências.
 //   ✔️ Navbar no topo.
 //   ✔️ Exportar como Power Point.*/
-//   Tela perfil do usuário.
+//   Tela perfil do usuário: informações básicas, apresentações passadas, predefinições, e-mails salvos. 
 //   Atalho para nova apresentação.
 //   Exportar como PDF.
 //   Enviar por e-mail.

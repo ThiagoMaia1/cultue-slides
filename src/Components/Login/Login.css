@@ -20,17 +20,6 @@
     width: 60%;
 }
 
-#quadro-login {
-    background-color: white;
-    border-radius: var(--round-border-medio);
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
-    padding: 5vh;
-    box-shadow: var(--box-shadow);    
-}
-
 #quadro-login input, #quadro-login hr {
     width: 20vw;
 }

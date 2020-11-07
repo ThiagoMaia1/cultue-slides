@@ -8,7 +8,6 @@ import { Provider } from 'react-redux';
 import Configurar from './Components/Configurar/Configurar.jsx';
 import MenuExportacao from './Components/MenuExportacao/MenuExportacao';
 import PopupAdicionar from './Components/PopupAdicionar/PopupAdicionar';
-import Login from './Components/Login/Login';
 import NavBar from './Components/NavBar/NavBar';
 
 class App extends Component {

@@ -79,7 +79,7 @@ class Arrastar extends React.Component {
   abrirPainelAdicionar = () => {
     this.setState({painelAdicionar: !this.state.painelAdicionar,
                    posicaoPainelAdicionar: this.ref.current.offsetHeight >= 0.6*window.innerHeight ?
-                                              {position: 'absolute', top: '-18vh'} :
+                                              {position: 'absolute', top: '-20vh'} :
                                               {position: 'relative'}});
   }
 
