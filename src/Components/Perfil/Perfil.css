@@ -1,0 +1,40 @@
+#pagina-perfil {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    background-color: white;
+    z-index: 600;
+    display: flex;
+}
+
+#barra-lateral-perfil {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    min-width: 20%;
+    flex: 0 0;
+}
+
+#menu-perfil {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    height: 60%;
+    width: 100%;
+    border-right: 1px solid darkgray;
+}
+
+#menu-perfil button {
+    padding: 3vh;
+}
+
+#menu-perfil button span:hover {
+    filter: drop-shadow(1px 1px 0.5px rgba(0,0,0,0.2));
+}
+
+#menu-perfil button span:active {
+    filter: drop-shadow(1px 1px 0.5px rgba(0,0,0,0.2));
+}

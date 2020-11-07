@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import './NavBar.css';
 import Login from '../Login/Login';
 import QuadroAtalhos from './QuadroAtalhos';
+import Perfil from '../Perfil/Perfil';
 
 // const botoesNav = [{nome: , onClick: }
 
@@ -13,7 +14,7 @@ class NavBar extends React.Component {
   constructor (props) {
     super(props);
     this.esperando = false;
-    this.state = {quadroLogin: true, fundo: true, quadroAtalhos: false}
+    this.state = {quadroLogin: true, fundo: true, quadroAtalhos: false, paginaPerfil: true}
   }
 
   toggleQuadroLogin = () => {
@@ -24,9 +25,16 @@ class NavBar extends React.Component {
     this.setState({quadroAtalhos: bool});
   }
 
+  togglePerfil = (bool = !this.state.paginaPerfil) => {
+    console.log(bool)
+    this.setState({paginaPerfil: bool});
+  }
+
   render() {
     var u = this.props.usuario;
     return (
+      <>
+        {this.state.paginaPerfil ? <Perfil/> : null }
         <div id="navbar">
             <div id='botoes-navbar'>
               <button>Nova Apresentação</button>
@@ -50,12 +58,14 @@ class NavBar extends React.Component {
             {this.state.quadroLogin 
                 ? <>
                     <div style={this.state.fundo ? {position: 'fixed'} : {position: 'absolute', right: '1vw', top: '6vh'}}>
-                      <Login fundo={this.state.fundo} ativo={this.state.quadroLogin} callback={this.toggleQuadroLogin}/>
+                      <Login fundo={this.state.fundo} ativo={this.state.quadroLogin} callback={this.toggleQuadroLogin} 
+                             abrirPerfil={this.togglePerfil}/>
                     </div>
                   </>
                 : null
               }
         </div>
+      </>
     );
   }
 };

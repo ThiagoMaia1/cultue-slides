@@ -14,7 +14,7 @@ class ItemListaSlides extends Component {
         this.state = {
             colapsa: this.props.elemento.slides.length > 1,
             colapsado: false,
-            tamanhoIcone: window.innerHeight*0.029 + 'px',
+            tamanhoIcone: window.innerHeight*0.029,
             popupConfirmacao: null
         };
     }
@@ -56,6 +56,7 @@ class ItemListaSlides extends Component {
         if ((props.elemento.slides.length > 1) !== state.colapsa) {
             return {colapsa: (props.elemento.slides.length > 1)}
         }
+        return null;
     }
 
     render () {
@@ -76,7 +77,7 @@ class ItemListaSlides extends Component {
                         <div className='quadradinho-canto'>
                             <div data-id={i} className='botao-quadradinho' onClick={e => this.excluirElemento(e)}>✕</div>
                             <div data-id={i} className='botao-quadradinho' onClick={e => this.editarElemento(e)}>
-                                <MdEdit size={this.state.tamanhoIcone*0.9}/>
+                                <MdEdit size={this.state.tamanhoIcone*0.5}/>
                             </div>
                         </div>
                         <div className={'fade-estilizado ' + (JSON.stringify(elemento.slides[0].estilo) !== estiloVazio ? 'elemento-slide-estilizado' : '')}>

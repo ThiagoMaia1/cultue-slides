@@ -88,6 +88,7 @@ import { createStore } from 'redux';
 import hotkeys from 'hotkeys-js';
 import Element, { getEstiloPadrao, textoMestre, Estilo, getPadding, tiposElemento } from './Element.js';
 import { selecionadoOffset, getSlidePreview } from './Components/MenuExportacao/Exportador';
+import { atualizarApresentacao } from './Components/Login/UsuarioBD';
 
 const tipos = Object.keys(tiposElemento);
 
@@ -219,38 +220,43 @@ function undoable(reducer) {
     present: presenteInicial,
     future: [],
     slidePreview: getSlidePreview(presenteInicial),
-    usuario: null
+    usuario: {},
+    apresentacao: null
   }
 
+  const limiteUndo = 50;
+
   return function (state = initialState, action) {
-    var { past, present, future, previousTemp, usuario } = state;
+    var { past, present, future, previousTemp, apresentacao } = state;
     var newPresent;
     switch (action.type) {
       case 'login':
-        return {...state, usuario: action.usuario}
+        return {...state, usuario: action.usuario};
+      case 'registrar-nova-apresentacao':
+        return {...state, apresentacao: action.apresentacao};
       case 'UNDO':
         if (past.length === 0) return state;
         const previous = past[past.length - 1]
-        const newPast = past.slice(Math.max(0, past.length-50), past.length - 1)
+        const newPast = past.slice(Math.max(0, past.length-limiteUndo), past.length - 1)
         return {
+          ...state,
           past: newPast,
           present: previous,
           future: [present, ...future],
-          previousTemp: null,
           slidePreview: getSlidePreview(previous),
-          usuario: usuario
+          previousTemp: null
         }
       case 'REDO':
         if (future.length === 0) return state;
         const next = future[0]
         const newFuture = future.slice(1)
         return {
+          ...state,
           past: [...past, present],
           present: next,
           future: newFuture,
-          previousTemp: null,
           slidePreview: getSlidePreview(next),
-          usuario: usuario          
+          previousTemp: null
         }
       case 'editar-slide-temporariamente':
         newPresent = reducer(deepSpreadPresente(present), {...action, type: 'editar-slide'})
@@ -261,25 +267,21 @@ function undoable(reducer) {
       default:
         newPresent = reducer(deepSpreadPresente(present), action);
         if (previousTemp) present = previousTemp;
-        if (!houveMudanca(present, newPresent)) {
-          return {
-            past: [...past],
-            present: newPresent,
-            future: [],
-            previousTemp: null,
-            slidePreview: getSlidePreview(newPresent),
-            usuario: usuario  
-          }
-        }
-        if (action.type === 'inserir')
-          present.popupAdicionar = {...action.popupAdicionar, tipo: action.elemento.tipo};
+        var mudanca = houveMudanca(present, newPresent);
+        if (mudanca) {
+          past = [...past, present];
+          if(apresentacao && mudanca.find(m => m === 'elementos'))
+            atualizarApresentacao(newPresent.elementos, apresentacao);
+          if (action.type === 'inserir')
+            present.popupAdicionar = {...action.popupAdicionar, tipo: action.elemento.tipo};
+        } 
         return {
-          past: [...past, present],
+          ...state,
+          past: [...past],
           present: newPresent,
           future: [],
-          previousTemp: null,
           slidePreview: getSlidePreview(newPresent),
-          usuario: usuario  
+          previousTemp: null,
         }
     }
   }
@@ -287,12 +289,13 @@ function undoable(reducer) {
 
 function houveMudanca(estado1, estado2) {
   const keysRelevantes = ['elementos', 'popupAdicionar'];
-  var [ e1, e2 ] = [{}, {}];
+  var retorno = [];
   for (var k of keysRelevantes) {
-    e1[k] = estado1[k];
-    e2[k] = estado2[k];
+    if (JSON.stringify(estado1[k]) !== JSON.stringify(estado2[k]))
+      retorno.push(k);  
   }
-  return JSON.stringify(e1) !== JSON.stringify(e2); 
+  if (retorno.length === 0) retorno = false;
+  return retorno; 
 }
 
 function deepSpreadPresente(present) {

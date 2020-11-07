@@ -66,7 +66,11 @@ export function getPadding (estilo, objeto) {
 
 export default class Element {
   
-  constructor(tipo, titulo, texto = [], imagens = [], estilo = {}, eMestre = false) {     
+  constructor(tipo, titulo, texto = [], imagens = [], estilo = {}, eMestre = false, elementoDB = null) {     
+    if (elementoDB) {
+      this.descoversorFirestore(elementoDB);
+      return;
+    }
     this.tipo = tipo;
     this.titulo = titulo;
     this.texto = texto;
@@ -188,6 +192,26 @@ export default class Element {
       }
     }
     thisP.slides[nSlide].textoArray = texto.slice(0, i+1);
+  }
+
+  conversorFirestore = () => {
+    return {
+      tipo: this.tipo,
+      titulo: this.titulo,
+      texto: this.texto,
+      imagens: this.imagens,
+      eMestre: this.eMestre,
+      slides: this.slides
+    }
+  }
+
+  descoversorFirestore = elementoDB => {
+    this.tipo = elementoDB.tipo;
+    this.titulo = elementoDB.titulo;
+    this.texto = elementoDB.texto;
+    this.imagens = elementoDB.imagens;
+    this.eMestre = elementoDB.eMestre;
+    this.slides = elementoDB.slides;
   }
 }
   

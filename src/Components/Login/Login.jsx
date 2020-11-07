@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import './Login.css';
 import { firebaseAuth, googleAuth } from "../../firebase";
-import { gerarDocumentoUsuario } from './UsuarioBD';
+import { gerarDocumentoUsuario, gerarNovaApresentacao } from './UsuarioBD';
 
 function getMensagemErro(error) {
     var codigo = error.code.replace('auth/', '');
@@ -36,7 +36,6 @@ class Login extends React.Component {
         super(props);
         this.ref = React.createRef();
         this.ref1 = React.createRef();
-        this.ref2 = React.createRef();
         this.state = {email: '', senha: '', erro: '', nomeCompleto: '', cadastrando: false}
     }
 
@@ -84,24 +83,24 @@ class Login extends React.Component {
     }
 
     componentDidMount = async () => {
-        if (this.ref1.current) {
-            this.ref1.current.focus();
-        } else if(this.ref2.current) {
-            this.ref2.current.focus();
-        }
+        if (this.ref1.current) this.ref1.current.focus();
         document.addEventListener("click", this.clickFora, false);
-            firebaseAuth.onAuthStateChanged(async userAuth => {
-            console.log(this.props.usuario, userAuth);
-          if (!(userAuth || this.props.usuario) || (this.props.usuario && userAuth && userAuth.id === this.props.usuario.id)) return;
-          const user = await gerarDocumentoUsuario(userAuth);
-          this.props.dispatch({type: 'login', usuario: user});
-          this.removerEventListener();
+        firebaseAuth.onAuthStateChanged(async userAuth => {
+            if ((!userAuth && !this.props.usuario.uid) || (userAuth && userAuth.uid === this.props.usuario.uid)) return;
+            const user = await gerarDocumentoUsuario(userAuth);
+            this.props.dispatch({type: 'login', usuario: user || {}});
+            this.removerEventListener();
+            if (!this.props.apresentacao) {
+                var apresentacao;
+                if (user.uid) {
+                    apresentacao = await gerarNovaApresentacao(user.uid);
+                } else {
+                    apresentacao = null;
+                }
+                this.props.dispatch({type: 'registrar-nova-apresentacao', apresentacao: apresentacao})
+            }
         });
       };
-
-    acessarPerfilUsuario = () => {
-        //todo
-    }
 
     render() {
         if (!this.props.ativo) return null;
@@ -109,9 +108,9 @@ class Login extends React.Component {
             <div ref={this.ref} id='container-login' className={this.props.fundo ? 'fundo-login' : ''}>
                 <div className='wraper-login'>
                     <div id='quadro-login' className={'quadro-navbar ' + (this.props.fundo ? 'quadro-centralizado' : '')}>
-                        {this.props.usuario 
+                        {this.props.usuario.uid
                             ? <>
-                                <button ref={this.ref2} className='botao-azul botao' onClik={this.acessarPerfilUsuario}>Meu Perfil</button>  
+                                <button className='botao-azul botao' onClick={() => this.props.abrirPerfil(true)}>Meu Perfil</button>  
                                 <button className='botao limpar-input' onClick={() => firebaseAuth.signOut()}>✕ Sair</button>
                             </>
                             :  
@@ -163,7 +162,7 @@ class Login extends React.Component {
 };
 
 const mapStateToProps = state => {
-  return {usuario: state.usuario};
+  return {usuario: state.usuario, apresentacao: state.apresentacao};
 }
 
 export default connect(mapStateToProps)(Login);
