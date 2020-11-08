@@ -14,7 +14,7 @@ class NavBar extends React.Component {
   constructor (props) {
     super(props);
     this.esperando = false;
-    this.state = {quadroLogin: true, fundo: true, quadroAtalhos: false, paginaPerfil: true}
+    this.state = {quadroLogin: true, fundo: true, quadroAtalhos: false, paginaPerfil: false}
   }
 
   toggleQuadroLogin = () => {

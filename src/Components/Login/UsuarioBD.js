@@ -89,7 +89,8 @@ export const getApresentacoesUsuario = async (idUsuario) => {
 
 const getObjetoApresentacao = doc => {
   var dados = doc.data();
-  dados.dataFormatada = dataFormatada(dados.timestamp.toDate());
+  dados.data = dataFormatada(dados.timestamp.toDate());
+  dados.dataCriacao = dataFormatada(dados.timestampCriacao.toDate());
   return {...dados, idApresentacao: doc.id};
 }
 
@@ -116,16 +117,3 @@ export const getElementosConvertidos = elementos => {
   }
   return el;
 }
-
-  // const getDocumentoUsuario = async uid => {
-  //   if (!uid) return null;
-  //   try {
-  //     const docUsuario = await firestore.doc(`usuários/${uid}`).get();
-  //     return {
-  //       uid,
-  //       ...docUsuario.data()
-  //     };
-  //   } catch (error) {
-  //     console.error("Erro ao buscar usuário.", error);
-  //   }
-  // };

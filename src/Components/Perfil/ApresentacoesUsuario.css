@@ -1,0 +1,15 @@
+.item-lista-apresentacoes {
+    padding: 2vh;
+    display: flex;
+    border-radius: var(--round-border-pequeno);
+    font-size: 90%;
+    height: 5vh;
+}
+
+.item-lista-apresentacoes:hover{
+    background-color: var(--platinum);
+}
+
+.previews-slides-elementos {
+    width: 20vw;
+}

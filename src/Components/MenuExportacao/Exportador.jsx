@@ -65,11 +65,10 @@ export const slidesOrdenados = (elementos, incluirMestre = false, selecionado = 
   return elem;
 }
 
-export function getSlidePreview (state, selecionado = null) {
-  const sel = selecionado || state.selecionado;
-  const global = state.elementos[0].slides[0];
-  const elemento = state.elementos[sel.elemento].slides[0];
-  const slide = {...state.elementos[sel.elemento].slides[sel.slide]};
+export function getSlidePreview ({elementos, selecionado}) {
+  const global = elementos[0].slides[0];
+  const elemento = elementos[selecionado.elemento].slides[0];
+  const slide = {...elementos[selecionado.elemento].slides[selecionado.slide]};
   const estiloAplicavel = obj => {
     var estilo = {...global.estilo[obj], ...elemento.estilo[obj], ...slide.estilo[obj]};
     for (var k of Object.keys(estilo)) {    
@@ -83,13 +82,13 @@ export function getSlidePreview (state, selecionado = null) {
   var estiloTexto = estiloAplicavel('texto');
   var estiloParagrafo = {...estiloTexto, ...estiloAplicavel('paragrafo')};
   var estiloTitulo = {...estiloTexto, ...estiloAplicavel('titulo')};
-  var tipo = state.elementos[sel.elemento].tipo;
-  var titulo = capitalize(state.elementos[sel.elemento].titulo, estiloTitulo.caseTexto);
+  var tipo = elementos[selecionado.elemento].tipo;
+  var titulo = capitalize(elementos[selecionado.elemento].titulo, estiloTitulo.caseTexto);
 
   return {...slide,
     tipo: tipo,
-    nomeLongoElemento: getNomeInterfaceTipo(tipo) + ': ' + ((tipo === 'Imagem' && !titulo) ? state.elementos[sel.elemento].imagens[0].alt : titulo),
-    selecionado: {...sel},
+    nomeLongoElemento: getNomeInterfaceTipo(tipo) + ': ' + ((tipo === 'Imagem' && !titulo) ? elementos[selecionado.elemento].imagens[0].alt : titulo),
+    selecionado: {...selecionado},
     textoArray: slide.textoArray.map(t => capitalize(t, estiloParagrafo.caseTexto)),
     titulo: titulo,
     estilo: {
@@ -128,8 +127,8 @@ class Exportador extends Component {
 
   getCopiaDOM = () => {
     this.imagensBase64 = [];
-    var sOrdenados = slidesOrdenados(this.props.state.elementos, false);
-    this.previews = sOrdenados.map((s, i) => ({...getSlidePreview(this.props.state, s), indice: i}));
+    var sOrdenados = slidesOrdenados(this.props.elementos, false);
+    this.previews = sOrdenados.map((s, i) => ({...getSlidePreview({elementos: this.props.elementos, selecionado: s}), indice: i}));
     if (this.props.criarSlideFinal) this.previews.push({...slideFinal, indice: this.previews.length});
     this.setState({previews: this.previews.map(s => <Preview slidePreviewFake={s}/>)})
     setTimeout(() => {
@@ -191,7 +190,7 @@ class Exportador extends Component {
 }
 
 const mapStateToProps = function (state) {
-  return {state: state.present};
+  return {elementos: state.present.elementos};
 }
 
 export default connect(mapStateToProps)(Exportador);

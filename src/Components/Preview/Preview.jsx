@@ -101,8 +101,8 @@ class Preview extends Component {
         var proporcao = eMini ? 0.1 : this.state.screen.proporcao;
         return (
             <div className='borda-slide-mestre' style={{height: this.alturaTela*proporcao + 0.051*window.innerHeight, 
-                                                        visibility: (slidePreview.eMestre || this.props.mini) ? '' : 'hidden',
-                                                        position: eFake ? 'absolute' : '',
+                                                        visibility: (slidePreview.eMestre && !eMini) ? '' : 'hidden',
+                                                        position: (eFake && !eMini) ? 'absolute' : '',
                                                         ...this.realcarElemento('tampao', 'fora')}}>
                 <div ref={this.ref} id={'preview' + (eFake ? '-fake' + slidePreview.indice : '')} 
                      className={(eFake ? 'preview-fake ' : '') + (slidePreview.indice === 0 ? 'slide-ativo' : '')}
