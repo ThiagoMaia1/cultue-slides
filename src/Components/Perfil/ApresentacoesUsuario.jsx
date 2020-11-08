@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { getApresentacoesUsuario } from '../Login/UsuarioBD'
+import { getApresentacoesUsuario } from '../Login/UsuarioBD';
+import Preview from '../Preview/Preview';
 
 class ApresentacoesUsuario extends React.Component {
   
@@ -20,7 +21,10 @@ class ApresentacoesUsuario extends React.Component {
         return (
             <div>
                 {this.state.apresentacoes 
-                    ? this.state.apresentacoes.map(a => <div>{a.dataFormatada || 'Apresentação vazia'}</div>)
+                    ? this.state.apresentacoes.map(a => 
+                        <div className='item-lista-apresentacoes'>
+                            <Preview></Preview>{a.dataFormatada}
+                        </div>)
                     : null}
             </div>
         );

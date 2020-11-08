@@ -86,18 +86,13 @@ import './index.css';
 import App from './App';
 import { createStore } from 'redux';
 import hotkeys from 'hotkeys-js';
-import Element, { getEstiloPadrao, textoMestre, Estilo, getPadding, tiposElemento } from './Element.js';
+import { getEstiloPadrao, Estilo, getPadding, tiposElemento } from './Element.js';
 import { selecionadoOffset, getSlidePreview } from './Components/MenuExportacao/Exportador';
-import { atualizarApresentacao } from './Components/Login/UsuarioBD';
+import { atualizarApresentacao, apresentacaoDefault } from './Components/Login/UsuarioBD';
 
 const tipos = Object.keys(tiposElemento);
 
-const criarNovaApresentacao = () => {
-  return [new Element("Slide-Mestre", "Slide-Mestre", [textoMestre], null, {...getEstiloPadrao()}, true)];
-}
-
-var defaultList = {elementos: criarNovaApresentacao(),
-  selecionado: {elemento: 0, slide: 0}, 
+var defaultList = {...apresentacaoDefault, 
   abaAtiva: 'texto',
   popupAdicionar: {}
 };
@@ -145,7 +140,7 @@ export const reducerElementos = function (state = defaultList, action) {
     case "reordenar":
       return {elementos: action.novaOrdemElementos, selecionado: sel, abaAtiva: state.abaAtiva, popupAdicionar: state.popupAdicionar};
     case "criar-nova-apresentacao":
-      return {elementos: criarNovaApresentacao(), selecionado: {elemento: 0, slide: 0}, abaAtiva: state.abaAtiva, popupAdicionar: state.popupAdicionar};
+      return {...apresentacaoDefault, abaAtiva: state.abaAtiva, popupAdicionar: state.popupAdicionar};
     case "editar-slide": {
       e = {...el[sel.elemento]};
       var s = e.slides[sel.slide];
@@ -235,8 +230,8 @@ function undoable(reducer) {
       case 'definir-apresentacao':
         newPresent = {...presenteInicial};
         if (action.elementos) {
-          newPresent.elementos = action.elementos
-          newPresent.selecionado = {elemento: 0, slide: 0};
+          newPresent.elementos = action.elementos;
+          newPresent.selecionado = apresentacaoDefault.selecionado;
         }
         return {...state, apresentacao: action.apresentacao, present: newPresent, slidePreview: getSlidePreview(newPresent)};
       case 'UNDO':
@@ -276,7 +271,7 @@ function undoable(reducer) {
         if (mudanca) {
           past = [...past, present];
           if(apresentacao && mudanca.find(m => m === 'elementos'))
-            atualizarApresentacao(newPresent.elementos, apresentacao);
+            atualizarApresentacao(newPresent.elementos, apresentacao.idApresentacao);
           if (action.type === 'inserir')
             present.popupAdicionar = {...action.popupAdicionar, tipo: action.elemento.tipo};
         } 

@@ -2,8 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import './Login.css';
 import { firebaseAuth, googleAuth } from "../../firebase";
-import { gerarDocumentoUsuario, gerarNovaApresentacao, getApresentacoesUsuario } from './UsuarioBD';
-import Element from '../../Element';
+import { gerarDocumentoUsuario, gerarNovaApresentacao, getApresentacoesUsuario, getElementosDesconvertidos } from './UsuarioBD';
 
 function getMensagemErro(error) {
     var codigo = error.code.replace('auth/', '');
@@ -95,13 +94,13 @@ class Login extends React.Component {
                 var apresentacao;
                 var elementos = null;
                 if (user.uid) {
-                    var apresentacoes = getApresentacoesUsuario(user.uid);
+                    var apresentacoes = await getApresentacoesUsuario(user.uid);
                     if (apresentacoes.length === 0) {
                         apresentacao = await gerarNovaApresentacao(user.uid);
                     } else {
                         apresentacao = apresentacoes[0];
                     }
-                    elementos = this.getElementosDesconvertidos(apresentacao.elementos);
+                    elementos = getElementosDesconvertidos(apresentacao.elementos);
                 } else {
                     apresentacao = null;
                 }
@@ -109,14 +108,6 @@ class Login extends React.Component {
             }
         });
     };
-
-    getElementosDesconvertidos = elementos => {
-        var el = [...elementos];
-        for (var i = 0; i < el.length; i++) {
-            el[i] = new Element(null, null, null, null, null, null, el[i]);
-        }
-        return el;
-    }
 
     render() {
         if (!this.props.ativo) return null;

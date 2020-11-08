@@ -1,4 +1,14 @@
 import firebase, { firestore } from '../../firebase';
+import Element, { getEstiloPadrao, textoMestre } from '../../Element.js';
+
+const criarNovaApresentacao = () => {
+  return [new Element("Slide-Mestre", "Slide-Mestre", [textoMestre], null, {...getEstiloPadrao()}, true)];
+}
+
+export const apresentacaoDefault = {
+  elementos: criarNovaApresentacao(),
+  selecionado: {elemento: 0, slide: 0}
+};
 
 export const gerarDocumentoUsuario = async (usuario, dadosAdicionais) => {
     if (!usuario) return;
@@ -42,16 +52,18 @@ export const gerarNovaApresentacao = async idUsuario => {
       timestampCriacao: timestamp,
       timestamp: timestamp,
       idUsuario: idUsuario,
-      elementos: []
+      elementos: getElementosConvertidos(apresentacaoDefault.elementos)
     });
   } catch (error) {
     console.error("Erro ao adicionar apresentação ao banco de dados", error);
   }
-  return refApresentacao;
+  var docApresentacao = await refApresentacao.get();
+  return getObjetoApresentacao(docApresentacao);
 };
 
 
-export const atualizarApresentacao = async (elementos, refApresentacao) => {
+export const atualizarApresentacao = async (elementos, idApresentacao) => {
+  var refApresentacao = firestore.doc(`apresentações/${idApresentacao}`)
   var dados = [];
   for (var i = 0; i < elementos.length; i++) {
     dados.push(elementos[i].conversorFirestore());
@@ -70,11 +82,15 @@ export const atualizarApresentacao = async (elementos, refApresentacao) => {
 export const getApresentacoesUsuario = async (idUsuario) => {
   var colecao = await firestore.collection('apresentações').where('idUsuario', '==', idUsuario).orderBy('timestamp', 'desc').get();
   return colecao.docs.reduce((resultado, doc) => {
-    var dados = doc.data();
-    dados.dataFormatada = dataFormatada(dados.timestamp.toDate());
-    resultado.push({...dados, idApresentacao: dados.id});
+    resultado.push(getObjetoApresentacao(doc));
     return resultado;
   }, []);
+}
+
+const getObjetoApresentacao = doc => {
+  var dados = doc.data();
+  dados.dataFormatada = dataFormatada(dados.timestamp.toDate());
+  return {...dados, idApresentacao: doc.id};
 }
 
 function dataFormatada(data) {
@@ -83,6 +99,22 @@ function dataFormatada(data) {
          data.getFullYear() + ' ' +
          String(data.getHours()).padStart(2,'0') + ":" +   
          String(data.getMinutes()).padStart(2,'0')
+}
+
+export const getElementosDesconvertidos = elementos => {
+  var el = [...elementos];
+  for (var i = 0; i < el.length; i++) {
+      el[i] = new Element(null, null, null, null, null, null, el[i]);
+  }
+  return el;
+}
+
+export const getElementosConvertidos = elementos => {
+  var el = [...elementos];
+  for (var i = 0; i < el.length; i++) {
+      el[i] = el[i].conversorFirestore();
+  }
+  return el;
 }
 
   // const getDocumentoUsuario = async uid => {

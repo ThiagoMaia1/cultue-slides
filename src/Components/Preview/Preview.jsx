@@ -94,24 +94,24 @@ class Preview extends Component {
     }
 
     render() {
+        var eFake = !!this.props.slidePreviewFake;
+        var eMini = this.props.mini;
         var slidePreview = this.props.slidePreviewFake || this.props.slidePreview;
         var sel = slidePreview.selecionado;
+        var proporcao = eMini ? 0.1 : this.state.screen.proporcao;
         return (
-            <div className='borda-slide-mestre' style={{height: this.alturaTela*this.state.screen.proporcao + 0.051*window.innerHeight, 
-                                                        visibility: slidePreview.eMestre ? '' : 'hidden',
-                                                        position: this.props.slidePreviewFake ? 'absolute' : '',
+            <div className='borda-slide-mestre' style={{height: this.alturaTela*proporcao + 0.051*window.innerHeight, 
+                                                        visibility: (slidePreview.eMestre || this.props.mini) ? '' : 'hidden',
+                                                        position: eFake ? 'absolute' : '',
                                                         ...this.realcarElemento('tampao', 'fora')}}>
-                <div ref={this.ref} id={'preview' + (this.props.slidePreviewFake ? '-fake' + slidePreview.indice : '')} 
-                     className={(this.props.slidePreviewFake ? 'preview-fake ' : '') + (slidePreview.indice === 0 ? 'slide-ativo' : '')}
-                     style={{width: this.larguraTela*this.state.screen.proporcao, 
-                            height: this.alturaTela*this.state.screen.proporcao,
+                <div ref={this.ref} id={'preview' + (eFake ? '-fake' + slidePreview.indice : '')} 
+                     className={(eFake ? 'preview-fake ' : '') + (slidePreview.indice === 0 ? 'slide-ativo' : '')}
+                     style={{width: this.larguraTela*proporcao, 
+                            height: this.alturaTela*proporcao,
                             ...this.realcarElemento('tampao', 'dentro')}}>
-                    <div className='tampao' style={slidePreview.estilo.tampao}>
-                                    
-                    </div>
-                    {this.props.marcaDagua}
+                    <div className='tampao' style={slidePreview.estilo.tampao}></div>
                     <Img imagem={slidePreview.estilo.fundo} />
-                    <div className='texto-preview' style={{fontSize: fonteBase.numero*this.state.screen.proporcao + fonteBase.unidade}}>
+                    <div className='texto-preview' style={{fontSize: fonteBase.numero*proporcao + fonteBase.unidade}}>
                         <div className='slide-titulo' style={slidePreview.estilo.titulo}>
                             <div><span id='textoTitulo' onInput={this.editarTexto} onFocus={this.ativarRealce} 
                                 contentEditable={!this.props.elementos[this.props.nElemento].eMestre}
@@ -130,19 +130,27 @@ class Preview extends Component {
                                  style={this.getEstiloImagem()}/>
                         </div>: 
                         null}
-                    <div className='container-setas' style={{display: this.state.screen.proporcao === small.proporcao ? 'none' : ''}}>
-                        <div className='movimentar-slide esquerda' onClick={() => this.offsetSlide(-1)}></div>
-                        <div className='movimentar-slide direita' onClick={() => this.offsetSlide(1)}></div>
-                    </div>
-                    <button id='ativar-tela-cheia' onClick={() => toggleFullscreen(this.ref.current)} 
-                        style={{opacity: this.state.screen.opacidadeBotao, color: slidePreview.estilo.texto.color, 
-                                width: 140*this.state.screen.proporcao + 'px', height: 140*this.state.screen.proporcao + 'px',
-                                right: 7.5*this.state.screen.proporcao + 'vh', bottom: 6.5*this.state.screen.proporcao + 'vh'}}
-                        onMouseOver={this.tornarBotaoVisivel} onMouseLeave={this.tornarBotaoInvisivel}>
-                        {this.state.screen.icone}
-                    </button>
+                    {eMini ? null :
+                        <>
+                            <div className='container-setas' style={{display: proporcao === small.proporcao ? 'none' : ''}}>
+                                <div className='movimentar-slide esquerda' onClick={() => this.offsetSlide(-1)}></div>
+                                <div className='movimentar-slide direita' onClick={() => this.offsetSlide(1)}></div>
+                            </div>
+                            <button id='ativar-tela-cheia' onClick={() => toggleFullscreen(this.ref.current)} 
+                                style={{opacity: this.state.screen.opacidadeBotao, color: slidePreview.estilo.texto.color, 
+                                        width: 140*proporcao + 'px', height: 140*proporcao + 'px',
+                                        right: 7.5*proporcao + 'vh', bottom: 6.5*proporcao + 'vh'}}
+                                onMouseOver={this.tornarBotaoVisivel} onMouseLeave={this.tornarBotaoInvisivel}>
+                                {this.state.screen.icone}
+                            </button>
+                        </>
+                    }
                 </div>
-                <div id="texto-slide-mestre" style={{textAlign: 'center', paddingTop: '0.7vh'}}>Slide-Mestre - {slidePreview.selecionado.elemento === 0 ? 'Global' : slidePreview.nomeLongoElemento}</div>
+                {(slidePreview.eMestre || eMini) ? null : 
+                    <div id="texto-slide-mestre" style={{textAlign: 'center', paddingTop: '0.7vh'}}>
+                        Slide-Mestre - {slidePreview.selecionado.elemento === 0 ? 'Global' : slidePreview.nomeLongoElemento}
+                    </div>
+                }
             </div>
         )
     }
