@@ -232,8 +232,13 @@ function undoable(reducer) {
     switch (action.type) {
       case 'login':
         return {...state, usuario: action.usuario};
-      case 'registrar-nova-apresentacao':
-        return {...state, apresentacao: action.apresentacao};
+      case 'definir-apresentacao':
+        newPresent = {...presenteInicial};
+        if (action.elementos) {
+          newPresent.elementos = action.elementos
+          newPresent.selecionado = {elemento: 0, slide: 0};
+        }
+        return {...state, apresentacao: action.apresentacao, present: newPresent, slidePreview: getSlidePreview(newPresent)};
       case 'UNDO':
         if (past.length === 0) return state;
         const previous = past[past.length - 1]

@@ -10,16 +10,17 @@ class ApresentacoesUsuario extends React.Component {
     }
     
     componentDidMount = async () => {
-        var apresentacoes = await getApresentacoesUsuario(this.props.usuario);
+        var apresentacoes = await getApresentacoesUsuario(this.props.usuario.uid);
         console.log(apresentacoes);
         this.setState({apresentacoes: apresentacoes});
+        console.log(apresentacoes)
     }
 
     render() {
         return (
             <div>
                 {this.state.apresentacoes 
-                    ? this.state.apresentacoes.map(a => <div>{a.timestampCriacao}</div>)
+                    ? this.state.apresentacoes.map(a => <div>{a.dataFormatada || 'Apresentação vazia'}</div>)
                     : null}
             </div>
         );

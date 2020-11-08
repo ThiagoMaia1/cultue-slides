@@ -35,11 +35,14 @@ export const gerarDocumentoUsuario = async (usuario, dadosAdicionais) => {
 
 export const gerarNovaApresentacao = async idUsuario => {
   if (!idUsuario) return null;
-  var refApresentacao = firestore.collection('apresentações').doc();   
+  var refApresentacao = firestore.collection('apresentações').doc(); 
+  var timestamp = firebase.firestore.FieldValue.serverTimestamp();  
   try {
     await refApresentacao.set({
-      timestampCriacao: firebase.firestore.FieldValue.serverTimestamp(),
-      idUsuario: idUsuario
+      timestampCriacao: timestamp,
+      timestamp: timestamp,
+      idUsuario: idUsuario,
+      elementos: []
     });
   } catch (error) {
     console.error("Erro ao adicionar apresentação ao banco de dados", error);
@@ -56,7 +59,7 @@ export const atualizarApresentacao = async (elementos, refApresentacao) => {
   try {
     await refApresentacao.update({
       timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-      elementos: elementos
+      elementos: dados
     });
   } catch (error) {
     console.error("Erro ao atualizar apresentação no banco de dados", error);
@@ -65,8 +68,21 @@ export const atualizarApresentacao = async (elementos, refApresentacao) => {
 };
 
 export const getApresentacoesUsuario = async (idUsuario) => {
-  var apresentacoes = await firestore.collection('apresentações').where('idUsuario', '==', idUsuario).orderBy('timestamp', 'desc').get();
-  return apresentacoes;
+  var colecao = await firestore.collection('apresentações').where('idUsuario', '==', idUsuario).orderBy('timestamp', 'desc').get();
+  return colecao.docs.reduce((resultado, doc) => {
+    var dados = doc.data();
+    dados.dataFormatada = dataFormatada(dados.timestamp.toDate());
+    resultado.push({...dados, idApresentacao: dados.id});
+    return resultado;
+  }, []);
+}
+
+function dataFormatada(data) {
+  return String((data.getMonth()+1)).padStart(2,'0') + '/' +
+         String(data.getDate()).padStart(2,'0') + '/' +
+         data.getFullYear() + ' ' +
+         String(data.getHours()).padStart(2,'0') + ":" +   
+         String(data.getMinutes()).padStart(2,'0')
 }
 
   // const getDocumentoUsuario = async uid => {
