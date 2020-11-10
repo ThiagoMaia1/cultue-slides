@@ -11,6 +11,7 @@
 .file-input-container {
     overflow-y: visible;
     position: relative;  
+    pointer-events: none;
 }
 
 .caixa-input-imagem [type=file] {
@@ -92,8 +93,4 @@
     justify-content: center;
     flex-wrap: wrap;
     flex-direction: row;
-}
-
-.file-input-container{
-    pointer-events: none;
 }

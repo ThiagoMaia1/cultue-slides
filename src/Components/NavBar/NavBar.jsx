@@ -26,7 +26,6 @@ class NavBar extends React.Component {
   }
 
   togglePerfil = (bool = !this.state.paginaPerfil) => {
-    console.log(bool)
     this.setState({paginaPerfil: bool});
   }
 
@@ -34,7 +33,7 @@ class NavBar extends React.Component {
     var u = this.props.usuario;
     return (
       <>
-        {this.state.paginaPerfil ? <Perfil/> : null }
+        {this.state.paginaPerfil ? <Perfil callback={this.togglePerfil}/> : null }
         <div id="navbar">
             <div id='botoes-navbar'>
               <button>Nova Apresentação</button>
@@ -49,11 +48,11 @@ class NavBar extends React.Component {
               <button>Express</button>
             </div>
             <div id='info-usuario' onClick={this.toggleQuadroLogin}>
-              {u
-                ? <img id='foto-usuario' src={u.photoURL || require('./Usuário Padrão.png')} alt='Foto Usuário'></img>
+              {u.uid
+                ? <img className='foto-usuario pequena' src={u.photoURL || require('./Usuário Padrão.png')} alt='Foto Usuário'></img>
                 : null
               }   
-              <div id='nome-usuario'>{u ? u.nomeCompleto : 'Entre ou Cadastre-se'}</div>
+              <div id='nome-usuario'>{u.uid ? u.nomeCompleto : 'Entre ou Cadastre-se'}</div>
             </div>
             {this.state.quadroLogin 
                 ? <>

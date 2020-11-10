@@ -1,4 +1,4 @@
-import { fonteBase } from './Components/Preview/Preview';
+import { fonteBase, alturaTela, larguraTela } from './Components/Preview/Preview';
 import AdicionarMusica from './Components/LetrasMusica/AdicionarMusica';
 import AdicionarTextoBiblico from './Components/TextoBiblico/AdicionarTextoBiblico';
 import AdicionarTexto from './Components/Configurar/AdicionarTexto';
@@ -145,10 +145,10 @@ export default class Element {
     // Variáveis relacionadas ao tamanho do slide.
     var padV = estP.paddingTop + estP.paddingRight; //Right é a base de cálculo, bottom varia.
     var padH = estP.paddingRight + estP.paddingLeft;
-    var larguraLinha = window.screen.width*(1-padH);
+    var larguraLinha = larguraTela*(1-padH);
     var alturaLinha = estP.lineHeight*estP.fontSize*fonteBase.numero;
-    var alturaSecaoTitulo = estTitulo.height*window.screen.height;
-    var alturaSecaoParagrafo = window.screen.height-alturaSecaoTitulo;
+    var alturaSecaoTitulo = estTitulo.height*alturaTela;
+    var alturaSecaoParagrafo = alturaTela-alturaSecaoTitulo;
     var alturaParagrafo = alturaSecaoParagrafo*(1-padV);
     var nLinhas = alturaParagrafo/alturaLinha;
   
@@ -157,7 +157,7 @@ export default class Element {
     } else {
       nLinhas = Math.floor(nLinhas);
     }
-    slide.estilo.paragrafo.paddingBottom = ((alturaSecaoParagrafo-nLinhas*alturaLinha)/window.screen.width)-estP.paddingTop; 
+    slide.estilo.paragrafo.paddingBottom = ((alturaSecaoParagrafo-nLinhas*alturaLinha)/larguraTela)-estP.paddingTop; 
     
     var duasColunas = false;
     if (estP.duasColunas) {
@@ -201,6 +201,8 @@ export default class Element {
       texto: this.texto,
       imagens: this.imagens,
       eMestre: this.eMestre,
+      input1: this.input1,
+      input2: this.input2,
       slides: this.slides
     }
   }
@@ -211,6 +213,8 @@ export default class Element {
     this.texto = elementoDB.texto;
     this.imagens = elementoDB.imagens;
     this.eMestre = elementoDB.eMestre;
+    this.input1 = elementoDB.input1;
+    this.input2 = elementoDB.input2;
     this.slides = elementoDB.slides;
   }
 }

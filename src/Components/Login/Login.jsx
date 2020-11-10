@@ -87,8 +87,8 @@ class Login extends React.Component {
         document.addEventListener("click", this.clickFora, false);
         firebaseAuth.onAuthStateChanged(async userAuth => {
             if ((!userAuth && !this.props.usuario.uid) || (userAuth && userAuth.uid === this.props.usuario.uid)) return;
-            const user = await gerarDocumentoUsuario(userAuth);
-            this.props.dispatch({type: 'login', usuario: user || {}});
+            const user = await gerarDocumentoUsuario(userAuth) || {};
+            this.props.dispatch({type: 'login', usuario: user});
             this.removerEventListener();
             if (!this.props.apresentacao) {
                 var apresentacao;

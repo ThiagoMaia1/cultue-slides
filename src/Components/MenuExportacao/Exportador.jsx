@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { capitalize, getNomeInterfaceTipo } from '../../Element';
-import Preview from '../Preview/Preview';
+import Preview, { alturaTela, larguraTela } from '../Preview/Preview';
 
 export function getBase64Image(src, classe, total, callback) {
   const img = new Image();
@@ -12,8 +12,8 @@ export function getBase64Image(src, classe, total, callback) {
     let dataURL;
     var iw = img.width;
     var ih = img.height;
-    var windowW = window.screen.width;
-    var windowH = window.screen.height;
+    var windowW = larguraTela;
+    var windowH = alturaTela;
     var scale = Math.max((windowW/iw), (windowH/ih));
     var wScaled = windowW/scale;
     var hScaled = windowH/scale;

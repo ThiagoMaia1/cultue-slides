@@ -2,7 +2,6 @@
     border-radius: var(--round-border-grande);
     padding: 1vh;
     background-color: black;
-    color: white;    
     box-shadow: var(--box-shadow);
 }
 
@@ -154,6 +153,9 @@ img {
     width: auto;
 }
 
+#texto-slide-mestre {
+    color: white;
+}
 /* .div-imagem-slide {
     resize: both;
     overflow: hidden;

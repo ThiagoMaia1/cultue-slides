@@ -46,11 +46,20 @@
     box-shadow: 2px 2px 8px rgba(0,0,0,0.3);
 }
 
-#foto-usuario {
+.foto-usuario {
     object-fit: cover;
-    border-radius: 100px;
+    border-radius: 100vh;
+}
+
+.foto-usuario.pequena {
     height: 3vh;
     width: 3vh;
+}
+
+.foto-usuario.grande {
+    height: 12vh;
+    width: 12vh;
+    margin-right: 2vw;
 }
 
 #info-usuario {

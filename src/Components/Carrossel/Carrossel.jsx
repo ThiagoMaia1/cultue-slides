@@ -100,7 +100,6 @@ class Carrossel extends Component {
     }
 
     onMouseOver = () => {
-        // console.log('mouse-over do carrossel')
         if (this.direcao === 'top') {
             this.setState({tamanhoCarrossel: this.refCarrossel.current.offsetHeight, tamanhoGaleria: this.refGaleria.current.offsetHeight});
         } else {

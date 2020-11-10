@@ -14,7 +14,7 @@ export default function Estrofes(props) {
         if (comBreaks) breaks = (divBreak);
         return (
             <>
-                <span contentEditable={!s.eMestre} id={'paragrafo-textoArray-' + sel.elemento + '-' + sel.slide + '-' + i} 
+                <span contentEditable={!s.eMestre && !props.eFake} id={'paragrafo-textoArray-' + sel.elemento + '-' + sel.slide + '-' + i} 
                     key={i} onInput={props.onInput} onFocus={props.onFocus}>
                 {t}</span>
                 {breaks}

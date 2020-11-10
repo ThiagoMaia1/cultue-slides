@@ -71,6 +71,7 @@
 //   Tela de propagandas
 //   Adicionar logo da igreja (upload ou a partir de lista de logos famosas de denominações).
 //   Melhorar pesquisa de letra de música usando google.
+//   Favoritar músicas, fundos...
 //
 // Negócio:
 //   Cadastrar google ads.

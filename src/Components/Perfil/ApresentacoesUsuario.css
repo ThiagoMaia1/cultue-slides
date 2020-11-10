@@ -1,15 +1,36 @@
 .item-lista-apresentacoes {
     padding: 2vh;
     display: flex;
-    border-radius: var(--round-border-pequeno);
+    align-items: center;
+    border-radius: var(--round-border-grande);
     font-size: 90%;
-    height: 5vh;
+    height: 15vh;
+    position: relative;
+    margin: 1vh;
 }
 
-.item-lista-apresentacoes:hover{
+.item-lista-apresentacoes > * {
+    margin: 0 1.5vw;
+}
+
+.item-lista-apresentacoes:hover {
     background-color: var(--platinum);
 }
 
+.datas-apresentacao {
+    display: flex;
+    flex-direction: column;
+    line-height: 200%;
+}
+
 .previews-slides-elementos {
-    width: 20vw;
+    display: flex;
+    overflow: visible;
+    position: relative;
+    flex: 0 0;
+    width: fit-content;
+}
+
+.previews-slides-elementos > * {
+    margin: 0.6vh 0 0 1vw;
 }

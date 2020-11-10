@@ -14,8 +14,6 @@
     margin-top: 3.8vh;
     flex: 0 0;
     display: flex;
-    width: auto;
-    flex-direction: row;
     position: relative;
     background-color: var(--azul-forte);
 }

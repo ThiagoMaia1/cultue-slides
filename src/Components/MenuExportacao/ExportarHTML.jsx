@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import BotaoExportador from './BotaoExportador';
-import { toggleFullscreen as fullScreen } from '../Preview/Preview';
+import { toggleFullscreen as fullScreen, alturaTela } from '../Preview/Preview';
 import TratarDadosHTML from './tratarDadosHTML';
 
 const toggleFullscreen = fullScreen;
@@ -29,7 +29,7 @@ function scriptHTML () {
     var botaoTela = document.getElementById('ativar-tela-cheia')
     msgFinal.innerHTML = msgFinal.innerHTML.replace(/Esc|F11/, botaoAApertar);
 
-    if(window.innerHeight > window.screen.height -100 && !telaCheiaElemento){
+    if(window.innerHeight > alturaTela -100 && !telaCheiaElemento){
       botaoTela.style.display = 'none';
     } else {
       botaoTela.style.display = '';

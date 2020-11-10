@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import BotaoExportador from './BotaoExportador';
 import pptxgen from "pptxgenjs";
-import { fonteBase } from '../Preview/Preview';
+import { fonteBase, larguraTela, alturaTela } from '../Preview/Preview';
 
 class ExportarPptx extends Component {
     
@@ -144,8 +144,8 @@ const getDimensoesInches = (keysAbrev = true) => {
   document.body.appendChild(divDpi);
   var dpi_x = divDpi.offsetWidth;
   var dpi_y = divDpi.offsetHeight;
-  var width = window.screen.width/dpi_x;
-  var height = window.screen.height/dpi_y;
+  var width = larguraTela/dpi_x;
+  var height = alturaTela/dpi_y;
   if (keysAbrev) {
     return {w: width, h: height};
   } else {

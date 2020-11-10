@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { alturaTela, larguraTela } from '../Preview/Preview'
 import BotaoExportador from './BotaoExportador';
 import { jsPDF } from "jspdf";
 import TratarDadosHTML from './tratarDadosHTML';
@@ -19,7 +20,7 @@ class ExportadorPDF extends Component {
     const pdf = new jsPDF(({
       orientation: "landscape",
       unit: "px",
-      format: [window.screen.width, window.screen.height]
+      format: [larguraTela, alturaTela]
     }));
     
     copiaDOM = TratarDadosHTML(copiaDOM).copiaDOM;

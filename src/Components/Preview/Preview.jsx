@@ -4,7 +4,12 @@ import { connect } from 'react-redux';
 import { MdFullscreen, MdFullscreenExit } from 'react-icons/md';
 import Estrofes from './Estrofes';
 
-export const fonteBase = {numero: 0.025*window.screen.height, unidade: 'px', fontFamily: 'Noto Sans'};
+const wWidth = window.screen.width;
+const wHeight = window.screen.height;
+export const larguraTela = Math.max(wWidth, wHeight);
+export const alturaTela = Math.min(wWidth, wHeight);
+
+export const fonteBase = {numero: 0.025*alturaTela, unidade: 'px', fontFamily: 'Noto Sans'};
 const full = {icone: <MdFullscreenExit className='icone-botao' size={140}/>, proporcao: 1, opacidadeBotao: '0%'}
 export const small = {icone: <MdFullscreen className='icone-botao' size={60}/>, proporcao: 0.45, opacidadeBotao: '30%'}
 
@@ -28,10 +33,6 @@ class Preview extends Component {
     constructor(props) {
         super(props);
         this.ref = React.createRef();
-        var wWidth = window.screen.width;
-        var wHeight = window.screen.height;
-        this.larguraTela = Math.max(wWidth, wHeight);
-        this.alturaTela = Math.min(wWidth, wHeight);
         this.state = {screen: this.props.slidePreviewFake ? 
             {...full, icone: <MdFullscreen className='icone-botao' size={100}/>} : 
             {...small}};
@@ -98,29 +99,31 @@ class Preview extends Component {
         var eMini = this.props.mini;
         var slidePreview = this.props.slidePreviewFake || this.props.slidePreview;
         var sel = slidePreview.selecionado;
-        var proporcao = eMini ? 0.1 : this.state.screen.proporcao;
+        var proporcao = eMini ? 0.08 : this.state.screen.proporcao;
         return (
             <div className='borda-slide-mestre' style={{height: this.alturaTela*proporcao + 0.051*window.innerHeight, 
                                                         visibility: (slidePreview.eMestre && !eMini) ? '' : 'hidden',
                                                         position: (eFake && !eMini) ? 'absolute' : '',
+                                                        padding: eFake ? '0' : '',
                                                         ...this.realcarElemento('tampao', 'fora')}}>
                 <div ref={this.ref} id={'preview' + (eFake ? '-fake' + slidePreview.indice : '')} 
                      className={(eFake ? 'preview-fake ' : '') + (slidePreview.indice === 0 ? 'slide-ativo' : '')}
-                     style={{width: this.larguraTela*proporcao, 
-                            height: this.alturaTela*proporcao,
+                     style={{width: larguraTela*proporcao, 
+                            height: alturaTela*proporcao,
+                            visibility: eMini ? 'visible' : '',
                             ...this.realcarElemento('tampao', 'dentro')}}>
                     <div className='tampao' style={slidePreview.estilo.tampao}></div>
                     <Img imagem={slidePreview.estilo.fundo} />
                     <div className='texto-preview' style={{fontSize: fonteBase.numero*proporcao + fonteBase.unidade}}>
                         <div className='slide-titulo' style={slidePreview.estilo.titulo}>
                             <div><span id='textoTitulo' onInput={this.editarTexto} onFocus={this.ativarRealce} 
-                                contentEditable={!this.props.elementos[this.props.nElemento].eMestre}
+                                contentEditable={!this.props.elementos[this.props.nElemento].eMestre && !eFake}
                                 style={this.realcarElemento('titulo')}>{slidePreview.titulo}</span></div>
                         </div>
                         <div id='paragrafo-slide' className='slide-paragrafo' style={slidePreview.estilo.paragrafo}>
                             <div style={{...this.realcarElemento('paragrafo')}} 
                                  className={'realce-paragrafo ' + (slidePreview.estilo.paragrafo.duasColunas ? 'dividido-colunas' : '')}>
-                                {<Estrofes selecionado={sel} slidePreview={slidePreview} onInput={this.editarTexto} onFocus={this.ativarRealce}/>}
+                                {<Estrofes selecionado={sel} slidePreview={slidePreview} onInput={this.editarTexto} onFocus={this.ativarRealce} eFake={eFake}/>}
                             </div>
                         </div>
                     </div>
@@ -146,7 +149,7 @@ class Preview extends Component {
                         </>
                     }
                 </div>
-                {(slidePreview.eMestre || eMini) ? null : 
+                {(!slidePreview.eMestre || eMini) ? null : 
                     <div id="texto-slide-mestre" style={{textAlign: 'center', paddingTop: '0.7vh'}}>
                         Slide-Mestre - {slidePreview.selecionado.elemento === 0 ? 'Global' : slidePreview.nomeLongoElemento}
                     </div>
