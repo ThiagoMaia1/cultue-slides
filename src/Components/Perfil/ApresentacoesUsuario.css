@@ -1,4 +1,4 @@
-.item-lista-apresentacoes {
+.item-lista-perfil {
     padding: 2vh;
     display: flex;
     align-items: center;
@@ -9,11 +9,11 @@
     margin: 1vh;
 }
 
-.item-lista-apresentacoes > * {
+.item-lista-perfil > * {
     margin: 0 1.5vw;
 }
 
-.item-lista-apresentacoes:hover {
+.item-lista-perfil:hover {
     background-color: var(--platinum);
 }
 

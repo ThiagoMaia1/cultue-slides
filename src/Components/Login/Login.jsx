@@ -2,7 +2,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import './Login.css';
 import { firebaseAuth, googleAuth } from "../../firebase";
-import { gerarDocumentoUsuario, gerarNovaApresentacao, getApresentacoesUsuario, getElementosDesconvertidos } from './UsuarioBD';
+import { gerarDocumentoUsuario } from '../../firestore/apiFirestore';
+import { gerarNovaApresentacao, getApresentacoesUsuario, getElementosDesconvertidos } from '../../firestore/apresentacoesBD';
 
 function getMensagemErro(error) {
     var codigo = error.code.replace('auth/', '');

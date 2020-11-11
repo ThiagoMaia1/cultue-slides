@@ -89,7 +89,7 @@ import { createStore } from 'redux';
 import hotkeys from 'hotkeys-js';
 import { getEstiloPadrao, Estilo, getPadding, tiposElemento } from './Element.js';
 import { selecionadoOffset, getSlidePreview } from './Components/MenuExportacao/Exportador';
-import { atualizarApresentacao, apresentacaoDefault } from './Components/Login/UsuarioBD';
+import { atualizarApresentacao, apresentacaoDefault } from './firestore/apresentacoesBD';
 
 const tipos = Object.keys(tiposElemento);
 
@@ -272,7 +272,7 @@ function undoable(reducer) {
         if (mudanca) {
           past = [...past, present];
           if(apresentacao && mudanca.find(m => m === 'elementos'))
-            atualizarApresentacao(newPresent.elementos, apresentacao.idApresentacao);
+            atualizarApresentacao(newPresent.elementos, apresentacao.id);
           if (action.type === 'inserir')
             present.popupAdicionar = {...action.popupAdicionar, tipo: action.elemento.tipo};
         } 

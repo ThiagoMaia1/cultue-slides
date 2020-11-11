@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { getApresentacoesUsuario, getElementosDesconvertidos } from '../Login/UsuarioBD';
+import { getApresentacoesUsuario, getElementosDesconvertidos } from '../../firestore/apresentacoesBD';
 import Preview from '../Preview/Preview';
 import { getSlidePreview } from '../MenuExportacao/Exportador';
 import './ApresentacoesUsuario.css';
@@ -33,7 +33,7 @@ class ApresentacoesUsuario extends React.Component {
             <div>
                 {this.state.apresentacoes 
                     ? this.state.apresentacoes.map(a => 
-                        <div className='item-lista-apresentacoes'>
+                        <div className='item-lista-perfil'>
                             <div className='datas-apresentacao'>
                                 <div><span>Data de Criação: </span><span>{a.dataCriacao}</span></div>
                                 <div><span>Data de Modificação: </span><span>{a.data}</span></div>

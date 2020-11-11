@@ -1,32 +1,37 @@
 import React from 'react';
 import { connect } from 'react-redux';
-// import firebase, { firestore } from '../../firebase';
+import { getRegistrosUsuario } from '../../firestore/apiFirestore';
+import ItemListaEmails, { colecaoEmails } from './ItemListaEmails';
   
 class ListaEmails extends React.Component {
   
     constructor (props) {
         super(props);
-        this.state = {apresentacoes: null}
+        this.state = {emailsUsuario: null}
     }
     
-    // componentDidMount = async () => {
-    //     var apresentacoes = await getApresentacoesUsuario(this.props.usuario.uid);
-    //     this.setState({apresentacoes: apresentacoes});
-    // }
+    atualizarLista = async () => {
+        var emails = await getRegistrosUsuario(this.props.usuario.uid, colecaoEmails);
+        this.setState({emailsUsuario: emails});
+    }
+
+    componentDidMount = async () => {
+        this.atualizarLista();
+    }
 
     render() {
         return (
             <div>
-                {this.state.apresentacoes 
-                    ? this.state.apresentacoes.map(a => 
-                        <div className='item-lista-apresentacoes'>
-                            <div className='datas-apresentacao'>
-                                <div><span>Data de Criação: </span><span>{a.dataCriacao}</span></div>
-                                <div><span>Data de Modificação: </span><span>{a.data}</span></div>
-                            </div>             
-                            <button onClick={() => this.selecionarApresentacao(a)} className='botao-azul botao'>Selecionar</button>
-                        </div>)
+                {this.state.emailsUsuario 
+                    ? this.state.emailsUsuario.map(e => 
+                        <ItemListaEmails 
+                            enderecoEmail={e.enderecoEmail}
+                            nomeCompleto={e.nomeCompleto} 
+                            eProprio={e.eProprio}
+                            idEmail={e.id}
+                            callback={this.atualizarLista}/>)
                     : null}
+                <ItemListaEmails callback={this.atualizarLista}/>
             </div>
         );
     }

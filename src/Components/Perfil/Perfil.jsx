@@ -1,5 +1,4 @@
 import React from "react";
-import ReactDOM from "react-dom";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import { connect } from 'react-redux';
 import './Perfil.css';
@@ -17,10 +16,6 @@ const paginasPerfil = [{nome: 'info-pessoal', nomeInterface: 'Informações Pess
 ]
 
 class Perfil extends React.Component {
-  
-    constructor (props) {
-        super(props);
-    }
 
     render() {
         var u = this.props.usuario;
