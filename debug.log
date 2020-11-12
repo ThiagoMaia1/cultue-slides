@@ -856,3 +856,6 @@
 [1105/184043.572:ERROR:directory_reader_win.cc(43)] FindFirstFile: O sistema não pode encontrar o caminho especificado. (0x3)
 [1108/160937.858:ERROR:directory_reader_win.cc(43)] FindFirstFile: O sistema não pode encontrar o caminho especificado. (0x3)
 [1108/163729.672:ERROR:directory_reader_win.cc(43)] FindFirstFile: O sistema não pode encontrar o caminho especificado. (0x3)
+[1111/153127.643:ERROR:crash_report_database_win.cc(498)] failed to stat report
+[1111/153127.646:ERROR:crash_report_database_win.cc(498)] failed to stat report
+[1111/153127.646:ERROR:crash_report_database_win.cc(498)] failed to stat report

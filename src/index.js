@@ -89,11 +89,11 @@ import { createStore } from 'redux';
 import hotkeys from 'hotkeys-js';
 import { getEstiloPadrao, Estilo, getPadding, tiposElemento } from './Element.js';
 import { selecionadoOffset, getSlidePreview } from './Components/MenuExportacao/Exportador';
-import { atualizarApresentacao, apresentacaoDefault } from './firestore/apresentacoesBD';
+import { atualizarApresentacao, getApresentacaoPadrao, gerarNovaApresentacao, getElementosDesconvertidos } from './firestore/apresentacoesBD';
 
 const tipos = Object.keys(tiposElemento);
 
-var defaultList = {...apresentacaoDefault, 
+var defaultList = {...getApresentacaoPadrao(), 
   abaAtiva: 'texto',
   popupAdicionar: {}
 };
@@ -140,8 +140,6 @@ export const reducerElementos = function (state = defaultList, action) {
       return {elementos: el, selecionado: {...novaSelecao}, abaAtiva: state.abaAtiva, popupAdicionar: state.popupAdicionar};
     case "reordenar":
       return {elementos: action.novaOrdemElementos, selecionado: sel, abaAtiva: state.abaAtiva, popupAdicionar: state.popupAdicionar};
-    case "criar-nova-apresentacao":
-      return {...apresentacaoDefault, abaAtiva: state.abaAtiva, popupAdicionar: state.popupAdicionar};
     case "editar-slide": {
       e = {...el[sel.elemento]};
       var s = e.slides[sel.slide];
@@ -223,17 +221,13 @@ function undoable(reducer) {
   const limiteUndo = 50;
 
   return function (state = initialState, action) {
-    var { past, present, future, previousTemp, apresentacao } = state;
+    var { past, present, future, previousTemp, apresentacao, usuario } = state;
     var newPresent;
     switch (action.type) {
       case 'login':
         return {...state, usuario: action.usuario};
       case 'definir-apresentacao':
-        newPresent = {...presenteInicial};
-        if (action.elementos) {
-          newPresent.elementos = action.elementos;
-          newPresent.selecionado = apresentacaoDefault.selecionado;
-        }
+        newPresent = {...presenteInicial, elementos: action.apresentacao.elementos};
         return {...state, apresentacao: action.apresentacao, present: newPresent, slidePreview: getSlidePreview(newPresent)};
       case 'UNDO':
         if (past.length === 0) return state;

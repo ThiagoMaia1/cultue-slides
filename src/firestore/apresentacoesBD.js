@@ -1,34 +1,52 @@
 import Element, { getEstiloPadrao, textoMestre } from '../Element.js';
 import { gerarNovoRegistro, atualizarRegistro, getRegistrosUsuario } from './apiFirestore';
 
-const criarNovaApresentacao = () => {
+const colecaoApresentacoes = 'apresentações';
+
+const getElementosPadrao = (usuario) => {
+  if (usuario && usuario.apresentacaoPadrao) {
+    return usuario.apresentacaoPadrao;
+  }
   return [new Element("Slide-Mestre", "Slide-Mestre", [textoMestre], null, {...getEstiloPadrao()}, true)];
 }
 
-export const apresentacaoDefault = {
-  elementos: criarNovaApresentacao(),
+export const getApresentacaoPadrao = (usuario) => ({
+  elementos: getElementosPadrao(usuario),
   selecionado: {elemento: 0, slide: 0}
-};
+});
 
-const colecaoApresentacoes = 'apresentações';
-
-export const gerarNovaApresentacao = async idUsuario => {
+export const gerarNovaApresentacao = async usuario => {
   return await gerarNovoRegistro(
-    idUsuario,
+    usuario.uid,
     colecaoApresentacoes,
     {
-      elementos: getElementosConvertidos(apresentacaoDefault.elementos)
+      elementos: getElementosConvertidos(getElementosPadrao(usuario))
     },
     true
   );
 };
 
+export const definirApresentacao = async (usuario, dispatcher, apresentacao) => {
+  var novaApresentacao = apresentacao || await gerarNovaApresentacao(usuario);
+  novaApresentacao.elementos = getElementosDesconvertidos(novaApresentacao.elementos);
+  dispatcher.dispatch({type: 'definir-apresentacao', apresentacao: novaApresentacao})
+}
 
 export const atualizarApresentacao = async (elementos, idApresentacao) => {
   return await atualizarRegistro(
     {elementos: elementos},
     colecaoApresentacoes,
     idApresentacao
+  );
+}
+
+export const definirApresentacaoPadrao = async (idUsuario, elementosPadrao) => {
+  atualizarRegistro(
+    {
+      apresentacaoPadrao: getSlideMestreApresentacao(elementosPadrao)
+    },
+    'usuários',
+    idUsuario
   );
 }
 
@@ -53,4 +71,8 @@ export const getElementosConvertidos = elementos => {
       el[i] = el[i].conversorFirestore();
   }
   return el;
+}
+
+export const getSlideMestreApresentacao = elementos => {
+  return getElementosConvertidos(elementos.filter(e => e.eMestre));
 }

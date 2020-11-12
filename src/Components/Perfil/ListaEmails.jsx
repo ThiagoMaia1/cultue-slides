@@ -21,7 +21,7 @@ class ListaEmails extends React.Component {
 
     render() {
         return (
-            <div>
+            <>
                 {this.state.emailsUsuario 
                     ? this.state.emailsUsuario.map(e => 
                         <ItemListaEmails 
@@ -29,10 +29,11 @@ class ListaEmails extends React.Component {
                             nomeCompleto={e.nomeCompleto} 
                             eProprio={e.eProprio}
                             idEmail={e.id}
+                            data={e.data}
                             callback={this.atualizarLista}/>)
                     : null}
                 <ItemListaEmails callback={this.atualizarLista}/>
-            </div>
+            </>
         );
     }
 };

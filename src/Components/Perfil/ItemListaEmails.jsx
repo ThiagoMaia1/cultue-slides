@@ -1,44 +1,54 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { gerarNovoRegistro, atualizarRegistro } from '../../firestore/apiFirestore';
+import { gerarNovoRegistro, atualizarRegistro, excluirRegistro } from '../../firestore/apiFirestore';
 import Checkbox from '../Checkbox/Checkbox';
+import PopupConfirmacao from '../Configurar/Popup/PopupConfirmacao';
 
 export const colecaoEmails = 'emails';
+
+export const eEmailValido = enderecoEmail => {
+    return /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/.test(enderecoEmail);
+}
   
 class ItemListaEmails extends React.Component {
   
     constructor (props) {
         super(props);
         this.state = {
-            enderecoEmail: props.enderecoEmail, 
-            nomeCompleto: props.nomeCompleto, 
+            enderecoEmail: props.enderecoEmail || '', 
+            nomeCompleto: props.nomeCompleto || '', 
             eProprio: !!props.eProprio, 
-            editandoEmail: !props.idEmail, 
-            editandoNome: !props.idEmail}
-    }   
+            editando: !props.idEmail,
+            popupAtivo: false,
+            emailInvalido: false
+        }
+        this.ref = React.createRef();
+    }
       
-    atualizarEnderecoEmail = e => {
+    editar = () => {
+        this.setState({editando: true})
+        setTimeout(() => this.ref.current.focus(), 100);
+    }
+
+    atualizarEnderecoEmail = (e, conferir) => {
         var enderecoEmail = e.target.value;
-        if (!enderecoEmail) return;
-        this.setState({enderecoEmail: enderecoEmail});
-        this.setState({editandoEmail: false});
-        this.atualizarEmailBD();
+        if (!conferir || eEmailValido(enderecoEmail)) {
+            this.setState({enderecoEmail: enderecoEmail, emailInvalido: false});
+        } else {
+            this.setState({popupAtivo: true, emailInvalido: true});
+        }
     }
 
     atualizarNomeCompleto = e => {
-        var nomeCompleto = e.target.value;
-        if (!nomeCompleto) return;
-        this.setState({nomeCompleto: nomeCompleto});
-        this.setState({editandoNome: false});
-        this.atualizarEmailBD();
+        this.setState({nomeCompleto: e.target.value});
     }
 
     atualizarEProprio = () => {
         this.setState({eProprio: !this.state.eProprio});
-        this.atualizarEmailBD();
     }
 
     atualizarEmailBD = () => {
+        if (!this.state.enderecoEmail || !this.state.nomeCompleto) return;
         if (this.props.idEmail) {
             setTimeout(() => atualizarRegistro(
                 {
@@ -51,6 +61,7 @@ class ItemListaEmails extends React.Component {
         } else if (this.state.nomeCompleto && this.state.enderecoEmail) {
             this.gerarNovoEmail();
         }
+        this.setState({editando: false})
         this.props.callback();
     }
 
@@ -60,28 +71,73 @@ class ItemListaEmails extends React.Component {
             colecaoEmails,
             {
                 enderecoEmail: this.state.enderecoEmail,
+                nomeCompleto: this.state.nomeCompleto,
                 eProprio: this.state.eProprio
             }
         );
     };
-    
+
+    excluirEmail = async () => {
+        await excluirRegistro(this.props.idEmail, colecaoEmails);
+        this.props.callback();
+    }
+
     render() {
         return (
-            <div className='item-lista-perfil'>
-                {this.state.editandoNome
-                    ? <input type='text' className='combo-popup' placeholder='Nome Completo'
-                        onBlur={this.atualizarNomeCompleto} 
-                        value={this.state.nomeCompleto}></input>
-                    : <div tabIndex='0' onFocus={() => this.setState({editandoNome: true})}>{this.state.nomeCompleto}</div>
+            <>
+                {this.state.popupAtivo
+                    ? <PopupConfirmacao
+                        botoes='OK' 
+                        titulo='E-mail Inválido' 
+                        pergunta='Insira um endereço de e-mail válido.'
+                        callback={() => this.setState({popupAtivo: false})}/>
+                    : null
                 }
-                {this.state.editandoEmail
-                    ? <input type='text' className='combo-popup' placeholder='Endereço de E-mail'
-                             onBlur={this.atualizarEnderecoEmail} 
-                             value={this.state.enderecoEmail}></input>
-                    : <div tabIndex='0' onFocus={() => this.setState({editandoEmail: true})}>{this.state.enderecoEmail}</div>
-                }
-                <Checkbox checked={this.state.eProprio} label='E-mail Próprio' onClick={this.atualizarEProprio} />
-            </div>
+                <div className='item-lista-perfil'>
+                    <div className='dados-verticais-item-lista-perfil'>
+                        <div><span>Nome: </span>
+                            {this.state.editando
+                                ?  <input type='text' className='combo-popup' 
+                                           placeholder='Nome Completo'
+                                           onChange={this.atualizarNomeCompleto} 
+                                           value={this.state.nomeCompleto}
+                                           ref={this.ref}></input>
+                                : <div>{this.state.nomeCompleto}</div>
+                            }
+                        </div>
+                        <div><span>E-mail: </span>
+                            {this.state.editando
+                                ?   <input type='text' className='combo-popup' 
+                                           placeholder='Endereço de E-mail'
+                                           onChange={this.atualizarEnderecoEmail} 
+                                           style={this.state.popupAtivo ? {borderColor: 'var(--vermelho-forte)'} : null}
+                                           value={this.state.enderecoEmail}
+                                           onBlur={e => this.atualizarEnderecoEmail(e, true)}></input>
+                                : <div>{this.state.enderecoEmail}</div>
+                            }
+                        </div>
+                    </div>
+                    <Checkbox checked={this.state.eProprio} label='E-mail Próprio' onClick={this.atualizarEProprio} />
+                    <div className='dados-verticais-item-lista-perfil' style={this.props.idEmail ? null : {visibility: 'hidden'}}>
+                        <div><span>Data de Modificação: {this.props.data}</span></div>
+                    </div>
+                    <div className='container-botoes-item-lista-perfil'>
+                        {this.state.editando
+                            ? <button className='botao-azul botao' 
+                                        onClick={this.atualizarEmailBD}
+                                        style={eEmailValido(this.state.enderecoEmail) && this.state.nomeCompleto ? null : {visibility: 'hidden'}}>
+                                Salvar
+                              </button>
+                            : <button className='botao-azul botao' onClick={this.editar}>Editar</button>
+                        }
+                        <button className='botao limpar-input' 
+                                onClick={this.excluirEmail}
+                                style={this.props.idEmail ? null : {visibility: 'hidden'}}>
+                            Excluir
+                        </button>
+                    </div>
+                </div>
+            </>
         );
     }
 };
@@ -91,4 +147,3 @@ const mapStateToProps = state => {
 }
 
 export default connect(mapStateToProps)(ItemListaEmails);
-  

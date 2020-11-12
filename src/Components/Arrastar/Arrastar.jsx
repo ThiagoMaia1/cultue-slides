@@ -6,6 +6,7 @@ import Carrossel from '../Carrossel/Carrossel';
 // import Popup from '../Configurar/Popup/Popup';
 import PopupConfirmacao from '../Configurar/Popup/PopupConfirmacao';
 import ItemListaSlides from './ItemListaSlides';
+import { definirApresentacao } from '../../firestore/apresentacoesBD';
 
 class Arrastar extends React.Component {
   constructor(props) {
@@ -60,7 +61,7 @@ class Arrastar extends React.Component {
   zerarApresentacao = () => {
     var pergunta = "Deseja excluir todos os slides?";
     const callback = fazer => {
-      if(fazer) this.props.dispatch({type: 'criar-nova-apresentacao'});
+      if(fazer) definirApresentacao(this.props.usuario, this);
       this.setState({popupConfirmacao: null});
     }
     this.setState({popupConfirmacao: (<PopupConfirmacao titulo='Atenção' pergunta={pergunta} callback={callback} botoes='simNao'/>)});
@@ -123,8 +124,12 @@ class Arrastar extends React.Component {
 }
 
 const mapStateToProps = function (state) {
-  state = state.present;
-  return {elementos: state.elementos, selecionado: state.selecionado, popupAdicionar: state.popupAdicionar}
+  return {
+    elementos: state.present.elementos, 
+    selecionado: state.present.selecionado, 
+    popupAdicionar: state.present.popupAdicionar, 
+    usuario: state.usuario
+  }
 }
 
 export default connect(mapStateToProps)(Arrastar);

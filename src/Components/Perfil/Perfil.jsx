@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import './Perfil.css';
 import ApresentacoesUsuario from './ApresentacoesUsuario';
 import ListaEmails from './ListaEmails';
+import { BsArrowLeft } from 'react-icons/bs'
 
 export const urlPerfil = '/perfil';
 
@@ -22,6 +23,11 @@ class Perfil extends React.Component {
         return (
             <div id='pagina-perfil'>
                 <div id='cabecalho-perfil'>
+                    <div className='container-seta-voltar'>
+                        <div id='seta-voltar' onClick={() => this.props.callback()}>
+                            <BsArrowLeft size={window.innerWidth*0.06}/>
+                        </div>
+                    </div>
                     <img className='foto-usuario grande' src={u.photoURL || require('./Usuário Padrão.png')} alt='Foto Usuário'></img>
                     {u.nomeCompleto}
                 </div>
@@ -38,8 +44,10 @@ class Perfil extends React.Component {
                             {paginasPerfil.map(p => {
                                 var Pagina = p.componente;
                                 return (
-                                    <Route path={urlPerfil + '/' + p.nome}>
-                                        <Pagina callback={this.props.callback}/>
+                                    <Route path={urlPerfil + '/' + p.nome} >
+                                        <div className='pagina-perfil'>
+                                            <Pagina callback={this.props.callback}/>
+                                        </div>
                                     </Route>
                                 );    
                             })}

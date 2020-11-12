@@ -1,14 +1,14 @@
 import React from 'react';
 
-const listaAtalhos = [{teclas: [['←'], ['↑']], acao: 'Slide anterior.'},
+const listaAtalhos = [{teclas: [['←'], ['↑']], acao: 'Slide anterior'},
                       {teclas: [['↑'], ['→']], acao: 'Próximo Slide'},
-                      {teclas: ['Ctrl', 'Z'], acao: 'Desfazer última ação.'},
-                      {teclas: [['Ctrl', 'Y'], ['Ctrl', 'Shift', 'Z']], acao: 'Refazer ação desfeita.'},
-                      {teclas: ['Ctrl', 'L'], acao: 'Adicionar Texto Livre.'},
-                      {teclas: ['Ctrl', 'B'], acao: 'Adicionar Texto Bíblico.'},
-                      {teclas: ['Ctrl', 'M'], acao: 'Adicionar Música.'},
-                      {teclas: ['Ctrl', 'I'], acao: 'Adicionar Imagem.'},
-                      {teclas: ['Ctrl', 'D'], acao: 'Adicionar Vídeo.'}
+                      {teclas: ['Ctrl', 'Z'], acao: 'Desfazer última ação'},
+                      {teclas: [['Ctrl', 'Y'], ['Ctrl', 'Shift', 'Z']], acao: 'Refazer ação desfeita'},
+                      {teclas: ['Ctrl', 'L'], acao: 'Adicionar Texto Livre'},
+                      {teclas: ['Ctrl', 'B'], acao: 'Adicionar Texto Bíblico'},
+                      {teclas: ['Ctrl', 'M'], acao: 'Adicionar Música'},
+                      {teclas: ['Ctrl', 'I'], acao: 'Adicionar Imagem'},
+                      {teclas: ['Ctrl', 'D'], acao: 'Adicionar Vídeo'}
 ]
 
 const getAtalhoSeparado = teclas => ( 

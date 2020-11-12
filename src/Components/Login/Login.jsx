@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import './Login.css';
 import { firebaseAuth, googleAuth } from "../../firebase";
 import { gerarDocumentoUsuario } from '../../firestore/apiFirestore';
-import { gerarNovaApresentacao, getApresentacoesUsuario, getElementosDesconvertidos } from '../../firestore/apresentacoesBD';
+import { definirApresentacao, getApresentacoesUsuario } from '../../firestore/apresentacoesBD';
 
 function getMensagemErro(error) {
     var codigo = error.code.replace('auth/', '');
@@ -37,14 +37,16 @@ class Login extends React.Component {
         super(props);
         this.ref = React.createRef();
         this.ref1 = React.createRef();
-        this.state = {email: '', senha: '', erro: '', nomeCompleto: '', cadastrando: false}
+        this.state = {email: '', senha: '', erro: '', nomeCompleto: '', logando: true, cadastrando: false}
     }
 
     entrar = event => {
         event.preventDefault();
         this.setState({erro: ''});
-        if (this.state.cadastrando) { 
+        if (this.state.cadastrando && this.state.logando) { 
             this.criarUsuarioComEmailSenha();
+        } else if(!this.state.logando) { 
+            gerarDocumentoUsuario(this.props.usuario, {nomeCompleto: this.state.nomeCompleto, cargo: this.state.cargo});
         } else {
             firebaseAuth.signInWithEmailAndPassword(this.state.email, this.state.senha).catch(error => {
                 this.setState({erro: getMensagemErro(error)});
@@ -89,23 +91,18 @@ class Login extends React.Component {
         firebaseAuth.onAuthStateChanged(async userAuth => {
             if ((!userAuth && !this.props.usuario.uid) || (userAuth && userAuth.uid === this.props.usuario.uid)) return;
             const user = await gerarDocumentoUsuario(userAuth) || {};
+            if (!user.nomeCompleto || !user.cargo) {
+                this.setState({cadastrando: true, logando: false});
+            }
             this.props.dispatch({type: 'login', usuario: user});
             this.removerEventListener();
             if (!this.props.apresentacao) {
                 var apresentacao;
-                var elementos = null;
                 if (user.uid) {
                     var apresentacoes = await getApresentacoesUsuario(user.uid);
-                    if (apresentacoes.length === 0) {
-                        apresentacao = await gerarNovaApresentacao(user.uid);
-                    } else {
-                        apresentacao = apresentacoes[0];
-                    }
-                    elementos = getElementosDesconvertidos(apresentacao.elementos);
-                } else {
-                    apresentacao = null;
+                    if (apresentacoes.length !== 0) apresentacao = apresentacoes[0];
                 }
-                this.props.dispatch({type: 'definir-apresentacao', apresentacao: apresentacao, elementos: elementos})
+                definirApresentacao(user, this.props, apresentacao)
             }
         });
     };
@@ -124,10 +121,15 @@ class Login extends React.Component {
                             :  
                             <>
                                 <form className='inputs-login'> 
-                                    <input ref={this.ref1} id='username' className='combo-popup' placeholder='E-mail' type='email' value={this.state.email}
-                                            onChange={e => this.setState({email: e.target.value})}></input>
-                                    <input id='password' className='combo-popup' placeholder='Senha' type='password' value={this.state.senha}
-                                            onChange={e => this.setState({senha: e.target.value})}></input>
+                                    {this.state.logando ?
+                                        <>
+                                            <input ref={this.ref1} id='username' className='combo-popup' placeholder='E-mail' type='email' value={this.state.email}
+                                                    onChange={e => this.setState({email: e.target.value})}></input>
+                                            <input id='password' className='combo-popup' placeholder='Senha' type='password' value={this.state.senha}
+                                                    onChange={e => this.setState({senha: e.target.value})}></input>
+                                        </>
+                                        : null
+                                    }   
                                     {this.state.cadastrando ?
                                         <>
                                             <input id='nome-completo' className='combo-popup' placeholder='Nome Completo' type='text' 
@@ -138,12 +140,11 @@ class Login extends React.Component {
                                             </select>
                                         </> 
                                         : null 
-                                        
                                     }
-                                    <div className='mensagem-erro'>
-                                        <div>{this.state.erro}</div>
-                                    </div>
-                                    <button className='botao-azul botao' onClick={this.entrar}>Entrar</button>
+                                        <div className='mensagem-erro'>
+                                            <div>{this.state.erro}</div>
+                                        </div>
+                                        <button className='botao-azul botao' onClick={this.entrar}>Entrar</button>
                                 </form>
                                 {this.state.cadastrando ? null :
                                     <>

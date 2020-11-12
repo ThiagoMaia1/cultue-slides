@@ -42,13 +42,10 @@
     text-decoration-line: underline;
 }
 
-#info-usuario:hover img {
-    box-shadow: 2px 2px 8px rgba(0,0,0,0.3);
-}
-
 .foto-usuario {
     object-fit: cover;
     border-radius: 100vh;
+    box-shadow: 2px 2px 8px rgba(0,0,0,0.3);
 }
 
 .foto-usuario.pequena {

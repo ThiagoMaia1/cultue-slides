@@ -13,14 +13,24 @@ export const gerarDocumentoUsuario = async (usuario, dadosAdicionais) => {
           photoURL,
           ...dadosAdicionais
         });
+        gerarNovoRegistro(
+          usuario.uid,
+          'emails',
+          {
+              enderecoEmail: email,
+              nomeCompleto: dadosAdicionais.nomeCompleto,
+              eProprio: true
+          }
+        );
       } catch (error) {
         console.error("Erro ao criar documento de usuário", error);
       }
     }
+    
     return getDocumentoUsuario(usuario.uid);
   };
 
-  const getDocumentoUsuario = async uid => {
+  export const getDocumentoUsuario = async uid => {
     if (!uid) return null;
     try {
       const docUsuario = await firestore.doc(`usuários/${uid}`).get();
@@ -76,6 +86,14 @@ const getObjetoRegistro = doc => {
     dados.dataCriacao = dataFormatada(dados.timestampCriacao.toDate());
   dados.id = doc.id;
   return dados;
+}
+
+export const excluirRegistro = async (idRegistro, colecao) => {
+  firestore.collection(colecao).doc(idRegistro).delete().then(function() {
+    console.log("Registro excluído com sucesso.");
+  }).catch(function(error) {
+      console.error("Erro ao excluir registro: ", error);
+  });
 }
 
 function dataFormatada(data) {
