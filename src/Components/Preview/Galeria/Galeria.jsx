@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import Img from './Img';
 import Carrossel from '../../Carrossel/Carrossel';
 import InputImagem from '../../AdicionarImagem/InputImagem';
-import Popup from '../../Configurar/Popup/Popup';
+import Popup from '../../Popup/Popup';
 import { toggleAnimacao } from '../../Animacao/animacaoCoordenadas.js'
 
 class Galeria extends Component {

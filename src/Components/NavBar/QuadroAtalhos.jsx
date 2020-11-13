@@ -8,7 +8,8 @@ const listaAtalhos = [{teclas: [['←'], ['↑']], acao: 'Slide anterior'},
                       {teclas: ['Ctrl', 'B'], acao: 'Adicionar Texto Bíblico'},
                       {teclas: ['Ctrl', 'M'], acao: 'Adicionar Música'},
                       {teclas: ['Ctrl', 'I'], acao: 'Adicionar Imagem'},
-                      {teclas: ['Ctrl', 'D'], acao: 'Adicionar Vídeo'}
+                      {teclas: ['Ctrl', 'D'], acao: 'Adicionar Vídeo'},
+                      {teclas: ['Ctrl', 'N'], acao: 'Nova Apresentação'}
 ]
 
 const getAtalhoSeparado = teclas => ( 

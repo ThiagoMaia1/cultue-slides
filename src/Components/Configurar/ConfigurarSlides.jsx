@@ -286,7 +286,7 @@ class ConfigurarSlides extends Component {
 	}
 }
 
-const mapStateToProps = function (state) {
+const mapState = function (state) {
   var sel = state.present.selecionado;
   return {slideSelecionado: state.present.elementos[sel.elemento].slides[sel.slide], 
           selecionado: state.present.selecionado, 
@@ -295,4 +295,4 @@ const mapStateToProps = function (state) {
   }
 }
 
-export default connect(mapStateToProps)(ConfigurarSlides);
+export default connect(mapState)(ConfigurarSlides);

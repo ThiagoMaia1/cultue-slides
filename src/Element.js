@@ -201,8 +201,8 @@ export default class Element {
       texto: this.texto,
       imagens: this.imagens,
       eMestre: this.eMestre,
-      input1: this.input1,
-      input2: this.input2,
+      input1: this.input1 || null,
+      input2: this.input2 || null,
       slides: this.slides
     }
   }

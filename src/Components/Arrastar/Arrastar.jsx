@@ -3,16 +3,14 @@ import './style.css';
 import { connect } from 'react-redux';
 import Adicionar from '../Configurar/Adicionar';
 import Carrossel from '../Carrossel/Carrossel';
-// import Popup from '../Configurar/Popup/Popup';
-import PopupConfirmacao from '../Configurar/Popup/PopupConfirmacao';
 import ItemListaSlides from './ItemListaSlides';
-import { definirApresentacao } from '../../firestore/apresentacoesBD';
+import { zerarApresentacao } from '../../firestore/apresentacoesBD';
 
 class Arrastar extends React.Component {
   constructor(props) {
     super(props);
     this.ref = React.createRef();
-    this.state = {...props, painelAdicionar: true, posicaoPainelAdicionar: {position: 'relative'}, 
+    this.state = {...props, painelAdicionar: true, posicaoPainelAdicionar: 1,
                   selecionado: 0, placeholder: {posicao: -1}, carrosselAtivo: false};
   }
 
@@ -58,15 +56,6 @@ class Arrastar extends React.Component {
     }});
   }
 
-  zerarApresentacao = () => {
-    var pergunta = "Deseja excluir todos os slides?";
-    const callback = fazer => {
-      if(fazer) definirApresentacao(this.props.usuario, this);
-      this.setState({popupConfirmacao: null});
-    }
-    this.setState({popupConfirmacao: (<PopupConfirmacao titulo='Atenção' pergunta={pergunta} callback={callback} botoes='simNao'/>)});
-  }
-
   marcarSelecionado = (item, slide) => {
     var sel = this.props.selecionado;
     if (sel.elemento === item && sel.slide === slide) {
@@ -77,53 +66,43 @@ class Arrastar extends React.Component {
     this.props.dispatch({type: 'definir-selecao', selecionado: {elemento: item, slide: slide}})
   }
 
-  abrirPainelAdicionar = () => {
-    this.setState({painelAdicionar: !this.state.painelAdicionar,
-                   posicaoPainelAdicionar: this.ref.current.offsetHeight >= 0.6*window.innerHeight ?
-                                              {position: 'absolute', top: '-20vh'} :
-                                              {position: 'relative'}});
-  }
-
 	render() {
     return (
-      <>
-        <div className='coluna-lista-slides'>
-          <div className='gradiente-coluna emcima'></div>
-          <div className='gradiente-coluna embaixo'></div>
-          <Carrossel direcao='vertical' tamanhoIcone={50} tamanhoMaximo={'58vh'} style={{zIndex: '50', width: '21vw', height: 'auto'}}>
-              <ol ref={this.ref} id="ordem-elementos">
-                <div id="slide-mestre" className={'itens ' + (this.props.selecionado.elemento === 0 ? 'selecionado' : '')} data-id={0}
-                  onClick={() => this.marcarSelecionado(0, 0)}
-                  onDragOver={this.dragOver.bind(this)}
-                  style={{marginBottom: this.state.placeholder.posicao === 0 ? this.state.placeholder.tamanho + 'px' : '', 
-                  display: this.props.elementos.length === 1 ? 'none' : ''}}>
-                  <div data-id={0} id='criar-nova-apresentacao' className='botao-quadradinho quadradinho-canto' onClick={() => this.zerarApresentacao()}>*</div>
-                  Slide-Mestre
-                </div>
-                {this.props.elementos.map((elemento, i) => {
-                  if (i === 0) return null;
-                  return(<ItemListaSlides elemento={elemento} ordem={i} key={i} placeholder={this.state.placeholder} ultimo={i === this.props.elementos.length - 1}
-                          dragStart={this.dragStart} dragEnd={this.dragEnd} dragOver={this.dragOver} marcarSelecionado={this.marcarSelecionado}/>)
-                })}
-              </ol>
-          </Carrossel>
-          <div className='tampao-do-overflow' style={this.props.elementos.length === 1 ? {top: '-3vh'} : null}> 
-            <div id="adicionar-slide" onClick={this.abrirPainelAdicionar} 
-                  className='botao-azul itens lista-slides'>Adicionar Slide</div>
-            {(this.state.painelAdicionar || this.props.elementos.length === 1) ? 
-              <div className='container-adicionar' style={this.state.posicaoPainelAdicionar}>
-                <Adicionar onClick={() => this.setState({painelAdicionar: false})}/>
-              </div> : null} 
-          </div>
+      <div className='coluna-lista-slides'>
+        <div className='gradiente-coluna emcima'></div>
+        <div className='gradiente-coluna embaixo'></div>
+        <Carrossel direcao='vertical' tamanhoIcone={50} tamanhoMaximo={'58vh'} style={{zIndex: '50', width: '21vw', height: 'auto'}}>
+            <ol ref={this.ref} id="ordem-elementos">
+              <div id="slide-mestre" className={'itens ' + (this.props.selecionado.elemento === 0 ? 'selecionado' : '')} data-id={0}
+                onClick={() => this.marcarSelecionado(0, 0)}
+                onDragOver={this.dragOver.bind(this)}
+                style={{marginBottom: this.state.placeholder.posicao === 0 ? this.state.placeholder.tamanho + 'px' : '', 
+                display: this.props.elementos.length === 1 ? 'none' : ''}}>
+                <div data-id={0} id='criar-nova-apresentacao' className='botao-quadradinho quadradinho-canto' onClick={() => zerarApresentacao(this.props.usuario)}>*</div>
+                Slide-Mestre
+              </div>
+              {this.props.elementos.map((elemento, i) => {
+                if (i === 0) return null;
+                return(<ItemListaSlides elemento={elemento} ordem={i} key={i} placeholder={this.state.placeholder} ultimo={i === this.props.elementos.length - 1}
+                        dragStart={this.dragStart} dragEnd={this.dragEnd} dragOver={this.dragOver} marcarSelecionado={this.marcarSelecionado}/>)
+              })}
+            </ol>
+        </Carrossel>
+        <div className='tampao-do-overflow' style={this.props.elementos.length === 1 ? {top: '-3vh'} : null}> 
+          <div id="adicionar-slide" onClick={() => this.setState({painelAdicionar: !this.state.painelAdicionar})} 
+                className='botao-azul itens lista-slides'>Adicionar Slide</div>
+          {(this.state.painelAdicionar || this.props.elementos.length === 1) ? 
+            <div className='container-adicionar' 
+                 style={this.state.posicaoPainelAdicionar === -1 ? {top: '-20vh'} : null}>
+              <Adicionar onClick={() => this.setState({painelAdicionar: false})}/>
+            </div> : null} 
         </div>
-        {this.state.popupCompleto}
-        {this.state.popupConfirmacao}
-      </>
+      </div>
     )
   }
 }
 
-const mapStateToProps = function (state) {
+const mapState = function (state) {
   return {
     elementos: state.present.elementos, 
     selecionado: state.present.selecionado, 
@@ -132,4 +111,4 @@ const mapStateToProps = function (state) {
   }
 }
 
-export default connect(mapStateToProps)(Arrastar);
+export default connect(mapState)(Arrastar);

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import SublistaSlides from './SublistaSlides';
 import { connect } from 'react-redux';
 import { MdKeyboardArrowUp, MdKeyboardArrowDown, MdEdit } from 'react-icons/md';
-import PopupConfirmacao from '../Configurar/Popup/PopupConfirmacao';
+import { ativarPopupConfirmacao } from '../Popup/PopupConfirmacao';
 import { getNomeInterfaceTipo, Estilo } from '../../Element';
 
 const estiloVazio = JSON.stringify(new Estilo());
@@ -14,8 +14,7 @@ class ItemListaSlides extends Component {
         this.state = {
             colapsa: this.props.elemento.slides.length > 1,
             colapsado: false,
-            tamanhoIcone: window.innerHeight*0.029,
-            popupConfirmacao: null
+            tamanhoIcone: window.innerHeight*0.029
         };
     }
 
@@ -32,11 +31,10 @@ class ItemListaSlides extends Component {
         var pergunta = "Deseja excluir " + (/[oe]/.test(elemento.tipo.slice(-1)) ? 'o ' : 'a ') 
                         + getNomeInterfaceTipo(elemento.tipo).toLowerCase() + " '" + elemento.titulo + "'?";
         const callback = fazer => {
-        if (fazer !== -1)
-          if(fazer) this.props.dispatch({type: 'deletar', elemento: this.props.ordem});
-        this.setState({popupConfirmacao: null});
+        if (fazer)
+            this.props.dispatch({type: 'deletar', elemento: this.props.ordem});
         }
-        this.setState({popupConfirmacao: (<PopupConfirmacao titulo='Atenção' pergunta={pergunta} callback={callback} botoes='simNao'/>)});         
+        ativarPopupConfirmacao('simNao', 'Atenção', pergunta, callback);         
     }
 
     editarElemento = (e) => {
@@ -97,15 +95,14 @@ class ItemListaSlides extends Component {
                         <SublistaSlides elemento={this.props.elemento} ordem={i} marcarSelecionado={this.props.marcarSelecionado} /> 
                     : null}
                 </li>
-                {this.state.popupConfirmacao}
             </>
         )
     }
 }
 
-const mapStateToProps = function (state) {
+const mapState = function (state) {
     state = state.present;
     return {selecionado: state.selecionado, elementos: state.elementos}
 }
   
-export default connect(mapStateToProps)(ItemListaSlides);
+export default connect(mapState)(ItemListaSlides);

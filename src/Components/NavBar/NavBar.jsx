@@ -69,9 +69,9 @@ class NavBar extends React.Component {
   }
 };
   
-const mapStateToProps = state => {
+const mapState = state => {
   return {usuario: state.usuario};
 }
 
-export default connect(mapStateToProps)(NavBar);
+export default connect(mapState)(NavBar);
   

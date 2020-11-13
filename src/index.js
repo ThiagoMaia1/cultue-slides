@@ -37,6 +37,7 @@
 //   Duas colunas
 //   Indicar que há estilização nos slides/elementos.
 //   Pesquisa de letra de música não funciona na produção.
+//   getEstiloPadrao pegar do padrão do usuário.
 //
 /*// Features:
 //   ✔️ Envio de imagens.
@@ -53,9 +54,10 @@
 //   ✔️ Atalhos em geral.
 //   ✔️ Login para salvar preferências.
 //   ✔️ Navbar no topo.
+//   ✔️ Atalho para nova apresentação.
+//   ✔️ Tela perfil do usuário: apresentações passadas, e-mails salvos. 
 //   ✔️ Exportar como Power Point.*/
-//   Tela perfil do usuário: informações básicas, apresentações passadas, predefinições, e-mails salvos. 
-//   Atalho para nova apresentação.
+//   Tela perfil do usuário: informações básicas, predefinições. 
 //   Exportar como PDF.
 //   Enviar por e-mail.
 //   Calcular resolução do datashow.
@@ -89,13 +91,14 @@ import { createStore } from 'redux';
 import hotkeys from 'hotkeys-js';
 import { getEstiloPadrao, Estilo, getPadding, tiposElemento } from './Element.js';
 import { selecionadoOffset, getSlidePreview } from './Components/MenuExportacao/Exportador';
-import { atualizarApresentacao, getApresentacaoPadrao, gerarNovaApresentacao, getElementosDesconvertidos } from './firestore/apresentacoesBD';
+import { atualizarApresentacao, getApresentacaoPadrao, definirApresentacaoAtiva, zerarApresentacao } from './firestore/apresentacoesBD';
 
 const tipos = Object.keys(tiposElemento);
 
 var defaultList = {...getApresentacaoPadrao(), 
   abaAtiva: 'texto',
-  popupAdicionar: {}
+  popupAdicionar: {},
+  apresentacao: {id: 0, zerada: true}
 };
 
 const redividirSlides = (elementos, sel) => {
@@ -117,6 +120,8 @@ export const reducerElementos = function (state = defaultList, action) {
   var sel = action.selecionado || state.selecionado;
   var e;
   switch (action.type) {
+    case 'definir-apresentacao-ativa':
+        return {...state, apresentacao: action.apresentacao, elementos: action.elementos};
     case "inserir":
       var elNovo = action.elemento;
       elNovo.input1 = action.popupAdicionar.input1;
@@ -132,14 +137,14 @@ export const reducerElementos = function (state = defaultList, action) {
       } else {
         el.push(elNovo);
       }
-      return {elementos: [...el], selecionado: {elemento: el.length-1, slide: 0}, abaAtiva: state.abaAtiva, popupAdicionar: {}};
+      return {...state, elementos: [...el], selecionado: {elemento: el.length-1, slide: 0}, popupAdicionar: {}};
     case "deletar":
       el.splice(Number(action.elemento), 1);
       var novaSelecao = {elemento: state.selecionado.elemento, slide: 0};
       if (state.selecionado.elemento >= el.length) novaSelecao.elemento = state.selecionado.elemento-1 
-      return {elementos: el, selecionado: {...novaSelecao}, abaAtiva: state.abaAtiva, popupAdicionar: state.popupAdicionar};
+      return {...state, elementos: el, selecionado: {...novaSelecao}};
     case "reordenar":
-      return {elementos: action.novaOrdemElementos, selecionado: sel, abaAtiva: state.abaAtiva, popupAdicionar: state.popupAdicionar};
+      return {...state, elementos: action.novaOrdemElementos, selecionado: sel};
     case "editar-slide": {
       e = {...el[sel.elemento]};
       var s = e.slides[sel.slide];
@@ -168,7 +173,7 @@ export const reducerElementos = function (state = defaultList, action) {
       }
       el[sel.elemento] = e;
       if (action.redividir) el = redividirSlides(el, sel);
-      return {elementos: [...el], selecionado: sel, abaAtiva: state.abaAtiva, popupAdicionar: state.popupAdicionar};
+      return {...state, elementos: [...el], selecionado: sel};
     }
     case "limpar-estilo": {
       const limparEstiloSlide = s => s.estilo = new Estilo();
@@ -188,7 +193,7 @@ export const reducerElementos = function (state = defaultList, action) {
         limparEstiloSlide(el[sel.elemento].slides[sel.slide]);
       }
       el = redividirSlides(el, sel);
-      return {elementos: [...el], selecionado: action.selecionado, abaAtiva: 'texto', popupAdicionar: state.popupAdicionar};
+      return {...state, elementos: [...el], selecionado: action.selecionado, abaAtiva: 'texto'};
     }
     case "ativar-popup-adicionar": {
       return {...state, popupAdicionar: {...action.popupAdicionar}};
@@ -215,24 +220,24 @@ function undoable(reducer) {
     future: [],
     slidePreview: getSlidePreview(presenteInicial),
     usuario: {},
-    apresentacao: null
+    popupConfirmacao: null
   }
 
   const limiteUndo = 50;
 
   return function (state = initialState, action) {
-    var { past, present, future, previousTemp, apresentacao, usuario } = state;
+    var { past, present, future, previousTemp, usuario } = state;
     var newPresent;
     switch (action.type) {
       case 'login':
         return {...state, usuario: action.usuario};
-      case 'definir-apresentacao':
-        newPresent = {...presenteInicial, elementos: action.apresentacao.elementos};
-        return {...state, apresentacao: action.apresentacao, present: newPresent, slidePreview: getSlidePreview(newPresent)};
+      case "ativar-popup-confirmacao":
+        return {...state, popupConfirmacao: action.popupConfirmacao};
       case 'UNDO':
         if (past.length === 0) return state;
-        const previous = past[past.length - 1]
-        const newPast = past.slice(Math.max(0, past.length-limiteUndo), past.length - 1)
+        const previous = past[past.length - 1];
+        const newPast = past.slice(Math.max(0, past.length-limiteUndo), past.length - 1);
+        atualizarApresentacaoBD (present, previous);
         return {
           ...state,
           past: newPast,
@@ -243,8 +248,9 @@ function undoable(reducer) {
         }
       case 'REDO':
         if (future.length === 0) return state;
-        const next = future[0]
-        const newFuture = future.slice(1)
+        const next = future[0];
+        const newFuture = future.slice(1);
+        atualizarApresentacaoBD (present, next);
         return {
           ...state,
           past: [...past, present],
@@ -263,10 +269,16 @@ function undoable(reducer) {
         newPresent = reducer(deepSpreadPresente(present), action);
         if (previousTemp) present = previousTemp;
         var mudanca = houveMudanca(present, newPresent);
+        atualizarApresentacaoBD (present, newPresent);
         if (mudanca) {
           past = [...past, present];
-          if(apresentacao && mudanca.find(m => m === 'elementos'))
-            atualizarApresentacao(newPresent.elementos, apresentacao.id);
+          if(mudanca.includes('elementos')) {
+            newPresent.apresentacao = {...newPresent.apresentacao, zerada: false}
+            if(usuario.uid) {
+              if(!newPresent.apresentacao.id)
+                definirApresentacaoAtiva(usuario, newPresent.apresentacao, newPresent.elementos);
+            } 
+          }
           if (action.type === 'inserir')
             present.popupAdicionar = {...action.popupAdicionar, tipo: action.elemento.tipo};
         } 
@@ -276,14 +288,21 @@ function undoable(reducer) {
           present: newPresent,
           future: [],
           slidePreview: getSlidePreview(newPresent),
-          previousTemp: null,
+          previousTemp: null
         }
     }
   }
 }
 
+function atualizarApresentacaoBD (present, newPresent) {
+  var mudanca = houveMudanca(present, newPresent);
+  if (mudanca && mudanca.includes('elementos') && newPresent.apresentacao.id) {
+    atualizarApresentacao(newPresent.elementos, newPresent.apresentacao.id);
+  } 
+}
+
 function houveMudanca(estado1, estado2) {
-  const keysRelevantes = ['elementos', 'popupAdicionar'];
+  const keysRelevantes = ['elementos', 'popupAdicionar', 'apresentacao'];
   var retorno = [];
   for (var k of keysRelevantes) {
     if (JSON.stringify(estado1[k]) !== JSON.stringify(estado2[k]))
@@ -319,7 +338,7 @@ export let store = createStore(undoable(reducerElementos), /* preloadedState, */
 
 const atalhosAdicionar = {ctrlm: 0, ctrlb: 1, ctrll: 2, ctrli: 3, ctrld: 4};
 
-hotkeys('right,left,up,down,ctrl+z,ctrl+shift+z,ctrl+y,ctrl+n,ctrl+m,ctrl+i,ctrl+b,ctrl+l,ctrl+d', function(event, handler){
+hotkeys('right,left,up,down,ctrl+z,ctrl+shift+z,ctrl+y,ctrl+o,ctrl+m,ctrl+i,ctrl+b,ctrl+l,ctrl+d', function(event, handler){
   event.preventDefault();
   var offset = 0;
   switch (handler.key) {
@@ -338,8 +357,9 @@ hotkeys('right,left,up,down,ctrl+z,ctrl+shift+z,ctrl+y,ctrl+n,ctrl+m,ctrl+i,ctrl
       case 'ctrl+shift+z':
         store.dispatch({type: 'REDO'});
         break;
-      // case 'ctrl+n':
-      //   store.dispatch({type: 'criar-nova-apresentacao'});
+      case 'ctrl+o':
+        zerarApresentacao(store.getState().usuario);
+        break;
       default:
         var atalho = handler.key.replace('+','');
         var tipo = tipos[atalhosAdicionar[atalho]];

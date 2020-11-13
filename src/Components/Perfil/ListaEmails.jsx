@@ -38,9 +38,9 @@ class ListaEmails extends React.Component {
     }
 };
   
-const mapStateToProps = state => {
+const mapState = state => {
     return {usuario: state.usuario};
 }
 
-export default connect(mapStateToProps)(ListaEmails);
+export default connect(mapState)(ListaEmails);
   

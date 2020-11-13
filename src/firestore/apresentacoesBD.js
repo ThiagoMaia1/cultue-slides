@@ -1,9 +1,12 @@
 import Element, { getEstiloPadrao, textoMestre } from '../Element.js';
 import { gerarNovoRegistro, atualizarRegistro, getRegistrosUsuario } from './apiFirestore';
+import { firestore } from '../firebase';
+import { store } from '../index';
+import { ativarPopupConfirmacao } from '../Components/Popup/PopupConfirmacao';
 
 const colecaoApresentacoes = 'apresentações';
 
-const getElementosPadrao = (usuario) => {
+export const getElementosPadrao = (usuario) => {
   if (usuario && usuario.apresentacaoPadrao) {
     return usuario.apresentacaoPadrao;
   }
@@ -15,26 +18,53 @@ export const getApresentacaoPadrao = (usuario) => ({
   selecionado: {elemento: 0, slide: 0}
 });
 
-export const gerarNovaApresentacao = async usuario => {
+export const gerarNovaApresentacao = async (idUsuario, elementos) => {
+  if (elementos)
+    elementos = getElementosConvertidos(elementos);
   return await gerarNovoRegistro(
-    usuario.uid,
+    idUsuario,
     colecaoApresentacoes,
     {
-      elementos: getElementosConvertidos(getElementosPadrao(usuario))
+      elementos: elementos
     },
     true
   );
 };
 
-export const definirApresentacao = async (usuario, dispatcher, apresentacao) => {
-  var novaApresentacao = apresentacao || await gerarNovaApresentacao(usuario);
-  novaApresentacao.elementos = getElementosDesconvertidos(novaApresentacao.elementos);
-  dispatcher.dispatch({type: 'definir-apresentacao', apresentacao: novaApresentacao})
+export const definirApresentacaoAtiva = async (usuario, apresentacao = {}, elementos = null) => {
+  var novaApresentacao = apresentacao;
+  var zerada = false;
+  if (apresentacao.elementos)
+    elementos = getElementosDesconvertidos(apresentacao.elementos);
+  if (!elementos) {
+    zerada = true;
+    elementos = getElementosPadrao(usuario);
+  }
+  if (!usuario.uid) {
+    novaApresentacao = {id: 0}
+  } else {
+    limparApresentacoesVazias(usuario.uid);
+    if (!apresentacao.id)
+      novaApresentacao = await gerarNovaApresentacao(usuario.uid, elementos);
+  }
+  delete novaApresentacao.elementos;
+  novaApresentacao = {...novaApresentacao, zerada: zerada}
+  store.dispatch({type: 'definir-apresentacao-ativa', apresentacao: novaApresentacao, elementos: elementos})
+}
+
+const limparApresentacoesVazias = idUsuario => {
+  var consulta = firestore.collection(colecaoApresentacoes).where('idUsuario','==', idUsuario);
+  consulta.get().then(function(resultados) {
+    resultados.forEach(function(doc) {
+      if (!doc.data().elementos) 
+        doc.ref.delete();
+    });
+  });
 }
 
 export const atualizarApresentacao = async (elementos, idApresentacao) => {
   return await atualizarRegistro(
-    {elementos: elementos},
+    {elementos: getElementosConvertidos(elementos)},
     colecaoApresentacoes,
     idApresentacao
   );
@@ -68,6 +98,7 @@ export const getElementosDesconvertidos = elementos => {
 export const getElementosConvertidos = elementos => {
   var el = [...elementos];
   for (var i = 0; i < el.length; i++) {
+    if(el[i].conversorFirestore)
       el[i] = el[i].conversorFirestore();
   }
   return el;
@@ -75,4 +106,16 @@ export const getElementosConvertidos = elementos => {
 
 export const getSlideMestreApresentacao = elementos => {
   return getElementosConvertidos(elementos.filter(e => e.eMestre));
+}
+
+export const zerarApresentacao = usuario => {
+  ativarPopupConfirmacao(
+    'simNao',
+    'Atenção', 
+    'Deseja iniciar uma nova apresentação?' + 
+      (!usuario.uid ? '\n\n(A apresentação atual será excluída)' : ''), 
+    fazer => {
+      if(fazer) definirApresentacaoAtiva(usuario);
+    }
+  );
 }

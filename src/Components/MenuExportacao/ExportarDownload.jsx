@@ -15,11 +15,6 @@ const downloadArquivoTexto = function(nomeArquivo, conteudoArquivo) {
 
 class ExportarDownload extends Component {
     
-  constructor (props) {
-    super(props);
-    this.posicao = 0;
-  }
-
   exportarDownload = obj => {
     var { nomeArquivo, arquivo, formato } = obj;
     switch (formato) {
@@ -40,8 +35,8 @@ class ExportarDownload extends Component {
 
   render() {
       return (
-        <BotaoExportador formato='download' onClick={() => this.props.definirMeioExportacao(this.exportarDownload, this.posicao)} 
-          arrow={this.props.posicaoArrow === this.posicao} logo={<MdFileDownload size={this.props.tamIcones}/>} rotulo='Baixar'/>
+        <BotaoExportador formato='download' onClick={() => this.props.definirMeioExportacao(this.exportarDownload, this.props.posicao)} 
+          arrow={this.props.posicaoArrow === this.props.posicao} logo={<MdFileDownload size={this.props.tamIcones}/>} rotulo='Baixar'/>
       )
   }
 

@@ -5,6 +5,7 @@ import './Perfil.css';
 import ApresentacoesUsuario from './ApresentacoesUsuario';
 import ListaEmails from './ListaEmails';
 import { BsArrowLeft } from 'react-icons/bs'
+import Carrossel from '../Carrossel/Carrossel';
 
 export const urlPerfil = '/perfil';
 
@@ -46,7 +47,9 @@ class Perfil extends React.Component {
                                 return (
                                     <Route path={urlPerfil + '/' + p.nome} >
                                         <div className='pagina-perfil'>
-                                            <Pagina callback={this.props.callback}/>
+                                        <Carrossel direcao='vertical' tamanhoIcone={50} tamanhoMaximo={'75vh'} percentualBeirada={0.05} style={{zIndex: '900', width: '100%'}}>
+                                               <Pagina callback={this.props.callback}/>
+                                            </Carrossel>
                                         </div>
                                     </Route>
                                 );    
@@ -59,9 +62,9 @@ class Perfil extends React.Component {
     }
 };
   
-const mapStateToProps = state => {
+const mapState = state => {
     return {usuario: state.usuario};
   }
 
-export default connect(mapStateToProps)(Perfil);
+export default connect(mapState)(Perfil);
   

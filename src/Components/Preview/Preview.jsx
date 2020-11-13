@@ -167,8 +167,8 @@ const Img = ({imagem}) => {
     }
 };
 
-const mapStateToProps = function (state) {
+const mapState = function (state) {
     return {slidePreview: state.slidePreview, abaAtiva: state.present.abaAtiva, elementos: state.present.elementos, nElemento: state.present.selecionado.elemento}
 }
 
-export default connect(mapStateToProps)(Preview);
+export default connect(mapState)(Preview);

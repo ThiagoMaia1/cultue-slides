@@ -3,14 +3,9 @@ import BotaoExportador from './BotaoExportador';
 import { IoMdMail } from 'react-icons/io';
 import { firebaseFunctions } from '../../firebase';
 
-var enviarEmail = firebaseFunctions.httpsCallable('enviarEmail');
+const enviarEmail = firebaseFunctions.httpsCallable('enviarEmail');
 
 class ExportarEmail extends Component {
-
-  constructor (props) {    
-    super(props);
-    this.posicao = 1;
-  }
 
   exportarEmail = obj => {
     var { nomeArquivo, arquivo, formato } = obj;
@@ -40,8 +35,8 @@ class ExportarEmail extends Component {
 
   render() {
       return (
-        <BotaoExportador formato='email' onClick={() => this.props.definirMeioExportacao(this.exportarEmail, this.posicao)} 
-          arrow={this.props.posicaoArrow === this.posicao} logo={<IoMdMail size={this.props.tamIcones}/>} rotulo='E-mail'/>
+        <BotaoExportador formato='email' onClick={() => this.props.definirMeioExportacao(this.exportarEmail, this.props.posicao)} 
+          arrow={this.props.posicaoArrow === this.props.posicao} logo={<IoMdMail size={this.props.tamIcones}/>} rotulo='E-mail'/>
       )
   }
 

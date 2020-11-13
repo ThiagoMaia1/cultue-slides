@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { tiposElemento } from '../../Element';
-import Popup from '../Configurar/Popup/Popup';
+import Popup from '../Popup/Popup';
 
 class PopupAdicionar extends Component {
 
@@ -25,8 +25,8 @@ class PopupAdicionar extends Component {
   }
 };
 
-const mapStateToProps = state => {
+const mapState = state => {
     return {popupAdicionar: state.present.popupAdicionar};
 }
 
-export default connect(mapStateToProps)(PopupAdicionar);
+export default connect(mapState)(PopupAdicionar);

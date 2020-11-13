@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { getApresentacoesUsuario, definirApresentacao, definirApresentacaoPadrao } from '../../firestore/apresentacoesBD';
+import { getApresentacoesUsuario, definirApresentacaoAtiva, definirApresentacaoPadrao } from '../../firestore/apresentacoesBD';
 import Preview from '../Preview/Preview';
 import { getSlidePreview } from '../MenuExportacao/Exportador';
 import './ApresentacoesUsuario.css';
@@ -21,7 +21,7 @@ class ApresentacoesUsuario extends React.Component {
     }
 
     selecionarApresentacao = apresentacao => {
-        definirApresentacao(this.props.usuario, this.props, apresentacao)
+        definirApresentacaoAtiva(this.props.usuario, apresentacao)
         this.props.callback(false);
     }
 
@@ -71,9 +71,9 @@ class ApresentacoesUsuario extends React.Component {
     }
 };
   
-const mapStateToProps = state => {
+const mapState = state => {
     return {usuario: state.usuario};
 }
 
-export default connect(mapStateToProps)(ApresentacoesUsuario);
+export default connect(mapState)(ApresentacoesUsuario);
   

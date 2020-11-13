@@ -65,9 +65,9 @@ class SublistaSlides extends Component {
     }
 }
 
-const mapStateToProps = function (state) {
+const mapState = function (state) {
     state = state.present;
     return {selecionado: state.selecionado, elementos: state.elementos}
 }
   
-export default connect(mapStateToProps)(SublistaSlides);
+export default connect(mapState)(SublistaSlides);

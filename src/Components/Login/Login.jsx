@@ -3,7 +3,8 @@ import { connect } from 'react-redux';
 import './Login.css';
 import { firebaseAuth, googleAuth } from "../../firebase";
 import { gerarDocumentoUsuario } from '../../firestore/apiFirestore';
-import { definirApresentacao, getApresentacoesUsuario } from '../../firestore/apresentacoesBD';
+import { definirApresentacaoAtiva, getApresentacoesUsuario } from '../../firestore/apresentacoesBD';
+import { ativarPopupConfirmacao } from '../Popup/PopupConfirmacao';
 
 function getMensagemErro(error) {
     var codigo = error.code.replace('auth/', '');
@@ -63,10 +64,6 @@ class Login extends React.Component {
         catch(error){
             this.setState({erro: getMensagemErro(error)});
         }
-
-        // setEmail("");
-        // setPassword("");
-        // setDisplayName("");
     };
 
     cadastrando = () => {
@@ -85,6 +82,50 @@ class Login extends React.Component {
         this.props.callback();
     }
 
+    definirApresentacaoUsuario = user => {
+        var z = this.props.apresentacao.zerada;
+        if (!user.uid) {
+            if (!z)
+                definirApresentacaoAtiva(user, {id: 0}, this.props.elementos)
+            return
+        }
+        if (!z) {
+            ativarPopupConfirmacao(
+                'SimNao', 
+                'Apresentação', 
+                'Deseja continuar editando a apresentação atual?', 
+                fazer => {
+                    if(fazer) {
+                        this.associarApresentacaoUsuario(user);
+                    } else {
+                        this.selecionarUltimaApresentacaoUsuario(user);
+                    }
+                }
+            )
+        } else {
+            this.selecionarUltimaApresentacaoUsuario(user);
+        }
+    }
+
+    associarApresentacaoUsuario = user => {
+        definirApresentacaoAtiva(
+            user, 
+            this.props.apresentacao,
+            this.props.elementos
+        )
+    }
+
+    selecionarUltimaApresentacaoUsuario = async user => {
+        var apresentacoes = await getApresentacoesUsuario(user.uid);
+        console.log(apresentacoes)
+        if (apresentacoes.length !== 0) {
+            var oneDay = 24 * 60 * 60 * 1000; // ms
+            var tempoDecorrido = (new Date()) - apresentacoes[0].timestamp.toDate();
+            if(tempoDecorrido < 7*oneDay)
+                definirApresentacaoAtiva(user, apresentacoes[0]);
+        }
+    }
+
     componentDidMount = async () => {
         if (this.ref1.current) this.ref1.current.focus();
         document.addEventListener("click", this.clickFora, false);
@@ -96,14 +137,7 @@ class Login extends React.Component {
             }
             this.props.dispatch({type: 'login', usuario: user});
             this.removerEventListener();
-            if (!this.props.apresentacao) {
-                var apresentacao;
-                if (user.uid) {
-                    var apresentacoes = await getApresentacoesUsuario(user.uid);
-                    if (apresentacoes.length !== 0) apresentacao = apresentacoes[0];
-                }
-                definirApresentacao(user, this.props, apresentacao)
-            }
+            this.definirApresentacaoUsuario(user);
         });
     };
 
@@ -170,9 +204,9 @@ class Login extends React.Component {
     }
 };
 
-const mapStateToProps = state => {
-  return {usuario: state.usuario, apresentacao: state.apresentacao};
+const mapState = state => {
+  return {usuario: state.usuario, apresentacao: state.present.apresentacao, elementos: state.present.elementos};
 }
 
-export default connect(mapStateToProps)(Login);
+export default connect(mapState)(Login);
   

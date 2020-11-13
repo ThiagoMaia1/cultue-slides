@@ -10,8 +10,8 @@
 
 #cabecalho-perfil {
     width: 100%;
-    height: 20vh;
-    padding: 5vh 2vw 0;
+    height: 25vh;
+    padding: 5vh 2vw;
     display: flex;
     align-items: center;
     flex: 0 0;
@@ -43,7 +43,6 @@
 }
 
 #organizador-perfil {
-    margin-top: 5vh;
     flex: 1 0;
     display: flex;
 }

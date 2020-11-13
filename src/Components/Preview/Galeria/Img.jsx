@@ -51,9 +51,9 @@ class Img extends Component {
     }
 };
 
-const mapStateToProps = function(state) {
+const mapState = function(state) {
     var sel = state.present.selecionado
     return {slidePreview: state.slidePreview, slideSelecionado: state.present.elementos[sel.elemento].slides[sel.slide]}
 }
 
-export default connect(mapStateToProps)(Img);
+export default connect(mapState)(Img);

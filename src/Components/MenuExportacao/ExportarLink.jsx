@@ -8,11 +8,6 @@ const gerarLinkCompartilhavel= () => {
 }
 
 class ExportarLink extends Component {
-    
-  constructor (props) {
-    super(props);
-    this.posicao = 2;
-  }
 
   exportarLink = obj => {
     var { nomeArquivo, conteudoArquivo } = obj;
@@ -21,8 +16,8 @@ class ExportarLink extends Component {
 
   render() {
       return (
-        <BotaoExportador formato='link' onClick={() => this.props.definirMeioExportacao(this.exportarLink, this.posicao)} 
-          arrow={this.props.posicaoArrow === this.posicao} logo={<BsLink45Deg size={this.props.tamIcones}/>} rotulo='Link'/>
+        <BotaoExportador formato='link' onClick={() => this.props.definirMeioExportacao(this.exportarLink, this.props.posicao)} 
+          arrow={this.props.posicaoArrow === this.props.posicao} logo={<BsLink45Deg size={this.props.tamIcones}/>} rotulo='Link'/>
       )
   }
 

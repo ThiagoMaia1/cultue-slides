@@ -95,8 +95,8 @@ class Slider extends Component {
     }
 }
 
-const mapStateToProps = state => {
+const mapState = state => {
     return {previous: !!state.previousTemp}
 }
 
-export default connect(mapStateToProps)(Slider);
+export default connect(mapState)(Slider);

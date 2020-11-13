@@ -49,6 +49,7 @@ export const gerarNovoRegistro = async (idUsuario, colecao, dados, gerarTimestam
   var timestamp = firebase.firestore.FieldValue.serverTimestamp();
   dados.timestamp = timestamp;
   if (gerarTimestampCriacao) dados.timestampCriacao = timestamp;
+  console.log(dados);
   try {
     await refRegistro.set(dados);
   } catch (error) {
@@ -80,7 +81,7 @@ export const getRegistrosUsuario = async (idUsuario, colecao) => {
 }
 
 const getObjetoRegistro = doc => {
-  var dados = doc.data();
+  var dados = doc.data({serverTimestamps: "estimate"});
   dados.data = dataFormatada(dados.timestamp.toDate());
   if (dados.timestampCriacao)
     dados.dataCriacao = dataFormatada(dados.timestampCriacao.toDate());
@@ -97,8 +98,8 @@ export const excluirRegistro = async (idRegistro, colecao) => {
 }
 
 function dataFormatada(data) {
-  return String((data.getMonth()+1)).padStart(2,'0') + '/' +
-         String(data.getDate()).padStart(2,'0') + '/' +
+  return String(data.getDate()).padStart(2,'0') + '/' +
+         String((data.getMonth()+1)).padStart(2,'0') + '/' +
          data.getFullYear() + ' ' +
          String(data.getHours()).padStart(2,'0') + ":" +   
          String(data.getMinutes()).padStart(2,'0')

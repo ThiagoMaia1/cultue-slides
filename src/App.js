@@ -7,7 +7,8 @@ import { store } from './index';
 import { Provider } from 'react-redux';
 import Configurar from './Components/Configurar/Configurar.jsx';
 import MenuExportacao from './Components/MenuExportacao/MenuExportacao';
-import PopupAdicionar from './Components/PopupAdicionar/PopupAdicionar';
+import PopupAdicionar from './Components/Popup/PopupAdicionar';
+import PopupConfirmacao from './Components/Popup/PopupConfirmacao';
 import NavBar from './Components/NavBar/NavBar';
 
 class App extends Component {
@@ -26,6 +27,7 @@ class App extends Component {
       <Provider store={store}>
         <NavBar/>
         <PopupAdicionar/>
+        <PopupConfirmacao/>
         <div className="App">
           <div id='organizador'>
             <Arrastar />

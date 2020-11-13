@@ -122,7 +122,7 @@ class Exportador extends Component {
   constructor (props) {
     super(props);
     this.ref = React.createRef();
-    this.state = {slidePreviewFake: true, previews: [], popupConfirmacao: null, callback: null, feito: false};
+    this.state = {slidePreviewFake: true, previews: [], callback: null, feito: false};
   } 
 
   getCopiaDOM = () => {
@@ -189,8 +189,8 @@ class Exportador extends Component {
 
 }
 
-const mapStateToProps = function (state) {
+const mapState = function (state) {
   return {elementos: state.present.elementos};
 }
 
-export default connect(mapStateToProps)(Exportador);
+export default connect(mapState)(Exportador);
