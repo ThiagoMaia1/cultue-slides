@@ -10,7 +10,7 @@ class Arrastar extends React.Component {
   constructor(props) {
     super(props);
     this.ref = React.createRef();
-    this.state = {...props, painelAdicionar: true, posicaoPainelAdicionar: 1,
+    this.state = {...props, painelAdicionar: true, adicionarAcima: false,
                   selecionado: 0, placeholder: {posicao: -1}, carrosselAtivo: false};
   }
 
@@ -66,12 +66,21 @@ class Arrastar extends React.Component {
     this.props.dispatch({type: 'definir-selecao', selecionado: {elemento: item, slide: slide}})
   }
 
+  componentDidUpdate = () => {
+    if(this.ref.current) {
+      var aA = this.ref.current.offsetHeight >= 0.55*window.innerHeight;
+      if (aA !== this.state.adicionarAcima)
+        this.setState({adicionarAcima: aA})
+    }
+  }
+
 	render() {
+
     return (
       <div className='coluna-lista-slides'>
         <div className='gradiente-coluna emcima'></div>
         <div className='gradiente-coluna embaixo'></div>
-        <Carrossel direcao='vertical' tamanhoIcone={50} tamanhoMaximo={'58vh'} style={{zIndex: '50', width: '21vw', height: 'auto'}}>
+        <Carrossel direcao='vertical' tamanhoIcone={50} tamanhoMaximo={'60vh'} style={{zIndex: '50', width: '21vw', height: 'auto'}}>
             <ol ref={this.ref} id="ordem-elementos">
               <div id="slide-mestre" className={'itens ' + (this.props.selecionado.elemento === 0 ? 'selecionado' : '')} data-id={0}
                 onClick={() => this.marcarSelecionado(0, 0)}
@@ -88,12 +97,12 @@ class Arrastar extends React.Component {
               })}
             </ol>
         </Carrossel>
-        <div className='tampao-do-overflow' style={this.props.elementos.length === 1 ? {top: '-3vh'} : null}> 
+        <div className='tampao-do-overflow'> 
           <div id="adicionar-slide" onClick={() => this.setState({painelAdicionar: !this.state.painelAdicionar})} 
                 className='botao-azul itens lista-slides'>Adicionar Slide</div>
           {(this.state.painelAdicionar || this.props.elementos.length === 1) ? 
-            <div className='container-adicionar' 
-                 style={this.state.posicaoPainelAdicionar === -1 ? {top: '-20vh'} : null}>
+            <div className='container-adicionar'
+                 style={this.state.adicionarAcima ? {top: '-20vh'} : null}>
               <Adicionar onClick={() => this.setState({painelAdicionar: false})}/>
             </div> : null} 
         </div>

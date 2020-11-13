@@ -1,6 +1,6 @@
 .coluna-lista-slides {
   width: 23vw;
-  height: 58vh;
+  height: 60vh;
   position: relative;
   margin-top: -3vh;
 }
@@ -14,7 +14,7 @@
 }
 
 .gradiente-coluna.embaixo {
-  top: 55vh;
+  top: 57vh;
   background-image: linear-gradient(to bottom, transparent,  white);
 }
 
