@@ -83,31 +83,33 @@ class ItemListaEmails extends React.Component {
 
     render() {
         return (
-            <div className='item-lista-perfil'>
-                <div className='dados-verticais-item-lista-perfil'>
-                    <div><span>Nome: </span>
-                        {this.state.editando
-                            ?  <input type='text' className='combo-popup' 
-                                        placeholder='Nome Completo'
-                                        onChange={this.atualizarNomeCompleto} 
-                                        value={this.state.nomeCompleto}
-                                        ref={this.ref}></input>
-                            : <div>{this.state.nomeCompleto}</div>
-                        }
-                    </div>
-                    <div><span>E-mail: </span>
-                        {this.state.editando
-                            ?   <input type='text' className='combo-popup' 
-                                        placeholder='Endereço de E-mail'
-                                        onChange={this.atualizarEnderecoEmail} 
-                                        value={this.state.enderecoEmail}
-                                        onBlur={e => this.atualizarEnderecoEmail(e, true)}></input>
-                            : <div>{this.state.enderecoEmail}</div>
-                        }
+            <div className='item-lista-perfil email'>
+                <div className='container-email'>
+                    <div className='dados-verticais-item-lista-perfil dados'>
+                        <div><span>Nome: </span>
+                            {this.state.editando
+                                ?  <input type='text' className='combo-popup' 
+                                            placeholder='Nome Completo'
+                                            onChange={this.atualizarNomeCompleto} 
+                                            value={this.state.nomeCompleto}
+                                            ref={this.ref}></input>
+                                : <div>{this.state.nomeCompleto}</div>
+                            }
+                        </div>
+                        <div><span>E-mail: </span>
+                            {this.state.editando
+                                ?   <input type='text' className='combo-popup' 
+                                            placeholder='Endereço de E-mail'
+                                            onChange={this.atualizarEnderecoEmail} 
+                                            value={this.state.enderecoEmail}
+                                            onBlur={e => this.atualizarEnderecoEmail(e, true)}></input>
+                                : <div>{this.state.enderecoEmail}</div>
+                            }
+                        </div>
                     </div>
                 </div>
                 <Checkbox checked={this.state.eProprio} label='E-mail Próprio' onClick={this.atualizarEProprio} />
-                <div className='dados-verticais-item-lista-perfil' style={this.props.idEmail ? null : {visibility: 'hidden'}}>
+                <div className='dados-verticais-item-lista-perfil data' style={this.props.idEmail ? null : {visibility: 'hidden'}}>
                     <div><span>Data de Modificação: {this.props.data}</span></div>
                 </div>
                 <div className='container-botoes-item-lista-perfil'>

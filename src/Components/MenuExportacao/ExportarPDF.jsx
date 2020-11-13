@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { alturaTela, larguraTela } from '../Preview/Preview'
+import { alturaTela, larguraTela } from '../Preview/TamanhoTela/TamanhoTela'
 import BotaoExportador from './BotaoExportador';
 import { jsPDF } from "jspdf";
 import TratarDadosHTML from './tratarDadosHTML';

@@ -3,13 +3,8 @@ import './App.css';
 import Arrastar from './Components/Arrastar/Arrastar';
 import Preview from './Components/Preview/Preview';
 import Galeria from './Components/Preview/Galeria/Galeria'
-import { store } from './index';
-import { Provider } from 'react-redux';
 import Configurar from './Components/Configurar/Configurar.jsx';
 import MenuExportacao from './Components/MenuExportacao/MenuExportacao';
-import PopupAdicionar from './Components/Popup/PopupAdicionar';
-import PopupConfirmacao from './Components/Popup/PopupConfirmacao';
-import NavBar from './Components/NavBar/NavBar';
 
 class App extends Component {
 
@@ -24,20 +19,15 @@ class App extends Component {
 
   render() {
     return (
-      <Provider store={store}>
-        <NavBar/>
-        <PopupAdicionar/>
-        <PopupConfirmacao/>
-        <div className="App">
-          <div id='organizador'>
-            <Arrastar />
-            <Preview />
-            <Configurar />
-          </div>
-          <Galeria id='galeria'/>
-          <MenuExportacao />
+      <div className="App">
+        <div id='organizador'>
+          <Arrastar />
+          <Preview />
+          <Configurar />
         </div>
-      </Provider>
+        <Galeria id='galeria'/>
+        <MenuExportacao />
+      </div>
     );
   }
 }

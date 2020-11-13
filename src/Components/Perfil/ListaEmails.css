@@ -1,0 +1,29 @@
+.item-lista-perfil.email {
+    justify-content: flex-end;
+    overflow: hidden;
+}
+
+.item-lista-perfil.email > .container-email {
+    flex: 0 1 100%;
+    max-width: 30vw;
+    text-align: left;
+    min-width: none;
+    overflow: hidden;
+}
+
+.item-lista-perfil.email > .checkbox {
+    margin-right: 5vw;
+    flex: 1 0 11vw;
+    justify-content: flex-end;
+}
+
+.item-lista-perfil.email > .dados-verticais-item-lista-perfil.data {
+    margin-right: 5vw;
+    flex: 0 1;
+    min-width: 20vw;
+}
+
+.item-lista-perfil.email > .container-botoes-item-lista-perfil {
+    margin: 0;
+    flex: 0 0;
+}

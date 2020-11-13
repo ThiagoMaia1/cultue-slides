@@ -1,4 +1,4 @@
-import { fonteBase, alturaTela, larguraTela } from './Components/Preview/Preview';
+import { fonteBase, alturaTela, larguraTela } from './Components/Preview/TamanhoTela/TamanhoTela';
 import AdicionarMusica from './Components/LetrasMusica/AdicionarMusica';
 import AdicionarTextoBiblico from './Components/TextoBiblico/AdicionarTextoBiblico';
 import AdicionarTexto from './Components/Configurar/AdicionarTexto';

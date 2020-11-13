@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import BotaoExportador from './BotaoExportador';
 import pptxgen from "pptxgenjs";
-import { fonteBase, larguraTela, alturaTela } from '../Preview/Preview';
+import { fonteBase, larguraTela, alturaTela } from '../Preview/TamanhoTela/TamanhoTela';
 
 class ExportarPptx extends Component {
     

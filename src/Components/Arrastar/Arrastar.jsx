@@ -10,7 +10,7 @@ class Arrastar extends React.Component {
   constructor(props) {
     super(props);
     this.ref = React.createRef();
-    this.state = {...props, painelAdicionar: true, adicionarAcima: false,
+    this.state = {...props, painelAdicionar: props.elementos.length === 1, adicionarAcima: false,
                   selecionado: 0, placeholder: {posicao: -1}, carrosselAtivo: false};
   }
 
@@ -100,7 +100,7 @@ class Arrastar extends React.Component {
         <div className='tampao-do-overflow'> 
           <div id="adicionar-slide" onClick={() => this.setState({painelAdicionar: !this.state.painelAdicionar})} 
                 className='botao-azul itens lista-slides'>Adicionar Slide</div>
-          {(this.state.painelAdicionar || this.props.elementos.length === 1) ? 
+          {(this.state.painelAdicionar) ? 
             <div className='container-adicionar'
                  style={this.state.adicionarAcima ? {top: '-20vh'} : null}>
               <Adicionar onClick={() => this.setState({painelAdicionar: false})}/>

@@ -86,7 +86,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
+import Home from './Home';
 import { createStore } from 'redux';
 import hotkeys from 'hotkeys-js';
 import { getEstiloPadrao, Estilo, getPadding, tiposElemento } from './Element.js';
@@ -369,6 +369,6 @@ hotkeys('right,left,up,down,ctrl+z,ctrl+shift+z,ctrl+y,ctrl+o,ctrl+m,ctrl+i,ctrl
 });
 
 ReactDOM.render(
-  <App />,
+  <Home />,
   document.getElementById('root')
 );

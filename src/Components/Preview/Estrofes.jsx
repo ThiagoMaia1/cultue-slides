@@ -3,7 +3,6 @@ import React from 'react';
 export default function Estrofes(props) {
     var s = props.slidePreview;
     var tA = s.textoArray;
-    var sel = props.selecionado;
     const divBreak = <div><br></br></div>;
     var spans;
     var estiloDivEstrofe;
@@ -14,8 +13,7 @@ export default function Estrofes(props) {
         if (comBreaks) breaks = (divBreak);
         return (
             <>
-                <span contentEditable={!s.eMestre && !props.eFake} id={'paragrafo-textoArray-' + sel.elemento + '-' + sel.slide + '-' + i} 
-                    key={i} onInput={props.onInput} onFocus={props.onFocus}>
+                <span contentEditable={props.editavel} key={i} onInput={props.onInput} onFocus={props.onFocus}>
                 {t}</span>
                 {breaks}
             </>

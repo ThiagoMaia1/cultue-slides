@@ -57,6 +57,15 @@ class ItemListaSlides extends Component {
         return null;
     }
 
+    eSelecionado = i => (this.props.selecionado.elemento === i && !this.props.selecionado.slide);
+
+    getMargin = elemento => {
+        var slidesPorLinha = 3;
+        var proporcao = 0.2;
+        var base = 1.5;
+        return base + proporcao*(elemento.slides.length-1)/slidesPorLinha
+    }
+
     render () {
         var elemento = this.props.elemento;
         var i = this.props.ordem;
@@ -66,11 +75,14 @@ class ItemListaSlides extends Component {
                     data-id={i}
                     key={i}
                     draggable='true'
-                    className={'bloco-reordenar ' + (this.props.selecionado.elemento === i && !this.props.selecionado.slide ? 'selecionado' : '')}
+                    className={'bloco-reordenar ' + (this.eSelecionado(i) ? 'selecionado' : '')}
                     onDragEnd={this.props.dragEnd}
                     onDragStart={this.props.dragStart}
                     onDragOver={this.props.dragOver}
-                    style={{marginBottom: this.props.placeholder.posicao === i ? this.props.placeholder.tamanho + 'px' : (this.props.ultimo ? '0': '')}}>
+                    style={{marginTop: (this.eSelecionado(i) ? this.getMargin(elemento) + 'vh' : ''),
+                            marginBottom: this.props.placeholder.posicao === i 
+                            ? this.props.placeholder.tamanho + 'px' 
+                            : (this.eSelecionado(i) ? this.getMargin(elemento) + 0.2 + 'vh' : (this.props.ultimo ? '0': ''))}}>
                     <div data-id={i} className='itens lista-slides' onClick={() => this.props.marcarSelecionado(i, 0)}>
                         <div className='quadradinho-canto'>
                             <div data-id={i} className='botao-quadradinho' onClick={e => this.excluirElemento(e)}>✕</div>

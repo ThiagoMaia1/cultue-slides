@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { getRegistrosUsuario } from '../../firestore/apiFirestore';
 import ItemListaEmails, { colecaoEmails } from './ItemListaEmails';
+import './ListaEmails.css';
   
 class ListaEmails extends React.Component {
   

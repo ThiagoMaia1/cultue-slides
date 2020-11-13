@@ -22,24 +22,24 @@ class Perfil extends React.Component {
     render() {
         var u = this.props.usuario;
         return (
-            <div id='pagina-perfil'>
-                <div id='cabecalho-perfil'>
-                    <div className='container-seta-voltar'>
-                        <div id='seta-voltar' onClick={() => this.props.callback()}>
-                            <BsArrowLeft size={window.innerWidth*0.06}/>
+            <Router>
+                <div id='perfil'>
+                    <div id='barra-lateral-perfil'>
+                        <div className='container-seta-voltar' title='Voltar ao App'>
+                            <div id='seta-voltar' onClick={() => this.props.callback()}>
+                                <BsArrowLeft size={window.innerWidth*0.06}/>
+                            </div>
+                        </div>
+                        <div id='menu-perfil'>
+                            {paginasPerfil.map(p => 
+                                <Link key={p.nome} to={urlPerfil + '/' + p.nome}>{p.nomeInterface}</Link>
+                            )}
                         </div>
                     </div>
-                    <img className='foto-usuario grande' src={u.photoURL || require('./Usuário Padrão.png')} alt='Foto Usuário'></img>
-                    {u.nomeCompleto}
-                </div>
-                <Router>
                     <div id='organizador-perfil'>
-                        <div id='barra-lateral-perfil'>
-                            <div id='menu-perfil'>
-                                {paginasPerfil.map(p => 
-                                    <Link key={p.nome} to={urlPerfil + '/' + p.nome}>{p.nomeInterface}</Link>
-                                )}
-                            </div>
+                        <div id='cabecalho-perfil'>
+                            <img className='foto-usuario grande' src={u.photoURL || require('./Usuário Padrão.png')} alt='Foto Usuário'></img>
+                            {u.nomeCompleto}
                         </div>
                         <Switch>
                             {paginasPerfil.map(p => {
@@ -47,8 +47,8 @@ class Perfil extends React.Component {
                                 return (
                                     <Route path={urlPerfil + '/' + p.nome} >
                                         <div className='pagina-perfil'>
-                                        <Carrossel direcao='vertical' tamanhoIcone={50} tamanhoMaximo={'75vh'} percentualBeirada={0.05} style={{zIndex: '900', width: '100%'}}>
-                                               <Pagina callback={this.props.callback}/>
+                                        <Carrossel direcao='vertical' tamanhoIcone={50} tamanhoMaximo={'100%'} percentualBeirada={0.05} style={{zIndex: '900', width: '100%'}}>
+                                            <Pagina callback={this.props.callback}/>
                                             </Carrossel>
                                         </div>
                                     </Route>
@@ -56,8 +56,8 @@ class Perfil extends React.Component {
                             })}
                         </Switch>
                     </div>
-                </Router>
-            </div>
+                </div>
+            </Router>
         );
     }
 };

@@ -12,4 +12,11 @@
 
 .container-botoes-item-lista-perfil.apresentacoes {
     margin-left: 3vw;
+    flex: none;
+}
+
+.container-carrossel-previews {
+    flex: 1 1;
+    height: 100%;
+    overflow: hidden;
 }

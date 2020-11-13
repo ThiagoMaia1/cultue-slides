@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { capitalize, getNomeInterfaceTipo } from '../../Element';
-import Preview, { alturaTela, larguraTela } from '../Preview/Preview';
+import SlideFormatado from '../Preview/SlideFormatado'; 
+import { alturaTela, larguraTela } from '../Preview/TamanhoTela/TamanhoTela';
 
 export function getBase64Image(src, classe, total, callback) {
   const img = new Image();
@@ -130,7 +131,14 @@ class Exportador extends Component {
     var sOrdenados = slidesOrdenados(this.props.elementos, false);
     this.previews = sOrdenados.map((s, i) => ({...getSlidePreview({elementos: this.props.elementos, selecionado: s}), indice: i}));
     if (this.props.criarSlideFinal) this.previews.push({...slideFinal, indice: this.previews.length});
-    this.setState({previews: this.previews.map(s => <Preview slidePreviewFake={s}/>)})
+    this.setState({previews: this.previews.map((s, i) => 
+      <SlideFormatado slidePreview={s}
+        id={'preview-fake' + i}
+        className='preview-fake'
+        editavel={false}
+        proporcao={1}
+      />)
+    })
     setTimeout(() => {
       this.copiaDOM = document.cloneNode(true);
       this.getImagensBase64();
