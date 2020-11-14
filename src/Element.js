@@ -23,6 +23,17 @@ export function getNomeInterfaceTipo(nome) {
   return nome.join('');
 }
 
+export const getGeneroTipo = tipo => {
+  return /[oe]/.test(tipo.slice(-1)) ? 'o' : 'a';
+}
+
+export function getDadosMensagem(elemento) {
+  return {
+    elemento: getNomeInterfaceTipo(elemento.tipo) + ' :"' + elemento.titulo + '"',
+    genero: getGeneroTipo(elemento.tipo)
+  };
+}
+
 export const textoMestre = 'As configurações do estilo desse slide serão aplicadas aos demais, exceto quando configurações específicas de cada slide se sobrepuserem às deste. \n\nEste slide não será exportado nem exibido no modo de apresentação.'
 
 export class Estilo {

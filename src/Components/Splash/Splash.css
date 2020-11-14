@@ -10,14 +10,41 @@
     align-items: center;
     justify-content: flex-start;
     z-index: 1000;
+    font-family: 'Myriad Pro';
+    --largura-logo: 40vh;
+    --altura-logo: calc(var(--largura-logo)/1.2614);
+    /* --offset-quadrados: 2vh; */
 }
 
 #logo-splash {
-    top: -10vh;
-    height: 40vh;
     margin: 13vh 0;
+    position: relative;
+    width: calc(var(--largura-logo));
+    height: calc(var(--altura-logo));
+    transition: transform 1s ease-in-out;
 }
 
-#loading-splash {
-    position: relative;
+.quadrado-logo {
+    width: var(--largura-logo);
+    height: var(--altura-logo);
+    border-radius: calc(var(--largura-logo)*0.0685);
+    position: absolute;
+    transition: transform 1s ease-in-out;
+}
+
+.quadrado-logo.azul {
+    top: 0;
+    right: 0;
+}
+
+.quadrado-logo.azul-claro {
+    background-color: #879acb;
+    /* right: calc(-1 * var(--offset-quadrados));
+    top: calc(-1 * var(--offset-quadrados)); */
+}
+
+.quadrado-logo.cinza {
+    background-color: var(--platinum);
+    /* top: var(--offset-quadrados);
+    right: var(--offset-quadrados); */
 }

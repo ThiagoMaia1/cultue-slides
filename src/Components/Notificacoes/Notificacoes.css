@@ -6,24 +6,27 @@
     display: flex;
     align-items: center;
     flex-direction: column-reverse;
-    z-index: 120;
+    z-index: 10;
     overflow: hidden;
-    height: calc(150px + 4.8vh);
+    height: calc(165px + 4.8vh);
 }
 
 #painel-notificacoes .gradiente-coluna {
-    width: calc(180px + 1.4vh);
+    width: calc(200px + 1.4vh);
     height: 0.8vh;
 }
 
 .container-card-notificacao {
     overflow: hidden;
     flex: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .card-notificacao {
-    width: 180px;
-    height: 50px;
+    width: 200px;
+    height: 55px;
     background-color: var(--platinum-forte);
     border-radius: var(--round-border-pequeno);
     box-shadow: var(--box-shadow);
@@ -32,4 +35,5 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    text-align: center;
 }

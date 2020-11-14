@@ -38,6 +38,8 @@
 //   Indicar que há estilização nos slides/elementos.
 //   Pesquisa de letra de música não funciona na produção.
 //   getEstiloPadrao pegar do padrão do usuário.
+//   Tamanho botão tela cheia.
+//   Logo do vagalume não está clicável.
 //
 /*// Features:
 //   ✔️ Envio de imagens.
@@ -75,10 +77,11 @@
 //   Melhorar pesquisa de letra de música usando google.
 //   Favoritar músicas, fundos...
 //   Cards de notificação
+//   Gif splash.
 //
 // Negócio:
-//   Cadastrar google ads.
 //   ✔️ Criar logo.
+//   Cadastrar google ads.
 //   Buscar parceria com ultimato.
 //   Comprar domínio.
 //   Configurar site para ser encontrado pelo google.
@@ -90,7 +93,7 @@ import './index.css';
 import Home from './Home';
 import { createStore } from 'redux';
 import hotkeys from 'hotkeys-js';
-import { getEstiloPadrao, Estilo, getPadding, tiposElemento } from './Element.js';
+import { getEstiloPadrao, Estilo, getPadding, tiposElemento, getDadosMensagem } from './Element.js';
 import { selecionadoOffset, getSlidePreview } from './Components/MenuExportacao/Exportador';
 import { atualizarApresentacao, getApresentacaoPadrao, definirApresentacaoAtiva, zerarApresentacao } from './firestore/apresentacoesBD';
 
@@ -120,6 +123,8 @@ export const reducerElementos = function (state = defaultList, action) {
   var el = [...state.elementos];
   var sel = action.selecionado || state.selecionado;
   var e;
+  var notificacao;
+  var dadosMensagem;
   switch (action.type) {
     case 'definir-apresentacao-ativa':
         return {...state, apresentacao: action.apresentacao, elementos: action.elementos};
@@ -140,10 +145,12 @@ export const reducerElementos = function (state = defaultList, action) {
       }
       return {...state, elementos: [...el], selecionado: {elemento: el.length-1, slide: 0}, popupAdicionar: {}};
     case "deletar":
-      el.splice(Number(action.elemento), 1);
+      var excluido = el.splice(Number(action.elemento), 1);
+      dadosMensagem = getDadosMensagem(excluido[0]);
+      notificacao = dadosMensagem.elemento + ' Excluíd' + dadosMensagem.genero;
       var novaSelecao = {elemento: state.selecionado.elemento, slide: 0};
       if (state.selecionado.elemento >= el.length) novaSelecao.elemento = state.selecionado.elemento-1 
-      return {...state, elementos: el, selecionado: {...novaSelecao}};
+      return {...state, elementos: el, selecionado: {...novaSelecao}, notificacao: notificacao };
     case "reordenar":
       return {...state, elementos: action.novaOrdemElementos, selecionado: sel};
     case "editar-slide": {
@@ -177,6 +184,7 @@ export const reducerElementos = function (state = defaultList, action) {
       return {...state, elementos: [...el], selecionado: sel};
     }
     case "limpar-estilo": {
+      dadosMensagem = getDadosMensagem(el[sel.elemento]);
       const limparEstiloSlide = s => s.estilo = new Estilo();
       const limparEstiloElemento = e => {
         for (var s of e.slides) {
@@ -188,13 +196,16 @@ export const reducerElementos = function (state = defaultList, action) {
         for (e of el.slice(1)) {
           limparEstiloElemento(e);  
         }
+        notificacao = 'Estilo de Toda a Apresentação Limpo'
       } else if (sel.slide === 0) {
         limparEstiloElemento(el[sel.elemento]);
+        notificacao = 'Estilo d' + dadosMensagem.genero + ' ' + dadosMensagem.elemento + ' Limp' + dadosMensagem.genero;
       } else {
         limparEstiloSlide(el[sel.elemento].slides[sel.slide]);
+        notificacao = 'Estilo do Slide' + sel.slide + ' d' + dadosMensagem.genero + ' ' + dadosMensagem.elementos + '" Limp' + dadosMensagem.genero;
       }
       el = redividirSlides(el, sel);
-      return {...state, elementos: [...el], selecionado: action.selecionado, abaAtiva: 'texto'};
+      return {...state, elementos: [...el], selecionado: action.selecionado, abaAtiva: 'texto', notificacao: notificacao};
     }
     case "ativar-popup-adicionar": {
       return {...state, popupAdicionar: {...action.popupAdicionar}};
@@ -229,7 +240,7 @@ function undoable(reducer) {
   
   return function (state = initialState, action) {
     var { past, present, future, previousTemp, usuario, notificacoes } = state;
-    var notificacoesAtualizado = notificacoes;
+    var notificacoesAtualizado = getNotificacoes(notificacoes, getConteudoNotificacao(action));
     var newPresent;
     switch (action.type) {
       case 'login':
@@ -248,7 +259,7 @@ function undoable(reducer) {
           future: [present, ...future],
           slidePreview: getSlidePreview(previous),
           previousTemp: null,
-          notificacoes: getNotificacoes(notificacoes, 'Desfazer Ação')
+          notificacoes: notificacoesAtualizado
         }
       case 'REDO':
         if (future.length === 0) return state;
@@ -262,7 +273,7 @@ function undoable(reducer) {
           future: newFuture,
           slidePreview: getSlidePreview(next),
           previousTemp: null,
-          notificacoes: getNotificacoes(notificacoes, 'Refazer Ação')
+          notificacoes: notificacoesAtualizado
         }
       case 'editar-slide-temporariamente':
         newPresent = reducer(deepSpreadPresente(present), {...action, type: 'editar-slide'})
@@ -271,11 +282,12 @@ function undoable(reducer) {
           previousTemp: previousTemp || deepSpreadPresente(present), 
           slidePreview: getSlidePreview(newPresent)};
       default:
-        newPresent = reducer(deepSpreadPresente(present), action);
+        newPresent = reducer(present, action);
+        notificacoesAtualizado = getNotificacoes(notificacoes, newPresent.notificacao);
+        newPresent = deepSpreadPresente(newPresent);
         if (previousTemp) present = previousTemp;
         var mudanca = houveMudanca(present, newPresent);
         atualizarApresentacaoBD (present, newPresent);
-        if (action.type === 'deletar') notificacoesAtualizado = getNotificacoes(notificacoes, 'Slide Excluído');
         if (mudanca) {
           past = [...past, present];
           if(mudanca.includes('elementos')) {
@@ -323,7 +335,8 @@ function deepSpreadPresente(present) {
   var elementos = [];
   var selecionado = {...present.selecionado};
   var popupAdicionar = {...present.popupAdicionar};
-  var abaAtiva = present.abaAtiva
+  var abaAtiva = present.abaAtiva;
+  var apresentacao = {...present.apresentacao};
 
   for (var e of present.elementos) {
     var slides = [];
@@ -336,17 +349,42 @@ function deepSpreadPresente(present) {
     }
     elementos.push({...e, slides: slides});
   }
-  return {...present, elementos: elementos, selecionado: selecionado, abaAtiva: abaAtiva, popupAdicionar: popupAdicionar};
-}
-
-function getNotificacoes(notificacoes, conteudo) {
-  notificacoes.unshift({conteudo: conteudo, dateTime: new Date().getTime()});
-  return [...notificacoes];
+  return {elementos: elementos, selecionado: selecionado, abaAtiva: abaAtiva, popupAdicionar: popupAdicionar, apresentacao: apresentacao};
 }
 
 export let store = createStore(undoable(reducerElementos), /* preloadedState, */
   window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
 );
+
+function getNotificacoes(notificacoes, conteudo) {
+  var notif = notificacoes;
+  if (conteudo) {
+    notificacoes.unshift({conteudo: conteudo, dateTime: new Date().getTime()});
+    notif = [...notificacoes];
+  }
+  return notif;
+}
+
+function getConteudoNotificacao(action) {
+  var conteudo;
+  switch(action.type){
+    case 'UNDO':
+      conteudo = 'Ação Desfeita';
+      break;
+    case 'REDO':
+      conteudo = 'Ação Refeita';
+      break;
+    case 'definir-apresentacao-ativa':
+      conteudo = 'Apresentação Selecionada';
+      break;
+    case 'inserir-notificacao':
+      conteudo = action.conteudo;
+      break;
+    default:
+      return null;
+  }
+  return conteudo;
+}
 
 const atalhosAdicionar = {ctrlm: 0, ctrlb: 1, ctrll: 2, ctrli: 3, ctrld: 4};
 

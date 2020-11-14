@@ -1,11 +1,12 @@
 import React from "react";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route, Link, Redirect } from "react-router-dom";
 import { connect } from 'react-redux';
 import './Perfil.css';
 import ApresentacoesUsuario from './ApresentacoesUsuario';
 import ListaEmails from './ListaEmails';
 import { BsArrowLeft } from 'react-icons/bs'
 import Carrossel from '../Carrossel/Carrossel';
+import sobreporSplash from "../Splash/SobreporSplash";
 
 export const urlPerfil = '/perfil';
 
@@ -13,8 +14,8 @@ const paginasPerfil = [{nome: 'info-pessoal', nomeInterface: 'Informações Pess
                        {nome: 'apresentacoes', nomeInterface: 'Apresentações', componente: ApresentacoesUsuario},
                        {nome: 'predefinicoes', nomeInterface: 'Predefinições', componente: ApresentacoesUsuario},
                        {nome: 'emails', nomeInterface: 'E-mails', componente: ListaEmails},
-                       {nome: 'assinatura', nomeInterface: 'Assinatura', componente: ApresentacoesUsuario}
-
+                       {nome: 'assinatura', nomeInterface: 'Assinatura', componente: ApresentacoesUsuario},
+                       {nome: 'compartilhamento', nomeInterface: 'Compartilhamento', componente: ApresentacoesUsuario}
 ]
 
 class Perfil extends React.Component {
@@ -43,17 +44,19 @@ class Perfil extends React.Component {
                         </div>
                         <Switch>
                             {paginasPerfil.map(p => {
-                                var Pagina = p.componente;
+                                var Pagina = sobreporSplash(p.componente);
                                 return (
                                     <Route exact path={urlPerfil + '/' + p.nome} >
                                         <div className='pagina-perfil'>
-                                        <Carrossel direcao='vertical' tamanhoIcone={50} tamanhoMaximo={'100%'} percentualBeirada={0.05} style={{zIndex: '900', width: '100%'}}>
-                                            <Pagina callback={this.props.callback}/>
+                                            <Carrossel direcao='vertical' tamanhoIcone={50} tamanhoMaximo={'100%'} 
+                                                   percentualBeirada={0.05} style={{zIndex: '900', width: '100%'}}>
+                                                <Pagina/>
                                             </Carrossel>
                                         </div>
                                     </Route>
                                 );    
                             })}
+                            <Route path={urlPerfil} render={() => <Redirect to={urlPerfil + '/' + paginasPerfil[0].nome}/>} />
                         </Switch>
                     </div>
                 </div>

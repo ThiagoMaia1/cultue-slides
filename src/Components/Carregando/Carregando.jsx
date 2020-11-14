@@ -30,7 +30,9 @@ class Carregando extends React.Component {
     }
 
     rodar() {
-        this.setState({angulo: this.state.angulo + 5*this.proporcaoVelocidade})
+        var angulo = this.state.angulo + 5*this.proporcaoVelocidade;
+        if (angulo > 360) angulo -= 360;
+        this.setState({angulo: angulo})
     }
 
     render() {

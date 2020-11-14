@@ -20,19 +20,26 @@ class ListaEmails extends React.Component {
         this.atualizarLista();
     }
 
+    componentDidUpdate() {
+        if(this.state.emailsUsuario && this.props.desativarSplash) this.props.desativarSplash();
+    }
+
     render() {
         return (
             <>
                 {this.state.emailsUsuario 
-                    ? this.state.emailsUsuario.map((e, i) => 
-                        <ItemListaEmails 
-                            key={e.id}
-                            enderecoEmail={e.enderecoEmail}
-                            nomeCompleto={e.nomeCompleto} 
-                            eProprio={e.eProprio}
-                            idEmail={e.id}
-                            data={e.data}
-                            callback={this.atualizarLista}/>)
+                    ? this.state.emailsUsuario.map((e, i) => (
+                            <ItemListaEmails 
+                                key={e.id}
+                                enderecoEmail={e.enderecoEmail}
+                                nomeCompleto={e.nomeCompleto} 
+                                eProprio={e.eProprio}
+                                idEmail={e.id}
+                                data={e.data}
+                                callback={this.atualizarLista}
+                            />
+                        )
+                    )
                     : null}
             </>
         );

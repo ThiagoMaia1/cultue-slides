@@ -132,8 +132,8 @@ class Login extends React.Component {
         if (this.props.callback) document.addEventListener("click", this.clickFora, false);
         firebaseAuth.onAuthStateChanged(async userAuth => {
             if(this.props.desativarSplash) this.props.desativarSplash();
-            if(userAuth) this.props.history.push('/app');
             if ((!userAuth && !this.props.usuario.uid) || (userAuth && userAuth.uid === this.props.usuario.uid)) return;
+            if(userAuth) this.props.history.push('/app');
             const user = await gerarDocumentoUsuario(userAuth) || {};
             if (!user.nomeCompleto || !user.cargo) {
                 this.setState({cadastrando: true, logando: false});

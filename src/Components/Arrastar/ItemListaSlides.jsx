@@ -3,7 +3,7 @@ import SublistaSlides from './SublistaSlides';
 import { connect } from 'react-redux';
 import { MdKeyboardArrowUp, MdKeyboardArrowDown, MdEdit } from 'react-icons/md';
 import { ativarPopupConfirmacao } from '../Popup/PopupConfirmacao';
-import { getNomeInterfaceTipo, Estilo } from '../../Element';
+import { getNomeInterfaceTipo, Estilo, getDadosMensagem } from '../../Element';
 
 const estiloVazio = JSON.stringify(new Estilo());
 
@@ -25,11 +25,12 @@ class ItemListaSlides extends Component {
     }
 
     
+
     excluirElemento = (e) => {
         e.stopPropagation();
         var elemento = this.props.elemento;
-        var pergunta = "Deseja excluir " + (/[oe]/.test(elemento.tipo.slice(-1)) ? 'o ' : 'a ') 
-                        + getNomeInterfaceTipo(elemento.tipo).toLowerCase() + " '" + elemento.titulo + "'?";
+        var dadosMensagem = getDadosMensagem(elemento); 
+        var pergunta = "Deseja excluir " + dadosMensagem.genero + ' ' + dadosMensagem.elemento.toLowerCase() + '?';
         const callback = fazer => {
         if (fazer)
             this.props.dispatch({type: 'deletar', elemento: this.props.ordem});
