@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import './style.css';
-import Carregando from './Carregando.jsx';
+import Carregando from '../Carregando/Carregando.jsx';
 import ItemListaMusica from './ItemListaMusica.jsx';
 import Element from '../../Element';
 import logoVagalume from './Logo Vagalume.png';
@@ -34,7 +34,7 @@ class AdicionarMusica extends Component {
     }
     
     toggleCarregador (estado) {
-        this.setState({carregando: estado ? <Carregando /> : null});
+        this.setState({carregando: estado ? <Carregando tamanho={3} noCanto={true}/> : null});
     }
 
     pegarMusicas (termo){

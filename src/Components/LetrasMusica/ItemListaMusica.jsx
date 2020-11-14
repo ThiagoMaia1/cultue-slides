@@ -1,6 +1,6 @@
 import React from 'react';
 import './style.css';
-import Carregando from './Carregando.jsx';
+import Carregando from '../Carregando/Carregando.jsx';
 
 class ItemListaMusica extends React.Component {
   
@@ -18,7 +18,7 @@ class ItemListaMusica extends React.Component {
     render() {
         return (
             <div className='item-lista-musica'>
-                {this.props.idBuscarLetra === this.props.musica.id ? <Carregando /> : null}
+                {this.props.idBuscarLetra === this.props.musica.id ? <Carregando tamanho={3} noCanto={true}/> : null}
                 <button key={this.props.musica.id} className='itens' onClick={() => {
                     this.props.buscarLetra(this.props.musica.id)}}>
                     <b>{this.props.musica.title} - </b>{this.props.musica.band}
@@ -40,7 +40,7 @@ export default ItemListaMusica;
 
 //     return (
 //         <div>
-//             {props.idBuscarLetra === props.musica.id ? <Carregando /> : null}
+//             {props.idBuscarLetra === props.musica.id ? <Carregando tamanho={3} noCanto={true}/> : null}
 //             <div key={props.musica.id} className='itens sombrear-selecao' onClick={() => props.buscarLetra(props.musica.id)}>
 //                 <span className='titulo-musica'>{props.musica.title} - </span>
 //                 <span className='banda-musica'>{props.musica.band}</span>

@@ -45,7 +45,7 @@ class Perfil extends React.Component {
                             {paginasPerfil.map(p => {
                                 var Pagina = p.componente;
                                 return (
-                                    <Route path={urlPerfil + '/' + p.nome} >
+                                    <Route exact path={urlPerfil + '/' + p.nome} >
                                         <div className='pagina-perfil'>
                                         <Carrossel direcao='vertical' tamanhoIcone={50} tamanhoMaximo={'100%'} percentualBeirada={0.05} style={{zIndex: '900', width: '100%'}}>
                                             <Pagina callback={this.props.callback}/>

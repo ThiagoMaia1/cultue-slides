@@ -9,11 +9,11 @@ class NavBar extends React.Component {
   constructor (props) {
     super(props);
     this.esperando = false;
-    this.state = {quadroLogin: true, fundo: true, quadroAtalhos: false, paginaPerfil: false}
+    this.state = {quadroLogin: false, quadroAtalhos: false, paginaPerfil: false}
   }
 
   toggleQuadroLogin = () => {
-    this.setState({quadroLogin: !this.state.quadroLogin, fundo: false});
+    this.setState({quadroLogin: !this.state.quadroLogin});
   }
  
   toggleQuadroAtalhos = bool => {
@@ -53,11 +53,9 @@ class NavBar extends React.Component {
             <div id='nome-usuario'>{u.uid ? u.nomeCompleto : 'Entre ou Cadastre-se'}</div>
           </div>
           {this.state.quadroLogin 
-              ? <>
-                  <div style={this.state.fundo ? {position: 'fixed'} : {position: 'absolute', right: '1vw', top: '6vh'}}>
-                    <Login callback={this.toggleQuadroLogin} history={() => this.props.history}/>
-                  </div>
-                </>
+              ? <div className='container-quadro-login'>
+                  <Login history={this.props.history} callback={this.toggleQuadroLogin}/>
+                </div>
               : null
             }
       </div>

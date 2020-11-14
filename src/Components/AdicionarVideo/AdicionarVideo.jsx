@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 // import './style.css';
-import Carregando from '../LetrasMusica/Carregando.jsx';
+import Carregando from '../Carregando/Carregando.jsx';
 import ItemListaVideo from './ItemListaVideo';
 import Element from '../../Element'
 
@@ -24,7 +24,7 @@ class AdicionarVideo extends Component {
     }
     
     toggleCarregador (estado) {
-        this.setState({carregando: estado ? <Carregando /> : null});
+        this.setState({carregando: estado ? <Carregando tamanho={3} noCanto={true}/> : null});
     }
 
     pegarMusicas (termo){

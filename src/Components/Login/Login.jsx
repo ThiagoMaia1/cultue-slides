@@ -71,7 +71,7 @@ class Login extends React.Component {
     }
 
     clickFora = e => {
-        if (!this.callback) return;
+        if (!this.props.callback) return;
         if (!this.ref.current) return;
         if (!this.ref.current.contains(e.target)) {
             this.removerEventListener();
@@ -119,7 +119,6 @@ class Login extends React.Component {
 
     selecionarUltimaApresentacaoUsuario = async user => {
         var apresentacoes = await getApresentacoesUsuario(user.uid);
-        console.log(apresentacoes)
         if (apresentacoes.length !== 0) {
             var oneDay = 24 * 60 * 60 * 1000; // ms
             var tempoDecorrido = (new Date()) - apresentacoes[0].timestamp.toDate();
@@ -132,6 +131,8 @@ class Login extends React.Component {
         if (this.ref1.current) this.ref1.current.focus();
         if (this.props.callback) document.addEventListener("click", this.clickFora, false);
         firebaseAuth.onAuthStateChanged(async userAuth => {
+            if(this.props.desativarSplash) this.props.desativarSplash();
+            if(userAuth) this.props.history.push('/app');
             if ((!userAuth && !this.props.usuario.uid) || (userAuth && userAuth.uid === this.props.usuario.uid)) return;
             const user = await gerarDocumentoUsuario(userAuth) || {};
             if (!user.nomeCompleto || !user.cargo) {

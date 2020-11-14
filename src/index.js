@@ -74,10 +74,11 @@
 //   Adicionar logo da igreja (upload ou a partir de lista de logos famosas de denominações).
 //   Melhorar pesquisa de letra de música usando google.
 //   Favoritar músicas, fundos...
+//   Cards de notificação
 //
 // Negócio:
 //   Cadastrar google ads.
-//   Criar logo.
+//   ✔️ Criar logo.
 //   Buscar parceria com ultimato.
 //   Comprar domínio.
 //   Configurar site para ser encontrado pelo google.
@@ -220,13 +221,15 @@ function undoable(reducer) {
     future: [],
     slidePreview: getSlidePreview(presenteInicial),
     usuario: {},
-    popupConfirmacao: null
+    popupConfirmacao: null,
+    notificacoes: []
   }
 
   const limiteUndo = 50;
-
+  
   return function (state = initialState, action) {
-    var { past, present, future, previousTemp, usuario } = state;
+    var { past, present, future, previousTemp, usuario, notificacoes } = state;
+    var notificacoesAtualizado = notificacoes;
     var newPresent;
     switch (action.type) {
       case 'login':
@@ -244,7 +247,8 @@ function undoable(reducer) {
           present: previous,
           future: [present, ...future],
           slidePreview: getSlidePreview(previous),
-          previousTemp: null
+          previousTemp: null,
+          notificacoes: getNotificacoes(notificacoes, 'Desfazer Ação')
         }
       case 'REDO':
         if (future.length === 0) return state;
@@ -257,7 +261,8 @@ function undoable(reducer) {
           present: next,
           future: newFuture,
           slidePreview: getSlidePreview(next),
-          previousTemp: null
+          previousTemp: null,
+          notificacoes: getNotificacoes(notificacoes, 'Refazer Ação')
         }
       case 'editar-slide-temporariamente':
         newPresent = reducer(deepSpreadPresente(present), {...action, type: 'editar-slide'})
@@ -270,6 +275,7 @@ function undoable(reducer) {
         if (previousTemp) present = previousTemp;
         var mudanca = houveMudanca(present, newPresent);
         atualizarApresentacaoBD (present, newPresent);
+        if (action.type === 'deletar') notificacoesAtualizado = getNotificacoes(notificacoes, 'Slide Excluído');
         if (mudanca) {
           past = [...past, present];
           if(mudanca.includes('elementos')) {
@@ -288,7 +294,8 @@ function undoable(reducer) {
           present: newPresent,
           future: [],
           slidePreview: getSlidePreview(newPresent),
-          previousTemp: null
+          previousTemp: null,
+          notificacoes: notificacoesAtualizado
         }
     }
   }
@@ -330,6 +337,11 @@ function deepSpreadPresente(present) {
     elementos.push({...e, slides: slides});
   }
   return {...present, elementos: elementos, selecionado: selecionado, abaAtiva: abaAtiva, popupAdicionar: popupAdicionar};
+}
+
+function getNotificacoes(notificacoes, conteudo) {
+  notificacoes.unshift({conteudo: conteudo, dateTime: new Date().getTime()});
+  return [...notificacoes];
 }
 
 export let store = createStore(undoable(reducerElementos), /* preloadedState, */

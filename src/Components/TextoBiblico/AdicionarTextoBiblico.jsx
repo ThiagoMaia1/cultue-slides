@@ -6,7 +6,7 @@ import { extrairReferencias, RefInvalida } from "./referenciaBiblica"
 import Element from '../../Element'
 import { connect } from 'react-redux'
 import { formatarVersiculos, formatarVersiculosSlide } from '../Preview/TextoPreview.jsx'
-import Carregando from '../LetrasMusica/Carregando.jsx';
+import Carregando from '../Carregando/Carregando.jsx';
 import Carrossel from '../Carrossel/Carrossel'
 
 const url = 'https://bibleapi.co/api';
@@ -52,7 +52,7 @@ class AdicionarTextoBiblico extends Component {
     }
 
     requestVersos(ref) {
-        this.setState({carregando:<Carregando style={{backgroundColor:'white'}} />})
+        this.setState({carregando:<Carregando tamanho={3} noCanto={true} style={{backgroundColor:'white'}} />})
         this.referenciaLimpa = this.getReferenciaLimpa(ref);
         this.versiculos = []; 
         this.contadorRef = 0;

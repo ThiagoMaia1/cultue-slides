@@ -1,6 +1,6 @@
 import React from 'react';
 // import './style.css';
-import Carregando from '../LetrasMusica/Carregando.jsx';
+import Carregando from '../Carregando/Carregando.jsx';
 
 class ItemListaVideo extends React.Component {
   
@@ -18,7 +18,7 @@ class ItemListaVideo extends React.Component {
     render() {
         return (
             <div>
-                {this.props.idBuscarLetra === this.props.musica.id ? <Carregando /> : null}
+                {this.props.idBuscarLetra === this.props.musica.id ? <Carregando tamanho={3} noCanto={true}/> : null}
                 <button key={this.props.musica.id} className='itens sombrear-selecao' onClick={() => {
                     this.props.buscarLetra(this.props.musica.id)}}>
                     <b>{this.props.musica.title} - </b>{this.props.musica.band}

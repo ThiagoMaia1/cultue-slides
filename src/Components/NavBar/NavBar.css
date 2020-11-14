@@ -112,3 +112,9 @@
 .instrucao-atalho span {
     font-size: 110%;
 }
+
+.container-quadro-login {
+    position: absolute; 
+    right: 1vw;
+    top: 6vh;
+}

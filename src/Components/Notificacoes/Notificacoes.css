@@ -1,0 +1,35 @@
+#painel-notificacoes {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    align-items: center;
+    flex-direction: column-reverse;
+    z-index: 120;
+    overflow: hidden;
+    height: calc(150px + 4.8vh);
+}
+
+#painel-notificacoes .gradiente-coluna {
+    width: calc(180px + 1.4vh);
+    height: 0.8vh;
+}
+
+.container-card-notificacao {
+    overflow: hidden;
+    flex: none;
+}
+
+.card-notificacao {
+    width: 180px;
+    height: 50px;
+    background-color: var(--platinum-forte);
+    border-radius: var(--round-border-pequeno);
+    box-shadow: var(--box-shadow);
+    margin: 0 1.4vh 1.4vh 1.4vh;
+    font-family: 'Noto Sans';
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

@@ -13,7 +13,7 @@ class ListaEmails extends React.Component {
     
     atualizarLista = async () => {
         var emails = await getRegistrosUsuario(this.props.usuario.uid, colecaoEmails);
-        this.setState({emailsUsuario: emails});
+        this.setState({emailsUsuario: [...emails, {}]});
     }
 
     componentDidMount = async () => {
@@ -24,8 +24,9 @@ class ListaEmails extends React.Component {
         return (
             <>
                 {this.state.emailsUsuario 
-                    ? this.state.emailsUsuario.map(e => 
+                    ? this.state.emailsUsuario.map((e, i) => 
                         <ItemListaEmails 
+                            key={e.id}
                             enderecoEmail={e.enderecoEmail}
                             nomeCompleto={e.nomeCompleto} 
                             eProprio={e.eProprio}
@@ -33,7 +34,6 @@ class ListaEmails extends React.Component {
                             data={e.data}
                             callback={this.atualizarLista}/>)
                     : null}
-                <ItemListaEmails callback={this.atualizarLista}/>
             </>
         );
     }

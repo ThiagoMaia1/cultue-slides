@@ -49,7 +49,6 @@ export const gerarNovoRegistro = async (idUsuario, colecao, dados, gerarTimestam
   var timestamp = firebase.firestore.FieldValue.serverTimestamp();
   dados.timestamp = timestamp;
   if (gerarTimestampCriacao) dados.timestampCriacao = timestamp;
-  console.log(dados);
   try {
     await refRegistro.set(dados);
   } catch (error) {
@@ -90,7 +89,7 @@ const getObjetoRegistro = doc => {
 }
 
 export const excluirRegistro = async (idRegistro, colecao) => {
-  firestore.collection(colecao).doc(idRegistro).delete().then(function() {
+  return firestore.collection(colecao).doc(idRegistro).delete().then(function() {
     console.log("Registro excluído com sucesso.");
   }).catch(function(error) {
       console.error("Erro ao excluir registro: ", error);

@@ -6,7 +6,8 @@ import PopupConfirmacao from './Components/Popup/PopupConfirmacao';
 import PaginaLogin from './Components/Login/PaginaLogin';
 import App from './App';
 import Perfil from './Components/Perfil/Perfil';
-import { BrowserRouter as Router, Switch, Route, Link, Redirect } from "react-router-dom";
+import Notificacoes from './Components/Notificacoes/Notificacoes';
+import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom";
 
 const paginas = [{nome: 'app', componente: App},
                  {nome: 'login', componente: PaginaLogin},
@@ -31,6 +32,7 @@ class Home extends Component {
         <Router>     
             <PopupAdicionar/>
             <PopupConfirmacao/>
+            <Notificacoes/>
             <Switch>
                 {paginas.map(p => (
                     <Route exact path={'/' + p.nome} component={p.componente}/>

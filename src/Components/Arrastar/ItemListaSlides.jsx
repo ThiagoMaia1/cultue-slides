@@ -82,7 +82,7 @@ class ItemListaSlides extends Component {
                     style={{marginTop: (this.eSelecionado(i) ? this.getMargin(elemento) + 'vh' : ''),
                             marginBottom: this.props.placeholder.posicao === i 
                             ? this.props.placeholder.tamanho + 'px' 
-                            : (this.eSelecionado(i) ? this.getMargin(elemento) + 0.2 + 'vh' : (this.props.ultimo ? '0': ''))}}>
+                            : (this.eSelecionado(i) ? this.getMargin(elemento) + (this.props.ultimo ? -2 : 0.4) + 'vh' : (this.props.ultimo ? '-1.5vh': ''))}}>
                     <div data-id={i} className='itens lista-slides' onClick={() => this.props.marcarSelecionado(i, 0)}>
                         <div className='quadradinho-canto'>
                             <div data-id={i} className='botao-quadradinho' onClick={e => this.excluirElemento(e)}>✕</div>
