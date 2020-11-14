@@ -3,6 +3,7 @@
     padding: 1vh;
     background-color: black;
     box-shadow: var(--box-shadow);
+    position: relative;
 }
 
 #preview {

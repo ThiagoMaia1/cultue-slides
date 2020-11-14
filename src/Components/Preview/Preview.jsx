@@ -9,6 +9,7 @@ export const small = {icone: <MdFullscreen className='icone-botao' size={60}/>, 
 
 export function toggleFullscreen (element = null) {        
 
+    console.log(element)
     if (document.fullscreenElement || !element) {
         document.exitFullscreen()
         .catch(function(error) {
@@ -96,25 +97,26 @@ class Preview extends Component {
                     proporcao={proporcao}
                     id='preview'
                     realcarElemento={this.realcarElemento}
-                    ref={this.ref}
+                    referencia={this.ref}
                     editavel={!slidePreview.eMestre}
                     slidePreview={slidePreview}
-                />
-                {eMini ? null :
-                    <>
-                        <div className='container-setas' style={{display: proporcao === small.proporcao ? 'none' : ''}}>
-                            <div className='movimentar-slide esquerda' onClick={() => this.offsetSlide(-1)}></div>
-                            <div className='movimentar-slide direita' onClick={() => this.offsetSlide(1)}></div>
-                        </div>
-                        <button id='ativar-tela-cheia' onClick={() => toggleFullscreen(this.ref.current)} 
-                            style={{opacity: this.state.screen.opacidadeBotao, color: slidePreview.estilo.texto.color, 
-                                    width: 140*proporcao + 'px', height: 140*proporcao + 'px',
-                                    right: 7.5*proporcao + 'vh', bottom: 6.5*proporcao + 'vh'}}
-                            onMouseOver={this.tornarBotaoVisivel} onMouseLeave={this.tornarBotaoInvisivel}>
-                            {this.state.screen.icone}
-                        </button>
-                    </>
-                }
+                >
+                    {eMini ? null :
+                        <>
+                            <div className='container-setas' style={{display: proporcao === small.proporcao ? 'none' : ''}}>
+                                <div className='movimentar-slide esquerda' onClick={() => this.offsetSlide(-1)}></div>
+                                <div className='movimentar-slide direita' onClick={() => this.offsetSlide(1)}></div>
+                            </div>
+                            <button id='ativar-tela-cheia' onClick={() => toggleFullscreen(this.ref.current)} 
+                                style={{opacity: this.state.screen.opacidadeBotao, color: slidePreview.estilo.texto.color, 
+                                        width: 140*proporcao + 'px', height: 140*proporcao + 'px',
+                                        right: 7.5*proporcao + 'vh', bottom: 6.5*proporcao + 'vh'}}
+                                onMouseOver={this.tornarBotaoVisivel} onMouseLeave={this.tornarBotaoInvisivel}>
+                                {this.state.screen.icone}
+                            </button>
+                        </>
+                    }
+                </SlideFormatado>
                 {(!slidePreview.eMestre || eMini) ? null : 
                     <div id="texto-slide-mestre" style={{textAlign: 'center', paddingTop: '0.7vh'}}>
                         Slide-Mestre - {slidePreview.selecionado.elemento === 0 ? 'Global' : slidePreview.nomeLongoElemento}

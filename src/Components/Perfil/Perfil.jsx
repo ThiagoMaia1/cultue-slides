@@ -26,7 +26,7 @@ class Perfil extends React.Component {
                 <div id='perfil'>
                     <div id='barra-lateral-perfil'>
                         <div className='container-seta-voltar' title='Voltar ao App'>
-                            <div id='seta-voltar' onClick={() => this.props.callback()}>
+                            <div id='seta-voltar' onClick={() => this.props.history.push('/app')}>
                                 <BsArrowLeft size={window.innerWidth*0.06}/>
                             </div>
                         </div>

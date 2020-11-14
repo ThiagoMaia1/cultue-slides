@@ -5,6 +5,7 @@ import Preview from './Components/Preview/Preview';
 import Galeria from './Components/Preview/Galeria/Galeria'
 import Configurar from './Components/Configurar/Configurar.jsx';
 import MenuExportacao from './Components/MenuExportacao/MenuExportacao';
+import NavBar from './Components/NavBar/NavBar';
 
 class App extends Component {
 
@@ -20,6 +21,7 @@ class App extends Component {
   render() {
     return (
       <div className="App">
+        <NavBar history={this.props.history}/> 
         <div id='organizador'>
           <Arrastar />
           <Preview />

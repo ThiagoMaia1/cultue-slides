@@ -1,7 +1,6 @@
 
 .App {
   display: block;
-  margin-top: 3vh;
 }
 
 #organizador {
@@ -10,7 +9,7 @@
   justify-content: space-between;
   align-items: top;
   width: 72%;
-  margin-left: 3vw;
+  margin: 3vw;
 }
 
 .botao-azul {

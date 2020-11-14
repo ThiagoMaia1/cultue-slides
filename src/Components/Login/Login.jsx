@@ -71,6 +71,7 @@ class Login extends React.Component {
     }
 
     clickFora = e => {
+        if (!this.callback) return;
         if (!this.ref.current) return;
         if (!this.ref.current.contains(e.target)) {
             this.removerEventListener();
@@ -78,6 +79,7 @@ class Login extends React.Component {
     }
 
     removerEventListener = () => {
+        if (!this.props.callback) return;
         document.removeEventListener("click", this.clickFora, false);
         this.props.callback();
     }
@@ -128,7 +130,7 @@ class Login extends React.Component {
 
     componentDidMount = async () => {
         if (this.ref1.current) this.ref1.current.focus();
-        document.addEventListener("click", this.clickFora, false);
+        if (this.props.callback) document.addEventListener("click", this.clickFora, false);
         firebaseAuth.onAuthStateChanged(async userAuth => {
             if ((!userAuth && !this.props.usuario.uid) || (userAuth && userAuth.uid === this.props.usuario.uid)) return;
             const user = await gerarDocumentoUsuario(userAuth) || {};
@@ -142,63 +144,54 @@ class Login extends React.Component {
     };
 
     render() {
-        if (!this.props.ativo) return null;
         return (
-            <div ref={this.ref} id='container-login' className={this.props.fundo ? 'fundo-login' : ''}>
-                <div className='wraper-login'>
-                    <div id='quadro-login' className={'quadro-navbar ' + (this.props.fundo ? 'quadro-centralizado' : '')}>
-                        {this.props.usuario.uid
-                            ? <>
-                                <button className='botao-azul botao' onClick={() => this.props.abrirPerfil(true)}>Meu Perfil</button>  
-                                <button className='botao limpar-input' onClick={() => firebaseAuth.signOut()}>✕ Sair</button>
-                            </>
-                            :  
+            <div id='quadro-login' className='quadro-navbar' ref={this.ref}>
+                {this.props.usuario.uid
+                    ? <>
+                        <button className='botao-azul botao' onClick={() => this.props.history.push('/perfil')}>Meu Perfil</button>  
+                        <button className='botao limpar-input' onClick={() => firebaseAuth.signOut()}>✕ Sair</button>
+                    </>
+                    :  
+                    <>
+                        <form className='inputs-login'> 
+                            {this.state.logando ?
+                                <>
+                                    <input ref={this.ref1} id='username' className='combo-popup' placeholder='E-mail' type='email' value={this.state.email}
+                                            onChange={e => this.setState({email: e.target.value})}></input>
+                                    <input id='password' className='combo-popup' placeholder='Senha' type='password' value={this.state.senha}
+                                            onChange={e => this.setState({senha: e.target.value})}></input>
+                                </>
+                                : null
+                            }   
+                            {this.state.cadastrando ?
+                                <>
+                                    <input id='nome-completo' className='combo-popup' placeholder='Nome Completo' type='text' 
+                                        value={this.state.nomeCompleto} onChange={e => this.setState({nomeCompleto: e.target.value})}></input>
+                                    <select id='cargo-usuario' className='combo-popup' placeholder='Cargo' type='select' value={this.state.cargo}
+                                        onChange={e => this.setState({cargo: e.target.value})}>
+                                            {listaCargos.map((c, i) => <option key={i} value={c}>{c}</option>)}
+                                    </select>
+                                </> 
+                                : null 
+                            }
+                                <div className='mensagem-erro'>
+                                    <div>{this.state.erro}</div>
+                                </div>
+                                <button className='botao-azul botao' onClick={this.entrar}>Entrar</button>
+                        </form>
+                        {this.state.cadastrando ? null :
                             <>
-                                <form className='inputs-login'> 
-                                    {this.state.logando ?
-                                        <>
-                                            <input ref={this.ref1} id='username' className='combo-popup' placeholder='E-mail' type='email' value={this.state.email}
-                                                    onChange={e => this.setState({email: e.target.value})}></input>
-                                            <input id='password' className='combo-popup' placeholder='Senha' type='password' value={this.state.senha}
-                                                    onChange={e => this.setState({senha: e.target.value})}></input>
-                                        </>
-                                        : null
-                                    }   
-                                    {this.state.cadastrando ?
-                                        <>
-                                            <input id='nome-completo' className='combo-popup' placeholder='Nome Completo' type='text' 
-                                                value={this.state.nomeCompleto} onChange={e => this.setState({nomeCompleto: e.target.value})}></input>
-                                            <select id='cargo-usuario' className='combo-popup' placeholder='Cargo' type='select' value={this.state.cargo}
-                                                onChange={e => this.setState({cargo: e.target.value})}>
-                                                    {listaCargos.map((c, i) => <option key={i} value={c}>{c}</option>)}
-                                            </select>
-                                        </> 
-                                        : null 
-                                    }
-                                        <div className='mensagem-erro'>
-                                            <div>{this.state.erro}</div>
-                                        </div>
-                                        <button className='botao-azul botao' onClick={this.entrar}>Entrar</button>
-                                </form>
-                                {this.state.cadastrando ? null :
-                                    <>
-                                        <hr></hr>
-                                        <button id='login-google' className='botao limpar-input' 
-                                                onClick={() => firebaseAuth.signInWithPopup(googleAuth)}>Entrar com Google</button>
-                                        <button id='cadastre-se' className='itens' onClick={this.cadastrando}>
-                                            Cadastre-se
-                                        </button>
-                                        <button id='esqueceu-senha'>Esqueceu sua senha?</button>
-                                    </>
-                                }
+                                <hr></hr>
+                                <button id='login-google' className='botao limpar-input' 
+                                        onClick={() => firebaseAuth.signInWithPopup(googleAuth)}>Entrar com Google</button>
+                                <button id='cadastre-se' className='itens' onClick={this.cadastrando}>
+                                    Cadastre-se
+                                </button>
+                                <button id='esqueceu-senha'>Esqueceu sua senha?</button>
                             </>
                         }
-                    </div>
-                    {this.props.fundo 
-                        ? <div id='comece-usar' className='botao-azul' onClick={this.removerEventListener}>
-                            <div>Comece a Usar</div></div>
-                        : null}
-                </div>
+                    </>
+                }
             </div>
         );
     }

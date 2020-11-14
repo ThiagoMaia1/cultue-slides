@@ -38,7 +38,7 @@ class SlideFormatado extends Component {
         var slidePreview = this.props.slidePreview;
         var proporcao = this.props.proporcao;
         return (
-                <div ref={this.props.ref} 
+                <div ref={this.props.referencia} 
                      id={this.props.id} 
                      className={this.props.className}
                      style={{width: larguraTela*proporcao, 
@@ -65,6 +65,7 @@ class SlideFormatado extends Component {
                                  style={this.getEstiloImagem()}/>
                         </div>: 
                         null}
+                    {this.props.children}
                 </div>
         )
     }
