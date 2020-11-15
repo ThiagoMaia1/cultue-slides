@@ -29,7 +29,7 @@ export const getGeneroTipo = tipo => {
 
 export function getDadosMensagem(elemento) {
   return {
-    elemento: getNomeInterfaceTipo(elemento.tipo) + ' :"' + elemento.titulo + '"',
+    elemento: getNomeInterfaceTipo(elemento.tipo) + ': "' + elemento.titulo + '"',
     genero: getGeneroTipo(elemento.tipo)
   };
 }
@@ -51,7 +51,7 @@ const estiloPadrao = {
   texto: {fontFamily: fonteBase.fontFamily}, 
   titulo: {fontSize: 3, height: 0.25, paddingRight: 0.08, textAlign: 'center'}, 
   paragrafo: {fontSize: 1.5, paddingRight: 0.08, lineHeight: 1.9}, 
-  fundo: {src: './Galeria/Fundos/Aquarela.jpg'}, 
+  fundo: {src: './Galeria/Fundos/Cor Sólida.jpg'}, 
   tampao: {backgroundColor: '#ffffff', opacity: 0.2},
   imagem: {padding: 0.02}
 };
@@ -205,16 +205,16 @@ export default class Element {
     thisP.slides[nSlide].textoArray = texto.slice(0, i+1);
   }
 
-  conversorFirestore = () => {
+  conversorFirestore = thisP => {
     return {
-      tipo: this.tipo,
-      titulo: this.titulo,
-      texto: this.texto,
-      imagens: this.imagens,
-      eMestre: this.eMestre,
-      input1: this.input1 || null,
-      input2: this.input2 || null,
-      slides: this.slides
+      tipo: thisP.tipo,
+      titulo: thisP.titulo,
+      texto: thisP.texto,
+      imagens: thisP.imagens,
+      eMestre: thisP.eMestre,
+      input1: thisP.input1 || null,
+      input2: thisP.input2 || null,
+      slides: thisP.slides
     }
   }
 

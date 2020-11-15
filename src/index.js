@@ -29,6 +29,7 @@
 //   ✔️ Botões novos do menu configurações.
 //   ✔️ Carrossel da lista de slides.
 //   ✔️ Slide-mestre aparecendo na apresentação.
+//   ✔️ Tamanho botão tela cheia.
 //   ✔️ Carrossel do Input Imagem não vai até o final.*/
 // Errinhos:
 //   Incluir webfonts na combo de fontes disponíveis.
@@ -38,7 +39,6 @@
 //   Indicar que há estilização nos slides/elementos.
 //   Pesquisa de letra de música não funciona na produção.
 //   getEstiloPadrao pegar do padrão do usuário.
-//   Tamanho botão tela cheia.
 //   Logo do vagalume não está clicável.
 //
 /*// Features:
@@ -58,6 +58,8 @@
 //   ✔️ Navbar no topo.
 //   ✔️ Atalho para nova apresentação.
 //   ✔️ Tela perfil do usuário: apresentações passadas, e-mails salvos. 
+//   ✔️ Cards de notificação
+//   ✔️ Gif splash.
 //   ✔️ Exportar como Power Point.*/
 //   Tela perfil do usuário: informações básicas, predefinições. 
 //   Exportar como PDF.
@@ -76,8 +78,6 @@
 //   Adicionar logo da igreja (upload ou a partir de lista de logos famosas de denominações).
 //   Melhorar pesquisa de letra de música usando google.
 //   Favoritar músicas, fundos...
-//   Cards de notificação
-//   Gif splash.
 //
 // Negócio:
 //   ✔️ Criar logo.
@@ -125,9 +125,10 @@ export const reducerElementos = function (state = defaultList, action) {
   var e;
   var notificacao;
   var dadosMensagem;
+  delete state.notificacao;
   switch (action.type) {
     case 'definir-apresentacao-ativa':
-        return {...state, apresentacao: action.apresentacao, elementos: action.elementos};
+        return {...state, apresentacao: action.apresentacao, elementos: action.elementos, notificacao: 'Apresentação Selecionada'};
     case "inserir":
       var elNovo = action.elemento;
       elNovo.input1 = action.popupAdicionar.input1;
@@ -245,7 +246,7 @@ function undoable(reducer) {
     switch (action.type) {
       case 'login':
         return {...state, usuario: action.usuario};
-      case "ativar-popup-confirmacao":
+      case 'ativar-popup-confirmacao':
         return {...state, popupConfirmacao: action.popupConfirmacao};
       case 'UNDO':
         if (past.length === 0) return state;
@@ -282,24 +283,24 @@ function undoable(reducer) {
           previousTemp: previousTemp || deepSpreadPresente(present), 
           slidePreview: getSlidePreview(newPresent)};
       default:
-        newPresent = reducer(present, action);
-        notificacoesAtualizado = getNotificacoes(notificacoes, newPresent.notificacao);
-        newPresent = deepSpreadPresente(newPresent);
+        newPresent = reducer(deepSpreadPresente(present), action);
+        notificacoesAtualizado = getNotificacoes(notificacoesAtualizado, newPresent.notificacao);
         if (previousTemp) present = previousTemp;
         var mudanca = houveMudanca(present, newPresent);
-        atualizarApresentacaoBD (present, newPresent);
-        if (mudanca) {
+        if (mudanca.length > 0) {
           past = [...past, present];
           if(mudanca.includes('elementos')) {
             newPresent.apresentacao = {...newPresent.apresentacao, zerada: false}
             if(usuario.uid) {
-              if(!newPresent.apresentacao.id)
+              if(!newPresent.apresentacao.id) {
                 definirApresentacaoAtiva(usuario, newPresent.apresentacao, newPresent.elementos);
+              }
             } 
           }
           if (action.type === 'inserir')
-            present.popupAdicionar = {...action.popupAdicionar, tipo: action.elemento.tipo};
+          present.popupAdicionar = {...action.popupAdicionar, tipo: action.elemento.tipo};
         } 
+        atualizarApresentacaoBD (present, newPresent, mudanca);
         return {
           ...state,
           past: [...past],
@@ -307,15 +308,15 @@ function undoable(reducer) {
           future: [],
           slidePreview: getSlidePreview(newPresent),
           previousTemp: null,
-          notificacoes: notificacoesAtualizado
+          notificacoes: [...notificacoesAtualizado]
         }
     }
   }
 }
 
-function atualizarApresentacaoBD (present, newPresent) {
-  var mudanca = houveMudanca(present, newPresent);
-  if (mudanca && mudanca.includes('elementos') && newPresent.apresentacao.id) {
+function atualizarApresentacaoBD (present, newPresent, mudanca = null) {       
+  if (!mudanca) mudanca = houveMudanca(present, newPresent);
+  if (mudanca.includes('elementos') && newPresent.apresentacao.id) {
     atualizarApresentacao(newPresent.elementos, newPresent.apresentacao.id);
   } 
 }
@@ -327,7 +328,6 @@ function houveMudanca(estado1, estado2) {
     if (JSON.stringify(estado1[k]) !== JSON.stringify(estado2[k]))
       retorno.push(k);  
   }
-  if (retorno.length === 0) retorno = false;
   return retorno; 
 }
 
@@ -349,7 +349,7 @@ function deepSpreadPresente(present) {
     }
     elementos.push({...e, slides: slides});
   }
-  return {elementos: elementos, selecionado: selecionado, abaAtiva: abaAtiva, popupAdicionar: popupAdicionar, apresentacao: apresentacao};
+  return {...present, elementos: elementos, selecionado: selecionado, abaAtiva: abaAtiva, popupAdicionar: popupAdicionar, apresentacao: apresentacao};
 }
 
 export let store = createStore(undoable(reducerElementos), /* preloadedState, */
@@ -373,9 +373,6 @@ function getConteudoNotificacao(action) {
       break;
     case 'REDO':
       conteudo = 'Ação Refeita';
-      break;
-    case 'definir-apresentacao-ativa':
-      conteudo = 'Apresentação Selecionada';
       break;
     case 'inserir-notificacao':
       conteudo = action.conteudo;

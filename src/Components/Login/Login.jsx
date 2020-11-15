@@ -3,8 +3,7 @@ import { connect } from 'react-redux';
 import './Login.css';
 import { firebaseAuth, googleAuth } from "../../firebase";
 import { gerarDocumentoUsuario } from '../../firestore/apiFirestore';
-import { definirApresentacaoAtiva, getApresentacoesUsuario } from '../../firestore/apresentacoesBD';
-import { ativarPopupConfirmacao } from '../Popup/PopupConfirmacao';
+import { checarLogin } from './ModulosLogin';
 
 function getMensagemErro(error) {
     var codigo = error.code.replace('auth/', '');
@@ -84,64 +83,18 @@ class Login extends React.Component {
         this.props.callback();
     }
 
-    definirApresentacaoUsuario = user => {
-        var z = this.props.apresentacao.zerada;
-        if (!user.uid) {
-            if (!z)
-                definirApresentacaoAtiva(user, {id: 0}, this.props.elementos)
-            return
+    callbackLogin = user => {
+        if (!user.nomeCompleto || !user.cargo) {
+            this.setState({cadastrando: true, logando: false});
         }
-        if (!z) {
-            ativarPopupConfirmacao(
-                'SimNao', 
-                'Apresentação', 
-                'Deseja continuar editando a apresentação atual?', 
-                fazer => {
-                    if(fazer) {
-                        this.associarApresentacaoUsuario(user);
-                    } else {
-                        this.selecionarUltimaApresentacaoUsuario(user);
-                    }
-                }
-            )
-        } else {
-            this.selecionarUltimaApresentacaoUsuario(user);
-        }
-    }
-
-    associarApresentacaoUsuario = user => {
-        definirApresentacaoAtiva(
-            user, 
-            this.props.apresentacao,
-            this.props.elementos
-        )
-    }
-
-    selecionarUltimaApresentacaoUsuario = async user => {
-        var apresentacoes = await getApresentacoesUsuario(user.uid);
-        if (apresentacoes.length !== 0) {
-            var oneDay = 24 * 60 * 60 * 1000; // ms
-            var tempoDecorrido = (new Date()) - apresentacoes[0].timestamp.toDate();
-            if(tempoDecorrido < 7*oneDay)
-                definirApresentacaoAtiva(user, apresentacoes[0]);
-        }
+        this.removerEventListener();
+        if(user.uid) this.props.history.push('/app');
     }
 
     componentDidMount = async () => {
         if (this.ref1.current) this.ref1.current.focus();
         if (this.props.callback) document.addEventListener("click", this.clickFora, false);
-        firebaseAuth.onAuthStateChanged(async userAuth => {
-            if(this.props.desativarSplash) this.props.desativarSplash();
-            if ((!userAuth && !this.props.usuario.uid) || (userAuth && userAuth.uid === this.props.usuario.uid)) return;
-            if(userAuth) this.props.history.push('/app');
-            const user = await gerarDocumentoUsuario(userAuth) || {};
-            if (!user.nomeCompleto || !user.cargo) {
-                this.setState({cadastrando: true, logando: false});
-            }
-            this.props.dispatch({type: 'login', usuario: user});
-            this.removerEventListener();
-            this.definirApresentacaoUsuario(user);
-        });
+        checarLogin(this.callbackLogin);
     };
 
     render() {

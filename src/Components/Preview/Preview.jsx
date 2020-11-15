@@ -4,7 +4,7 @@ import { MdFullscreen, MdFullscreenExit } from 'react-icons/md';
 import SlideFormatado from './SlideFormatado';
 import { alturaTela } from './TamanhoTela/TamanhoTela';
 
-const full = {icone: <MdFullscreenExit className='icone-botao' size={140}/>, proporcao: 1, opacidadeBotao: '0%'}
+const full = {icone: <MdFullscreenExit className='icone-botao' size={100}/>, proporcao: 1, opacidadeBotao: '0%'}
 export const small = {icone: <MdFullscreen className='icone-botao' size={60}/>, proporcao: 0.45, opacidadeBotao: '30%'}
 
 export function toggleFullscreen (element = null) {        
@@ -110,7 +110,7 @@ class Preview extends Component {
                             <button id='ativar-tela-cheia' onClick={() => toggleFullscreen(this.ref.current)} 
                                 style={{opacity: this.state.screen.opacidadeBotao, color: slidePreview.estilo.texto.color, 
                                         width: 140*proporcao + 'px', height: 140*proporcao + 'px',
-                                        right: 7.5*proporcao + 'vh', bottom: 6.5*proporcao + 'vh'}}
+                                        right: 5.5*proporcao*0.7 + 'vh', bottom: 4.5*proporcao*0.7 + 'vh'}}
                                 onMouseOver={this.tornarBotaoVisivel} onMouseLeave={this.tornarBotaoInvisivel}>
                                 {this.state.screen.icone}
                             </button>

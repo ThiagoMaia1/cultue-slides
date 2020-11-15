@@ -132,7 +132,6 @@ html, body, .app {
 
 .container-preview {
   display: block;
-  /* overflow: auto; */
   white-space: pre-wrap;
   flex: 1 1 100%;
   z-index: 1;
@@ -161,4 +160,6 @@ html, body, .app {
 
 .popup-confirmacao {
   color: black;
+  width: min-content;
+  min-width: 30vw;
 }

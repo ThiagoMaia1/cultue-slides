@@ -66,6 +66,7 @@ export const atualizarRegistro = async (dados, colecao, idRegistro) => {
     await refRegistro.update(dados);
   } catch (error) {
     console.error("Erro ao atualizar registro da coleção: '" + colecao + "'.", error);
+    throw error;
   }
   var doc = await refRegistro.get();
   return getObjetoRegistro(doc);

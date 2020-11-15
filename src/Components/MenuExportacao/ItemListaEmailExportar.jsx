@@ -10,29 +10,18 @@ export const eEmailValido = enderecoEmail => {
     return /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/.test(enderecoEmail);
 }
   
-class ItemListaEmails extends React.Component {
+class ItemListaEmailExportar extends React.Component {
   
     constructor (props) {
         super(props);
-        var e = props.objEmail;
-        this.idEmail = e.id;
-        this.data = e.data;
         this.state = {
-            enderecoEmail: e.enderecoEmail || '', 
-            nomeCompleto: e.nomeCompleto || '', 
-            eProprio: !!e.eProprio, 
-            editando: !e.id,
-            emailValido: false,
-            emailSelecionado: false
+            enderecoEmail: props.enderecoEmail || '', 
+            nomeCompleto: props.nomeCompleto || '', 
+            eProprio: !!props.eProprio, 
+            editando: !props.idEmail,
+            emailValido: false
         }
         this.ref = React.createRef();
-        this.selecionarEmail = () => {
-            if(this.props.selecionarEmail) {
-                var novoStatus = !this.state.emailSelecionado;
-                this.props.selecionarEmail(this.props.objEmail, novoStatus);
-                this.setState({emailSelecionado: novoStatus})
-            } 
-        }
     }
       
     editar = () => {
@@ -59,14 +48,14 @@ class ItemListaEmails extends React.Component {
 
     atualizarEmailBD = () => {
         if (!this.state.enderecoEmail || !this.state.nomeCompleto) return;
-        if (this.idEmail) {
+        if (this.props.idEmail) {
             setTimeout(() => atualizarRegistro(
                 {
                     enderecoEmail: this.state.enderecoEmail,
                     nomeCompleto: this.state.nomeCompleto
                 },
                 colecaoEmails,
-                this.idEmail
+                this.props.idEmail
             ), 10);
         } else if (this.state.nomeCompleto && this.state.enderecoEmail) {
             this.gerarNovoEmail();
@@ -88,18 +77,13 @@ class ItemListaEmails extends React.Component {
     };
 
     excluirEmail = async () => {
-        await excluirRegistro(this.idEmail, colecaoEmails);
+        await excluirRegistro(this.props.idEmail, colecaoEmails);
         this.props.callback();
     }
 
     render() {
-        var selecao = !!this.props.selecionarEmail;
         return (
             <div className='item-lista-perfil email'>
-                {selecao
-                    ? <Checkbox checked={this.state.emailSelecionado} label='' onClick={this.selecionarEmail} size='2.4vh' style={{flex: 'none'}}/>
-                    : null
-                }
                 <div className='container-email'>
                     <div className='dados-verticais-item-lista-perfil dados'>
                         <div><span>Nome: </span>
@@ -124,13 +108,10 @@ class ItemListaEmails extends React.Component {
                         </div>
                     </div>
                 </div>
-                {selecao
-                    ? null
-                    : <><Checkbox checked={this.state.eProprio} label='E-mail Próprio' onClick={this.atualizarEProprio}/>
-                        <div className='dados-verticais-item-lista-perfil data' style={this.idEmail ? null : {visibility: 'hidden'}}>
-                            <div><span>Data de Modificação: {this.data}</span></div>
-                        </div></>
-                }
+                <Checkbox checked={this.state.eProprio} label='E-mail Próprio' onClick={this.atualizarEProprio} />
+                <div className='dados-verticais-item-lista-perfil data' style={this.props.idEmail ? null : {visibility: 'hidden'}}>
+                    <div><span>Data de Modificação: {this.props.data}</span></div>
+                </div>
                 <div className='container-botoes-item-lista-perfil'>
                     {this.state.editando
                         ? <button className='botao-azul botao' 
@@ -142,7 +123,7 @@ class ItemListaEmails extends React.Component {
                     }
                     <button className='botao limpar-input' 
                             onClick={this.excluirEmail}
-                            style={this.idEmail ? null : {visibility: 'hidden'}}>
+                            style={this.props.idEmail ? null : {visibility: 'hidden'}}>
                         Excluir
                     </button>
                 </div>
@@ -155,4 +136,4 @@ const mapState = state => {
     return {usuario: state.usuario};
 }
 
-export default connect(mapState)(ItemListaEmails);
+export default connect(mapState)(ItemListaEmailExportar);

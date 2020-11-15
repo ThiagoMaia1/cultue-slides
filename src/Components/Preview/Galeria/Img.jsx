@@ -18,6 +18,7 @@ class Img extends Component {
 
     onClick = () => {
         this.togglePrevia(this.props.imagem);
+        this.props.dispatch({type: 'confirmar-mudanca'});
         this.mudancaTemporaria = false;
         this.estiloAnterior = {...this.props.slideSelecionado.estilo};
     }
@@ -27,9 +28,9 @@ class Img extends Component {
         var fundo = {...img.fundo};
         if (fundo.src && fundo.src.substr(0, 4) !== 'blob' && fundo.src.match(/Galeria/) === null) 
             fundo.src = fundo.src.replace('./','./Galeria/');
-        this.props.dispatch({type: 'editar-slide', objeto: 'fundo', valor: fundo});
-        this.props.dispatch({type: 'editar-slide', objeto: 'tampao', valor: img.tampao});
-        this.props.dispatch({type: 'editar-slide', objeto: 'texto', valor: {color: img.texto.color}});
+        this.props.dispatch({type: 'editar-slide-temporariamente', objeto: 'fundo', valor: fundo});
+        this.props.dispatch({type: 'editar-slide-temporariamente', objeto: 'tampao', valor: img.tampao});
+        this.props.dispatch({type: 'editar-slide-temporariamente', objeto: 'texto', valor: {color: img.texto.color}});
     }
 
     render () {

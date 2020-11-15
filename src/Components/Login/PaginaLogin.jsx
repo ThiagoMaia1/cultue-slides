@@ -1,5 +1,7 @@
 import React from 'react';
 import Login from './Login';
+import { connect } from 'react-redux';
+import { Redirect } from "react-router-dom";
 
 class PaginaLogin extends React.Component {
 
@@ -9,6 +11,7 @@ class PaginaLogin extends React.Component {
     }
 
     render() {
+        if (this.props.idUsuario) return <Redirect to='/app'/>
         return (
             <div id='container-login' className='fundo-login'>
                 <div className='wraper-login' >
@@ -24,6 +27,10 @@ class PaginaLogin extends React.Component {
     }
 };
 
-export default PaginaLogin;
+const mapState = state => {
+    return {idUsuario: state.usuario.uid}
+}
+
+export default connect(mapState)(PaginaLogin);
   
 

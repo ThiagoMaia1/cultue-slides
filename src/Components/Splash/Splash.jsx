@@ -7,9 +7,9 @@ class Popup extends React.Component {
   constructor(props) {
     super(props);
     this.rotate = 15;
-    this.escalaGrande = 1.15;
-    this.escalaPequena = 1;
-    this.state = {scale: this.escalaGrande, rotate: 0};
+    this.escalaGrande = 1.05;
+    this.escalaPequena = 0.95;
+    this.state = {scale: this.escalaPequena, rotate: 15};
   }
 
   animacaoLogo = () => {
@@ -23,7 +23,7 @@ class Popup extends React.Component {
   
   componentDidMount = () => {
     this.animacaoLogo();
-    setInterval(this.animacaoLogo, 1000);
+    setInterval(this.animacaoLogo, 1050);
   }
 
   render() {

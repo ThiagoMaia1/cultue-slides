@@ -54,6 +54,7 @@ class PopupConfirmacao extends React.Component {
                 <h4 className='titulo-popup'>{this.props.titulo}</h4>
                 <div className='texto-popup-pequeno'>{this.props.texto}</div>
             </div>
+            {this.props.filhos}
             <div className='container-botoes-popup' 
                  style={botoesJSX.length === 1 ? {justifyContent: 'center'} : null }>
                    {botoesJSX}

@@ -44,23 +44,26 @@ class ApresentacoesUsuario extends React.Component {
                                     <Carrossel tamanhoIcone={20} tamanhoMaximo={'100%'} percentualBeirada={0.02} 
                                             style={{zIndex: '650', width: 'fit-content', overflow: 'hidden'}} corGradiente='var(--platinum)'>
                                         <div className='previews-slides-elementos' ref={this.ref}>
-                                            {a.elementos.map((e, i) => {
-                                                if (e.eMestre) return null; 
-                                                return (
-                                                    e.slides.map((s, j) => {
-                                                        if (s.eMestre) return null; 
-                                                        return (
-                                                            <div className='preview-fake'>
-                                                                <SlideFormatado 
-                                                                    slidePreview={getSlidePreview({elementos: a.elementos, selecionado: {elemento: i, slide: j}})} 
-                                                                    editavel={false}
-                                                                    proporcao={0.08}
-                                                                    className='preview-fake'
-                                                                />
-                                                            </div>
-                                                        );
-                                                    }));
-                                            })}
+                                            {a.elementos.map((e, i) => (
+                                                e.slides.map((s, j) => {
+                                                    if (s.eMestre && i !==0) return null; 
+                                                    return (
+                                                        <div className='preview-fake'>
+                                                            <SlideFormatado 
+                                                                slidePreview={
+                                                                    getSlidePreview({
+                                                                        elementos: a.elementos, 
+                                                                        selecionado: {elemento: i, slide: j}
+                                                                    })
+                                                                } 
+                                                                editavel={false}
+                                                                proporcao={0.08}
+                                                                className='preview-fake'
+                                                            />
+                                                        </div>
+                                                    );
+                                                }))
+                                            )}
                                         </div>
                                     </Carrossel>
                                 </div>

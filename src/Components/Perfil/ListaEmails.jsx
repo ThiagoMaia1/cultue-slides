@@ -25,18 +25,16 @@ class ListaEmails extends React.Component {
     }
 
     render() {
+        var selecionar = this.props.selecionarEmail;
         return (
             <>
                 {this.state.emailsUsuario 
                     ? this.state.emailsUsuario.map((e, i) => (
-                            <ItemListaEmails 
+                            <ItemListaEmails
+                                objEmail={e}
                                 key={e.id}
-                                enderecoEmail={e.enderecoEmail}
-                                nomeCompleto={e.nomeCompleto} 
-                                eProprio={e.eProprio}
-                                idEmail={e.id}
-                                data={e.data}
                                 callback={this.atualizarLista}
+                                selecionarEmail={selecionar}
                             />
                         )
                     )

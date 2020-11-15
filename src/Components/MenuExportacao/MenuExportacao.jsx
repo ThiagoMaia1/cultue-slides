@@ -87,7 +87,6 @@ class MenuExportacao extends Component {
     }
 
     definirCallback = (callbackFormato, criarSlideFinal = false) => {
-        console.log(this.state.callbackMeio)
         var callback = (copiaDOM, imagensBase64, previews, nomeArquivo) => {
             this.state.callbackMeio(callbackFormato(copiaDOM, imagensBase64, previews, nomeArquivo))
         }

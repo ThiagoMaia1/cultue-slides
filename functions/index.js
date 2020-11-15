@@ -12,7 +12,10 @@ var transporter = nodemailer.createTransport({
       pass: '***REMOVED***'
   }
 });
-exports.enviarEmail = functions.https.onCall((assunto, destinatarios, corpo, corpoHtml, anexos) => {
+
+exports.enviarEmail = functions.https.onCall(data => {
+  console.log('function firebase')
+  var { assunto, destinatarios, corpo, corpoHTML, anexos } = data;
   let remetente = '"Thiago Pereira Maia" <' + enderecoEmail + '>';
 
   let email = {
@@ -20,7 +23,7 @@ exports.enviarEmail = functions.https.onCall((assunto, destinatarios, corpo, cor
       to: destinatarios,
       subject: assunto,
       text: corpo,
-      html: corpoHtml,
+      html: corpoHTML,
       attachments: anexos
   };
 
@@ -30,4 +33,5 @@ exports.enviarEmail = functions.https.onCall((assunto, destinatarios, corpo, cor
       }
       console.log('Mensagem %s enviada: %s', info.messageId, info.response);
   });
+  
 });

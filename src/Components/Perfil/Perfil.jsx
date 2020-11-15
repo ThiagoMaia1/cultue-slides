@@ -50,7 +50,7 @@ class Perfil extends React.Component {
                                         <div className='pagina-perfil'>
                                             <Carrossel direcao='vertical' tamanhoIcone={50} tamanhoMaximo={'100%'} 
                                                    percentualBeirada={0.05} style={{zIndex: '900', width: '100%'}}>
-                                                <Pagina/>
+                                                <Pagina history={this.props.history}/>
                                             </Carrossel>
                                         </div>
                                     </Route>

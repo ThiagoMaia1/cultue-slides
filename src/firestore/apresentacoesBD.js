@@ -18,7 +18,7 @@ export const getApresentacaoPadrao = (usuario) => ({
   selecionado: {elemento: 0, slide: 0}
 });
 
-export const gerarNovaApresentacao = async (idUsuario, elementos) => {
+export const gerarNovaApresentacao = async (idUsuario, elementos, ePadrao) => {
   if (elementos)
     elementos = getElementosConvertidos(elementos);
   return await gerarNovoRegistro(
@@ -45,7 +45,7 @@ export const definirApresentacaoAtiva = async (usuario, apresentacao = {}, eleme
   } else {
     limparApresentacoesVazias(usuario.uid);
     if (!apresentacao.id)
-      novaApresentacao = await gerarNovaApresentacao(usuario.uid, elementos);
+      novaApresentacao = await gerarNovaApresentacao(usuario.uid, elementos, zerada);
   }
   delete novaApresentacao.elementos;
   novaApresentacao = {...novaApresentacao, zerada: zerada}
@@ -53,31 +53,39 @@ export const definirApresentacaoAtiva = async (usuario, apresentacao = {}, eleme
 }
 
 const limparApresentacoesVazias = idUsuario => {
-  var consulta = firestore.collection(colecaoApresentacoes).where('idUsuario','==', idUsuario);
+  var consulta = firestore.collection(colecaoApresentacoes)
+                  .where('idUsuario','==', idUsuario)
+                  .where('ePadrao', '==', true);
   consulta.get().then(function(resultados) {
     resultados.forEach(function(doc) {
-      if (!doc.data().elementos) 
-        doc.ref.delete();
+      doc.ref.delete();
     });
   });
 }
 
 export const atualizarApresentacao = async (elementos, idApresentacao) => {
   return await atualizarRegistro(
-    {elementos: getElementosConvertidos(elementos)},
+    {elementos: getElementosConvertidos(elementos), ePadrao: false},
     colecaoApresentacoes,
     idApresentacao
   );
 }
 
 export const definirApresentacaoPadrao = async (idUsuario, elementosPadrao) => {
-  atualizarRegistro(
-    {
-      apresentacaoPadrao: getSlideMestreApresentacao(elementosPadrao)
-    },
-    'usuários',
-    idUsuario
-  );
+  var conteudo;
+  try { 
+    await atualizarRegistro(
+      {
+        apresentacaoPadrao: getSlideMestreApresentacao(elementosPadrao)
+      },
+      'usuários',
+      idUsuario
+    );
+  } catch (error) {
+    conteudo = 'Erro ao Definir Apresentação Padrão';
+  }
+  conteudo = 'Apresentação Definida como Padrão';
+  store.dispatch({type: 'inserir-notificacao', conteudo: conteudo})
 }
 
 export const getApresentacoesUsuario = async (idUsuario) => {
@@ -99,7 +107,7 @@ export const getElementosConvertidos = elementos => {
   var el = [...elementos];
   for (var i = 0; i < el.length; i++) {
     if(el[i].conversorFirestore)
-      el[i] = el[i].conversorFirestore();
+      el[i] = el[i].conversorFirestore(el[i]);
   }
   return el;
 }

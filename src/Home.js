@@ -9,22 +9,13 @@ import Perfil from './Components/Perfil/Perfil';
 import Notificacoes from './Components/Notificacoes/Notificacoes';
 import sobreporSplash from './Components/Splash/SobreporSplash';
 import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom";
-import { firebaseAuth } from "./firebase";
-import { gerarDocumentoUsuario } from './firestore/apiFirestore';
-
-const checarLogin = callback => {
-  firebaseAuth.onAuthStateChanged(async userAuth => {
-  if (!store.getState().usuario.uid) {
-    var user = await gerarDocumentoUsuario(userAuth) || {};
-    store.dispatch({type: 'login', usuario: user});
-  }
-  if (callback) callback();
-  });
-}
+import { checarLogin } from './Components/Login/ModulosLogin';
+import Splash from './Components/Splash/Splash';
 
 const paginas = [{nome: 'app', componente: App},
                  {nome: 'login', componente: PaginaLogin},
                  {nome: 'perfil', componente: Perfil, exigeLogin: true},
+                 {nome: 'splash', componente: Splash},
                  {nome: '', componente: () => <Redirect to='/login'/>}
 ]
 
