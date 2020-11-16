@@ -78,11 +78,11 @@ class ExportarEmail extends Component {
         {
           filename: nomeArquivo,
           content: arquivo
-        },
-        {
-          filename: 'LogoCultue.svg',
-          path: './LogoCultue.svg',
-          cid: this.cidLogo
+        // },
+        // {
+        //   filename: 'LogoCultue.svg',
+        //   path: '/LogoCultue.svg',
+        //   cid: this.cidLogo
         }  
     ]}
     const inserirNotificacao = conteudo => this.props.dispatch({type: 'inserir-notificacao', conteudo: conteudo})
@@ -125,8 +125,8 @@ class ExportarEmail extends Component {
           <p>{this.partes.paragrafo1}</p>
         </div>
         <a href={urlSite} target="_blank" rel="noopener noreferrer">
-          <div style={{backgroundColor: ' #3757A9', height: '300px', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-            <img src={'cid:' + this.cidLogo} style={{width: '200px', objectFit: 'cover'}}></img>
+          <div style={{backgroundColor: ' #3757A9', height: '150px', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+            {/* <img src={'cid:' + this.cidLogo} style={{width: '200px', objectFit: 'cover'}} alt='Logotipo Cultue'></img> */}
           </div>
         </a>
       </div>

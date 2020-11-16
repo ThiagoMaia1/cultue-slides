@@ -30,6 +30,7 @@
 //   ✔️ Carrossel da lista de slides.
 //   ✔️ Slide-mestre aparecendo na apresentação.
 //   ✔️ Tamanho botão tela cheia.
+//   ✔️ Pesquisa de letra de música não funciona na produção.
 //   ✔️ Carrossel do Input Imagem não vai até o final.*/
 // Errinhos:
 //   Incluir webfonts na combo de fontes disponíveis.
@@ -37,9 +38,9 @@
 //   Redividir quando o texto de um slide é todo deletado.
 //   Duas colunas
 //   Indicar que há estilização nos slides/elementos.
-//   Pesquisa de letra de música não funciona na produção.
 //   getEstiloPadrao pegar do padrão do usuário.
 //   Logo do vagalume não está clicável.
+//   Html descaracterizado ao enviar em anexo no e-mail.
 //
 /*// Features:
 //   ✔️ Envio de imagens.
