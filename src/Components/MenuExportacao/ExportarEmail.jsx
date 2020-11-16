@@ -6,6 +6,9 @@ import { firebaseFunctions } from '../../firebase';
 import ListaEmails from '../Perfil/ListaEmails';
 import Carrossel from '../Carrossel/Carrossel';
 import sobreporSplash from '../Splash/SobreporSplash';
+import { ativarPopupConfirmacao } from '../Popup/PopupConfirmacao';
+import ReactDOMServer from 'react-dom/server';
+import { urlSite } from '../../index';
 
 const enviarEmail = firebaseFunctions.httpsCallable('enviarEmail');
 
@@ -14,6 +17,18 @@ class ExportarEmail extends Component {
   constructor (props) {
     super(props);
     this.state = {listaEmails: []};
+    this.cidLogo = 'logo';
+
+    const ListaComLoading = sobreporSplash(ListaEmails);
+
+    this.filhosPopup = (
+      <div style={{maxHeight: '50vh', minHeight:'50vh', width: '100%', marginBottom: '2vh', overflow: 'hidden'}}>
+        <Carrossel direcao='vertical' tamanhoIcone={50} tamanhoMaximo={'50vh'} 
+                  percentualBeirada={0.05} style={{zIndex: '400', width: '50vw'}}>
+          <ListaComLoading selecionarEmail={this.selecionarEmail} height='50vh'/>
+        </Carrossel>
+      </div>
+    )
   }
 
   selecionarEmail = (email, novoStatus) => {
@@ -27,53 +42,65 @@ class ExportarEmail extends Component {
   }
 
   exportarEmail = obj => {
-    // var { nomeArquivo, arquivo, formato } = obj;
-    const ListaComLoading = sobreporSplash(ListaEmails);
-    var lista = this.state.listaEmails;
-    this.props.dispatch({type: 'ativar-popup-confirmacao', 
-    popupConfirmacao: {
-        botoes: 'OKCancelar',
-        titulo: 'E-mails',
-        texto: 'Selecione os endereços de e-mail para os quais você deseja enviar o arquivo.',
-        filhos: ( 
-          <div style={{maxHeight: '50vh', width: '100%', marginBottom: '2vh', overflow: 'hidden'}}>
-            <Carrossel direcao='vertical' tamanhoIcone={50} tamanhoMaximo={'50vh'} 
-                       percentualBeirada={0.05} style={{zIndex: '400', width: '50vw'}}>
-              <ListaComLoading selecionarEmail={this.selecionarEmail}/>
-            </Carrossel>
-          </div>
-        ),
-        callback: () => {
-          this.partes = this.getPartesEmail();
-          enviarEmail({
-            assunto: 'Apresentação de Slides para o Culto', 
-            destinatarios: lista.reduce((resultado, email) => {
-              resultado.push(email.enderecoEmail);
-              return resultado;
-            }, []).join(','),
-            corpo: this.getCorpoEmail(), 
-            corpoHTML: this.getHTMLEmail(),
-            [{filename: 'teste.txt',
-              content: 'oi' //arquivo
-            }]
-          })
-        }
-      }
-    })
+    ativarPopupConfirmacao(
+      'enviarCancelar', 
+      'E-mails', 
+      'Selecione os endereços de e-mail para os quais você deseja enviar o arquivo.',
+      () => this.enviarArquivoEmail(obj),
+      this.filhosPopup
+    )
   }
-    // switch (formato) {
-    //   case 'pptx':
-    //     arquivo.writeFile(nomeArquivo);
-    //     break;
-    //   case 'html':
-    //     // downloadArquivoTexto(nomeArquivo, arquivo);
-    //     break;
-    //   case 'pdf':
-    //     arquivo.save(nomeArquivo);
-    //     break;
-    //   default:
-    //     return;
-    // }
+
+  enviarArquivoEmail = obj => {
+    var { nomeArquivo, arquivo, formato } = obj;
+    console.log(arquivo);
+    switch (formato) {
+      case 'pptx':
+        arquivo.writeFile(nomeArquivo);
+        break;
+      case 'html':
+        // downloadArquivoTexto(nomeArquivo, arquivo);
+        break;
+      case 'pdf':
+        arquivo.save(nomeArquivo);
+        break;
+      default:
+        return;
+    }
+
+    this.partes = this.getPartesEmail();
+    var objEmail = {
+      assunto: 'Apresentação de Slides para o Culto', 
+      destinatarios: this.getDestinatarios(),
+      corpo: this.getCorpoEmail(), 
+      corpoHTML: this.getHTMLEmail(),
+      anexos: [
+        {
+          filename: nomeArquivo,
+          content: arquivo
+        },
+        {
+          filename: 'LogoCultue.svg',
+          path: './LogoCultue.svg',
+          cid: this.cidLogo
+        }  
+    ]}
+    const inserirNotificacao = conteudo => this.props.dispatch({type: 'inserir-notificacao', conteudo: conteudo})
+    enviarEmail(objEmail).then(
+      () => inserirNotificacao('E-mail enviado com sucesso'), 
+      error => {
+        inserirNotificacao('Erro ao enviar e-mail');
+        console.log(error);
+      }
+    );
+  }
+
+  getDestinatarios() { 
+    return this.state.listaEmails.reduce((resultado, email) => {
+      resultado.push(email.enderecoEmail);
+      return resultado;
+    }, []).join(',')
+  }
 
   getPartesEmail() {
     const lista = this.state.listaEmails;
@@ -89,7 +116,21 @@ class ExportarEmail extends Component {
   }
 
   getHTMLEmail() {
-    return '<div style="font-family: Roboto"/><h3>' + this.partes.saudacao + '<h3><p>' + this.partes.paragrafo1 + '</p></div>'
+    return ReactDOMServer.renderToStaticMarkup(
+      <div style={{fontFamily: 'Roboto'}}>
+        <div style={{backgroundColor: ' #3757A9', height: '70px', width: '100%'}}></div>
+        <div style={{padding: '25px'}}>
+          <h3>{this.partes.saudacao}</h3>
+          <br></br>
+          <p>{this.partes.paragrafo1}</p>
+        </div>
+        <a href={urlSite} target="_blank" rel="noopener noreferrer">
+          <div style={{backgroundColor: ' #3757A9', height: '300px', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+            <img src={'cid:' + this.cidLogo} style={{width: '200px', objectFit: 'cover'}}></img>
+          </div>
+        </a>
+      </div>
+    )
   }
 
   render() {

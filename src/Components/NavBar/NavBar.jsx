@@ -22,7 +22,6 @@ class NavBar extends React.Component {
   }
 
   togglePerfil = (bool) => {
-    console.log(bool)
     if (bool) {
       this.props.history.push('/perfil');
     } else {

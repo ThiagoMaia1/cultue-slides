@@ -10,7 +10,6 @@ export const checarLogin = (callbackLogin) => {
         var idUsuarioStore = store.getState().usuario.uid;
         if ((!userAuth && !idUsuarioStore) || (userAuth && userAuth.uid === idUsuarioStore)) return;
         var user = await gerarDocumentoUsuario(userAuth) || {};
-        console.log(user);
         store.dispatch({type: 'login', usuario: user});
         definirApresentacaoUsuario(user);
         if (callbackLogin) callbackLogin(user);

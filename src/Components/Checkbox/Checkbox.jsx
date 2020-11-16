@@ -6,7 +6,6 @@ export default function Checkbox(props) {
     const { checked, label, onClick, size, style } = props;
     const disabled = props.disabled ? 'disabled' : '';
 
-    console.log(size);
     return (
         <div className='checkbox' onClick={onClick} style={style}>
             <input type="checkbox" checked={checked} disabled={disabled} style={{width: size, height: size}}/>

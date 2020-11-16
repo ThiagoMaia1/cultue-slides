@@ -9,7 +9,6 @@ export const small = {icone: <MdFullscreen className='icone-botao' size={60}/>, 
 
 export function toggleFullscreen (element = null) {        
 
-    console.log(element)
     if (document.fullscreenElement || !element) {
         document.exitFullscreen()
         .catch(function(error) {

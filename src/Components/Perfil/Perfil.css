@@ -86,10 +86,6 @@
     overflow: hidden;
 }
 
-.pagina-perfil .fundo-splash-parcial {
-    height: 75vh;
-}
-
 .container-botoes-item-lista-perfil {
     display: flex;
     flex-direction: column;

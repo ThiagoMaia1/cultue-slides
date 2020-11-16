@@ -37,8 +37,8 @@ export default function sobreporSplash (Componente, exigeUsuario = false, funcao
                       {(this.state.loading || (this.props.idUsuario === undefined && conferirLogin))
                           ? paginaInteira 
                                 ? <Splash/> 
-                                : <div className='fundo-splash-parcial' style={{backgroundColor: 'inherit', width: '100%'}}>
-                                    <div className='fundo-splash-parcial' style={{backgroundColor: 'white', width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', paddingBottom: '6vh'}}>
+                                : <div className='fundo-splash-parcial' style={{backgroundColor: 'inherit', width: '100%', height: this.props.height}}>
+                                    <div className='fundo-splash-parcial' style={{backgroundColor: 'white', width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', paddingBottom: '6vh'}}>
                                       <LoadingSplash/>
                                     </div>
                                   </div>

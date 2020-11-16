@@ -99,6 +99,8 @@ import { atualizarApresentacao, getApresentacaoPadrao, definirApresentacaoAtiva,
 
 const tipos = Object.keys(tiposElemento);
 
+export const urlSite = 'https://slidesigreja-ff51f.web.app/';
+
 var defaultList = {...getApresentacaoPadrao(), 
   abaAtiva: 'texto',
   popupAdicionar: {},

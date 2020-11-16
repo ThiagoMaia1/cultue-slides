@@ -14,7 +14,6 @@ var transporter = nodemailer.createTransport({
 });
 
 exports.enviarEmail = functions.https.onCall(data => {
-  console.log('function firebase')
   var { assunto, destinatarios, corpo, corpoHTML, anexos } = data;
   let remetente = '"Thiago Pereira Maia" <' + enderecoEmail + '>';
 
@@ -27,11 +26,6 @@ exports.enviarEmail = functions.https.onCall(data => {
       attachments: anexos
   };
 
-  transporter.sendMail(email, (error, info) => {
-      if (error) {
-        return console.log(error);
-      }
-      console.log('Mensagem %s enviada: %s', info.messageId, info.response);
-  });
+  return transporter.sendMail(email);
   
 });

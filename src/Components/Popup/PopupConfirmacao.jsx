@@ -7,22 +7,25 @@ import { store } from '../../index';
 const botoes = {botaoSim: {texto: 'Sim', parametroCallback: true}, 
                 botaoNao: {texto: '✕ Não', parametroCallback: false, classe: 'limpar-input'}, 
                 botaoCancelar: {texto: 'Cancelar', parametroCallback: false, classe: 'neutro'},
-                botaoOK: {texto: 'OK', parametroCallback: true}
+                botaoOK: {texto: 'OK', parametroCallback: true},
+                botaoEnviar: {texto: 'Enviar', parametroCallback: true}
 }
                 
 const gruposDeBotoes = {simNao: ['botaoSim', 'botaoNao'],
                         simNaoCancelar: ['botaoSim', 'botaoNao', 'botaoCancelar'],
                         OKCancelar: ['botaoOK', 'botaoCancelar'],
-                        OK: ['botaoOK']
+                        OK: ['botaoOK'],
+                        enviarCancelar: ['botaoEnviar', 'botaoCancelar']
 }
 
-export const ativarPopupConfirmacao = (botoes, titulo, texto, callback) => {
+export const ativarPopupConfirmacao = (botoes, titulo, texto, callback, filhos) => {
   store.dispatch({type: 'ativar-popup-confirmacao', 
     popupConfirmacao: {
         botoes: botoes, 
         titulo: titulo, 
         texto: texto,
-        callback: callback
+        callback: callback,
+        filhos: filhos
     }
   })
 }
