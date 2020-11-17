@@ -9,7 +9,8 @@ class CardNotificacao extends React.Component {
     }
 
     componentDidMount() {
-        if (this.state.opacity) this.setState({opacity: 0, maxHeight: '100vh'});
+        if (this.state.opacity) 
+            setTimeout(() => this.setState({opacity: 0, maxHeight: '100vh'}), 0);
     }
 
     render () {

@@ -1,10 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { getApresentacoesUsuario, definirApresentacaoAtiva, definirApresentacaoPadrao } from '../../firestore/apresentacoesBD';
+import { getApresentacoesUsuario, definirApresentacaoAtiva, definirApresentacaoPadrao, excluirApresentacao } from '../../firestore/apresentacoesBD';
 import SlideFormatado from '../Preview/SlideFormatado';
 import { getSlidePreview } from '../MenuExportacao/Exportador';
 import './ApresentacoesUsuario.css';
 import Carrossel from '../Carrossel/Carrossel';
+import { ativarPopupConfirmacao } from '../Popup/PopupConfirmacao';
 
 class ApresentacoesUsuario extends React.Component {
   
@@ -13,10 +14,14 @@ class ApresentacoesUsuario extends React.Component {
         this.state = {apresentacoes: null}
         this.ref = React.createRef();
     }
-    
-    componentDidMount = async () => {
+
+    atualizarLista = async () => {
         var apresentacoes = await getApresentacoesUsuario(this.props.usuario.uid);
         this.setState({apresentacoes: apresentacoes});
+    }
+
+    componentDidMount = () => {
+        this.atualizarLista();
     }
 
     componentDidUpdate() {
@@ -26,16 +31,29 @@ class ApresentacoesUsuario extends React.Component {
     }
 
     selecionarApresentacao = apresentacao => {
-        definirApresentacaoAtiva(this.props.usuario, apresentacao)
-        this.props.history.push('/app');
+        definirApresentacaoAtiva(this.props.usuario, apresentacao);
     }
-
+    
+    excluir = apresentacao => {
+        ativarPopupConfirmacao(
+            'simNao',
+            'Atenção',
+            'Deseja excluir a apresentação de ' + apresentacao.dataCriacao + '?',
+            async fazer => {
+                if(fazer) {
+                    await excluirApresentacao(apresentacao.id);
+                    this.atualizarLista();
+                }            
+            }
+        )
+    }
     render() {
         return (
             <>
                 {this.state.apresentacoes 
                     ? this.state.apresentacoes.map(a => (
-                            <div className='item-lista-perfil'>
+                            <div key={a.id} className='item-lista-perfil apresentacao'>
+                                <div className='botao-quadradinho quadradinho-canto' onClick={() => this.excluir(a)}>✕</div>
                                 <div className='dados-verticais-item-lista-perfil'>
                                     <div><span>Data de Criação: </span><span>{a.dataCriacao}</span></div>
                                     <div><span>Data de Modificação: </span><span>{a.data}</span></div>

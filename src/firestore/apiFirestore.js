@@ -80,7 +80,13 @@ export const getRegistrosUsuario = async (idUsuario, colecao) => {
   }, []);
 }
 
+export const getRegistro = async (colecao, id) => {
+  var docRegistro = await firestore.doc(colecao + '/' + id).get();
+  return getObjetoRegistro(docRegistro);
+}
+
 const getObjetoRegistro = doc => {
+  if (!doc.data()) return null;
   var dados = doc.data({serverTimestamps: "estimate"});
   dados.data = dataFormatada(dados.timestamp.toDate());
   if (dados.timestampCriacao)

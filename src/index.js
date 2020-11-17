@@ -79,6 +79,7 @@
 //   Adicionar logo da igreja (upload ou a partir de lista de logos famosas de denominações).
 //   Melhorar pesquisa de letra de música usando google.
 //   Favoritar músicas, fundos...
+//   Persistir redux
 //
 // Negócio:
 //   ✔️ Criar logo.
@@ -131,7 +132,7 @@ export const reducerElementos = function (state = defaultList, action) {
   delete state.notificacao;
   switch (action.type) {
     case 'definir-apresentacao-ativa':
-        return {...state, apresentacao: action.apresentacao, elementos: action.elementos, notificacao: 'Apresentação Selecionada'};
+        return {...state, apresentacao: action.apresentacao, elementos: action.elementos};
     case "inserir":
       var elNovo = action.elemento;
       elNovo.input1 = action.popupAdicionar.input1;
@@ -294,11 +295,8 @@ function undoable(reducer) {
           past = [...past, present];
           if(mudanca.includes('elementos')) {
             newPresent.apresentacao = {...newPresent.apresentacao, zerada: false}
-            if(usuario.uid) {
-              if(!newPresent.apresentacao.id) {
-                definirApresentacaoAtiva(usuario, newPresent.apresentacao, newPresent.elementos);
-              }
-            } 
+            if(usuario.uid && !newPresent.apresentacao.id)
+              definirApresentacaoAtiva(usuario, newPresent.apresentacao, newPresent.elementos);
           }
           if (action.type === 'inserir')
           present.popupAdicionar = {...action.popupAdicionar, tipo: action.elemento.tipo};
@@ -319,7 +317,7 @@ function undoable(reducer) {
 
 function atualizarApresentacaoBD (present, newPresent, mudanca = null) {       
   if (!mudanca) mudanca = houveMudanca(present, newPresent);
-  if (mudanca.includes('elementos') && newPresent.apresentacao.id) {
+  if (mudanca.includes('elementos') && !mudanca.includes('apresentacao') && newPresent.apresentacao.id) {
     atualizarApresentacao(newPresent.elementos, newPresent.apresentacao.id);
   } 
 }
