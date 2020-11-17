@@ -8,9 +8,10 @@ import App from './App';
 import Perfil from './Components/Perfil/Perfil';
 import Notificacoes from './Components/Notificacoes/Notificacoes';
 import sobreporSplash from './Components/Splash/SobreporSplash';
-import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom";
+import { Router, Switch, Route, Redirect } from "react-router-dom";
 import { checarLogin } from './Components/Login/ModulosLogin';
 import Splash from './Components/Splash/Splash';
+import history from './history';
 
 const paginas = [{nome: 'app', componente: App},
                  {nome: 'login', componente: PaginaLogin},
@@ -21,19 +22,10 @@ const paginas = [{nome: 'app', componente: App},
 
 class Home extends Component {
 
-  constructor (props) {
-    super(props);
-    this.state = {loginAtivo: true}
-  }
-
-  toggleLogin = () => {
-    this.setState({loginAtivo: !this.state.loginAtivo})
-  }
-  
   render() {
     return (
       <Provider store={store}>
-        <Router>     
+        <Router history={history}>     
             <PopupAdicionar/>
             <PopupConfirmacao/>
             <Notificacoes/>
@@ -44,7 +36,7 @@ class Home extends Component {
                     />
                     )    
                 )};
-                <Route render={() => <Redirect to={'/login'}/>} />
+                <Route render={() => <Redirect to='/login'/>} />
             </Switch>
         </Router>
       </Provider>

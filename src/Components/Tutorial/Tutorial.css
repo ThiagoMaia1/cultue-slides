@@ -1,0 +1,57 @@
+#fundo-tutorial {
+    background: rgba(255, 255, 255, 0.3);
+    position: fixed;
+    top: 5vh;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    flex-direction: column-reverse;
+    padding: 4vh;
+    z-index: 1500;
+}
+
+#fundo-tutorial * {
+    pointer-events: all;
+}
+
+.container-caixa-tutorial {
+    position: absolute;
+}
+
+.caixa-tutorial {
+    background-color: var(--platinum);
+    border-radius: var(--round-border-medio);
+    padding: 2vh;
+    min-width: 20vw;
+    width: min-content;
+}
+
+#pular-tutorial {
+    position: absolute;
+    top: 2vh;
+    right: 2vh
+}
+
+#rodape-tutorial {
+    display: flex;
+    justify-content: space-between;
+}
+
+#rodape-tutorial .botao {
+    flex: none;
+}
+
+.container-arrow {
+    position: relative;
+    width: min-content;
+}
+
+.arrow {
+    border: solid var(--azul-oxford);
+    border-width: 0 5vh 5vh 0;
+    border-radius: 2vh;
+    display: inline-block;
+    padding: 5vh;
+    margin: 1vh;
+}
