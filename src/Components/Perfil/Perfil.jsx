@@ -27,7 +27,7 @@ class Perfil extends React.Component {
                 <div id='perfil'>
                     <div id='barra-lateral-perfil'>
                         <div className='container-seta-voltar' title='Voltar ao App'>
-                            <div id='seta-voltar' onClick={() => this.props.history.push('/app')}>
+                            <div id='seta-voltar' onClick={() => this.props.history.push('/app/#/' + this.props.apresentacao.id)}>
                                 <BsArrowLeft size={window.innerWidth*0.06}/>
                             </div>
                         </div>
@@ -66,7 +66,7 @@ class Perfil extends React.Component {
 };
   
 const mapState = state => {
-    return {usuario: state.usuario};
+    return {usuario: state.usuario, apresentacao: state.apresentacao};
   }
 
 export default connect(mapState)(Perfil);

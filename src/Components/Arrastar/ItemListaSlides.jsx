@@ -30,7 +30,7 @@ class ItemListaSlides extends Component {
         e.stopPropagation();
         var elemento = this.props.elemento;
         var dadosMensagem = getDadosMensagem(elemento); 
-        var pergunta = "Deseja excluir " + dadosMensagem.genero + ' ' + dadosMensagem.elemento.toLowerCase() + '?';
+        var pergunta = "Deseja excluir " + dadosMensagem.genero + ' ' + dadosMensagem.elemento + '?';
         const callback = fazer => {
         if (fazer)
             this.props.dispatch({type: 'deletar', elemento: this.props.ordem});
