@@ -14,6 +14,8 @@ class Configurar extends Component {
   }
 
   abrirMenu = () => {
+    if (this.state.coordenadas[3] === this.coordenadasBotao[3])
+      this.props.dispatch({type: 'definir-item-tutorial', itemTutorial: 'configuracoesSlide'})
     var coor = this.state.coordenadas;
     coor[2] = this.coordenadasBotao[2];
     toggleAnimacao(

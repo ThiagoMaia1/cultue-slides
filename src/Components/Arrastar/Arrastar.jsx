@@ -74,6 +74,16 @@ class Arrastar extends React.Component {
     }
   }
 
+  componentDidMount = () => this.props.dispatch({type: 'definir-item-tutorial', itemTutorial: 'painelAdicionar'})
+
+  static getDerivedStateFromProps = (props, state) => {
+    if(props.elementos.length > 1 && state.elementos.length === 1) {
+      this.props.dispatch({type: 'definir-item-tutorial', itemTutorial: 'arrastar'})
+      return null;
+    }
+    return null;
+  }
+
 	render() {
 
     return (
@@ -97,14 +107,15 @@ class Arrastar extends React.Component {
               })}
             </ol>
         </Carrossel>
-        <div className='tampao-do-overflow'> 
+        <div className='tampao-do-overflow'>
           <div id="adicionar-slide" onClick={() => this.setState({painelAdicionar: !this.state.painelAdicionar})} 
                 className='botao-azul itens lista-slides'>Adicionar Slide</div>
           {(this.state.painelAdicionar) ? 
             <div className='container-adicionar'
-                 style={this.state.adicionarAcima ? {top: '-20vh'} : null}>
+                style={this.state.adicionarAcima ? {top: '-20vh'} : null}>
               <Adicionar onClick={() => this.setState({painelAdicionar: false})}/>
-            </div> : null} 
+            </div> : null
+          }
         </div>
       </div>
     )

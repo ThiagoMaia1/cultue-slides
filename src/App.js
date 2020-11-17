@@ -8,33 +8,32 @@ import Configurar from './Components/Configurar/Configurar.jsx';
 import MenuExportacao from './Components/MenuExportacao/MenuExportacao';
 import NavBar from './Components/NavBar/NavBar';
 import Tutorial from './Components/Tutorial/Tutorial';
+import PopupAdicionar from './Components/Popup/PopupAdicionar';
 
 class App extends Component {
-
-  constructor (props) {
-    super(props);
-    this.state = {tutorial: true}
-  }
 
   render() {
     return (
       <div className="App">
-        {this.state.tutorial ? <Tutorial concluirTutorial={() => this.setState({tutorial: false})}/> : null }
+        <Tutorial/>
+        <PopupAdicionar/>
         <NavBar history={this.props.history}/> 
         <div id='organizador'>
-          <Arrastar />
-          <Preview />
-          <Configurar />
+          <Arrastar/>
+          <Preview/>
         </div>
-        <Galeria id='galeria'/>
-        <MenuExportacao />
+        <div id='botoes-flutuantes-app'>
+          <Configurar/>
+          <Galeria id='galeria'/>
+          <MenuExportacao/>
+        </div>
       </div>
     );
   }
 }
 
 const mapState = state => (
-  {apresentacao: state.present.apresentacao}
+  {apresentacao: state.present.apresentacao, usuario: state.usuario}
 )
 
 export default connect(mapState)(App);

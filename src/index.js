@@ -238,7 +238,8 @@ function undoable(reducer) {
     slidePreview: getSlidePreview(presenteInicial),
     usuario: {},
     popupConfirmacao: null,
-    notificacoes: []
+    notificacoes: [],
+    itemTutorial: null
   }
 
   const limiteUndo = 50;
@@ -252,6 +253,8 @@ function undoable(reducer) {
         return {...state, usuario: action.usuario};
       case 'ativar-popup-confirmacao':
         return {...state, popupConfirmacao: action.popupConfirmacao};
+      case 'definir-item-tutorial':
+        return {...state, itemTutorial: action.itemTutorial}
       case 'UNDO':
         if (past.length === 0) return state;
         const previous = past[past.length - 1];

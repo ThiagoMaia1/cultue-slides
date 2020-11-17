@@ -223,64 +223,64 @@ class ConfigurarSlides extends Component {
     var aba = this.props.abaAtiva;
     return (
       <div id='painel-configuracao'>
-          <div id='abas'>
-            {this.gerarBotoesAbas()}
-          </div>
-      {this.state.painelCor}
-          <div className='configuracoes'>
-            <div className='botoes-direita'>
-              <button title='Aplicar Estilo ao Slide-Mestre' className='botao-configuracao bool' 
-                      style={{visibility: this.props.selecionado.elemento === 0 ? 'hidden' : 'visible'}}
-                      onClick={this.aplicarEstiloAoMestre}>
-                <RiMastercardLine size={this.state.tamIcones} />
-              </button>
-              <button title='Limpar Estilos do Slide' className='botao-configuracao bool' 
-                      onClick={this.limparEstilo}>
-                <CgErase size={this.state.tamIcones} />
-              </button>
-            </div>
-            <div className='configuracoes-texto' 
-                 style={{display: (aba === 'tampao' || aba === 'imagem' ? 'none' : '')}}>
-              <div className='linha-configuracoes-texto'>
-                <button id={'cor-texto'} className='botao-configuracao bool' onMouseOver={() => this.ativarPainelCor(this.mudarCorFonte)}>
-                  <span className='a-cor-texto' style={{color: this.props.slideSelecionado.estilo[aba].color}}>A</span>
-                  <div className='cor-texto' style={{backgroundColor: this.props.slideSelecionado.estilo[aba].color}}></div>
-                </button>
-                <select className={'botao-configuracao combo-fonte'} onChange={this.mudarFonte} ref={this.ref}
-                        defaultValue={this.props.slidePreview.estilo[aba].fontFamily}
-                        style={{fontFamily: this.props.slidePreview.estilo[aba].fontFamily}}>
-                          {this.listaFontes}
-                </select>
-              </div>
-              <div className='linha-configuracoes-texto'>
-                <button title={casesTexto[this.state.caseTexto].valor} id='botao-case' className='botao-configuracao bool' 
-                          onClick={this.mudarCaseTexto}>{casesTexto[this.state.caseTexto].icone}</button>
-                <div className='botao-configuracao'>{this.gerarBotoesAlinhamento(aba)}</div>
-                {this.gerarBotoesEstiloTexto(aba, 3, 3)}
-              </div>
-              <div className='linha-configuracoes-texto'>
-                {this.gerarBotoesEstiloTexto(aba, 0, 2)}
-                <div id='rotulo-configuracoes-musica' style={this.props.slidePreview.tipo === 'Música' ? null : {display: 'none'}}>
-                  <BsMusicNoteBeamed size={this.state.tamIcones}/>
-                </div>
-                {this.gerarBotoesEstiloTexto(aba, 4)}
-              </div>
-            </div>
-            <button className='botao-configuracao bool' onMouseOver={() => this.ativarPainelCor(this.mudarCorFundo)}
-                    style={{display: (aba === 'tampao' ? '' : 'none')}}>
-                <div className='container-cor-fundo'>
-                  <div className='cor-fundo'>
-                    <img id='img-quadriculado' alt='' src={require('./Quadriculado PNG.png')} className='quadriculado-imitando-transparente'/>
-                  </div>
-                  <div className='cor-fundo' style={{backgroundColor: this.props.slideSelecionado.estilo.tampao.backgroundColor, 
-                                                    opacity: this.props.slideSelecionado.estilo.tampao.opacity}}>
-                  </div>
-                </div>
+        <div id='abas'>
+          {this.gerarBotoesAbas()}
+        </div>
+        {this.state.painelCor}
+        <div className='configuracoes'>
+          <div className='botoes-direita'>
+            <button title='Aplicar Estilo ao Slide-Mestre' className='botao-configuracao bool' 
+                    style={{visibility: this.props.selecionado.elemento === 0 ? 'hidden' : 'visible'}}
+                    onClick={this.aplicarEstiloAoMestre}>
+              <RiMastercardLine size={this.state.tamIcones} />
             </button>
-            <div className='div-sliders'>
-              {listaSliders.reduce(this.reducerListaSliders, [])}
+            <button title='Limpar Estilos do Slide' className='botao-configuracao bool' 
+                    onClick={this.limparEstilo}>
+              <CgErase size={this.state.tamIcones} />
+            </button>
+          </div>
+          <div className='configuracoes-texto' 
+                style={{display: (aba === 'tampao' || aba === 'imagem' ? 'none' : '')}}>
+            <div className='linha-configuracoes-texto'>
+              <button id={'cor-texto'} className='botao-configuracao bool' onMouseOver={() => this.ativarPainelCor(this.mudarCorFonte)}>
+                <span className='a-cor-texto' style={{color: this.props.slideSelecionado.estilo[aba].color}}>A</span>
+                <div className='cor-texto' style={{backgroundColor: this.props.slideSelecionado.estilo[aba].color}}></div>
+              </button>
+              <select className={'botao-configuracao combo-fonte'} onChange={this.mudarFonte} ref={this.ref}
+                      defaultValue={this.props.slidePreview.estilo[aba].fontFamily}
+                      style={{fontFamily: this.props.slidePreview.estilo[aba].fontFamily}}>
+                        {this.listaFontes}
+              </select>
+            </div>
+            <div className='linha-configuracoes-texto'>
+              <button title={casesTexto[this.state.caseTexto].valor} id='botao-case' className='botao-configuracao bool' 
+                        onClick={this.mudarCaseTexto}>{casesTexto[this.state.caseTexto].icone}</button>
+              <div className='botao-configuracao'>{this.gerarBotoesAlinhamento(aba)}</div>
+              {this.gerarBotoesEstiloTexto(aba, 3, 3)}
+            </div>
+            <div className='linha-configuracoes-texto'>
+              {this.gerarBotoesEstiloTexto(aba, 0, 2)}
+              <div id='rotulo-configuracoes-musica' style={this.props.slidePreview.tipo === 'Música' ? null : {display: 'none'}}>
+                <BsMusicNoteBeamed size={this.state.tamIcones}/>
+              </div>
+              {this.gerarBotoesEstiloTexto(aba, 4)}
             </div>
           </div>
+          <button className='botao-configuracao bool' onMouseOver={() => this.ativarPainelCor(this.mudarCorFundo)}
+                  style={{display: (aba === 'tampao' ? '' : 'none')}}>
+              <div className='container-cor-fundo'>
+                <div className='cor-fundo'>
+                  <img id='img-quadriculado' alt='' src={require('./Quadriculado PNG.png')} className='quadriculado-imitando-transparente'/>
+                </div>
+                <div className='cor-fundo' style={{backgroundColor: this.props.slideSelecionado.estilo.tampao.backgroundColor, 
+                                                  opacity: this.props.slideSelecionado.estilo.tampao.opacity}}>
+                </div>
+              </div>
+          </button>
+          <div className='div-sliders'>
+            {listaSliders.reduce(this.reducerListaSliders, [])}
+          </div>
+        </div>
       </div>
     )   
 	}

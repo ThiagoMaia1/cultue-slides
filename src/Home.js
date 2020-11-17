@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { store } from './index';
 import { Provider } from 'react-redux';
-import PopupAdicionar from './Components/Popup/PopupAdicionar';
 import PopupConfirmacao from './Components/Popup/PopupConfirmacao';
 import PaginaLogin from './Components/Login/PaginaLogin';
 import App from './App';
@@ -26,12 +25,11 @@ class Home extends Component {
     return (
       <Provider store={store}>
         <Router history={history}>     
-            <PopupAdicionar/>
             <PopupConfirmacao/>
             <Notificacoes/>
             <Switch>
-                {paginas.map(p => (
-                    <Route exact path={'/' + p.nome} 
+                {paginas.map((p, i) => (
+                    <Route exact path={'/' + p.nome} key={i}
                            component={sobreporSplash(p.componente, p.exigeLogin, checarLogin, true, true, true)}
                     />
                     )    

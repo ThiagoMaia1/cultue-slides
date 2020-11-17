@@ -18,6 +18,8 @@ class Galeria extends Component {
     }
 
     mostrarGaleria = () => {
+        if (this.state.coordenadas[0] === this.coordenadasBotao) 
+            this.props.dispatch({type: 'definir-item-tutorial', itemTutorial: 'galeriaFundos'})
         toggleAnimacao(
             this.state.coordenadas,
             this.coordenadasBotao,
