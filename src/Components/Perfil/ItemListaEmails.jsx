@@ -77,9 +77,9 @@ class ItemListaEmails extends React.Component {
 
     gerarNovoEmail = () => {
         gerarNovoRegistro(
-            this.props.usuario.uid,
             colecaoEmails,
             {
+                idUsuario: this.props.usuario.uid,
                 enderecoEmail: this.state.enderecoEmail,
                 nomeCompleto: this.state.nomeCompleto,
                 eProprio: this.state.eProprio

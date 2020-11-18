@@ -16,9 +16,9 @@ export const gerarDocumentoUsuario = async (usuario, dadosAdicionais) => {
           ...dadosAdicionais
         });
         gerarNovoRegistro(
-          usuario.uid,
           'emails',
           {
+              idUsuario: usuario.uid,
               enderecoEmail: email,
               nomeCompleto: dadosAdicionais.nomeCompleto,
               eProprio: true
@@ -45,9 +45,8 @@ export const gerarDocumentoUsuario = async (usuario, dadosAdicionais) => {
     }
   };
 
-export const gerarNovoRegistro = async (idUsuario, colecao, dados, gerarTimestampCriacao = false) => {
+export const gerarNovoRegistro = async (colecao, dados, gerarTimestampCriacao = false) => {
   var refRegistro = firestore.collection(colecao).doc(); 
-  dados.idUsuario = idUsuario;
   var timestamp = firebase.firestore.FieldValue.serverTimestamp();
   dados.timestamp = timestamp;
   if (gerarTimestampCriacao) dados.timestampCriacao = timestamp;
@@ -87,6 +86,14 @@ export const getRegistro = async (colecao, id) => {
   return getObjetoRegistro(docRegistro);
 }
 
+export const getRegistrosQuery = async (colecao, dado, valor) => {
+  var colecaoBD = await firestore.collection(colecao).where(dado, '==', valor).orderBy('timestamp', 'desc').get();
+  return colecaoBD.docs.reduce((resultado, doc) => {
+    resultado.push(getObjetoRegistro(doc));
+    return resultado;
+  }, []);
+}
+
 const getObjetoRegistro = doc => {
   if (!doc.data()) return null;
   var dados = doc.data({serverTimestamps: "estimate"});
@@ -111,4 +118,13 @@ function dataFormatada(data) {
          data.getFullYear() + ' ' +
          String(data.getHours()).padStart(2,'0') + ":" +   
          String(data.getMinutes()).padStart(2,'0')
+}
+
+export function gerarID(chars = 8) {
+  var id = '';
+  do {
+    var numero = Date.now();
+    id = id + numero.toString(16);
+  } while(id.length < chars)
+  return id.substr(id.length-chars);
 }

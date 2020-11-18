@@ -5,6 +5,7 @@ import Exportador from './Exportador';
 import ExportarHTML from './ExportarHTML';
 import ExportarPptx from './ExportarPptx';
 import ExportarPDF from './ExportarPDF';
+import ExportarOnline from './ExportarOnline';
 import ExportarEmail from './ExportarEmail';
 import ExportarLink from './ExportarLink';
 import ExportarDownload from './ExportarDownload';
@@ -24,25 +25,28 @@ class MenuExportacao extends Component {
     }
 
     getMeios = tamIcones => (
-        [ExportarDownload, ExportarEmail, ExportarLink].map((m, i) => {
-            const BotaoMeio = m;
-            return (
-                <BotaoMeio 
-                    tamIcones={tamIcones} 
-                    definirMeioExportacao={this.definirMeioExportacao} 
-                    posicaoArrow={this.state.posicaoArrow}
-                    posicao={i}
-                    key={i}
-                />
-            )
-        })
+        [ExportarDownload, ExportarEmail, ExportarLink] 
+            .map((m, i) => {
+                const BotaoMeio = m;
+                return (
+                    <BotaoMeio 
+                        tamIcones={tamIcones} 
+                        definirMeioExportacao={this.definirMeioExportacao} 
+                        posicaoArrow={this.state.posicaoArrow}
+                        posicao={i}
+                        key={i}
+                    />
+                )
+            })
     )
 
     getFormatos = () => (
-        [ExportarHTML, ExportarPptx, ExportarPDF].map((f, i) => {
-            const BotaoFormato = f;
-            return <BotaoFormato key={i} definirCallback={this.definirCallback}/>
-        })
+        [ExportarHTML, ExportarPptx, ExportarPDF, ExportarOnline]
+            .slice(0, this.state.posicaoArrow === 2 ? 4 : 3)
+            .map((f, i) => {
+                const BotaoFormato = f;
+                return <BotaoFormato key={i} definirCallback={this.definirCallback}/>
+            })
     )
 
     abrirMenu = () => {

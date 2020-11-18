@@ -6,6 +6,10 @@ import { ativarPopupConfirmacao } from '../Components/Popup/PopupConfirmacao';
 import history, { getIdHash } from '../history';
 
 const colecaoApresentacoes = 'apresentações';
+const colecaoPermissoes = 'permissões';
+
+const autorizacoesApresentacao = {baixar: 'componente', ver: 'componente', exportar: 'componente', editar: 'componente'}
+
 
 export const getElementosPadrao = (usuario) => {
   if (usuario && usuario.apresentacaoPadrao) {
@@ -23,9 +27,9 @@ export const gerarNovaApresentacao = async (idUsuario, elementos, ePadrao) => {
   if (elementos)
     elementos = getElementosConvertidos(elementos);
   return await gerarNovoRegistro(
-    idUsuario,
     colecaoApresentacoes,
     {
+      idUsuario: idUsuario,
       elementos: elementos
     },
     true
@@ -199,3 +203,17 @@ const selecionarUltimaApresentacaoUsuario = async user => {
   }
 }
 
+export const gerarNovaPermissao = async (idApresentacao, autorizacao = 'ver', usuarios = [], formatoExportacao = null) => {
+  if (!autorizacoesApresentacao[autorizacao]) autorizacao = 'ver';
+  
+  return await gerarNovoRegistro(
+    colecaoPermissoes,
+    {
+      idApresentacao: idApresentacao,
+      autorizacao: autorizacao,
+      usuarios: usuarios,
+      formatoExportacao: formatoExportacao,
+      permanente: false
+    }
+  )
+}
