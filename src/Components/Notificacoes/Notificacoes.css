@@ -24,8 +24,10 @@
 }
 
 .card-notificacao {
-    width: 200px;
+    min-width: 200px;
+    width: min-content;
     height: 55px;
+    padding: 0 10px;
     background-color: var(--platinum-forte);
     border-radius: var(--round-border-pequeno);
     box-shadow: var(--box-shadow);

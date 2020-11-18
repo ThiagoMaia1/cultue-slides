@@ -98,6 +98,8 @@ import hotkeys from 'hotkeys-js';
 import { getEstiloPadrao, Estilo, getPadding, tiposElemento, getDadosMensagem } from './Element.js';
 import { selecionadoOffset, getSlidePreview } from './Components/MenuExportacao/Exportador';
 import { atualizarApresentacao, getApresentacaoPadrao, definirApresentacaoAtiva, zerarApresentacao } from './firestore/apresentacoesBD';
+import { atualizarRegistro } from './firestore/apiFirestore';
+import { keysTutoriais } from './Components/Tutorial/Tutorial';
 
 const tipos = Object.keys(tiposElemento);
 
@@ -239,22 +241,29 @@ function undoable(reducer) {
     usuario: {},
     popupConfirmacao: null,
     notificacoes: [],
-    itemTutorial: null
+    itemTutorial: null,
+    tutoriaisFeitos: []
   }
 
   const limiteUndo = 50;
   
   return function (state = initialState, action) {
-    var { past, present, future, previousTemp, usuario, notificacoes } = state;
+    var { past, present, future, previousTemp, usuario, notificacoes, tutoriaisFeitos, itemTutorial } = state;
     var notificacoesAtualizado = getNotificacoes(notificacoes, getConteudoNotificacao(action));
     var newPresent;
     switch (action.type) {
       case 'login':
-        return {...state, usuario: action.usuario};
+        return {...state, usuario: action.usuario, tutoriaisFeitos: action.usuario.tutoriaisFeitos || []};
       case 'ativar-popup-confirmacao':
         return {...state, popupConfirmacao: action.popupConfirmacao};
       case 'definir-item-tutorial':
-        return {...state, itemTutorial: action.itemTutorial}
+        var tutoriais = [...tutoriaisFeitos, itemTutorial].filter(t => !!t);
+        var tutorialNovo = tutoriais.includes(action.itemTutorial) ? null : action.itemTutorial;
+        if(usuario.uid) atualizarRegistro({tutoriaisFeitos: tutoriais}, 'usuários', usuario.uid);
+        return {...state, itemTutorial: tutorialNovo, tutoriaisFeitos: tutoriais}
+      case 'bloquear-tutoriais':
+        if(usuario.uid) atualizarRegistro({tutoriaisFeitos: keysTutoriais}, 'usuários', usuario.uid);
+        return {...state, itemTutorial: null, tutoriaisFeitos: keysTutoriais}
       case 'UNDO':
         if (past.length === 0) return state;
         const previous = past[past.length - 1];

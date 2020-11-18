@@ -22,7 +22,7 @@
     background-color: var(--platinum);
     border-radius: var(--round-border-medio);
     padding: 2vh;
-    min-width: 20vw;
+    min-width: 16vw;
     width: min-content;
     box-shadow: var(--box-shadow);
 }
@@ -48,12 +48,9 @@
 }
 
 .arrow {
-    border: solid var(--azul-oxford);
-    border-width: 0 5vh 5vh 0;
-    border-radius: 2vh;
-    display: inline-block;
-    padding: 5vh;
-    margin: 1vh;
+    position: absolute;
+    color: var(--azul-forte);
+    filter: drop-shadow(-3px 3px 1px rgba(0,0,0,0.4));
 }
 
 #fundo-tutorial .botao {

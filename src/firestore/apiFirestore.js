@@ -1,4 +1,5 @@
 import firebase, { firestore } from '../firebase';
+import { store } from '../index';
 
 export const gerarDocumentoUsuario = async (usuario, dadosAdicionais) => {
     if (!usuario) return;
@@ -11,6 +12,7 @@ export const gerarDocumentoUsuario = async (usuario, dadosAdicionais) => {
           displayName,
           email,
           photoURL,
+          tutoriaisFeitos: store.getState().tutoriaisFeitos,
           ...dadosAdicionais
         });
         gerarNovoRegistro(

@@ -10,7 +10,7 @@ class Arrastar extends React.Component {
   constructor(props) {
     super(props);
     this.ref = React.createRef();
-    this.state = {...props, painelAdicionar: props.elementos.length === 1, adicionarAcima: false,
+    this.state = {painelAdicionar: props.elementos.length === 1, adicionarAcima: false, lElementos: props.elementos.length,
                   selecionado: 0, placeholder: {posicao: -1}, carrosselAtivo: false};
   }
 
@@ -77,11 +77,15 @@ class Arrastar extends React.Component {
   componentDidMount = () => this.props.dispatch({type: 'definir-item-tutorial', itemTutorial: 'painelAdicionar'})
 
   static getDerivedStateFromProps = (props, state) => {
-    if(props.elementos.length > 1 && state.elementos.length === 1) {
-      this.props.dispatch({type: 'definir-item-tutorial', itemTutorial: 'arrastar'})
-      return null;
+    var lAntes = state.lElementos;
+    var lDepois = props.elementos.length;
+    console.log(lAntes,lDepois)
+    if(lAntes === 1 && lDepois > 1) {
+      props.dispatch({type: 'definir-item-tutorial', itemTutorial: 'slides'})
+    } else if (lAntes <= 2 && lDepois > 2) {
+      props.dispatch({type: 'definir-item-tutorial', itemTutorial: 'arrastar'})
     }
-    return null;
+    return {lElementos: lDepois};
   }
 
 	render() {

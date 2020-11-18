@@ -20,8 +20,8 @@
     width: 60%;
 }
 
-#quadro-login input, #quadro-login hr {
-    width: 20vw;
+#quadro-login input, #quadro-login hr, #quadro-login select {
+    width: 100%;
 }
 
 #quadro-login button {

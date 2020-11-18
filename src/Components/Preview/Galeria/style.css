@@ -1,6 +1,7 @@
 #botao-mostrar-galeria {
     overflow: hidden;
     position: fixed;
+    z-index: 90;
 }
 
 .container-carrossel-fundos {
