@@ -15,7 +15,8 @@ const gruposDeBotoes = {simNao: ['botaoSim', 'botaoNao'],
                         simNaoCancelar: ['botaoSim', 'botaoNao', 'botaoCancelar'],
                         OKCancelar: ['botaoOK', 'botaoCancelar'],
                         OK: ['botaoOK'],
-                        enviarCancelar: ['botaoEnviar', 'botaoCancelar']
+                        enviarCancelar: ['botaoEnviar', 'botaoCancelar'],
+                        nenhum: []
 }
 
 export const ativarPopupConfirmacao = (botoes, titulo, texto, callback, filhos) => {
@@ -54,8 +55,8 @@ class PopupConfirmacao extends React.Component {
         <Popup tamanho='pequeno' ocultarPopup={this.props.fechar}>   
           <div className='popup-confirmacao'>
             <div className='conteudo-popup'>
-                <h4 className='titulo-popup'>{this.props.titulo}</h4>
-                <div className='texto-popup-pequeno'>{this.props.texto}</div>
+                {this.props.titulo ? <h4 className='titulo-popup'>{this.props.titulo}</h4> : null}
+                {this.props.texto ? <div className='texto-popup-pequeno'>{this.props.texto}</div> : null}
             </div>
             {this.props.filhos}
             <div className='container-botoes-popup' 

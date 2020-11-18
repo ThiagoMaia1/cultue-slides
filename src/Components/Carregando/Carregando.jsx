@@ -1,7 +1,7 @@
 import React from 'react';
 
 const CarregandoNoCanto = (props) => (
-    <div style={{width:'100%', padding: '1.7% 2%', position: 'absolute', display: 'flex', justifyContent: 'flex-end'}}>
+    <div style={{width:'100%', padding: '1.8vh 0.9vw', position: 'absolute', display: 'flex', justifyContent: 'flex-end'}}>
         {props.children}
     </div>
 )

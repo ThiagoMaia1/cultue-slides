@@ -21,6 +21,9 @@
     width: 100%; 
     background: white;
     display: block;
+}
+
+.container-opcoes-musica.container-carrossel {
     position: absolute;
 }
 
@@ -43,7 +46,6 @@
 
 #logo-vagalume {
     max-height: 16vh;
-    /* object-fit: cover; */
 }
 .paragrafo-musica-esquerda {
     padding: 0 10px;
@@ -66,4 +68,8 @@
 .checkboxes-popup{
     display: flex;
     justify-content: space-around;
+}
+
+#preview-musica {
+    min-height: 36vh;
 }

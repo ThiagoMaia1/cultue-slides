@@ -18,32 +18,33 @@ class ExportarLink extends Component {
 
   exportarLink = obj => {
     this.formato = obj.formato;
-    if (this.formato === 'online') {
-      ativarPopupConfirmacao(
-        'OKCancelar',
-        'Compartilhar Link',
-        'Selecione a forma de compartilhamento:',
-        null,
-        <div className='gerador-link-compartilhamento'>
-          <div className='linha-flex'>
-            <label to='selecionar-autorizacao-link'>Qualquer pessoa com o link pode </label>
-            <select id='selecionar-autorizacao-link' className='combo-popup' onChange={this.gerarLink}>
-              <option value='Ver'>Ver</option>
-              <option value='Exportar'>Exportar</option>
-              <option value='Editar'>Editar</option>
-            </select>        
-          </div>
-          <div className='linha-flex'>
-            <div className='link-copiavel'>{this.getLinkPermissao(this.state.idPermissao)}</div>
-            <div className='botao-configuracao bool' onClick={this.copiarLinkAreaDeTransferencia(this.state.idPermissao)}>
-              <BiCopy size={this.tamIcones}/>
-            </div>
+    var online = this.formato === 'online';
+    if (!online) this.gerarLink('baixar');
+    ativarPopupConfirmacao(
+      'OK',
+      'Compartilhamento por Link',
+      '',
+      null,
+      <div className='gerador-link-compartilhamento'>
+        <div className='linha-flex'>
+          <label to='selecionar-autorizacao-link'>{online ? 'Qualquer pessoa com o link pode' : 'Link para download em ' + this.formato + ':'}</label>
+          { online
+            ? <select id='selecionar-autorizacao-link' className='combo-popup' onChange={this.changeAutorizacao}>
+                <option value='Ver'>Ver</option>
+                <option value='Exportar'>Exportar</option>
+                <option value='Editar'>Editar</option>
+              </select>        
+            : null
+          }
+        </div>
+        <div className='linha-flex'>
+          <input type='text' className='link-copiavel' readOnly value={this.getLinkPermissao(this.state.idPermissao)}/>
+          <div className='botao-configuracao bool' onClick={() => this.copiarLinkAreaDeTransferencia(this.state.idPermissao)}>
+            <BiCopy size={this.tamIcones}/>
           </div>
         </div>
-      )
-    } else {
-      this.gerarLink('baixar')
-    }
+      </div>
+    )
   }
 
   changeAutorizacao = e => {
@@ -61,7 +62,6 @@ class ExportarLink extends Component {
       autorizacao: autorizacao,
       idPermissao: idPermissao
     })
-    this.copiarLinkAreaDeTransferencia(idPermissao);
   }
 
   copiarLinkAreaDeTransferencia = idPermissao => {

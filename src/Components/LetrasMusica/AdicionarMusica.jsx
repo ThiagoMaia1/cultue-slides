@@ -43,7 +43,9 @@ class AdicionarMusica extends Component {
         vagalume.responseType = 'json';
         
         vagalume.addEventListener('load', () => {    
-            this.setState({opcoes: vagalume.response.response.docs});
+            var opcoes = vagalume.response.response.docs;
+            this.setState({opcoes: opcoes});
+            this.setState({listaAtiva: opcoes.length > 0});
             this.toggleCarregador(false);
             if (this.input2) {
                 this.input2 = null;
@@ -123,8 +125,8 @@ class AdicionarMusica extends Component {
 
     limparInput = () => {
         this.refCombo.value = '';
-        this.refCombo.focus();
-        this.setState({listaAtiva: true, letraMusica: {}, botoesVisiveis: false, opcoes: []})
+        this.setState({letraMusica: {}, botoesVisiveis: false, opcoes: []})
+        setTimeout(() => this.refCombo.focus(), 1);
     }
 
     toggleCheckbox = opcao => {
@@ -147,18 +149,13 @@ class AdicionarMusica extends Component {
                         <div className='wraper-popup'>
                             {this.state.carregando}
                             <input ref={el => this.refCombo = el} className='combo-popup' type='text' autoComplete='off'
-                                   onFocus={() => this.setState({listaAtiva: true})} onKeyUp={e => this.onKeyUp(e)}
+                                   onKeyUp={e => this.onKeyUp(e)}
+                                   onFocus={() => this.setState({listaAtiva: this.state.opcoes.length > 0})}
                                    defaultValue={this.props.input1} placeholder='Pesquise por nome, artista ou trecho'/>
                         </div>
                     </div>
-                    <div className='wraper-popup'>
-                        <div id='div-logo-vagalume'>
-                            <a href='https://www.vagalume.com.br/' target="_blank" rel="noopener noreferrer">
-                                <img id='logo-vagalume' src={logoVagalume} alt='Logo Vagalume'/>
-                            </a>
-                        </div>
-                    </div>
-                    <div className='container-opcoes-musica container-carrossel' style={this.state.listaAtiva ? null : {display: 'none'}}>
+                    <div className='container-opcoes-musica container-carrossel' 
+                         style={this.state.listaAtiva ? null : {display: 'none'}}>
                         <Carrossel tamanhoIcone={45} tamanhoMaximo='100%' direcao='vertical' style={{zIndex: '400'}} percentualBeirada={0.08}>
                             <div className='opcoes-musica'>
                                 {this.state.opcoes.map(mus => 
@@ -168,19 +165,28 @@ class AdicionarMusica extends Component {
                         </Carrossel>
                     </div>
                 </div>
-                <div className='container-preview combo-popup container-carrossel'>
-                    <Carrossel tamanhoIcone={45} tamanhoMaximo='100%' direcao='vertical' style={{zIndex: '400'}} percentualBeirada={0.08}>
-                        <div>
-                            <div className='texto-inserir'>
-                                <div className='paragrafos-esquerda'>
-                                    {this.state.letraMusica.esquerda}
-                                </div>
-                                <div className='paragrafos-direita'>
-                                    {this.state.letraMusica.direita}
+                <div id='preview-musica' className='container-preview combo-popup container-carrossel'>
+                    {JSON.stringify(this.state.letraMusica) === '{}'
+                        ? <div className='wraper-popup'>
+                            <div id='div-logo-vagalume'>
+                                <a href='https://www.vagalume.com.br/' target="_blank" rel="noopener noreferrer">
+                                    <img id='logo-vagalume' src={logoVagalume} alt='Logo Vagalume'/>
+                                </a>
+                            </div>
+                        </div>                    
+                        : <Carrossel tamanhoIcone={45} tamanhoMaximo='100%' direcao='vertical' style={{zIndex: '400'}} percentualBeirada={0.08}>
+                            <div>
+                                <div className='texto-inserir'>
+                                    <div className='paragrafos-esquerda'>
+                                        {this.state.letraMusica.esquerda}
+                                    </div>
+                                    <div className='paragrafos-direita'>
+                                        {this.state.letraMusica.direita}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </Carrossel>
+                        </Carrossel>
+                    }
                 </div>
                 <div className='container-divisao-popup'>
                     <div className='checkboxes-popup'>

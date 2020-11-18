@@ -16,7 +16,7 @@ class MenuExportacao extends Component {
         super(props);
         this.coordenadasBotao = [ 80, 3, 12, 89];
         this.coordenadasMedio = [ 73, 3, 12, 77]
-        this.coordenadasMenu = [ 60, 3, 12, 77];
+        this.coordenadasMenu = [ 60, 3, 12, 70];
         this.state = {coordenadas: [...this.coordenadasBotao], 
             menuVisivel: false, 
             menuFormatos: false,

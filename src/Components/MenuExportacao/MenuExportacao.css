@@ -140,7 +140,7 @@
 }
 
 .gerador-link-compartilhamento {
-    padding: 0 2vh 5vh;
+    padding: 0 2vh;
     width: auto;
 }
 
@@ -150,7 +150,11 @@
 }
 
 .gerador-link-compartilhamento select {
-    margin: 2vh 0;
+    margin: 0 2vh;
+}
+
+.gerador-link-compartilhamento label {
+    margin-left: 0.6vh;
 }
 
 .gerador-link-compartilhamento .bool {
@@ -165,10 +169,12 @@
     padding: 1vh;
     border-radius: var(--round-border-medio);
     flex: 1 0;
+    max-width: 84%;
 }
 
 .linha-flex {
     display: flex;
-    justify-content: space-evenly;
+    justify-content: flex-start;
     align-items: center;
+    margin: 3vh 0;
 }
