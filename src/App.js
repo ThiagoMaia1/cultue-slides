@@ -14,7 +14,7 @@ class App extends Component {
 
   render() {
     return (
-      <div className="App">
+      <div id='App'>
         <Tutorial/>
         <PopupAdicionar/>
         <NavBar history={this.props.history}/> 

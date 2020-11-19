@@ -79,7 +79,6 @@ class Arrastar extends React.Component {
   static getDerivedStateFromProps = (props, state) => {
     var lAntes = state.lElementos;
     var lDepois = props.elementos.length;
-    console.log(lAntes,lDepois)
     if(lAntes === 1 && lDepois > 1) {
       props.dispatch({type: 'definir-item-tutorial', itemTutorial: 'slides'})
     } else if (lAntes <= 2 && lDepois > 2) {
@@ -111,7 +110,7 @@ class Arrastar extends React.Component {
               })}
             </ol>
         </Carrossel>
-        <div className='tampao-do-overflow'>
+        <div id='tampao-do-overflow'>
           <div id="adicionar-slide" onClick={() => this.setState({painelAdicionar: !this.state.painelAdicionar})} 
                 className='botao-azul itens lista-slides'>Adicionar Slide</div>
           {(this.state.painelAdicionar) ? 

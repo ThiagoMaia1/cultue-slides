@@ -8,12 +8,14 @@
     flex-direction: column-reverse;
     z-index: 1000;
     overflow: hidden;
-    height: calc(165px + 4.8vh);
+    --altura-notificacao: 8vh;
+    --largura-notificacao: 15vw;
+    height: calc(3*var(--altura-notificacao) + 4.8vh);
     pointer-events: none;
 }
 
 #painel-notificacoes .gradiente-coluna {
-    width: calc(200px + 1.4vh);
+    width: calc(var(--largura-notificacao) + 1.4vh);
     height: 0.8vh;
 }
 
@@ -25,10 +27,10 @@
 }
 
 .card-notificacao {
-    min-width: 200px;
+    min-width: var(--largura-notificacao);
     width: min-content;
-    height: 55px;
-    padding: 0 10px;
+    height: var(--altura-notificacao);
+    padding: 0 2vh;
     background-color: var(--platinum-forte);
     border-radius: var(--round-border-pequeno);
     box-shadow: var(--box-shadow);

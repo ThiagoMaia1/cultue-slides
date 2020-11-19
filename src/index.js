@@ -31,6 +31,8 @@
 //   ✔️ Slide-mestre aparecendo na apresentação.
 //   ✔️ Tamanho botão tela cheia.
 //   ✔️ Pesquisa de letra de música não funciona na produção.
+//   ✔️ getEstiloPadrao pegar do padrão do usuário.
+//   ✔️ Logo do vagalume não está clicável.
 //   ✔️ Carrossel do Input Imagem não vai até o final.*/
 // Errinhos:
 //   Incluir webfonts na combo de fontes disponíveis.
@@ -38,9 +40,13 @@
 //   Redividir quando o texto de um slide é todo deletado.
 //   Duas colunas
 //   Indicar que há estilização nos slides/elementos.
-//   getEstiloPadrao pegar do padrão do usuário.
-//   Logo do vagalume não está clicável.
 //   Html descaracterizado ao enviar em anexo no e-mail.
+//   Gradiente das notificações por cima das coisas]
+//   Fade do tutorial duas vezes
+//   Configuração do tutorial ao dar sign out/zerar apresentação
+//   Criar nova apresentação não funciona lá em cima e no atalho
+//   Borda na tela cheia está arredondada
+//   Preview-fake do menu exportacao está visível
 //
 /*// Features:
 //   ✔️ Envio de imagens.
@@ -80,6 +86,7 @@
 //   Melhorar pesquisa de letra de música usando google.
 //   Favoritar músicas, fundos...
 //   Persistir redux
+//   Criar texto livre padrão
 //
 // Negócio:
 //   ✔️ Criar logo.
@@ -102,8 +109,6 @@ import { atualizarRegistro } from './firestore/apiFirestore';
 import { keysTutoriais } from './Components/Tutorial/Tutorial';
 
 const tipos = Object.keys(tiposElemento);
-
-export const urlSite = 'https://slidesigreja-ff51f.web.app/';
 
 var defaultList = {...getApresentacaoPadrao(), 
   abaAtiva: 'texto',

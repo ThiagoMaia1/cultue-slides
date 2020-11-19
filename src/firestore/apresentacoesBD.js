@@ -1,7 +1,7 @@
 import Element, { getEstiloPadrao, textoMestre } from '../Element.js';
 import { gerarNovoRegistro, atualizarRegistro, getRegistrosUsuario, excluirRegistro, getRegistro } from './apiFirestore';
 import { firestore } from '../firebase';
-import { store, urlSite } from '../index';
+import { store } from '../index';
 import { ativarPopupConfirmacao } from '../Components/Popup/PopupConfirmacao';
 import history, { getIdHash } from '../history';
 
@@ -151,7 +151,7 @@ export const definirApresentacaoComLocation = async (location, user) => {
               definirApresentacaoAtiva(user, apresentacao);
               return;
           }
-          store.dispatch({type: 'inserir-notificacao', conteudo: 'URL Inválida: ' + urlSite + location.pathname + location.hash})
+          store.dispatch({type: 'inserir-notificacao', conteudo: 'URL Inválida: ' + window.location.origin.toString() + '/' + location.pathname + location.hash})
       }
   }
   definirApresentacaoUsuario(user);

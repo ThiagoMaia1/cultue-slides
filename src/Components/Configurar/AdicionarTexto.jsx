@@ -19,7 +19,7 @@ class AdicionarTexto extends Component {
 
     gerarListaSlidesPadrao = () => 
         listaSlidesPadrao.map(s => (
-            <button className='botao' key={s.titulo} 
+            <button className='botao' key={s.titulo} tabIndex='-1' 
                     onClick={() => {
                         this.refTitulo.current.value = s.titulo;
                         this.refTextoSlide.current.value = s.textoSlide;

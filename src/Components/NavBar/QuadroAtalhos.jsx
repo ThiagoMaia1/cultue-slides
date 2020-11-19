@@ -9,7 +9,7 @@ const listaAtalhos = [{teclas: [['←'], ['↑']], acao: 'Slide anterior'},
                       {teclas: ['Ctrl', 'M'], acao: 'Adicionar Música'},
                       {teclas: ['Ctrl', 'I'], acao: 'Adicionar Imagem'},
                       {teclas: ['Ctrl', 'D'], acao: 'Adicionar Vídeo'},
-                      {teclas: ['Ctrl', 'N'], acao: 'Nova Apresentação'}
+                      {teclas: ['Ctrl', 'O'], acao: 'Nova Apresentação'}
 ]
 
 const getAtalhoSeparado = teclas => ( 

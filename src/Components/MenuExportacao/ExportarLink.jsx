@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import BotaoExportador from './BotaoExportador';
 import { BsLink45Deg } from 'react-icons/bs';
 import { ativarPopupConfirmacao } from '../Popup/PopupConfirmacao';
-import { urlSite } from '../../index';
 import { BiCopy } from 'react-icons/bi';
 import { gerarNovaPermissao } from '../../firestore/apresentacoesBD';
 
@@ -57,7 +56,7 @@ class ExportarLink extends Component {
       autorizacao,
       null,
       this.formato
-    )
+    ).id;
     this.setState({
       autorizacao: autorizacao,
       idPermissao: idPermissao
@@ -75,9 +74,7 @@ class ExportarLink extends Component {
     this.props.dispatch({type: 'inserir-notificacao', conteudo: 'Link copiado para a área de transferência'});
   }
 
-  getLinkPermissao = idPermissao => {
-    return urlSite + '#/' + this.state.idPermissao
-  }
+  getLinkPermissao = idPermissao => window.location.origin.toString() + '/#/' + idPermissao;
 
   render() {
       return (

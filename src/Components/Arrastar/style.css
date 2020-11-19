@@ -237,7 +237,7 @@ ol {
   background-color: var(--azul-forte);
 }
 
-.tampao-do-overflow {
+#tampao-do-overflow {
   background: white;
   height: 100%;
   width: 100%;

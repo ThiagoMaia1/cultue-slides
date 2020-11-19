@@ -8,7 +8,6 @@ import Carrossel from '../Carrossel/Carrossel';
 import sobreporSplash from '../Splash/SobreporSplash';
 import { ativarPopupConfirmacao } from '../Popup/PopupConfirmacao';
 import ReactDOMServer from 'react-dom/server';
-import { urlSite } from '../../index';
 
 const enviarEmail = firebaseFunctions.httpsCallable('enviarEmail');
 
@@ -124,7 +123,7 @@ class ExportarEmail extends Component {
           <br></br>
           <p>{this.partes.paragrafo1}</p>
         </div>
-        <a href={urlSite} target="_blank" rel="noopener noreferrer">
+        <a href={window.location.origin.toString()} target="_blank" rel="noopener noreferrer">
           <div style={{backgroundColor: ' #3757A9', height: '150px', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
             {/* <img src={'cid:' + this.cidLogo} style={{width: '200px', objectFit: 'cover'}} alt='Logotipo Cultue'></img> */}
           </div>

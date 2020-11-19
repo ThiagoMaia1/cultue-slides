@@ -1,4 +1,4 @@
-.borda-slide-mestre {
+#borda-slide-mestre {
     border-radius: var(--round-border-grande);
     padding: 1vh;
     background-color: black;
