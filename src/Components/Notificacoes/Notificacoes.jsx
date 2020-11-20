@@ -16,7 +16,7 @@ class CardNotificacao extends React.Component {
     render () {
         return (
             <div className='container-card-notificacao' style={{maxHeight: this.state.maxHeight, transition: 'max-height 2s linear'}}>
-                <div style={{opacity: this.state.opacity, transition: 'opacity 0.3s linear 3s'}} className='card-notificacao'>{this.props.conteudo}</div>
+                <div style={{opacity: this.state.opacity, transition: 'opacity 0.2s linear 3s'}} className='card-notificacao'>{this.props.conteudo}</div>
             </div>
         )
     }
@@ -30,7 +30,6 @@ class Notificacoes extends React.Component {
             {this.props.notificacoes.map((n, i) => 
                 <CardNotificacao key={n.dateTime} conteudo={n.conteudo} dateTime={n.dateTime}/>
             )}
-            <div className='gradiente-coluna emcima'></div>
         </div>
     );
   }

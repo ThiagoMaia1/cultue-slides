@@ -110,12 +110,6 @@ import { keysTutoriais } from './Components/Tutorial/Tutorial';
 
 const tipos = Object.keys(tiposElemento);
 
-var defaultList = {...getApresentacaoPadrao(), 
-  abaAtiva: 'texto',
-  popupAdicionar: {},
-  apresentacao: {id: 0, zerada: true}
-};
-
 const redividirSlides = (elementos, sel) => {
   if (elementos.length !== 1) {
       var [ i, slide, repetir ] = (sel.elemento === 0 ? [ 1, 0, 1 ] : [ sel.elemento, sel.slide, 0]);
@@ -129,6 +123,13 @@ const redividirSlides = (elementos, sel) => {
   return elementos;
 }
 
+var defaultList = {...getApresentacaoPadrao(), 
+  abaAtiva: 'texto',
+  popupAdicionar: {},
+  apresentacao: {id: 0, zerada: true},
+  autorizacao: 'editar'
+};
+
 export const reducerElementos = function (state = defaultList, action) {
 
   var el = [...state.elementos];
@@ -139,7 +140,9 @@ export const reducerElementos = function (state = defaultList, action) {
   delete state.notificacao;
   switch (action.type) {
     case 'definir-apresentacao-ativa':
-        return {...state, apresentacao: action.apresentacao, elementos: action.elementos};
+      return {...state, apresentacao: action.apresentacao, elementos: action.elementos};
+    case 'definir-autorizacao':
+      return {...state, autorizacao: action.autorizacao}
     case "inserir":
       var elNovo = action.elemento;
       elNovo.input1 = action.popupAdicionar.input1;

@@ -164,7 +164,7 @@
     align-items: center;
 }
 
-.link-copiavel {
+#link-copiavel {
     border: 1px solid gray;
     padding: 1vh;
     border-radius: var(--round-border-medio);

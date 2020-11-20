@@ -14,7 +14,6 @@ const cssOrdemElementos = [cssJoin(cssArrastar, '.carrossel') + '#ordem-elemento
 const getCSSFade = selectorElemento => {
   var elementos = document.querySelectorAll(selectorElemento);
   var elemento = elementos[0];
-  console.log(elemento);
   var pai = elemento.parentElement;
   var css = '';
   while (!(pai.id === 'App')) {

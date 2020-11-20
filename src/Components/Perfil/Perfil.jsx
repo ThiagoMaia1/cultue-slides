@@ -66,7 +66,7 @@ class Perfil extends React.Component {
 };
   
 const mapState = state => {
-    return {usuario: state.usuario, apresentacao: state.apresentacao};
+    return {usuario: state.usuario, apresentacao: state.present.apresentacao};
   }
 
 export default connect(mapState)(Perfil);

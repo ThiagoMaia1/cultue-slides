@@ -43,3 +43,14 @@ class Home extends Component {
 }
 
 export default Home;
+
+// copiarLinkAreaDeTransferencia = idPermissao => {
+//   var inputTemporario = document.createElement('input');
+//   inputTemporario.type = 'text';
+//   inputTemporario.value =  this.getLinkPermissao(idPermissao);
+//   document.body.appendChild(inputTemporario);
+//   inputTemporario.select();
+//   document.execCommand('Copy');
+//   document.body.removeChild(inputTemporario);
+//   this.props.dispatch({type: 'inserir-notificacao', conteudo: 'Link copiado para a área de transferência'});
+// }

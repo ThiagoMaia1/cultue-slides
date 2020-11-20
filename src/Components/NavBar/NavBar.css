@@ -7,7 +7,7 @@
     justify-content: space-between;
     box-shadow: 2px 2px 8px rgba(0,0,0,0.3);
     position: relative;
-    z-index: 130;
+    z-index: 1100;
 }
 
 #botoes-navbar, .div-botao-navbar{
@@ -117,4 +117,8 @@
     position: absolute; 
     right: 1vw;
     top: 6vh;
+}
+
+#mensagem-autorizacao {
+    color: red;
 }

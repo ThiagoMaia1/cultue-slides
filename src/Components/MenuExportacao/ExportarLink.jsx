@@ -10,15 +10,16 @@ class ExportarLink extends Component {
 
   constructor (props) {
     super(props);
-    this.state = {autorizacao: null, idPermissao: null};
+    this.autorizacaoPadrao = 'ver';
     this.tamIcones = window.innerHeight*0.022 + 'px';
     this.formato = 'online';
   }
 
-  exportarLink = obj => {
+  exportarLink = async (obj, autorizacao = 'ver') => {
     this.formato = obj.formato;
     var online = this.formato === 'online';
-    if (!online) this.gerarLink('baixar');
+    if (!online) autorizacao = 'baixar';
+    var idPermissao = await this.gerarLink(autorizacao);
     ativarPopupConfirmacao(
       'OK',
       'Compartilhamento por Link',
@@ -28,17 +29,17 @@ class ExportarLink extends Component {
         <div className='linha-flex'>
           <label to='selecionar-autorizacao-link'>{online ? 'Qualquer pessoa com o link pode' : 'Link para download em ' + this.formato + ':'}</label>
           { online
-            ? <select id='selecionar-autorizacao-link' className='combo-popup' onChange={this.changeAutorizacao}>
-                <option value='Ver'>Ver</option>
-                <option value='Exportar'>Exportar</option>
-                <option value='Editar'>Editar</option>
+            ? <select id='selecionar-autorizacao-link' className='combo-popup' defaultValue={this.autorizacaoPadrao} onChange={this.changeAutorizacao}>
+                <option value='ver'>Ver</option>
+                <option value='exportar'>Exportar</option>
+                <option value='editar'>Editar</option>
               </select>        
             : null
           }
         </div>
         <div className='linha-flex'>
-          <input type='text' className='link-copiavel' readOnly value={this.getLinkPermissao(this.state.idPermissao)}/>
-          <div className='botao-configuracao bool' onClick={() => this.copiarLinkAreaDeTransferencia(this.state.idPermissao)}>
+          <input type='text' id='link-copiavel' readOnly value={this.getLinkPermissao(idPermissao)}/>
+          <div className='botao-configuracao bool' onClick={() => this.copiarLinkAreaDeTransferencia()}>
             <BiCopy size={this.tamIcones}/>
           </div>
         </div>
@@ -47,30 +48,24 @@ class ExportarLink extends Component {
   }
 
   changeAutorizacao = e => {
-    this.gerarLink(e.target.value)
+    this.exportarLink({formato: this.formato}, e.target.value);
   }
 
   gerarLink = async (autorizacao) => {
-    var idPermissao = await gerarNovaPermissao(
+    var permissao = await gerarNovaPermissao(
       this.props.apresentacao.id,
       autorizacao,
       null,
       this.formato
-    ).id;
-    this.setState({
-      autorizacao: autorizacao,
-      idPermissao: idPermissao
-    })
+    );
+    var idPermissao = permissao.id;
+    return idPermissao;
   }
 
-  copiarLinkAreaDeTransferencia = idPermissao => {
-    var inputTemporario = document.createElement('input');
-    inputTemporario.type = 'text';
-    inputTemporario.value =  this.getLinkPermissao(idPermissao);
-    document.body.appendChild(inputTemporario);
-    inputTemporario.select();
+  copiarLinkAreaDeTransferencia = () => {
+    const link = document.getElementById('link-copiavel');
+    link.select();
     document.execCommand('Copy');
-    document.body.removeChild(inputTemporario);
     this.props.dispatch({type: 'inserir-notificacao', conteudo: 'Link copiado para a área de transferência'});
   }
 

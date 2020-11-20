@@ -9,14 +9,9 @@
     z-index: 1000;
     overflow: hidden;
     --altura-notificacao: 8vh;
-    --largura-notificacao: 15vw;
-    height: calc(3*var(--altura-notificacao) + 4.8vh);
+    --largura-notificacao: 17vw;
+    max-height: calc(3*var(--altura-notificacao) + 4.3vh);
     pointer-events: none;
-}
-
-#painel-notificacoes .gradiente-coluna {
-    width: calc(var(--largura-notificacao) + 1.4vh);
-    height: 0.8vh;
 }
 
 .container-card-notificacao {

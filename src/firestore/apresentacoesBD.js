@@ -36,7 +36,7 @@ export const gerarNovaApresentacao = async (idUsuario, elementos, ePadrao) => {
   );
 };
 
-export const definirApresentacaoAtiva = async (usuario, apresentacao = {}, elementos = null) => {
+export const definirApresentacaoAtiva = async (usuario, apresentacao = {}, elementos = null, pushar = true) => {
   var novaApresentacao = apresentacao;
   var zerada = false;
   if (apresentacao.elementos)
@@ -54,16 +54,15 @@ export const definirApresentacaoAtiva = async (usuario, apresentacao = {}, eleme
   }
   delete novaApresentacao.elementos;
   novaApresentacao = {...novaApresentacao, zerada: zerada};
-  history.push('/app/#/' + novaApresentacao.id)
+  if (pushar) history.push('/app/#/' + novaApresentacao.id)
   store.dispatch({type: 'definir-apresentacao-ativa', apresentacao: novaApresentacao, elementos: elementos})
 }
 
 export const excluirApresentacao = async idApresentacao => {
-  await excluirRegistro(idApresentacao, colecaoApresentacoes);
   var state = store.getState();
-  if (state.apresentacao.id === idApresentacao) {
-    definirApresentacaoAtiva(state.usuario);
-  }
+  if (state.present.apresentacao.id === idApresentacao)
+    await selecionarUltimaApresentacaoUsuario(state.usuario, false);
+  await excluirRegistro(idApresentacao, colecaoApresentacoes);
 }
 
 const limparApresentacoesVazias = idUsuario => {
@@ -143,20 +142,44 @@ export const zerarApresentacao = usuario => {
 }
 
 export const definirApresentacaoComLocation = async (location, user) => {
+  var apresentacao = 0;
   if (location.hash) {
-      var idApresentacao = getIdHash(location);
-      if (idApresentacao) { 
-          var apresentacao = await getRegistro('apresentações', idApresentacao);
-          if (apresentacao) {
-              definirApresentacaoAtiva(user, apresentacao);
-              return;
-          }
-          store.dispatch({type: 'inserir-notificacao', conteudo: 'URL Inválida: ' + window.location.origin.toString() + '/' + location.pathname + location.hash})
-      }
+    var idHash = getIdHash(location);
+    var temApp = location.pathname === '/app';
+    var getApresentacao = temApp ? getApresentacaoHash : getApresentacaoPermissao; 
+    apresentacao = await getApresentacao(idHash, user.uid);
   }
-  definirApresentacaoUsuario(user);
+  if (apresentacao === null) 
+    store.dispatch({type: 'inserir-notificacao', conteudo: 'URL Inválida: ' + window.location.origin.toString() + '/' + location.pathname + location.hash})
+  if (!apresentacao) {
+    definirApresentacaoUsuario(user);
+  } else {
+    console.log(apresentacao)
+    definirApresentacaoAtiva(user, apresentacao)
+  }
 }
 
+const getApresentacaoHash = async (idApresentacao, idUsuario) => {
+  var apresentacao = await getRegistro('apresentações', idApresentacao);
+  if (apresentacao) {
+    var autorizacao = apresentacao.idUsuario === idUsuario ? 'editar' : 'ver'
+    store.dispatch({type: 'definir-autorizacao', autorizacao: autorizacao})
+    return apresentacao;
+  } else {
+    return null;
+  }
+}
+
+const getApresentacaoPermissao = async idPermissao => {
+  var permissao = await getRegistro('permissões', idPermissao);
+  if (permissao) { 
+    store.dispatch({type: 'definir-autorizacao', autorizacao: permissao.autorizacao})
+    return await getRegistro('apresentações', permissao.idApresentacao);
+  } else {
+    return null;
+  }
+}
+ 
 const definirApresentacaoUsuario = user => {
   var state = store.getState();
   var z = state.present.apresentacao.zerada;
@@ -193,19 +216,21 @@ const associarApresentacaoUsuario = user => {
   )
 }
 
-const selecionarUltimaApresentacaoUsuario = async user => {
+const selecionarUltimaApresentacaoUsuario = async (user, pushar = true) => {
   var apresentacoes = await getApresentacoesUsuario(user.uid);
   if (apresentacoes.length !== 0) {
       var oneDay = 24 * 60 * 60 * 1000; // ms
       var tempoDecorrido = (new Date()) - apresentacoes[0].timestamp.toDate();
-      if(tempoDecorrido < 7*oneDay)
-          definirApresentacaoAtiva(user, apresentacoes[0]);
+      if(tempoDecorrido < 7*oneDay || !pushar) {
+        definirApresentacaoAtiva(user, apresentacoes[0], undefined, pushar);
+        return;
+      }
   }
+  definirApresentacaoAtiva(user, undefined, undefined, pushar);
 }
 
 export const gerarNovaPermissao = async (idApresentacao, autorizacao = 'ver', usuarios = [], formatoExportacao = null) => {
   if (!autorizacoesApresentacao[autorizacao]) autorizacao = 'ver';
-  
   return await gerarNovoRegistro(
     colecaoPermissoes,
     {

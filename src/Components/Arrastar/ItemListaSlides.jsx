@@ -75,7 +75,7 @@ class ItemListaSlides extends Component {
                 <li 
                     data-id={i}
                     key={i}
-                    draggable='true'
+                    draggable={this.props.autorizacao === 'editar'}
                     className={'bloco-reordenar ' + (this.eSelecionado(i) ? 'selecionado' : '')}
                     onDragEnd={this.props.dragEnd}
                     onDragStart={this.props.dragStart}
@@ -115,7 +115,7 @@ class ItemListaSlides extends Component {
 
 const mapState = function (state) {
     state = state.present;
-    return {selecionado: state.selecionado, elementos: state.elementos}
+    return {selecionado: state.selecionado, elementos: state.elementos, autorizacao: state.autorizacao}
 }
   
 export default connect(mapState)(ItemListaSlides);
