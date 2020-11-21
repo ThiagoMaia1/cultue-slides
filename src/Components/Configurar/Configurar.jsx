@@ -32,6 +32,7 @@ class Configurar extends Component {
 }
 
 	render() {
+    if (this.props.autorizacao !== 'editar') return null;
     var estiloMenuVisivel = {};
     if (this.state.menuVisivel) {
       estiloMenuVisivel = {pointerEvents: 'none', background: 'var(--azul-forte)', paddingBottom: '2.5vh'}
@@ -58,8 +59,8 @@ class Configurar extends Component {
 }
 
 const mapState = function (state) {
-  state = state.present;
-  return {elementos: state.elementos};
+  var sP = state.present;
+  return {elementos: sP.elementos, autorizacao: sP.apresentacao.autorizacao};
 }
 
 export default connect(mapState)(Configurar);

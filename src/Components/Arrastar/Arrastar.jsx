@@ -74,35 +74,35 @@ class Arrastar extends React.Component {
     }
   }
 
-  componentDidMount = () => this.props.dispatch({type: 'definir-item-tutorial', itemTutorial: 'painelAdicionar'})
+  componentDidMount = () => this.props.dispatch({type: 'definir-item-tutorial', itemTutorial: 'painelAdicionar'});
 
   static getDerivedStateFromProps = (props, state) => {
     var lAntes = state.lElementos;
     var lDepois = props.elementos.length;
-    if(lAntes === 1 && lDepois > 1) {
-      props.dispatch({type: 'definir-item-tutorial', itemTutorial: 'slides'})
-    } else if (lAntes <= 2 && lDepois > 2) {
-      props.dispatch({type: 'definir-item-tutorial', itemTutorial: 'arrastar'})
-    }
+    if (lAntes === 1 && lDepois > 1) props.dispatch({type: 'definir-item-tutorial', itemTutorial: 'slides'});
+    if (lAntes <= 2 && lDepois > 2) props.dispatch({type: 'definir-item-tutorial', itemTutorial: 'arrastar'});
     return {lElementos: lDepois};
   }
 
 	render() {
-
+    var editavel = this.props.autorizacao === 'editar';
     return (
       <div className='coluna-lista-slides'>
         <div className='gradiente-coluna emcima'></div>
         <div className='gradiente-coluna embaixo'></div>
         <Carrossel direcao='vertical' tamanhoIcone={50} tamanhoMaximo={'60vh'} style={{zIndex: '50', width: '21vw', height: 'auto'}}>
             <ol ref={this.ref} id="ordem-elementos">
-              <div id="slide-mestre" className={'itens ' + (this.props.selecionado.elemento === 0 ? 'selecionado' : '')} data-id={0}
-                onClick={() => this.marcarSelecionado(0, 0)}
-                onDragOver={this.dragOver.bind(this)}
-                style={{marginBottom: this.state.placeholder.posicao === 0 ? this.state.placeholder.tamanho + 'px' : '', 
-                display: this.props.elementos.length === 1 ? 'none' : ''}}>
-                <div data-id={0} id='criar-nova-apresentacao' className='botao-quadradinho quadradinho-canto' onClick={() => zerarApresentacao(this.props.usuario)}>*</div>
-                Slide-Mestre
-              </div>
+              { editavel 
+                ? <div id="slide-mestre" className={'itens ' + (this.props.selecionado.elemento === 0 ? 'selecionado' : '')} data-id={0}
+                    onClick={() => this.marcarSelecionado(0, 0)}
+                    onDragOver={this.dragOver.bind(this)}
+                    style={{marginBottom: this.state.placeholder.posicao === 0 ? this.state.placeholder.tamanho + 'px' : '', 
+                    display: this.props.elementos.length === 1 ? 'none' : ''}}>
+                    <div data-id={0} id='criar-nova-apresentacao' className='botao-quadradinho quadradinho-canto' onClick={() => zerarApresentacao(this.props.usuario)}>*</div>
+                    Slide-Mestre
+                  </div>
+                : null
+              }
               {this.props.elementos.map((elemento, i) => {
                 if (i === 0) return null;
                 return(<ItemListaSlides elemento={elemento} ordem={i} key={i} placeholder={this.state.placeholder} ultimo={i === this.props.elementos.length - 1}
@@ -111,13 +111,19 @@ class Arrastar extends React.Component {
             </ol>
         </Carrossel>
         <div id='tampao-do-overflow'>
-          <div id="adicionar-slide" onClick={() => this.setState({painelAdicionar: !this.state.painelAdicionar})} 
-                className='botao-azul itens lista-slides'>Adicionar Slide</div>
-          {(this.state.painelAdicionar) ? 
-            <div className='container-adicionar'
-                style={this.state.adicionarAcima ? {top: '-20vh'} : null}>
-              <Adicionar onClick={() => this.setState({painelAdicionar: false})}/>
-            </div> : null
+          { editavel
+            ? <>
+                <div id="adicionar-slide" onClick={() => this.setState({painelAdicionar: !this.state.painelAdicionar})} 
+                      className='botao-azul itens lista-slides'>Adicionar Slide</div>
+                {(this.state.painelAdicionar) 
+                  ? <div className='container-adicionar'
+                      style={this.state.adicionarAcima ? {top: '-20vh'} : null}>
+                        <Adicionar onClick={() => this.setState({painelAdicionar: false})}/>
+                    </div> 
+                  : null
+                }
+              </>
+            : null
           }
         </div>
       </div>
@@ -129,7 +135,8 @@ const mapState = function (state) {
   return {
     elementos: state.present.elementos, 
     selecionado: state.present.selecionado, 
-    popupAdicionar: state.present.popupAdicionar, 
+    popupAdicionar: state.present.popupAdicionar,
+    autorizacao: state.present.apresentacao.autorizacao,
     usuario: state.usuario
   }
 }

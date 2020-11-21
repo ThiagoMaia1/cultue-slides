@@ -1,14 +1,15 @@
 import React from 'react';
+import { connect } from 'react-redux';
 
 const listaAtalhos = [{teclas: [['←'], ['↑']], acao: 'Slide anterior'},
                       {teclas: [['↑'], ['→']], acao: 'Próximo Slide'},
                       {teclas: ['Ctrl', 'Z'], acao: 'Desfazer última ação'},
                       {teclas: [['Ctrl', 'Y'], ['Ctrl', 'Shift', 'Z']], acao: 'Refazer ação desfeita'},
-                      {teclas: ['Ctrl', 'L'], acao: 'Adicionar Texto Livre'},
-                      {teclas: ['Ctrl', 'B'], acao: 'Adicionar Texto Bíblico'},
-                      {teclas: ['Ctrl', 'M'], acao: 'Adicionar Música'},
-                      {teclas: ['Ctrl', 'I'], acao: 'Adicionar Imagem'},
-                      {teclas: ['Ctrl', 'D'], acao: 'Adicionar Vídeo'},
+                      {teclas: ['Ctrl', 'L'], acao: 'Adicionar Texto Livre', autorizacao: 'editar'},
+                      {teclas: ['Ctrl', 'B'], acao: 'Adicionar Texto Bíblico', autorizacao: 'editar'},
+                      {teclas: ['Ctrl', 'M'], acao: 'Adicionar Música', autorizacao: 'editar'},
+                      {teclas: ['Ctrl', 'I'], acao: 'Adicionar Imagem', autorizacao: 'editar'},
+                      {teclas: ['Ctrl', 'D'], acao: 'Adicionar Vídeo', autorizacao: 'editar'},
                       {teclas: ['Ctrl', 'O'], acao: 'Nova Apresentação'}
 ]
 
@@ -43,28 +44,35 @@ class QuadroAtalhos extends React.Component {
             <>
                 <div id='quadro-atalhos' className='quadro-navbar' style={{position: 'absolute', top: '6vh', left: '0'}}
                     tabIndex='0' ref={this.ref} onKeyUp={this.fecharQuadro} onBlur={this.fecharQuadro}>
-                    {listaAtalhos.map(a => (
-                        <div className='instrucao-atalho'>
-                            <div>
-                                {Array.isArray(a.teclas[0])
-                                    ? <>{a.teclas.map((t, i) => (
-                                            <>
-                                                {getAtalhoSeparado(t)}
-                                                {i === a.teclas.length-1 ? '' : <span>  ,  </span>}
-                                            </>
-                                        ))}
-                                    </>
-                                    : getAtalhoSeparado(a.teclas)                         
-                                }
+                    {listaAtalhos.map(a => {
+                        if (a.autorizacao && a.autorizacao !== this.props.autorizacao) return null;
+                        return (
+                            <div className='instrucao-atalho'>
+                                <div>
+                                    {Array.isArray(a.teclas[0])
+                                        ? <>{a.teclas.map((t, i) => (
+                                                <>
+                                                    {getAtalhoSeparado(t)}
+                                                    {i === a.teclas.length-1 ? '' : <span>  ,  </span>}
+                                                </>
+                                            ))}
+                                        </>
+                                        : getAtalhoSeparado(a.teclas)                         
+                                    }
+                                </div>
+                                <div>{a.acao}</div>
                             </div>
-                            <div>{a.acao}</div>
-                        </div>
-                    ))}
+                        )
+                    })}
                 </div>
             </>
         );
     }
 };
   
-export default QuadroAtalhos;
+const mapState = state => (
+    {autorizacao: state.present.apresentacao.autorizacao}
+)
+
+export default connect(mapState)(QuadroAtalhos);
   

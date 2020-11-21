@@ -13,8 +13,9 @@ export default function Estrofes(props) {
         if (comBreaks) breaks = (divBreak);
         return (
             <>
-                <span contentEditable={props.editavel} key={i} onInput={props.onInput} onFocus={props.onFocus}>
-                {t}</span>
+                <span contentEditable={props.editavel} key={i} onInput={props.onInput} onFocus={() => props.ativarRealce('paragrafo')}>
+                    {t}
+                </span>
                 {breaks}
             </>
         )

@@ -73,8 +73,8 @@ class ConfigurarSlides extends Component {
       var tampar;
       if (this.props.abaAtiva === a.nomeCodigo) tampar = (<div className='tampar-shadow'></div>);
       return (<>
-          <button className='botao-aba' data-id={i+1} key={i+1}
-            onClick={this.selecionarAba.bind(this)}>
+          <button className='botao-aba' key={i+1}
+            onClick={() => this.selecionarAba(a.nomeCodigo)}>
               {a.nomeInterface}
               {tampar}
           </button>
@@ -131,8 +131,7 @@ class ConfigurarSlides extends Component {
     return resultado;
   }
 
-  selecionarAba = e => {
-    var aba = listaBotoesAbas[e.target.dataset.id].nomeCodigo;
+  selecionarAba = aba => {
     if (aba === this.props.abaAtiva) aba = listaBotoesAbas[0].nomeCodigo;
     this.props.dispatch({type: 'ativar-realce', abaAtiva: aba});
   }

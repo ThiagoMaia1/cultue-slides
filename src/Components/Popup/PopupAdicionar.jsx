@@ -14,7 +14,7 @@ class PopupAdicionar extends Component {
 
   render() {
     var popup = this.props.popupAdicionar;
-    if (!popup.tipo) return null;
+    if (!popup.tipo || this.props.autorizacao !== 'editar') return null;
     
     var ComponenteConteudoPopup = tiposElemento[popup.tipo];
     return (
@@ -26,7 +26,8 @@ class PopupAdicionar extends Component {
 };
 
 const mapState = state => {
-    return {popupAdicionar: state.present.popupAdicionar};
+  var sP = state.present;
+  return {popupAdicionar: sP.popupAdicionar, autorizacao: sP.apresentacao.autorizacao};
 }
 
 export default connect(mapState)(PopupAdicionar);

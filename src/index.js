@@ -104,7 +104,7 @@ import { createStore } from 'redux';
 import hotkeys from 'hotkeys-js';
 import { getEstiloPadrao, Estilo, getPadding, tiposElemento, getDadosMensagem } from './Element.js';
 import { selecionadoOffset, getSlidePreview } from './Components/MenuExportacao/Exportador';
-import { atualizarApresentacao, getApresentacaoPadrao, definirApresentacaoAtiva, zerarApresentacao } from './firestore/apresentacoesBD';
+import { atualizarApresentacao, getApresentacaoPadrao, definirApresentacaoAtiva, zerarApresentacao, autorizacaoEditar } from './firestore/apresentacoesBD';
 import { atualizarRegistro } from './firestore/apiFirestore';
 import { keysTutoriais } from './Components/Tutorial/Tutorial';
 
@@ -123,11 +123,12 @@ const redividirSlides = (elementos, sel) => {
   return elementos;
 }
 
+const autorizacaoPadrao = 'editar';
+
 var defaultList = {...getApresentacaoPadrao(), 
   abaAtiva: 'texto',
   popupAdicionar: {},
-  apresentacao: {id: 0, zerada: true},
-  autorizacao: 'editar'
+  apresentacao: {id: 0, zerada: true, autorizacao: autorizacaoPadrao},
 };
 
 export const reducerElementos = function (state = defaultList, action) {
@@ -140,9 +141,11 @@ export const reducerElementos = function (state = defaultList, action) {
   delete state.notificacao;
   switch (action.type) {
     case 'definir-apresentacao-ativa':
-      return {...state, apresentacao: action.apresentacao, elementos: action.elementos};
-    case 'definir-autorizacao':
-      return {...state, autorizacao: action.autorizacao}
+      var autorizacao = action.apresentacao.autorizacao || autorizacaoPadrao;
+      action.apresentacao.autorizacao = autorizacao;
+      if (!autorizacaoEditar(autorizacao)) 
+        sel = selecionadoOffset(action.elementos, getApresentacaoPadrao().selecionado, 1, true);
+      return {...state, apresentacao: action.apresentacao, elementos: action.elementos, selecionado: sel};
     case "inserir":
       var elNovo = action.elemento;
       elNovo.input1 = action.popupAdicionar.input1;
@@ -229,9 +232,11 @@ export const reducerElementos = function (state = defaultList, action) {
       return {...state, abaAtiva: action.abaAtiva};
     }
     case "definir-selecao":
+      if (!autorizacaoEditar(state.apresentacao.autorizacao)) 
+        sel = selecionadoOffset(state.elementos, state.selecionado, 1, true);
       return {...state, selecionado: sel};
-    case "offset-selecao":
-      sel = {...selecionadoOffset(state.elementos, state.selecionado, action.offset)};
+    case "offset-selecao":  
+      sel = {...selecionadoOffset(state.elementos, state.selecionado, action.offset, !autorizacaoEditar(state.apresentacao.autorizacao))};
       return {...state, selecionado: sel};
     default:
       return state;
@@ -249,29 +254,35 @@ function undoable(reducer) {
     usuario: {},
     popupConfirmacao: null,
     notificacoes: [],
-    itemTutorial: null,
+    itensTutorial: [],
     tutoriaisFeitos: []
   }
 
   const limiteUndo = 50;
   
   return function (state = initialState, action) {
-    var { past, present, future, previousTemp, usuario, notificacoes, tutoriaisFeitos, itemTutorial } = state;
+    var { past, present, future, previousTemp, usuario, notificacoes, tutoriaisFeitos, itensTutorial } = state;
     var notificacoesAtualizado = getNotificacoes(notificacoes, getConteudoNotificacao(action));
     var newPresent;
     switch (action.type) {
       case 'login':
-        return {...state, usuario: action.usuario, tutoriaisFeitos: action.usuario.tutoriaisFeitos || []};
+        var feitos = action.usuario.tutoriaisFeitos || [];
+        var novosItensTutorial = itensTutorial.filter(n => !feitos.includes(n))
+        return {...state, usuario: action.usuario, tutoriaisFeitos: feitos, itensTutorial: novosItensTutorial};
       case 'ativar-popup-confirmacao':
         return {...state, popupConfirmacao: action.popupConfirmacao};
       case 'definir-item-tutorial':
-        var tutoriais = [...tutoriaisFeitos, itemTutorial].filter(t => !!t);
-        var tutorialNovo = tutoriais.includes(action.itemTutorial) ? null : action.itemTutorial;
+        var tutoriais = [...tutoriaisFeitos, ...itensTutorial].filter(t => !!t);
+        var novosItensTutorial = [];
+        if (!action.zerar) {
+          var tutorialNovo = tutoriais.includes(action.itemTutorial) ? null : action.itemTutorial;
+          if (tutorialNovo) novosItensTutorial = [...itensTutorial, tutorialNovo];
+        }
         if(usuario.uid) atualizarRegistro({tutoriaisFeitos: tutoriais}, 'usuários', usuario.uid);
-        return {...state, itemTutorial: tutorialNovo, tutoriaisFeitos: tutoriais}
+        return {...state, itensTutorial: novosItensTutorial, tutoriaisFeitos: tutoriais}
       case 'bloquear-tutoriais':
         if(usuario.uid) atualizarRegistro({tutoriaisFeitos: keysTutoriais}, 'usuários', usuario.uid);
-        return {...state, itemTutorial: null, tutoriaisFeitos: keysTutoriais}
+        return {...state, itensTutorial: [], tutoriaisFeitos: [...keysTutoriais]}
       case 'UNDO':
         if (past.length === 0) return state;
         const previous = past[past.length - 1];

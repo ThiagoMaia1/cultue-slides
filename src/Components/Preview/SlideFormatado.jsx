@@ -29,10 +29,7 @@ class SlideFormatado extends Component {
     }
 
     
-    ativarRealce = e => {
-        var aba = e.target.id.split('-')[0].replace('textoTitulo', 'titulo');
-        this.props.dispatch({type: 'ativar-realce', abaAtiva: aba});
-    }
+    ativarRealce = aba => this.props.dispatch({type: 'ativar-realce', abaAtiva: aba});
 
     render() {
         var slidePreview = this.props.slidePreview;
@@ -43,19 +40,20 @@ class SlideFormatado extends Component {
                      className={this.props.className}
                      style={{width: larguraTela*proporcao, 
                              height: alturaTela*proporcao,
-                             ...this.realcarElemento('tampao', 'dentro')}}>
+                             ...this.realcarElemento('tampao', 'dentro'),
+                             ...this.props.style}}>
                     <div className='tampao' style={slidePreview.estilo.tampao}></div>
                     <Img imagem={slidePreview.estilo.fundo} />
                     <div className='texto-preview' style={{fontSize: fonteBase.numero*proporcao + fonteBase.unidade}}>
                         <div className='slide-titulo' style={slidePreview.estilo.titulo}>
-                            <div><span id='textoTitulo' onInput={this.editarTexto} onFocus={this.ativarRealce} 
+                            <div><span id='textoTitulo' onInput={this.editarTexto} onFocus={() => this.ativarRealce('titulo')} 
                                 contentEditable={this.props.editavel}
                                 style={this.realcarElemento('titulo')}>{slidePreview.titulo}</span></div>
                         </div>
                         <div id='paragrafo-slide' className='slide-paragrafo' style={slidePreview.estilo.paragrafo}>
                             <div style={this.realcarElemento('paragrafo')} 
                                  className={'realce-paragrafo ' + (slidePreview.estilo.paragrafo.duasColunas ? 'dividido-colunas' : '')}>
-                                {<Estrofes slidePreview={slidePreview} onInput={this.editarTexto} onFocus={this.ativarRealce} editavel={this.props.editavel}/>}
+                                {<Estrofes slidePreview={slidePreview} onInput={this.editarTexto} ativarRealce={this.ativarRealce} editavel={this.props.editavel}/>}
                             </div>
                         </div>
                     </div>

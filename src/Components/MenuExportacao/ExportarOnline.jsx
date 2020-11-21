@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import BotaoExportador from './BotaoExportador';
  
 class ExportadorPDF extends Component {
@@ -17,13 +18,17 @@ class ExportadorPDF extends Component {
   }
 
   render() {
+    if (this.props.autorizacao !== 'editar') return null;
     return (
       <BotaoExportador formato={this.formato} onClick={() => this.props.definirCallback(this.exportarOnline)} 
         logo={this.logo} rotulo='Online'/>
     )
   }
-
 }
 
-export default ExportadorPDF;
+const mapState = state => (
+  {autorizacao: state.present.apresentacao.autorizacao}
+)
+
+export default connect(mapState)(ExportadorPDF);
 

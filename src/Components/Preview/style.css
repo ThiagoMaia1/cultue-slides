@@ -14,6 +14,14 @@
     border-radius: var(--round-border-grande);
 }
 
+#preview {
+    overflow: hidden;
+}
+
+.preview-fake > img{
+    border-radius: var(--round-border-pequeno);
+}
+
 #fundo-preview {
     height:100%;
     width: 100%;
@@ -23,12 +31,12 @@
 }
 
 img {
-    border-radius: var(--round-border-grande);
     object-fit: cover;
 }
 
 .preview-fake {
     position: relative;
+    border-radius: var(--round-border-pequeno);
 }
 
 .texto-preview {
@@ -157,12 +165,3 @@ img {
 #texto-slide-mestre {
     color: white;
 }
-/* .div-imagem-slide {
-    resize: both;
-    overflow: hidden;
-}
-
-.div-imagem-slide:active {
-    width: 0;
-    height: 0;
-} */

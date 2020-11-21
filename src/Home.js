@@ -16,7 +16,10 @@ const paginas = [{nome: 'app', componente: App},
                  {nome: 'login', componente: PaginaLogin},
                  {nome: 'perfil', componente: Perfil, exigeLogin: true},
                  {nome: 'splash', componente: Splash},
-                 {nome: '', componente: () => <Redirect to='/login'/>}
+                 {nome: '', componente: props => {
+                    if (props.location.hash) {return <App/>}
+                    else {return <Redirect to='/login'/>}
+                 }}
 ]
 
 class Home extends Component {

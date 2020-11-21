@@ -24,6 +24,7 @@
     margin: 0 0 0 1vh;
     height: 85%;
     width: 14vw;
+    border-radius: var(--round-border-grande);
 }
 
 .div-img:hover {

@@ -88,6 +88,7 @@ class Preview extends Component {
         var eMini = this.props.mini;
         var slidePreview = this.props.slidePreview;
         var proporcao = this.state.screen.proporcao;
+        const telaCheia = proporcao === full.proporcao;
         return (
             <div id='borda-slide-mestre' style={{height: alturaTela*proporcao + 0.051*window.innerHeight, 
                                                         visibility: slidePreview.eMestre ? '' : 'hidden',
@@ -97,12 +98,13 @@ class Preview extends Component {
                     id='preview'
                     realcarElemento={this.realcarElemento}
                     referencia={this.ref}
-                    editavel={!slidePreview.eMestre}
+                    editavel={!slidePreview.eMestre && this.props.autorizacao === 'editar' && !telaCheia}
                     slidePreview={slidePreview}
+                    style={telaCheia ? {overflow: 'visible'} : null}
                 >
                     {eMini ? null :
                         <>
-                            <div className='container-setas' style={{display: proporcao === small.proporcao ? 'none' : ''}}>
+                            <div className='container-setas' style={{display: telaCheia ? '' : 'none'}}>
                                 <div className='movimentar-slide esquerda' onClick={() => this.offsetSlide(-1)}></div>
                                 <div className='movimentar-slide direita' onClick={() => this.offsetSlide(1)}></div>
                             </div>
@@ -127,7 +129,7 @@ class Preview extends Component {
 }
 
 const mapState = function (state) {
-    return {slidePreview: state.slidePreview, abaAtiva: state.present.abaAtiva}
+    return {slidePreview: state.slidePreview, abaAtiva: state.present.abaAtiva, autorizacao: state.present.apresentacao.autorizacao}
 }
 
 export default connect(mapState)(Preview);

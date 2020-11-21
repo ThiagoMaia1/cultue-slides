@@ -121,4 +121,6 @@
 
 #mensagem-autorizacao {
     color: red;
+    display: flex;
+    align-items: center;
 }

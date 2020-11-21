@@ -70,12 +70,13 @@ class ItemListaSlides extends Component {
     render () {
         var elemento = this.props.elemento;
         var i = this.props.ordem;
+        var editavel = this.props.autorizacao === 'editar';
         return (            
             <>
                 <li 
                     data-id={i}
                     key={i}
-                    draggable={this.props.autorizacao === 'editar'}
+                    draggable={editavel}
                     className={'bloco-reordenar ' + (this.eSelecionado(i) ? 'selecionado' : '')}
                     onDragEnd={this.props.dragEnd}
                     onDragStart={this.props.dragStart}
@@ -85,12 +86,15 @@ class ItemListaSlides extends Component {
                             ? this.props.placeholder.tamanho + 'px' 
                             : (this.eSelecionado(i) ? this.getMargin(elemento) + (this.props.ultimo ? -2 : 0.4) + 'vh' : (this.props.ultimo ? '-1.5vh': ''))}}>
                     <div data-id={i} className='itens lista-slides' onClick={() => this.props.marcarSelecionado(i, 0)}>
-                        <div className='quadradinho-canto'>
-                            <div data-id={i} className='botao-quadradinho' onClick={e => this.excluirElemento(e)}>✕</div>
-                            <div data-id={i} className='botao-quadradinho' onClick={e => this.editarElemento(e)}>
-                                <MdEdit size={this.state.tamanhoIcone*0.5}/>
-                            </div>
-                        </div>
+                        { editavel
+                            ? <div className='quadradinho-canto'>
+                                  <div data-id={i} className='botao-quadradinho' onClick={e => this.excluirElemento(e)}>✕</div>
+                                  <div data-id={i} className='botao-quadradinho' onClick={e => this.editarElemento(e)}>
+                                      <MdEdit size={this.state.tamanhoIcone*0.5}/>
+                                  </div>
+                              </div>
+                            : null
+                        }
                         <div className={'fade-estilizado ' + (JSON.stringify(elemento.slides[0].estilo) !== estiloVazio ? 'elemento-slide-estilizado' : '')}>
                             <b> {i}. {getNomeInterfaceTipo(elemento.tipo)}: </b>{(elemento.tipo === 'Imagem' && !elemento.titulo) ? elemento.imagens[0].alt : elemento.titulo}
                         </div>
@@ -114,8 +118,8 @@ class ItemListaSlides extends Component {
 }
 
 const mapState = function (state) {
-    state = state.present;
-    return {selecionado: state.selecionado, elementos: state.elementos, autorizacao: state.autorizacao}
+    var sP = state.present;
+    return {selecionado: sP.selecionado, elementos: sP.elementos, autorizacao: sP.apresentacao.autorizacao}
 }
   
 export default connect(mapState)(ItemListaSlides);

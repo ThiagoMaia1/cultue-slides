@@ -5,22 +5,22 @@ import Login from '../Login/Login';
 import QuadroAtalhos from './QuadroAtalhos';
 import { definirApresentacaoPadrao, zerarApresentacao } from '../../firestore/apresentacoesBD';
 
-function MensagemAutorizacao (props) {
+// function MensagemAutorizacao (props) {
 
-  var mensagem = '';
-  switch (props.autorizacao) { 
-  case 'ver':
-    mensagem = 'Autorização: Somente Ver';
-    break;
-  case 'exportar':
-    mensagem = 'Autorização: Somente Ver e Exportar';
-    break;
-  }
+// var mensagem = '';
+// switch (props.autorizacao) { 
+// case 'ver':
+//   mensagem = 'Autorização: Somente Ver';
+//   break;
+// case 'exportar':
+//   mensagem = 'Autorização: Somente Ver e Exportar';
+//   break;
+// }
 
-  return ( 
-    <div id='mensagem-autorizacao'>{mensagem}</div>
-  );
-}
+//   return ( 
+//     <div id='mensagem-autorizacao'>{props.autorizacao === 'ver' ? 'Somente Leitura' : ''}</div>
+//   );
+// }
 
 class NavBar extends React.Component {
 
@@ -62,7 +62,7 @@ class NavBar extends React.Component {
             </div>
             <button>Express</button>
           </div>
-          <MensagemAutorizacao autorizacao={this.props.autorizacao}/>
+          <div id='mensagem-autorizacao'>{this.props.autorizacao === 'ver' ? 'Somente Leitura' : ''}</div>
           <div id='info-usuario' onClick={this.toggleQuadroLogin}>
             {u.uid
               ? <img className='foto-usuario pequena' src={u.photoURL || require('./Usuário Padrão.png')} alt='Foto Usuário'></img>
@@ -82,7 +82,7 @@ class NavBar extends React.Component {
 };
   
 const mapState = state => {
-  return {usuario: state.usuario, elementos: state.present.elementos, autorizacao: state.present.autorizacao};
+  return {usuario: state.usuario, elementos: state.present.elementos, autorizacao: state.present.apresentacao.autorizacao};
 }
 
 export default connect(mapState)(NavBar);

@@ -10,8 +10,8 @@ export const checarLogin = (callbackLogin) => {
         var idUsuarioStore = store.getState().usuario.uid;
         if ((!userAuth && !idUsuarioStore) || (userAuth && userAuth.uid === idUsuarioStore)) return;
         var user = await gerarDocumentoUsuario(userAuth) || {};
+        await definirApresentacaoComLocation(history.location, user);
         store.dispatch({type: 'login', usuario: user});
-        definirApresentacaoComLocation(history.location, user);
         if (callbackLogin) callbackLogin(user);
     });
 }

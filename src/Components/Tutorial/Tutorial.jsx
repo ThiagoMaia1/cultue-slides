@@ -4,15 +4,9 @@ import './Tutorial.css';
 import { FaLongArrowAltRight } from 'react-icons/fa';
 
 const cssOpacidade = 'opacity: 0.2';
-const cssCorFundo = 'background-color: #d0d9ec; box-shadow: 2px 2px 6px rgba(0,0,0,0.3)';
-const cssJoin = (css, selector = null) => css.join(selector ? ':not(' + selector + ')' : '');
-const cssBotoes = ['#botoes-flutuantes-app > *', '{background-color: #d0d9ec; box-shadow: 2px 2px 6px rgba(0,0,0,0.3);} '];
-const cssOrganizador = ['#organizador > *', cssOpacidade];
-const cssArrastar = [cssJoin(cssOrganizador, '.coluna-lista-slides') + '.coluna-lista-slides > *', cssOpacidade];
-const cssOrdemElementos = [cssJoin(cssArrastar, '.carrossel') + '#ordem-elementos > *', cssOpacidade]
+const cssCorFundo = 'background-color: #d0d9ec; box-shadow: 2px 2px 6px rgba(0,0,0,0.1)';
 
-const getCSSFade = selectorElemento => {
-  var elementos = document.querySelectorAll(selectorElemento);
+const getCSSFade = elementos => {
   var elemento = elementos[0];
   var pai = elemento.parentElement;
   var css = '';
@@ -76,7 +70,7 @@ const listaBoxes = {
     {texto: 'Clique no slide, ou utilize as setas para navegar', 
      coordenadas: [23, 25], 
      arrow: {rotacao: 180, posicao: {top: '-18vh', left: ''}},
-     selectorElemento: '#slide-mestre'},,
+     selectorElemento: '#slide-mestre'},
     {texto: 'Arraste os elementos para reordenar a apresentação', 
      coordenadas: [23, 25], 
      arrow: {rotacao: 180, posicao: {top: '-18vh', left: ''}},
@@ -114,11 +108,13 @@ class Tutorial extends Component {
   }
 
   getComponenteEtapa = (indice = 0) => {
-    var { texto, coordenadas, css, arrow, selectorElemento } = this.props.itemTutorial[indice];
+    var { texto, coordenadas, arrow, selectorElemento } = this.props.itensTutorial[indice];
 
     this.removerCss();
     this.styleSheet = document.createElement("style");
-    this.styleSheet.innerHTML = getCSSFade(selectorElemento);
+    var elementos = document.querySelectorAll(selectorElemento);
+    if (!elementos.length) return null;
+    this.styleSheet.innerHTML = getCSSFade(elementos);
     document.head.appendChild(this.styleSheet);
 
     return (
@@ -139,26 +135,25 @@ class Tutorial extends Component {
   offsetEtapaTutorial = passo => {
     this.removerCss();
     var novoIndice = this.state.indiceEtapa + passo;
-    if (novoIndice >= this.props.itemTutorial.length) {
-      this.definirElemento(null);
+    if (novoIndice >= this.props.itensTutorial.length) {
+      this.setState({indiceEtapa: 0});
+      this.props.dispatch({type: 'definir-item-tutorial', zerar: true});
     } else {
       this.setState({indiceEtapa: novoIndice});
     }
   }
 
-  definirElemento = elemento => {
-    this.setState({indiceEtapa: 0});
-    this.props.dispatch({type: 'definir-item-tutorial', itemTutorial: elemento});
-  }
-
   removerCss = () => {
-    if (this.styleSheet) this.styleSheet.remove();
+    if (this.styleSheet) {
+      this.styleSheet.remove();
+      this.styleSheet = null;
+    }
   }
 
   componentWillUnmount = () => this.removerCss();
 
   render() {
-    if (!this.props.itemTutorial) return null;
+    if (this.props.itensTutorial.length === 0) return null;
     return (
       <div id='fundo-tutorial'>
           <button id='pular-tutorial' className='botao limpar-input' onClick={() => this.props.dispatch({type: 'bloquear-tutoriais'})}>Não Exibir Tutoriais</button>
@@ -169,7 +164,7 @@ class Tutorial extends Component {
               Anterior
             </button>
             <button className='botao neutro' onClick={() => this.offsetEtapaTutorial(1)}>
-              {(this.state.indiceEtapa === this.props.itemTutorial.length-1) ? 'Concluir' : 'Próximo'}
+              {(this.state.indiceEtapa === this.props.itensTutorial.length-1) ? 'Concluir' : 'Próximo'}
             </button>
           </div>
       </div>
@@ -177,8 +172,12 @@ class Tutorial extends Component {
   }
 }
 
-const mapState = state => (
-  {itemTutorial: listaBoxes[state.itemTutorial]}
-)
+const mapState = state => {
+  var arrayTutorial = [];
+  for (var i of state.itensTutorial) {
+    arrayTutorial.push(listaBoxes[i]);
+  }
+  return {itensTutorial: arrayTutorial.flat()}
+}
 
 export default connect(mapState)(Tutorial);

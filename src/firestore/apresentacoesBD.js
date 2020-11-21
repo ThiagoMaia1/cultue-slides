@@ -145,16 +145,15 @@ export const definirApresentacaoComLocation = async (location, user) => {
   var apresentacao = 0;
   if (location.hash) {
     var idHash = getIdHash(location);
-    var temApp = location.pathname === '/app';
+    var temApp = location.pathname === '/app/';
     var getApresentacao = temApp ? getApresentacaoHash : getApresentacaoPermissao; 
     apresentacao = await getApresentacao(idHash, user.uid);
   }
   if (apresentacao === null) 
-    store.dispatch({type: 'inserir-notificacao', conteudo: 'URL Inválida: ' + window.location.origin.toString() + '/' + location.pathname + location.hash})
+    store.dispatch({type: 'inserir-notificacao', conteudo: 'URL Inválida: ' + window.location.origin.toString() + location.pathname + location.hash})
   if (!apresentacao) {
     definirApresentacaoUsuario(user);
   } else {
-    console.log(apresentacao)
     definirApresentacaoAtiva(user, apresentacao)
   }
 }
@@ -162,9 +161,8 @@ export const definirApresentacaoComLocation = async (location, user) => {
 const getApresentacaoHash = async (idApresentacao, idUsuario) => {
   var apresentacao = await getRegistro('apresentações', idApresentacao);
   if (apresentacao) {
-    var autorizacao = apresentacao.idUsuario === idUsuario ? 'editar' : 'ver'
-    store.dispatch({type: 'definir-autorizacao', autorizacao: autorizacao})
-    return apresentacao;
+    console.log(apresentacao.idUsuario === idUsuario)
+    return {...apresentacao, autorizacao: apresentacao.idUsuario === idUsuario ? 'editar' : 'ver'};
   } else {
     return null;
   }
@@ -173,8 +171,8 @@ const getApresentacaoHash = async (idApresentacao, idUsuario) => {
 const getApresentacaoPermissao = async idPermissao => {
   var permissao = await getRegistro('permissões', idPermissao);
   if (permissao) { 
-    store.dispatch({type: 'definir-autorizacao', autorizacao: permissao.autorizacao})
-    return await getRegistro('apresentações', permissao.idApresentacao);
+    var apresentacao = await getRegistro('apresentações', permissao.idApresentacao);
+    return {...apresentacao, autorizacao: permissao.autorizacao}
   } else {
     return null;
   }
@@ -242,3 +240,5 @@ export const gerarNovaPermissao = async (idApresentacao, autorizacao = 'ver', us
     }
   )
 }
+
+export const autorizacaoEditar = autorizacao => autorizacao === 'editar';

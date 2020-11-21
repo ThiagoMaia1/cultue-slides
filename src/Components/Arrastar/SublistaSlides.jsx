@@ -66,8 +66,8 @@ class SublistaSlides extends Component {
 }
 
 const mapState = function (state) {
-    state = state.present;
-    return {selecionado: state.selecionado, elementos: state.elementos}
+    var sP = state.present;
+    return {selecionado: sP.selecionado, elementos: sP.elementos}
 }
   
 export default connect(mapState)(SublistaSlides);
