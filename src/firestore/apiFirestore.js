@@ -2,48 +2,47 @@ import firebase, { firestore } from '../firebase';
 import { store } from '../index';
 
 export const gerarDocumentoUsuario = async (usuario, dadosAdicionais) => {
-    if (!usuario) return;
-    const refUsuario = firestore.doc(`usuários/${usuario.uid}`);
-    const snapshot = await refUsuario.get();
-    if (!snapshot.exists) {
-      const { email, displayName, photoURL } = usuario;
-      try {
-        await refUsuario.set({
-          displayName,
-          email,
-          photoURL,
-          tutoriaisFeitos: store.getState().tutoriaisFeitos,
-          ...dadosAdicionais
-        });
-        gerarNovoRegistro(
-          'emails',
-          {
-              idUsuario: usuario.uid,
-              enderecoEmail: email,
-              nomeCompleto: dadosAdicionais.nomeCompleto,
-              eProprio: true
-          }
-        );
-      } catch (error) {
-        console.error("Erro ao criar documento de usuário", error);
-      }
+  if (!usuario) return;
+  const refUsuario = firestore.doc(`usuários/${usuario.uid}`);
+  const snapshot = await refUsuario.get();
+  if (!snapshot.exists) {
+    const { email, displayName, photoURL } = usuario;
+    try {
+      await refUsuario.set({
+        displayName,
+        email,
+        photoURL,
+        tutoriaisFeitos: store.getState().tutoriaisFeitos,
+        ...dadosAdicionais
+      });
+      gerarNovoRegistro(
+        'emails',
+        {
+            idUsuario: usuario.uid,
+            enderecoEmail: email,
+            nomeCompleto: dadosAdicionais.nomeCompleto,
+            eProprio: true
+        }
+      );
+    } catch (error) {
+      console.error("Erro ao criar documento de usuário", error);
     }
-    
-    return getDocumentoUsuario(usuario.uid);
+  }
+  return getDocumentoUsuario(usuario.uid);
   };
 
-  export const getDocumentoUsuario = async uid => {
-    if (!uid) return null;
-    try {
-      const docUsuario = await firestore.doc(`usuários/${uid}`).get();
-      return {
-        uid,
-        ...docUsuario.data()
-      };
-    } catch (error) {
-      console.error("Erro ao buscar usuário.", error);
-    }
-  };
+export const getDocumentoUsuario = async uid => {
+  if (!uid) return null;
+  try {
+    const docUsuario = await firestore.doc(`usuários/${uid}`).get();
+    return {
+      uid,
+      ...docUsuario.data()
+    };
+  } catch (error) {
+    console.error("Erro ao buscar usuário.", error);
+  }
+};
 
 export const gerarNovoRegistro = async (colecao, dados, gerarTimestampCriacao = false) => {
   var refRegistro = firestore.collection(colecao).doc(); 

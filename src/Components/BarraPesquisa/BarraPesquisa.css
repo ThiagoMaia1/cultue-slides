@@ -1,0 +1,38 @@
+#barra-pesquisa {
+    position: fixed;
+    background-color: var(--platinum);
+    padding: 1vh;
+    right: 1vh;
+    z-index: 500;
+    border-radius: var(--round-border-medio);
+    font-size: 90%;
+    transition: top 0.1s ease-in-out;
+    box-shadow: 7px 7px 8px rgba(0,0,0,0.4);
+}
+
+#barra-pesquisa button {
+    display: inline-block;
+    margin: 0 1vh;
+}
+
+.campo-pesquisa {
+    border-radius: var(--round-border-medio);
+    padding: 0.7vh;
+    margin: 1vh;
+    outline: none;
+    border: 1px solid rgb(201, 201, 201);
+}
+
+#barra-pesquisa > span {
+    margin: 0.6vh 1.1vh;
+    display: inline-block;
+}
+
+.colapsar-menu.pesquisa {
+    color: #c5c5c5;
+    font-size: 150%;
+}
+
+.colapsar-menu.pesquisa:hover {
+    color: #a3a3a3;
+}

@@ -4,6 +4,7 @@ import AdicionarTextoBiblico from './Components/TextoBiblico/AdicionarTextoBibli
 import AdicionarTexto from './Components/Configurar/AdicionarTexto';
 import AdicionarImagem from './Components/AdicionarImagem/AdicionarImagem';
 import AdicionarVideo from './Components/AdicionarVideo/AdicionarVideo';
+import { store } from './index';
 
 export const tiposElemento = {Música: AdicionarMusica,
                               TextoBíblico: AdicionarTextoBiblico,
@@ -87,6 +88,7 @@ export default class Element {
     this.texto = texto;
     this.imagens = imagens;
     this.eMestre = eMestre;
+    this.colapsado = false;
     
     var est = {...new Estilo(), ...estilo};
     est = {...est, paragrafo: getPadding(est, 'paragrafo'), titulo: getPadding(est, 'titulo')};
@@ -148,7 +150,7 @@ export default class Element {
     }
     var slide = thisP.slides[nSlide];  
     var estSlide = slide.estilo;
-    estGlobal = estGlobal ? estGlobal : getEstiloPadrao();
+    estGlobal = estGlobal ? estGlobal : store.getState().present.elementos[0].slides[0].estilo;
     
     var estP = {...estGlobal.paragrafo, ...estElemento.paragrafo , ...estSlide.paragrafo};
     var estT = {...estGlobal.texto, ...estElemento.texto, ...estSlide.texto};

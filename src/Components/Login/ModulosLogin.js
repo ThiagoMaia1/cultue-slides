@@ -2,16 +2,39 @@ import { store } from '../../index';
 import { gerarDocumentoUsuario } from '../../firestore/apiFirestore';
 import { firebaseAuth } from "../../firebase";
 import history from '../../history';
-import { definirApresentacaoComLocation } from '../../firestore/apresentacoesBD';
+import { getApresentacaoComLocation, definirApresentacaoAtiva, getUltimaApresentacaoUsuario } from '../../firestore/apresentacoesBD';
 
+var primeiraTentativa = true;
+
+const getTipoEvento = userAuth => {
+    var idAuth = (userAuth ? userAuth.uid : 0);
+    var idUsuarioStore = store.getState().usuario.uid;
+    if(!idUsuarioStore && idAuth) return 'login';
+    if(!idAuth && (idUsuarioStore)) return 'logout';
+    return 'noChange';
+}
 export const checarLogin = (callbackLogin) => {
     firebaseAuth.onAuthStateChanged(async userAuth => {
-        if (!userAuth) store.dispatch({type: 'login', usuario: {uid: 0}});
-        var idUsuarioStore = store.getState().usuario.uid;
-        if ((!userAuth && !idUsuarioStore) || (userAuth && userAuth.uid === idUsuarioStore)) return;
+        var elementos = store.getState().present.elementos;
+        var tipoEvento = getTipoEvento(userAuth);
+        var pushar;
+        if (tipoEvento === 'noChange') {
+            if (!primeiraTentativa) return;
+            [ tipoEvento, pushar ] = [ 'logout', false ];
+        }
         var user = await gerarDocumentoUsuario(userAuth) || {};
-        await definirApresentacaoComLocation(history.location, user);
-        store.dispatch({type: 'login', usuario: user});
+        var apresentacao = {elementos: elementos};
+        if (primeiraTentativa) {
+            apresentacao = await getApresentacaoComLocation(history.location) || 
+                           await getUltimaApresentacaoUsuario(user);
+            primeiraTentativa = false;
+        } else {
+            if (tipoEvento === 'login' && elementos.length === 1) {
+                apresentacao = await getUltimaApresentacaoUsuario(user);
+            }
+        }
+        store.dispatch({type: tipoEvento, usuario: user});
+        definirApresentacaoAtiva(user, apresentacao, undefined, pushar);
         if (callbackLogin) callbackLogin(user);
     });
 }

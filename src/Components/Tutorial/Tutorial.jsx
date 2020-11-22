@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import './Tutorial.css';
 import { FaLongArrowAltRight } from 'react-icons/fa';
+import { store } from '../../index';
 
 const cssOpacidade = 'opacity: 0.2';
 const cssCorFundo = 'background-color: #d0d9ec; box-shadow: 2px 2px 6px rgba(0,0,0,0.1)';
@@ -57,10 +58,12 @@ const listaBoxes = {
     {texto: 'As configurações do Slide-Mestre se aplicam aos demais slides', 
      coordenadas: [15, 25], 
      arrow: {rotacao: 180, posicao: {top: '-19vh'}},
-     selectorElemento: '#slide-mestre'},
+     selectorElemento: '#slide-mestre',
+     callback: () => store.dispatch({type: 'definir-selecao', selecionado: {elemento: 0, slide: 0}})},
     {texto: 'Clique para alterar as configurações e a imagem de fundo do slide selecionado', 
      coordenadas: [40, 40], 
-     selectorElemento: '#botao-menu-configurar, #botao-mostrar-galeria'},
+     selectorElemento: '#botao-menu-configurar, #botao-mostrar-galeria',
+     callback: () => store.dispatch({type: 'definir-selecao', selecionado: {elemento: 1, slide: 0}})},
     {texto: 'Clique para ver a prévia da apresentação em tela cheia', 
      coordenadas: [60, 51.5], 
      arrow: {rotacao: 270, posicao: {top: '-3vh', left: '14vw'}},
@@ -108,13 +111,14 @@ class Tutorial extends Component {
   }
 
   getComponenteEtapa = (indice = 0) => {
-    var { texto, coordenadas, arrow, selectorElemento } = this.props.itensTutorial[indice];
+    var { texto, coordenadas, arrow, selectorElemento, callback } = this.props.itensTutorial[indice];
 
     this.removerCss();
     this.styleSheet = document.createElement("style");
     var elementos = document.querySelectorAll(selectorElemento);
     if (!elementos.length) return null;
     this.styleSheet.innerHTML = getCSSFade(elementos);
+    if (callback) callback();
     document.head.appendChild(this.styleSheet);
 
     return (

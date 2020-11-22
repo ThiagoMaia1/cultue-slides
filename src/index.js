@@ -33,6 +33,11 @@
 //   ✔️ Pesquisa de letra de música não funciona na produção.
 //   ✔️ getEstiloPadrao pegar do padrão do usuário.
 //   ✔️ Logo do vagalume não está clicável.
+//   ✔️ Fade do tutorial duas vezes
+//   ✔️ Configuração do tutorial ao dar sign out/zerar apresentação
+//   ✔️ Borda na tela cheia está arredondada
+//   ✔️ Gradiente das notificações por cima das coisas
+//   ✔️ Criar nova apresentação não funciona lá em cima e no atalho
 //   ✔️ Carrossel do Input Imagem não vai até o final.*/
 // Errinhos:
 //   Incluir webfonts na combo de fontes disponíveis.
@@ -41,11 +46,6 @@
 //   Duas colunas
 //   Indicar que há estilização nos slides/elementos.
 //   Html descaracterizado ao enviar em anexo no e-mail.
-//   Gradiente das notificações por cima das coisas]
-//   Fade do tutorial duas vezes
-//   Configuração do tutorial ao dar sign out/zerar apresentação
-//   Criar nova apresentação não funciona lá em cima e no atalho
-//   Borda na tela cheia está arredondada
 //   Preview-fake do menu exportacao está visível
 //
 /*// Features:
@@ -67,6 +67,9 @@
 //   ✔️ Tela perfil do usuário: apresentações passadas, e-mails salvos. 
 //   ✔️ Cards de notificação
 //   ✔️ Gif splash.
+//   ✔️ Gerar link compartilhável.
+//   ✔️ Pesquisa no conteúdo dos slides.
+//   ✔️ Navegação pelas setas causar rolagem na lista de slides.
 //   ✔️ Exportar como Power Point.*/
 //   Tela perfil do usuário: informações básicas, predefinições. 
 //   Exportar como PDF.
@@ -75,18 +78,15 @@
 //   Editar tamanho da imagem direto no preview.
 //   Exportação de slides de imagem
 //   Incorporar vídeos do youtube.
-//   Gerar link compartilhável.
 //   Criar slides a partir de lista com separador.
 //   Combo de número de capítulos e versículos da bíblia.
-//   Navegação pelas setas causar rolagem na lista de slides.
-//   Pesquisa no conteúdo dos slides.
 //   ColorPicker personalizado.
 //   Tela de propagandas
 //   Adicionar logo da igreja (upload ou a partir de lista de logos famosas de denominações).
 //   Melhorar pesquisa de letra de música usando google.
 //   Favoritar músicas, fundos...
 //   Persistir redux
-//   Criar texto livre padrão
+//   Criar texto livre padrão personalizado
 //
 // Negócio:
 //   ✔️ Criar logo.
@@ -144,7 +144,7 @@ export const reducerElementos = function (state = defaultList, action) {
       var autorizacao = action.apresentacao.autorizacao || autorizacaoPadrao;
       action.apresentacao.autorizacao = autorizacao;
       if (!autorizacaoEditar(autorizacao)) 
-        sel = selecionadoOffset(action.elementos, getApresentacaoPadrao().selecionado, 1, true);
+        sel = selecionadoOffset(action.elementos, getApresentacaoPadrao().selecionado, 0, true);
       return {...state, apresentacao: action.apresentacao, elementos: action.elementos, selecionado: sel};
     case "inserir":
       var elNovo = action.elemento;
@@ -171,6 +171,9 @@ export const reducerElementos = function (state = defaultList, action) {
       return {...state, elementos: el, selecionado: {...novaSelecao}, notificacao: notificacao };
     case "reordenar":
       return {...state, elementos: action.novaOrdemElementos, selecionado: sel};
+    case "toggle-colapsar":
+      el[sel.elemento].colapsado = !el[sel.elemento].colapsado;
+      return {...state, elementos: el};
     case "editar-slide": {
       e = {...el[sel.elemento]};
       var s = e.slides[sel.slide];
@@ -233,11 +236,13 @@ export const reducerElementos = function (state = defaultList, action) {
     }
     case "definir-selecao":
       if (!autorizacaoEditar(state.apresentacao.autorizacao)) 
-        sel = selecionadoOffset(state.elementos, state.selecionado, 1, true);
+        sel = selecionadoOffset(state.elementos, action.selecionado, 0, true);
       return {...state, selecionado: sel};
     case "offset-selecao":  
       sel = {...selecionadoOffset(state.elementos, state.selecionado, action.offset, !autorizacaoEditar(state.apresentacao.autorizacao))};
-      return {...state, selecionado: sel};
+      if (sel.slide > 0 && el[sel.elemento].colapsado) 
+        el[sel.elemento].colapsado = false;
+      return {...state, selecionado: sel, elementos: el};
     default:
       return state;
   }
@@ -255,28 +260,34 @@ function undoable(reducer) {
     popupConfirmacao: null,
     notificacoes: [],
     itensTutorial: [],
-    tutoriaisFeitos: []
+    tutoriaisFeitos: [],
+    searchAtivo: false
   }
 
   const limiteUndo = 50;
   
   return function (state = initialState, action) {
-    var { past, present, future, previousTemp, usuario, notificacoes, tutoriaisFeitos, itensTutorial } = state;
+    var { past, present, future, previousTemp, usuario, notificacoes, tutoriaisFeitos, itensTutorial, searchAtivo } = state;
     var notificacoesAtualizado = getNotificacoes(notificacoes, getConteudoNotificacao(action));
     var newPresent;
+    var novosItensTutorial = [];
     switch (action.type) {
       case 'login':
         var feitos = action.usuario.tutoriaisFeitos || [];
-        var novosItensTutorial = itensTutorial.filter(n => !feitos.includes(n))
+        novosItensTutorial = itensTutorial.filter(n => !feitos.includes(n))
         return {...state, usuario: action.usuario, tutoriaisFeitos: feitos, itensTutorial: novosItensTutorial};
+      case 'logout':
+        return {...state, usuario: {uid: 0}}
       case 'ativar-popup-confirmacao':
         return {...state, popupConfirmacao: action.popupConfirmacao};
+      case 'toggle-search':
+        return {...state, searchAtivo: !searchAtivo};
       case 'definir-item-tutorial':
-        var tutoriais = [...tutoriaisFeitos, ...itensTutorial].filter(t => !!t);
-        var novosItensTutorial = [];
+        var tutoriais = [...new Set([...tutoriaisFeitos, ...itensTutorial].filter(t => !!t))];
         if (!action.zerar) {
+          novosItensTutorial = [...itensTutorial];
           var tutorialNovo = tutoriais.includes(action.itemTutorial) ? null : action.itemTutorial;
-          if (tutorialNovo) novosItensTutorial = [...itensTutorial, tutorialNovo];
+          if (tutorialNovo) novosItensTutorial.push(tutorialNovo);
         }
         if(usuario.uid) atualizarRegistro({tutoriaisFeitos: tutoriais}, 'usuários', usuario.uid);
         return {...state, itensTutorial: novosItensTutorial, tutoriaisFeitos: tutoriais}
@@ -417,7 +428,7 @@ function getConteudoNotificacao(action) {
 
 const atalhosAdicionar = {ctrlm: 0, ctrlb: 1, ctrll: 2, ctrli: 3, ctrld: 4};
 
-hotkeys('right,left,up,down,ctrl+z,ctrl+shift+z,ctrl+y,ctrl+o,ctrl+m,ctrl+i,ctrl+b,ctrl+l,ctrl+d', function(event, handler){
+hotkeys('right,left,up,down,ctrl+z,ctrl+shift+z,ctrl+y,ctrl+o,ctrl+m,ctrl+i,ctrl+b,ctrl+l,ctrl+d,ctrl+f', function(event, handler){
   event.preventDefault();
   var offset = 0;
   switch (handler.key) {
@@ -438,6 +449,9 @@ hotkeys('right,left,up,down,ctrl+z,ctrl+shift+z,ctrl+y,ctrl+o,ctrl+m,ctrl+i,ctrl
         break;
       case 'ctrl+o':
         zerarApresentacao(store.getState().usuario);
+        break;
+      case 'ctrl+f':
+        store.dispatch({type: 'toggle-search'});
         break;
       default:
         var atalho = handler.key.replace('+','');

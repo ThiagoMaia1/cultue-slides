@@ -9,12 +9,14 @@ import MenuExportacao from './Components/MenuExportacao/MenuExportacao';
 import NavBar from './Components/NavBar/NavBar';
 import Tutorial from './Components/Tutorial/Tutorial';
 import PopupAdicionar from './Components/Popup/PopupAdicionar';
+import BarraPesquisa from './Components/BarraPesquisa/BarraPesquisa';
 
 class App extends Component {
 
   render() {
     return (
       <div id='App'>
+        <BarraPesquisa/>
         <Tutorial/>
         <PopupAdicionar/>
         <NavBar history={this.props.history}/> 
@@ -33,7 +35,7 @@ class App extends Component {
 }
 
 const mapState = state => (
-  {apresentacao: state.present.apresentacao, usuario: state.usuario}
+  {apresentacao: state.present.apresentacao, usuario: state.usuario, searchAtivo: state.searchAtivo}
 )
 
 export default connect(mapState)(App);

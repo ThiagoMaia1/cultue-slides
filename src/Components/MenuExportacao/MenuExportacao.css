@@ -113,6 +113,7 @@
     font-size: 3.5vh;
     line-height: 70%;
     pointer-events: all;
+    user-select: none;
 }
 
 .colapsar-menu:hover {

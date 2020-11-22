@@ -13,7 +13,6 @@ class ItemListaSlides extends Component {
         super(props);
         this.state = {
             colapsa: this.props.elemento.slides.length > 1,
-            colapsado: false,
             tamanhoIcone: window.innerHeight*0.029
         };
     }
@@ -21,10 +20,8 @@ class ItemListaSlides extends Component {
     toggleColapsar = e => {
         if (this.props.selecionado.elemento === this.props.ordem && !this.props.selecionado.slide) 
             e.stopPropagation();
-        this.setState({colapsado: !this.state.colapsado})
+        this.props.dispatch({type: 'toggle-colapsar'});
     }
-
-    
 
     excluirElemento = (e) => {
         e.stopPropagation();
@@ -62,7 +59,7 @@ class ItemListaSlides extends Component {
 
     getMargin = elemento => {
         var slidesPorLinha = 3;
-        var proporcao = 0.2;
+        var proporcao = this.props.elemento.colapsado ? 0 : 0.2;
         var base = 1.5;
         return base + proporcao*(elemento.slides.length-1)/slidesPorLinha
     }
@@ -81,11 +78,12 @@ class ItemListaSlides extends Component {
                     onDragEnd={this.props.dragEnd}
                     onDragStart={this.props.dragStart}
                     onDragOver={this.props.dragOver}
+                    ref={this.props.objRef.elemento} 
                     style={{marginTop: (this.eSelecionado(i) ? this.getMargin(elemento) + 'vh' : ''),
                             marginBottom: this.props.placeholder.posicao === i 
                             ? this.props.placeholder.tamanho + 'px' 
                             : (this.eSelecionado(i) ? this.getMargin(elemento) + (this.props.ultimo ? -2 : 0.4) + 'vh' : (this.props.ultimo ? '-1.5vh': ''))}}>
-                    <div data-id={i} className='itens lista-slides' onClick={() => this.props.marcarSelecionado(i, 0)}>
+                    <div data-id={i} className='itens lista-slides' onClick={() => this.props.marcarSelecionado(i, (editavel ? 0 : 0 + (elemento.slides.length > 1)))}>
                         { editavel
                             ? <div className='quadradinho-canto'>
                                   <div data-id={i} className='botao-quadradinho' onClick={e => this.excluirElemento(e)}>✕</div>
@@ -101,15 +99,15 @@ class ItemListaSlides extends Component {
                         {this.state.colapsa ? 
                             (<div className='container-icone-colapsar'>
                                 <div className='icone-colapsar' onClick={this.toggleColapsar}>
-                                    {this.state.colapsado ? 
+                                    {this.props.elemento.colapsado ? 
                                         <MdKeyboardArrowDown size={this.state.tamanhoIcone}/> :
                                         <MdKeyboardArrowUp size={this.state.tamanhoIcone}/> }
                                 </div>
                             </div>) : null
                         }
                     </div>
-                    {elemento.slides.length > 1 && !this.state.colapsado ? 
-                        <SublistaSlides elemento={this.props.elemento} ordem={i} marcarSelecionado={this.props.marcarSelecionado} /> 
+                    {elemento.slides.length > 1 && !this.props.elemento.colapsado ? 
+                        <SublistaSlides elemento={this.props.elemento} ordem={i} marcarSelecionado={this.props.marcarSelecionado} refSlide={this.props.objRef.slide}/> 
                     : null}
                 </li>
             </>
@@ -119,7 +117,7 @@ class ItemListaSlides extends Component {
 
 const mapState = function (state) {
     var sP = state.present;
-    return {selecionado: sP.selecionado, elementos: sP.elementos, autorizacao: sP.apresentacao.autorizacao}
+    return {selecionado: sP.selecionado, autorizacao: sP.apresentacao.autorizacao}
 }
   
 export default connect(mapState)(ItemListaSlides);

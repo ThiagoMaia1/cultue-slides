@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import './style.css';
 import { connect } from 'react-redux';
 import { CgErase } from 'react-icons/cg';
@@ -49,7 +49,7 @@ class ConfigurarSlides extends Component {
     this.state = {painelCor: null, caseTexto: 0, tamIcones: window.innerHeight*0.022 + 'px', 
                   ref: this.ref, selecionado: this.props.selecionado};
     this.listaFontes = listaFontes.sort().map(f => 
-        <option className='opcoes-fonte' value={f} style={{fontFamily: f}}>{f}</option>                  
+        <option key={f} className='opcoes-fonte' value={f} style={{fontFamily: f}}>{f}</option>                  
     )
     this.listaEstilosTexto = [{apelido:'Negrito', nomeAtributo: 'fontWeight', valorNormal: '500', valorAlterado: '650'}, 
                               {apelido:'Itálico', nomeAtributo: 'fontStyle', valorNormal: 'normal', valorAlterado: 'italic'},
@@ -72,23 +72,26 @@ class ConfigurarSlides extends Component {
       }
       var tampar;
       if (this.props.abaAtiva === a.nomeCodigo) tampar = (<div className='tampar-shadow'></div>);
-      return (<>
+      return (
+        <Fragment key={i}>
           <button className='botao-aba' key={i+1}
             onClick={() => this.selecionarAba(a.nomeCodigo)}>
               {a.nomeInterface}
               {tampar}
           </button>
-      </>)});
+        </Fragment>
+      )
+    });
   }
 
   gerarBotoesEstiloTexto = (aba, iIni = 0, iFin = 99) => {
     var lista = this.listaEstilosTexto.filter((e, i) => i >= iIni && i <= iFin);
-    return lista.map(e => {
+    return lista.map((e, i) => {
       if (e.tipo && e.tipo !== this.props.slidePreview.tipo) return null;
       var objEstilo = {};
       objEstilo[e.nomeAtributo] = e.valorAlterado;
       return (
-        <button title={e.apelido} 
+        <button key={i} title={e.apelido}
         className={'botao-configuracao bool ' + (this.props.slideSelecionado.estilo[aba][e.nomeAtributo] === e.valorAlterado ? ' clicado' : '')} 
         onClick={() => this.toggleEstiloTexto(e)} 
         style={objEstilo}>{e.simbolo ? e.simbolo : e.apelido[0]}</button>
@@ -104,7 +107,8 @@ class ConfigurarSlides extends Component {
       if (i === 0) {bordas = {borderRadius: '0.7vh 0 0 0.7vh'}; 
       } else if (i === 3) {bordas = {borderRadius: '0 0.7vh 0.7vh 0'};}
       return (
-        <button title={b.titulo} 
+        <button key={b.titulo}
+                title={b.titulo} 
                 style={bordas}
                 className={'botao-alinhamento ' + (this.props.slideSelecionado.estilo[aba].textAlign === b.direcao ? ' clicado' : '')} 
                 onClick={() => {

@@ -235,8 +235,6 @@ class AdicionarTextoBiblico extends Component {
                 <div className='container-versiculos container-carrossel combo-popup' style={this.state.botoesVisiveis ? null : {visibility: 'hidden'}}>
                     <Carrossel tamanhoIcone={45} tamanhoMaximo='100%' direcao='vertical' style={{zIndex: '400'}} percentualBeirada={0.12}>
                         {formatarVersiculos(this.state.versiculosPronto)}
-                        {/* <div className='texto-inserir'>
-                        </div> */}
                     </Carrossel>
                 </div>
                 <div className='container-botoes-popup' style={this.state.botoesVisiveis ? null : {visibility: 'hidden'}}>

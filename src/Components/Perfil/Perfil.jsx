@@ -7,10 +7,11 @@ import ListaEmails from './ListaEmails';
 import { BsArrowLeft } from 'react-icons/bs'
 import Carrossel from '../Carrossel/Carrossel';
 import sobreporSplash from "../Splash/SobreporSplash";
+import InformacoesPessoais from './InformacoesPessoais';
 
 export const urlPerfil = '/perfil';
 
-const paginasPerfil = [{nome: 'info-pessoal', nomeInterface: 'Informações Pessoais', componente: ApresentacoesUsuario},
+const paginasPerfil = [{nome: 'info-pessoal', nomeInterface: 'Informações Pessoais', componente: InformacoesPessoais},
                        {nome: 'apresentacoes', nomeInterface: 'Apresentações', componente: ApresentacoesUsuario},
                        {nome: 'predefinicoes', nomeInterface: 'Predefinições', componente: ApresentacoesUsuario},
                        {nome: 'emails', nomeInterface: 'E-mails', componente: ListaEmails},
@@ -46,7 +47,7 @@ class Perfil extends React.Component {
                             {paginasPerfil.map(p => {
                                 var Pagina = sobreporSplash(p.componente);
                                 return (
-                                    <Route exact path={urlPerfil + '/' + p.nome} >
+                                    <Route exact path={urlPerfil + '/' + p.nome} key={p}>
                                         <div className='pagina-perfil'>
                                             <Carrossel direcao='vertical' tamanhoIcone={50} tamanhoMaximo={'100%'} 
                                                    percentualBeirada={0.05} style={{zIndex: '900', width: '100%'}}>

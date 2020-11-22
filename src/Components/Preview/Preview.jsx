@@ -96,6 +96,7 @@ class Preview extends Component {
                 <SlideFormatado
                     proporcao={proporcao}
                     id='preview'
+                    className='preview'
                     realcarElemento={this.realcarElemento}
                     referencia={this.ref}
                     editavel={!slidePreview.eMestre && this.props.autorizacao === 'editar' && !telaCheia}

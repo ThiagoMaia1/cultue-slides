@@ -10,8 +10,10 @@ class Arrastar extends React.Component {
   constructor(props) {
     super(props);
     this.ref = React.createRef();
-    this.state = {painelAdicionar: props.elementos.length === 1, adicionarAcima: false, lElementos: props.elementos.length,
-                  selecionado: 0, placeholder: {posicao: -1}, carrosselAtivo: false};
+    this.refElemento = React.createRef();
+    this.refSlide = React.createRef();
+    this.state = {painelAdicionar: props.elementos.length < 2, adicionarAcima: false, lElementos: props.elementos.length,
+                  placeholder: {posicao: -1}, carrosselAtivo: false};
   }
 
   dragStart = (e) => {
@@ -66,12 +68,14 @@ class Arrastar extends React.Component {
     this.props.dispatch({type: 'definir-selecao', selecionado: {elemento: item, slide: slide}})
   }
 
-  componentDidUpdate = () => {
+  componentDidUpdate = (prevProps) => {
     if(this.ref.current) {
       var aA = this.ref.current.offsetHeight >= 0.55*window.innerHeight;
       if (aA !== this.state.adicionarAcima)
         this.setState({adicionarAcima: aA})
     }
+    if(this.state.painelAdicionar && prevProps.elementos.length <= 1 && this.props.elementos.length > 1)
+      this.setState({painelAdicionar: false});
   }
 
   componentDidMount = () => this.props.dispatch({type: 'definir-item-tutorial', itemTutorial: 'painelAdicionar'});
@@ -86,18 +90,21 @@ class Arrastar extends React.Component {
 
 	render() {
     var editavel = this.props.autorizacao === 'editar';
+    var sel = this.props.selecionado;
     return (
       <div className='coluna-lista-slides'>
         <div className='gradiente-coluna emcima'></div>
         <div className='gradiente-coluna embaixo'></div>
-        <Carrossel direcao='vertical' tamanhoIcone={50} tamanhoMaximo={'60vh'} style={{zIndex: '50', width: '21vw', height: 'auto'}}>
+        <Carrossel direcao='vertical' tamanhoIcone={50} tamanhoMaximo={'60vh'} style={{zIndex: '50', width: '21vw', height: 'auto'}} 
+                   refElemento={this.refElemento} refSlide={this.refSlide}>
             <ol ref={this.ref} id="ordem-elementos">
               { editavel 
-                ? <div id="slide-mestre" className={'itens ' + (this.props.selecionado.elemento === 0 ? 'selecionado' : '')} data-id={0}
+                ? <div id="slide-mestre" className={'itens ' + (sel.elemento === 0 ? 'selecionado' : '')} data-id={0}
                     onClick={() => this.marcarSelecionado(0, 0)}
                     onDragOver={this.dragOver.bind(this)}
                     style={{marginBottom: this.state.placeholder.posicao === 0 ? this.state.placeholder.tamanho + 'px' : '', 
-                    display: this.props.elementos.length === 1 ? 'none' : ''}}>
+                    display: this.props.elementos.length === 1 ? 'none' : ''}}
+                    ref={sel.elemento === 0 ? this.refElemento : null}>
                     <div data-id={0} id='criar-nova-apresentacao' className='botao-quadradinho quadradinho-canto' onClick={() => zerarApresentacao(this.props.usuario)}>*</div>
                     Slide-Mestre
                   </div>
@@ -105,8 +112,12 @@ class Arrastar extends React.Component {
               }
               {this.props.elementos.map((elemento, i) => {
                 if (i === 0) return null;
-                return(<ItemListaSlides elemento={elemento} ordem={i} key={i} placeholder={this.state.placeholder} ultimo={i === this.props.elementos.length - 1}
-                        dragStart={this.dragStart} dragEnd={this.dragEnd} dragOver={this.dragOver} marcarSelecionado={this.marcarSelecionado}/>)
+                return(<ItemListaSlides elemento={elemento} ordem={i} key={i} placeholder={this.state.placeholder} 
+                                        ultimo={i === this.props.elementos.length - 1}
+                                        dragStart={this.dragStart} dragEnd={this.dragEnd} 
+                                        dragOver={this.dragOver} 
+                                        marcarSelecionado={this.marcarSelecionado} 
+                                        objRef={sel.elemento === i ? {elemento: this.refElemento, slide: this.refSlide} : {}}/>)
               })}
             </ol>
         </Carrossel>

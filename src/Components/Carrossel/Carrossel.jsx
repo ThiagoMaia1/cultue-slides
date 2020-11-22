@@ -3,6 +3,24 @@ import './Carrossel.css';
 import { connect } from 'react-redux';
 import { MdKeyboardArrowUp, MdKeyboardArrowRight, MdKeyboardArrowDown, MdKeyboardArrowLeft } from 'react-icons/md';
 
+function getCoords(elem) { // crossbrowser version
+    var box = elem.getBoundingClientRect();
+
+    var body = document.body;
+    var docEl = document.documentElement;
+
+    var scrollTop = window.pageYOffset || docEl.scrollTop || body.scrollTop;
+    var scrollLeft = window.pageXOffset || docEl.scrollLeft || body.scrollLeft;
+
+    var clientTop = docEl.clientTop || body.clientTop || 0;
+    var clientLeft = docEl.clientLeft || body.clientLeft || 0;
+
+    var top  = box.top +  scrollTop - clientTop;
+    var left = box.left + scrollLeft - clientLeft;
+
+    return { top: Math.round(top), left: Math.round(left) };
+}
+
 class Carrossel extends Component {
 
     constructor (props) {
@@ -52,8 +70,23 @@ class Carrossel extends Component {
             return;
         }   
     }
+
+    encontrarSelecionado = async elemento => {
+        if (this.state.tamanhoCarrossel > this.state.tamanhoGaleria) return;
+        var coordElemento = getCoords(elemento)[this.direcao];
+        var carrossel = this.refCarrossel.current;
+        var coordCarrossel = getCoords(carrossel)[this.direcao];
+        var o = this.state.estilo[this.direcao];
+        const espacoExtra = 30;
+        var distancia = coordCarrossel > coordElemento
+                        ? Math.max(coordCarrossel - coordElemento + espacoExtra, 0)
+                        : Math.min(coordCarrossel + carrossel.offsetHeight - (coordElemento + elemento.offsetHeight) - espacoExtra, 0)
+        var objEstilo = {transition: this.direcao + ' ' + distancia/300 + 's linear'};
+        objEstilo[this.direcao] = o + distancia;
+        this.setState({estilo: objEstilo});
+    }
     
-    deslizar = (sentido, tamanhoPasso = 10) => {
+    deslizar = (sentido, tamanhoPasso = 10, tempo = 20) => {
         this.ativarSetas(sentido, tamanhoPasso)     
 
         clearInterval(this.animacao);
@@ -72,7 +105,7 @@ class Carrossel extends Component {
                 objEstilo[this.direcao] = o + passo;
                 this.setState({estilo: objEstilo});
             }
-        }, 20);
+        }, tempo);
     }
 
     saltar(sentido) {
@@ -110,7 +143,16 @@ class Carrossel extends Component {
             objEstilo[this.direcao] = '0';
             this.setState({estilo: objEstilo});
         }
-        // console.log(this.state);
+    }
+
+    componentDidUpdate = prevProps => {
+        if(prevProps.selecionado === this.props.selecionado || !this.props.refElemento) return;
+        var elemento = this.props.refElemento.current;
+        if(!elemento) return;
+        var slide = this.props.refSlide;
+        if(elemento.offsetHeight > this.refCarrossel.current.offsetHeight && slide && slide.current)
+            elemento = slide.current;
+        setTimeout(() => this.encontrarSelecionado(elemento), 10);
     }
 
     render () {
@@ -142,5 +184,9 @@ class Carrossel extends Component {
         )
     }
 }
+
+const mapState = state => (
+    {selecionado: state.present.selecionado}
+)
  
-export default connect()(Carrossel);
+export default connect(mapState)(Carrossel);

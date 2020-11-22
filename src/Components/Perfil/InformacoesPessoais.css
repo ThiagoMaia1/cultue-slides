@@ -1,0 +1,16 @@
+#info-pessoal input {
+    position: static;
+    border-radius: var(--round-border-pequeno);
+    padding: 1vh;
+    border: 0.2vh solid #999999;
+    outline: 0;
+    margin: 1.5vh;
+}
+
+.campos-editaveis {
+    display: flex;
+}
+
+#info-pessoal .linha-flex {
+    justify-content: center;
+}

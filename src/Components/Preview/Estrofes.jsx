@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 
 export default function Estrofes(props) {
     var s = props.slidePreview;
@@ -12,12 +12,12 @@ export default function Estrofes(props) {
         var breaks = null;
         if (comBreaks) breaks = (divBreak);
         return (
-            <>
+            <Fragment key={i}>
                 <span contentEditable={props.editavel} key={i} onInput={props.onInput} onFocus={() => props.ativarRealce('paragrafo')}>
                     {t}
                 </span>
                 {breaks}
-            </>
+            </Fragment>
         )
     };
 

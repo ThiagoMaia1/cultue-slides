@@ -6,20 +6,14 @@
     position: relative;
 }
 
-#preview {
+.preview {
     color: initial;
     visibility: initial;
     position: relative;
     display: block;
     border-radius: var(--round-border-grande);
-}
-
-#preview {
     overflow: hidden;
-}
-
-.preview-fake > img{
-    border-radius: var(--round-border-pequeno);
+    box-shadow: var(--box-shadow);
 }
 
 #fundo-preview {
@@ -27,15 +21,13 @@
     width: 100%;
     object-fit: cover;
     position: absolute;
-    box-shadow: var(--box-shadow);
 }
 
 img {
     object-fit: cover;
 }
 
-.preview-fake {
-    position: relative;
+.preview.fake {
     border-radius: var(--round-border-pequeno);
 }
 

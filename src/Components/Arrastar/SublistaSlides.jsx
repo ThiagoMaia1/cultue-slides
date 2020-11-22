@@ -46,15 +46,17 @@ class SublistaSlides extends Component {
         //Se elemento tem múltiplos slides, cria subdivisão ol.
         var elemento = this.props.elemento;
         var i = this.props.ordem;
+        var sel = this.props.selecionado;
         return (
             <ol className='sublista'>
                 {elemento.slides.map((slide, j) => {
                     if (j === 0) return null; //Pula o slide 0, pois se tem múltiplos slides, o slide 0 é o mestre.
                     return (
                         <li className={'item-sublista ' + elemento.tipo + ' fade-estilizado ' +
-                                       (this.props.selecionado.elemento === i && this.props.selecionado.slide === j ? 'selecionado' : '') + ' ' +
+                                       (this.props.selecionado.elemento === i && sel.slide === j ? 'selecionado' : '') + ' ' +
                                        (eEstiloVazio(slide.estilo) ? '' : 'elemento-slide-estilizado')
                                     }
+                            ref={sel.slide === j ? this.props.refSlide : null}
                             onClick={() => this.props.marcarSelecionado(i, j)} key={j}>
                             {this.getRotuloSlide(elemento, slide)}
                         </li>

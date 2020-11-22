@@ -66,7 +66,7 @@ class ApresentacoesUsuario extends React.Component {
                                                 e.slides.map((s, j) => {
                                                     if (s.eMestre && i !==0) return null; 
                                                     return (
-                                                        <div className='preview-fake'>
+                                                        <div>
                                                             <SlideFormatado 
                                                                 slidePreview={
                                                                     getSlidePreview({
@@ -76,7 +76,8 @@ class ApresentacoesUsuario extends React.Component {
                                                                 } 
                                                                 editavel={false}
                                                                 proporcao={0.08}
-                                                                className='preview-fake'
+                                                                className='preview fake'
+                                                                key={i+'.'+j}
                                                             />
                                                         </div>
                                                     );
