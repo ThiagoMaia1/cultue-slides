@@ -55,8 +55,17 @@ class BarraPesquisa extends React.Component {
     }
 
     definirSelecao = indice => {
+        console.log(this.state.termoPesquisa);
         this.setState({indiceResultadoSelecionado: indice});
         this.props.dispatch({type: 'definir-selecao', selecionado: this.arrayResultados[indice]})
+        setTimeout(this.highlightSlides, 0);
+    }
+
+    highlightSlides = () => {
+        var spansConteudo = document.querySelectorAll('.texto-preview span');
+        for (var s of spansConteudo) {
+            s.innerHTML = s.innerText.replace(this.state.termoPesquisa, resultado => '<span class="highlight">' + resultado + '</span>');
+        }
     }
 
     componentDidUpdate = prevProps => {

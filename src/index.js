@@ -237,6 +237,7 @@ export const reducerElementos = function (state = defaultList, action) {
     case "definir-selecao":
       if (!autorizacaoEditar(state.apresentacao.autorizacao)) 
         sel = selecionadoOffset(state.elementos, action.selecionado, 0, true);
+      console.log('selecao ' + sel.slide);
       return {...state, selecionado: sel};
     case "offset-selecao":  
       sel = {...selecionadoOffset(state.elementos, state.selecionado, action.offset, !autorizacaoEditar(state.apresentacao.autorizacao))};

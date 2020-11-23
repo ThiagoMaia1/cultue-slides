@@ -92,7 +92,7 @@ class ApresentacoesUsuario extends React.Component {
                                         Selecionar
                                     </button>
                                     <button className='botao-azul botao'
-                                            onClick={() => definirApresentacaoPadrao(this.props.usuario.uid, a.elementos)}>
+                                            onClick={() => definirApresentacaoPadrao(this.props.usuario.uid, a.elementos, 'selecionada')}>
                                         Definir como Padrão
                                     </button>
                                 </div>

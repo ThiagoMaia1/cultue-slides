@@ -36,3 +36,7 @@
 .colapsar-menu.pesquisa:hover {
     color: #a3a3a3;
 }
+
+.highlight {
+    background-color: var(--azul-forte);
+}

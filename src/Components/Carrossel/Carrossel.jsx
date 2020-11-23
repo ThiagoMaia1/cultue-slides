@@ -3,7 +3,7 @@ import './Carrossel.css';
 import { connect } from 'react-redux';
 import { MdKeyboardArrowUp, MdKeyboardArrowRight, MdKeyboardArrowDown, MdKeyboardArrowLeft } from 'react-icons/md';
 
-function getCoords(elem) { // crossbrowser version
+function getCoords(elem) {
     var box = elem.getBoundingClientRect();
 
     var body = document.body;
@@ -72,7 +72,7 @@ class Carrossel extends Component {
     }
 
     encontrarSelecionado = async elemento => {
-        if (this.state.tamanhoCarrossel > this.state.tamanhoGaleria) return;
+        if (!this.state.tamanhoCarrossel || this.state.tamanhoCarrossel > this.state.tamanhoGaleria) return;
         var coordElemento = getCoords(elemento)[this.direcao];
         var carrossel = this.refCarrossel.current;
         var coordCarrossel = getCoords(carrossel)[this.direcao];
@@ -146,13 +146,14 @@ class Carrossel extends Component {
     }
 
     componentDidUpdate = prevProps => {
-        if(prevProps.selecionado === this.props.selecionado || !this.props.refElemento) return;
+        if(!this.props.refElemento || (prevProps.selecionado.elemento === this.props.selecionado.elemento && prevProps.selecionado.slide === this.props.selecionado.slide)) return;
+            console.log(prevProps.selecionado.elemento, this.props.selecionado.elemento, prevProps.selecionado.slide, this.props.selecionado.slide)
         var elemento = this.props.refElemento.current;
         if(!elemento) return;
         var slide = this.props.refSlide;
         if(elemento.offsetHeight > this.refCarrossel.current.offsetHeight && slide && slide.current)
             elemento = slide.current;
-        setTimeout(() => this.encontrarSelecionado(elemento), 10);
+        this.encontrarSelecionado(elemento);
     }
 
     render () {

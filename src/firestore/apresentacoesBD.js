@@ -89,21 +89,37 @@ export const atualizarApresentacao = async (elementos, idApresentacao) => {
   );
 }
 
-export const definirApresentacaoPadrao = async (idUsuario, elementosPadrao) => {
+export const definirApresentacaoPadrao = async (idUsuario, elementosPadrao, atualSelecionada = 'atual') => {
   var conteudo;
-  try { 
-    await atualizarRegistro(
-      {
-        apresentacaoPadrao: getSlideMestreApresentacao(elementosPadrao)
-      },
-      'usuários',
-      idUsuario
+  if (!idUsuario) {
+    ativarPopupConfirmacao(
+      'OK',
+      'Atenção', 
+      'Para definir uma apresentação como padrão, você deve primeiro fazer login.'
+    )
+  } else {
+    ativarPopupConfirmacao(
+      'simNao',
+      'Atenção', 
+      'Deseja definir a apresentação ' + atualSelecionada + ' como padrão?', 
+      async fazer => {
+        if(!fazer) return;
+        try { 
+          await atualizarRegistro(
+            {
+              apresentacaoPadrao: getSlideMestreApresentacao(elementosPadrao)
+            },
+            'usuários',
+            idUsuario
+          );
+        } catch (error) {
+          conteudo = 'Erro ao Definir Apresentação Padrão';
+        }
+        conteudo = 'Apresentação Definida como Padrão';
+        store.dispatch({type: 'inserir-notificacao', conteudo: conteudo})
+      }
     );
-  } catch (error) {
-    conteudo = 'Erro ao Definir Apresentação Padrão';
   }
-  conteudo = 'Apresentação Definida como Padrão';
-  store.dispatch({type: 'inserir-notificacao', conteudo: conteudo})
 }
 
 export const getApresentacoesUsuario = async (idUsuario) => {

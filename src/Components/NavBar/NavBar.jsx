@@ -52,7 +52,7 @@ class NavBar extends React.Component {
       <div id="navbar">
           <div id='botoes-navbar'>
             <button onClick={() => zerarApresentacao(this.props.usuario)}>Nova Apresentação</button>
-            <button onClick={() => definirApresentacaoPadrao(u.uid, this.props.elementos)}>Definir Padrão</button>
+            <button onClick={() => definirApresentacaoPadrao(u.uid, this.props.elementos, 'atual')}>Definir Padrão</button>
             <div className='div-botao-navbar'>
               <button onClick={() => this.toggleQuadroAtalhos(true)} style={this.state.quadroAtalhos ? {pointerEvents: 'none', cursor: 'pointer'} : null}>Atalhos</button>
               {this.state.quadroAtalhos

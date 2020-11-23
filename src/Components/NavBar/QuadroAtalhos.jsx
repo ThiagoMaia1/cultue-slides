@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import QuadroNavbar from './QuadroNavbar';
 
 const listaAtalhos = [{teclas: [['←'], ['↑']], acao: 'Slide anterior'},
                       {teclas: [['↑'], ['→']], acao: 'Próximo Slide'},
@@ -10,7 +11,8 @@ const listaAtalhos = [{teclas: [['←'], ['↑']], acao: 'Slide anterior'},
                       {teclas: ['Ctrl', 'M'], acao: 'Adicionar Música', autorizacao: 'editar'},
                       {teclas: ['Ctrl', 'I'], acao: 'Adicionar Imagem', autorizacao: 'editar'},
                       {teclas: ['Ctrl', 'D'], acao: 'Adicionar Vídeo', autorizacao: 'editar'},
-                      {teclas: ['Ctrl', 'O'], acao: 'Nova Apresentação'}
+                      {teclas: ['Ctrl', 'O'], acao: 'Nova Apresentação'},
+                      {teclas: ['Ctrl', 'F'], acao: 'Pesquisar nos slides'}
 ]
 
 const getAtalhoSeparado = teclas => ( 
@@ -26,46 +28,30 @@ const getAtalhoSeparado = teclas => (
 
 class QuadroAtalhos extends React.Component {
 
-    constructor (props) {
-        super(props);
-        this.ref = React.createRef();
-    }
-
-    fecharQuadro = () => {
-        this.props.callback(false);
-    }
-
-    componentDidMount = () => {
-        if (this.ref.current) this.ref.current.focus();
-    }
-
     render() {
         return (
-            <>
-                <div id='quadro-atalhos' className='quadro-navbar' style={{position: 'absolute', top: '6vh', left: '0'}}
-                    tabIndex='0' ref={this.ref} onKeyUp={this.fecharQuadro} onBlur={this.fecharQuadro}>
-                    {listaAtalhos.map(a => {
-                        if (a.autorizacao && a.autorizacao !== this.props.autorizacao) return null;
-                        return (
-                            <div className='instrucao-atalho'>
-                                <div>
-                                    {Array.isArray(a.teclas[0])
-                                        ? <>{a.teclas.map((t, i) => (
-                                                <>
-                                                    {getAtalhoSeparado(t)}
-                                                    {i === a.teclas.length-1 ? '' : <span>  ,  </span>}
-                                                </>
-                                            ))}
-                                        </>
-                                        : getAtalhoSeparado(a.teclas)                         
-                                    }
-                                </div>
-                                <div>{a.acao}</div>
+            <QuadroNavbar callback={this.props.callback}>
+                {listaAtalhos.map(a => {
+                    if (a.autorizacao && a.autorizacao !== this.props.autorizacao) return null;
+                    return (
+                        <div className='instrucao-atalho'>
+                            <div>
+                                {Array.isArray(a.teclas[0])
+                                    ? <>{a.teclas.map((t, i) => (
+                                            <>
+                                                {getAtalhoSeparado(t)}
+                                                {i === a.teclas.length-1 ? '' : <span>  ,  </span>}
+                                            </>
+                                        ))}
+                                    </>
+                                    : getAtalhoSeparado(a.teclas)                         
+                                }
                             </div>
-                        )
-                    })}
-                </div>
-            </>
+                            <div>{a.acao}</div>
+                        </div>
+                    )
+                })}
+            </QuadroNavbar>
         );
     }
 };
