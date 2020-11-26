@@ -6,6 +6,11 @@ import { store } from '../../index';
 
 const cssOpacidade = 'opacity: 0.2';
 const cssCorFundo = 'background-color: #d0d9ec; box-shadow: 2px 2px 6px rgba(0,0,0,0.1)';
+const selectorQuadradinhoCanto = '.itens.lista-slides .quadradinho-canto';
+
+const setOpacidadeQuadradinhoCanto = opacidade => {
+  document.querySelectorAll(selectorQuadradinhoCanto)[0].setAttribute('opacity', opacidade)
+}
 
 const getCSSFade = elementos => {
   var elemento = elementos[0];
@@ -59,12 +64,12 @@ const listaBoxes = {
      coordenadas: [15, 25], 
      arrow: {rotacao: 180, posicao: {top: '-19vh'}},
      selectorElemento: '#slide-mestre',
-     callback: () => store.dispatch({type: 'definir-selecao', selecionado: {elemento: 0, slide: 0}})
+     callbackAntes: () => store.dispatch({type: 'definir-selecao', selecionado: {elemento: 0, slide: 0}}),
+     callbackDepois: () => store.dispatch({type: 'definir-selecao', selecionado: {elemento: 1, slide: 0}})
     },
     {texto: 'Clique para alterar as configurações e a imagem de fundo do slide selecionado', 
      coordenadas: [40, 40], 
-     selectorElemento: '#botao-menu-configurar, #botao-mostrar-galeria',
-     callback: () => store.dispatch({type: 'definir-selecao', selecionado: {elemento: 1, slide: 0}})
+     selectorElemento: '#botao-menu-configurar, #botao-mostrar-galeria'
     },
     {texto: 'Clique para ver a prévia da apresentação em tela cheia', 
      coordenadas: [60, 51.5], 
@@ -81,9 +86,12 @@ const listaBoxes = {
      arrow: {rotacao: 180, posicao: {top: '-18vh', left: ''}},
      selectorElemento: '#ordem-elementos'},
     {texto: 'Clique no canto superior direito de um slide ou grupo de slides para exclui-lo, ou clique no botão do lápis para editar o conteúdo do slide na janela de adição', 
-     coordenadas: [15, 25], 
+     coordenadas: [23, 25], 
      arrow: {rotacao: 180, posicao: {top: '-19vh'}},
-     selectorElemento: '#slide-mestre'},
+     selectorElemento: selectorQuadradinhoCanto,
+     callbackAntes: setOpacidadeQuadradinhoCanto,
+     callbackDepois: setOpacidadeQuadradinhoCanto
+    },
     {texto: 'Ao concluir, clique para exportar a apresentação pronta', 
      coordenadas: [59, 74], 
      arrow: {rotacao: 0, posicao: {top: '8vh', left: '2vw'}},
@@ -101,11 +109,19 @@ const listaBoxes = {
     selectorElemento: '#botao-menu-configurar'},
    {texto: 'Ao editar as configurações de texto, os slides são automaticamente redivididos para caber', 
     coordenadas: [45, 45], 
-    selectorElemento: '#botao-mostrar-galeria'},
+    selectorElemento: '#botao-menu-configurar'},
    {texto: 'Você pode alterar a cor de fundo, e a opacidade da camada que se sobrepõe à imagem de fundo', 
     coordenadas: [45, 45], 
-    selectorElemento: '#botao-mostrar-galeria',
-    callback: () => store.dispatch({type: 'ativar-realce', abaAtiva: 'tampao'})}
+    selectorElemento: '#botao-menu-configurar',
+    callbackAntes: () => store.dispatch({type: 'ativar-realce', abaAtiva: 'tampao'}),
+    callbackDepois: () => store.dispatch({type: 'ativar-realce', abaAtiva: 'texto'})
+   },
+   {texto: 'Clique diretamente no texto do slide para editar seu conteúdo', 
+    coordenadas: [30, 50], 
+    selectorElemento: '#borda-slide-mestre',
+    callbackAntes: () => store.dispatch({type: 'ativar-realce', abaAtiva: 'paragrafo'}),
+    callbackDepois: () => store.dispatch({type: 'ativar-realce', abaAtiva: 'texto'})
+  }
   ]
 }
 
@@ -117,15 +133,33 @@ export const keysTutoriais = Object.keys(listaBoxes);
 
 class EtapaTutorial extends Component {
   
-  componentDidUpdate = () => {
-    console.log('oi');
+  constructor (props) {
+    super(props);
+    this.state = {...props.itens[props.indice]};
+  }
+
+  componentDidUpdate = prevProps => {
+    if(JSON.stringify(prevProps) !== JSON.stringify(this.props))
+      this.componentDidMount();
+  }
+
+  componentDidMount = () => {
     this.removerCss();
     this.styleSheet = document.createElement("style");
-    var elementos = document.querySelectorAll(this.props.selectorElemento);
+    var elementos = document.querySelectorAll(this.state.selectorElemento);
     if (!elementos.length) return null;
     this.styleSheet.innerHTML = getCSSFade(elementos);
-    if (this.props.callback) this.props.callback();
+    if (this.state.callbackAntes) this.state.callbackAntes();
     document.head.appendChild(this.styleSheet);
+  }
+
+  static getDerivedStateFromProps = (props, state) => {
+    var item = props.itens[props.indice] || {};
+    if(state.texto !== item.texto) {
+      if (state.callbackDepois) state.callbackDepois();
+      return {arrow: null, callbackAntes: null, callbackDepois: null, ...item};
+    }
+    return null;
   }
   
   removerCss = () => {
@@ -138,16 +172,17 @@ class EtapaTutorial extends Component {
   componentWillUnmount = () => this.removerCss();
 
   render() {
+    if(!this.props.itens.length) return null;
     return (
-      <div className='container-caixa-tutorial' style={{top: this.props.coordenadas[0] + 'vh', left: this.props.coordenadas[1] + 'vw'}}>
-        {this.props.arrow 
-          ? <div className='arrow' style={{transform: 'rotate(' + this.props.arrow.rotacao + 'deg)', ...this.props.arrow.posicao}}>
+      <div className='container-caixa-tutorial' style={{top: this.state.coordenadas[0] + 'vh', left: this.state.coordenadas[1] + 'vw'}}>
+        {this.state.arrow 
+          ? <div className='arrow' style={{transform: 'rotate(' + this.state.arrow.rotacao + 'deg)', ...this.state.arrow.posicao}}>
               <FaLongArrowAltRight size={150}/>
             </div>
           : null
         }
         <div className='caixa-tutorial'>
-          {this.props.texto}
+          {this.state.texto}
         </div>
       </div>
     )
@@ -159,34 +194,51 @@ class Tutorial extends Component {
   constructor (props) {
     super(props);
     this.styleSheet = null;
-    this.state = {indiceEtapa: 0};
+    this.state = {indiceEtapa: -1};
   }
 
   offsetEtapaTutorial = passo => {
     var novoIndice = this.state.indiceEtapa + passo;
     if (novoIndice >= this.props.itensTutorial.length) {
-      this.setState({indiceEtapa: 0});
+      this.setState({indiceEtapa: -1});
       this.props.dispatch({type: 'definir-item-tutorial', zerar: true});
     } else {
       this.setState({indiceEtapa: novoIndice});
     }
   }
 
+  static getDerivedStateFromProps = (props, state) => {
+    if(props.itensTutorial.length > 0 && state.indiceEtapa === -1)
+      return {indiceEtapa: 0}
+    return null;
+  }
+
+  finalizar = () => {
+    for (var i = this.state.indiceEtapa; i < this.props.itensTutorial.length; i++) {
+      setTimeout(() => this.offsetEtapaTutorial(1), 1)
+    }
+    setTimeout(() => this.props.dispatch({type: 'bloquear-tutoriais'}), 10);
+  }
+
   render() {
-    if (this.props.itensTutorial.length === 0) return null;
     return (
-      <div id='fundo-tutorial'>
-          <button id='pular-tutorial' className='botao limpar-input' onClick={() => this.props.dispatch({type: 'bloquear-tutoriais'})}>Não Exibir Tutoriais</button>
-          <EtapaTutorial {...this.props.itensTutorial[this.state.indiceEtapa]}/>
-          <div id='rodape-tutorial'>
-            <button className='botao neutro' onClick={() => this.offsetEtapaTutorial(-1)}
-              style={this.state.indiceEtapa === 0 ? {visibility: 'hidden'} : null}>
-              Anterior
-            </button>
-            <button className='botao neutro' onClick={() => this.offsetEtapaTutorial(1)}>
-              {(this.state.indiceEtapa === this.props.itensTutorial.length-1) ? 'Concluir' : 'Próximo'}
-            </button>
-          </div>
+      <div id='fundo-tutorial' style={this.props.itensTutorial.length ? null : {pointerEvents: 'none'}}>
+        <EtapaTutorial itens={[...this.props.itensTutorial]} indice={this.state.indiceEtapa}/>
+        {this.props.itensTutorial.length
+          ? <>
+              <button id='pular-tutorial' className='botao limpar-input' onClick={this.finalizar}>Não Exibir Tutoriais</button>
+              <div id='rodape-tutorial'>
+                <button className='botao neutro' onClick={() => this.offsetEtapaTutorial(-1)}
+                  style={this.state.indiceEtapa === 0 ? {visibility: 'hidden'} : null}>
+                  Anterior
+                </button>
+                <button className='botao neutro' onClick={() => this.offsetEtapaTutorial(1)}>
+                  {(this.state.indiceEtapa === this.props.itensTutorial.length-1) ? 'Concluir' : 'Próximo'}
+                </button>
+              </div>
+            </>
+          : null  
+        }
       </div>
     );
   }

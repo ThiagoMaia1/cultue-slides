@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import './MenuExportacao.css';
 import { toggleAnimacao } from '../Animacao/animacaoCoordenadas.js';
 import Exportador from './Exportador';
@@ -24,7 +25,7 @@ class MenuExportacao extends Component {
         };
     }
 
-    getMeios = tamIcones => (
+    getMeios = (tamIcones) => (
         [ExportarDownload, ExportarEmail, ExportarLink] 
             .map((m, i) => {
                 const BotaoMeio = m;
@@ -58,7 +59,7 @@ class MenuExportacao extends Component {
             bool => {
                 if (this.state.menuVisivel !== bool)
                     this.setState({menuVisivel: bool, menuFormatos: false, posicaoArrow: null, 
-                                   callbackMeio: null, callback: null})
+                                   callbackMeio: null, callbackFormato: null, callback: null})
             },
             c => c[3] < 84,
             1.72
@@ -88,18 +89,25 @@ class MenuExportacao extends Component {
         var timeout = (posicao !== null ? 100 : 20);
         setTimeout(() => this.setState({posicaoArrow: posicao}), timeout);
         this.setState({callbackMeio: callback});
+        this.definirCallbackFinal();
     }
 
     definirCallback = (callbackFormato, criarSlideFinal = false) => {
+        this.setState({callbackFormato: callbackFormato, criarSlideFinal: criarSlideFinal});
+        this.definirCallbackFinal();
+    }
+
+    definirCallbackFinal = () => {
+        if (!this.state.callbackMeio || !this.state.callbackFormato) return;
         var callback = (copiaDOM, imagensBase64, previews, nomeArquivo) => {
-            this.state.callbackMeio(callbackFormato(copiaDOM, imagensBase64, previews, nomeArquivo))
+            this.state.callbackMeio(this.state.callbackFormato(copiaDOM, imagensBase64, previews, nomeArquivo))
         }
-        this.setState({callback: callback, criarSlideFinal: criarSlideFinal});
+        this.setState({callback: callback});
     }
 
     render() {
         var estiloDivOculta = {overflow: 'hidden', width: '1px', height: '1px'};
-        var tamIcones = window.innerWidth*0.027 + 'px'
+        var tamIcones = window.innerWidth*0.027 + 'px';
         return (
             <div id='menu-exportacao' className='botao-azul' onClick={this.abrirMenu}
                 style={{top: this.state.coordenadas[0] + 'vh', right: this.state.coordenadas[1] + 'vw', 
@@ -123,4 +131,8 @@ class MenuExportacao extends Component {
     }
 }
 
-export default MenuExportacao;
+const mapState = state => (
+    {formatoExportacao: state.present.apresentacao.formatoExportacao}
+)
+
+export default connect(mapState)(MenuExportacao);

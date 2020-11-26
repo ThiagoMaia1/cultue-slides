@@ -10,6 +10,7 @@ import sobreporSplash from './Components/Splash/SobreporSplash';
 import { Router, Switch, Route, Redirect } from "react-router-dom";
 import { checarLogin } from './Components/Login/ModulosLogin';
 import Splash from './Components/Splash/Splash';
+import Propaganda from './Components/Propaganda/Propaganda';
 import history from './history';
 
 const paginas = [{nome: 'app', componente: App},
@@ -40,6 +41,7 @@ class Home extends Component {
                 <Route render={() => <Redirect to='/login'/>} />
             </Switch>
         </Router>
+        <Propaganda/>
       </Provider>
     );
   }

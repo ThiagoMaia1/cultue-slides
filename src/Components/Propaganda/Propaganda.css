@@ -1,0 +1,33 @@
+#fundo-propaganda {
+    position: fixed;
+    background-color: rgba(255,255,255,0.9);
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 2000;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#fundo-propaganda button {
+    margin-top: 3vh;
+    font-size: 120%;
+    cursor: default;
+}
+
+#fundo-propaganda img{
+    border-radius: var(--round-border-medio);
+    background-color: white;
+    object-fit: contain;
+    position: relative;
+    background-color: white;
+    padding: 5vh;
+    border-radius: var(--round-border-grande);
+    box-shadow: var(--box-shadow-longe);
+    max-width: 80%;
+    max-height: 80%;
+    cursor: pointer;
+}

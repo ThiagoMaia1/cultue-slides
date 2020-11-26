@@ -1,6 +1,11 @@
 import firebase, { firestore } from '../firebase';
 import { store } from '../index';
 
+export const slidesPadraoDefault = [{titulo: 'Visitantes', textoSlide: 'Sejam bem-vindos à nossa Igreja!'},
+                           {titulo: 'Avisos', textoSlide: ''}, 
+                           {titulo: 'Mensagem', textoSlide: ''}
+]
+
 export const gerarDocumentoUsuario = async (usuario, dadosAdicionais) => {
   if (!usuario) return;
   const refUsuario = firestore.doc(`usuários/${usuario.uid}`);
@@ -13,7 +18,8 @@ export const gerarDocumentoUsuario = async (usuario, dadosAdicionais) => {
         email,
         photoURL,
         tutoriaisFeitos: store.getState().tutoriaisFeitos,
-        ...dadosAdicionais
+        ...dadosAdicionais,
+        slidesPadrao: slidesPadraoDefault
       });
       gerarNovoRegistro(
         'emails',

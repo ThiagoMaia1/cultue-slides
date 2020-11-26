@@ -147,7 +147,6 @@ class Carrossel extends Component {
 
     componentDidUpdate = prevProps => {
         if(!this.props.refElemento || (prevProps.selecionado.elemento === this.props.selecionado.elemento && prevProps.selecionado.slide === this.props.selecionado.slide)) return;
-            console.log(prevProps.selecionado.elemento, this.props.selecionado.elemento, prevProps.selecionado.slide, this.props.selecionado.slide)
         var elemento = this.props.refElemento.current;
         if(!elemento) return;
         var slide = this.props.refSlide;

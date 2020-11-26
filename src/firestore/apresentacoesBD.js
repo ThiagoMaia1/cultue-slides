@@ -185,7 +185,7 @@ const getApresentacaoComPermissao = async idPermissao => {
   var permissao = await getRegistro('permissões', idPermissao);
   if (permissao) { 
     var apresentacao = await getRegistro('apresentações', permissao.idApresentacao);
-    return {...apresentacao, autorizacao: permissao.autorizacao}
+    return {...apresentacao, autorizacao: permissao.autorizacao, formatoExportacao: permissao.formatoExportacao}
   } else {
     return null;
   }

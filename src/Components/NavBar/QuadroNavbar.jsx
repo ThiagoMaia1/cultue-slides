@@ -10,7 +10,7 @@ class QuadroNavbar extends React.Component {
 
     fecharQuadro = () => {
         this.setState({maxHeight: 0, maxWidth: 0, tiop: '-6vh'})
-        setTimeout(() => this.props.callback(false), 300);
+        setTimeout(() => this.props.callback(false), 100);
     }
 
     componentDidMount = () => {

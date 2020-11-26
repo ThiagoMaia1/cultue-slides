@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import BotaoExportador from './BotaoExportador';
 import pptxgen from "pptxgenjs";
 import { fonteBase, larguraTela, alturaTela } from '../Preview/TamanhoTela/TamanhoTela';
@@ -53,6 +54,11 @@ class ExportarPptx extends Component {
       slide.addText(texto, opcoesTexto);
     }
     return {nomeArquivo: nomeArquivo + this.formato, arquivo: pptx, formato: this.formato}
+  }
+
+  componentDidMount = () => {
+    if(this.props.formatoExportacao === this.formato)
+      this.props.definirCallback(this.exportarPptx);
   }
 
   render() {
@@ -153,4 +159,8 @@ const getDimensoesInches = (keysAbrev = true) => {
   }
 }
 
-export default ExportarPptx;
+const mapState = state => (
+  {formatoExportacao: state.present.apresentacao.formatoExportacao}
+)
+
+export default connect(mapState)(ExportarPptx);

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { alturaTela, larguraTela } from '../Preview/TamanhoTela/TamanhoTela'
 import BotaoExportador from './BotaoExportador';
 import { jsPDF } from "jspdf";
@@ -34,6 +35,12 @@ class ExportadorPDF extends Component {
     return {nomeArquivo: nomeArquivo + this.formato, arquivo: pdf, formato: this.formato};
   }
 
+  componentDidMount = () => {
+    if(this.props.formatoExportacao === this.formato)
+      this.props.definirCallback(this.exportarPDF);
+  }
+
+
   render() {
     return (
       <BotaoExportador formato={this.formato} onClick={() => this.props.definirCallback(this.exportarPDF)} 
@@ -43,5 +50,9 @@ class ExportadorPDF extends Component {
 
 }
 
-export default ExportadorPDF;
+const mapState = state => (
+  {formatoExportacao: state.present.apresentacao.formatoExportacao}
+)
+
+export default connect(mapState)(ExportadorPDF);
 

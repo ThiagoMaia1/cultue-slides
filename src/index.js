@@ -47,6 +47,7 @@
 //   Indicar que há estilização nos slides/elementos.
 //   Html descaracterizado ao enviar em anexo no e-mail.
 //   Preview-fake do menu exportacao está visível
+//   Envio da apresentação para o BD quando o estilo é limpado.
 //
 /*// Features:
 //   ✔️ Envio de imagens.
@@ -70,6 +71,8 @@
 //   ✔️ Gerar link compartilhável.
 //   ✔️ Pesquisa no conteúdo dos slides.
 //   ✔️ Navegação pelas setas causar rolagem na lista de slides.
+//   ✔️ Tela de propagandas
+//   ✔️ Criar texto livre padrão personalizado
 //   ✔️ Exportar como Power Point.*/
 //   Tela perfil do usuário: informações básicas, predefinições. 
 //   Exportar como PDF.
@@ -81,12 +84,10 @@
 //   Criar slides a partir de lista com separador.
 //   Combo de número de capítulos e versículos da bíblia.
 //   ColorPicker personalizado.
-//   Tela de propagandas
 //   Adicionar logo da igreja (upload ou a partir de lista de logos famosas de denominações).
 //   Melhorar pesquisa de letra de música usando google.
 //   Favoritar músicas, fundos...
 //   Persistir redux
-//   Criar texto livre padrão personalizado
 //
 // Negócio:
 //   ✔️ Criar logo.
@@ -105,7 +106,7 @@ import hotkeys from 'hotkeys-js';
 import { getEstiloPadrao, Estilo, getPadding, tiposElemento, getDadosMensagem } from './Element.js';
 import { selecionadoOffset, getSlidePreview } from './Components/MenuExportacao/Exportador';
 import { atualizarApresentacao, getApresentacaoPadrao, definirApresentacaoAtiva, zerarApresentacao, autorizacaoEditar } from './firestore/apresentacoesBD';
-import { atualizarRegistro } from './firestore/apiFirestore';
+import { atualizarRegistro, slidesPadraoDefault } from './firestore/apiFirestore';
 import { keysTutoriais } from './Components/Tutorial/Tutorial';
 
 const tipos = Object.keys(tiposElemento);
@@ -124,6 +125,7 @@ const redividirSlides = (elementos, sel) => {
 }
 
 const autorizacaoPadrao = 'editar';
+const numeroAcoesPropaganda = 20;
 
 var defaultList = {...getApresentacaoPadrao(), 
   abaAtiva: 'texto',
@@ -143,8 +145,8 @@ export const reducerElementos = function (state = defaultList, action) {
     case 'definir-apresentacao-ativa':
       var autorizacao = action.apresentacao.autorizacao || autorizacaoPadrao;
       action.apresentacao.autorizacao = autorizacao;
-      if (!autorizacaoEditar(autorizacao)) 
-        sel = selecionadoOffset(action.elementos, getApresentacaoPadrao().selecionado, 0, true);
+      if (!autorizacaoEditar(autorizacao))
+        sel = selecionadoOffset(action.elementos, getApresentacaoPadrao().selecionado, 1, true);
       return {...state, apresentacao: action.apresentacao, elementos: action.elementos, selecionado: sel};
     case "inserir":
       var elNovo = action.elemento;
@@ -237,7 +239,6 @@ export const reducerElementos = function (state = defaultList, action) {
     case "definir-selecao":
       if (!autorizacaoEditar(state.apresentacao.autorizacao)) 
         sel = selecionadoOffset(state.elementos, action.selecionado, 0, true);
-      console.log('selecao ' + sel.slide);
       return {...state, selecionado: sel};
     case "offset-selecao":  
       sel = {...selecionadoOffset(state.elementos, state.selecionado, action.offset, !autorizacaoEditar(state.apresentacao.autorizacao))};
@@ -249,6 +250,7 @@ export const reducerElementos = function (state = defaultList, action) {
   }
 };
 
+const usuarioAnonimo = {uid: 0, slidesPadrao: slidesPadraoDefault};
 function undoable(reducer) {
 
   var presenteInicial = reducer(undefined, {})
@@ -262,27 +264,37 @@ function undoable(reducer) {
     notificacoes: [],
     itensTutorial: [],
     tutoriaisFeitos: [],
-    searchAtivo: false
+    searchAtivo: false,
+    contadorPropaganda: 0,
+    propagandaAtiva: false
   }
 
   const limiteUndo = 50;
   
   return function (state = initialState, action) {
-    var { past, present, future, previousTemp, usuario, notificacoes, tutoriaisFeitos, itensTutorial, searchAtivo } = state;
+    var { past, present, future, previousTemp, usuario, notificacoes, tutoriaisFeitos, itensTutorial, searchAtivo, contadorPropaganda, propagandaAtiva } = state;
     var notificacoesAtualizado = getNotificacoes(notificacoes, getConteudoNotificacao(action));
     var newPresent;
     var novosItensTutorial = [];
+    var slidesPadrao = [];
+    if(propagandaAtiva) {
+      if(action.type === 'desativar-propaganda') {        
+        return {...state, propagandaAtiva: false};
+      } else {
+        return state;
+      }
+    }
     switch (action.type) {
       case 'login':
         var feitos = action.usuario.tutoriaisFeitos || [];
         novosItensTutorial = itensTutorial.filter(n => !feitos.includes(n))
         return {...state, usuario: action.usuario, tutoriaisFeitos: feitos, itensTutorial: novosItensTutorial};
       case 'logout':
-        return {...state, usuario: {uid: 0}}
-      case 'ativar-popup-confirmacao':
-        return {...state, popupConfirmacao: action.popupConfirmacao};
+        return {...state, usuario: usuarioAnonimo}
       case 'toggle-search':
         return {...state, searchAtivo: !searchAtivo};
+      case 'ativar-popup-confirmacao':
+        return {...state, popupConfirmacao: action.popupConfirmacao};
       case 'definir-item-tutorial':
         var tutoriais = [...new Set([...tutoriaisFeitos, ...itensTutorial].filter(t => !!t))];
         if (!action.zerar) {
@@ -290,11 +302,19 @@ function undoable(reducer) {
           var tutorialNovo = tutoriais.includes(action.itemTutorial) ? null : action.itemTutorial;
           if (tutorialNovo) novosItensTutorial.push(tutorialNovo);
         }
-        if(usuario.uid) atualizarRegistro({tutoriaisFeitos: tutoriais}, 'usuários', usuario.uid);
+        atualizarDadosUsuario(usuario.uid, {tutoriaisFeitos: tutoriais});
         return {...state, itensTutorial: novosItensTutorial, tutoriaisFeitos: tutoriais}
       case 'bloquear-tutoriais':
-        if(usuario.uid) atualizarRegistro({tutoriaisFeitos: keysTutoriais}, 'usuários', usuario.uid);
+        atualizarDadosUsuario(usuario.uid, { tutoriaisFeitos: keysTutoriais });
         return {...state, itensTutorial: [], tutoriaisFeitos: [...keysTutoriais]}
+      case 'adicionar-slide-padrao':
+        slidesPadrao = [...usuario.slidesPadrao, action.slide];
+        atualizarDadosUsuario(usuario.uid, {slidesPadrao: slidesPadrao});
+        return {...state, usuario: {...usuario, slidesPadrao: slidesPadrao}};
+      case 'excluir-slide-padrao':
+        slidesPadrao = usuario.slidesPadrao.splice(action.indiceSlide, 1);
+        atualizarDadosUsuario(usuario.uid, {slidesPadrao: slidesPadrao});
+        return {...state, usuario: {...usuario, slidesPadrao: slidesPadrao}};
       case 'UNDO':
         if (past.length === 0) return state;
         const previous = past[past.length - 1];
@@ -345,6 +365,10 @@ function undoable(reducer) {
           present.popupAdicionar = {...action.popupAdicionar, tipo: action.elemento.tipo};
         } 
         atualizarApresentacaoBD (present, newPresent, mudanca);
+        if (past.length - contadorPropaganda*numeroAcoesPropaganda >= numeroAcoesPropaganda) {
+          contadorPropaganda++;
+          propagandaAtiva = true;
+        }
         return {
           ...state,
           past: [...past],
@@ -352,10 +376,17 @@ function undoable(reducer) {
           future: [],
           slidePreview: getSlidePreview(newPresent),
           previousTemp: null,
-          notificacoes: [...notificacoesAtualizado]
+          notificacoes: [...notificacoesAtualizado],
+          propagandaAtiva: propagandaAtiva,
+          contadorPropaganda: contadorPropaganda
         }
     }
   }
+}
+
+const atualizarDadosUsuario = (idUsuario, dados) => {
+  if (idUsuario)
+    atualizarRegistro(dados, 'usuários', idUsuario);
 }
 
 function atualizarApresentacaoBD (present, newPresent, mudanca = null) {       

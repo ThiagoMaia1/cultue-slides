@@ -7,7 +7,7 @@
     border-radius: var(--round-border-medio);
     font-size: 90%;
     transition: top 0.1s ease-in-out;
-    box-shadow: 7px 7px 8px rgba(0,0,0,0.4);
+    box-shadow: var(--box-shadow-longe);
 }
 
 #barra-pesquisa button {
