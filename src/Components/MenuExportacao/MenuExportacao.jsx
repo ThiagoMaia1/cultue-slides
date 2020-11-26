@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import './MenuExportacao.css';
 import { toggleAnimacao } from '../Animacao/animacaoCoordenadas.js';
 import Exportador from './Exportador';
@@ -36,6 +35,7 @@ class MenuExportacao extends Component {
                         posicaoArrow={this.state.posicaoArrow}
                         posicao={i}
                         key={i}
+                        formatoExportacao={this.props.formatoExportacao}
                     />
                 )
             })
@@ -46,7 +46,8 @@ class MenuExportacao extends Component {
             .slice(0, this.state.posicaoArrow === 2 ? 4 : 3)
             .map((f, i) => {
                 const BotaoFormato = f;
-                return <BotaoFormato key={i} definirCallback={this.definirCallback}/>
+                return <BotaoFormato key={i} definirCallback={this.definirCallback} 
+                                     formatoExportacao={this.props.formatoExportacao}/>
             })
     )
 
@@ -93,16 +94,19 @@ class MenuExportacao extends Component {
     }
 
     definirCallback = (callbackFormato, criarSlideFinal = false) => {
-        this.setState({callbackFormato: callbackFormato, criarSlideFinal: criarSlideFinal});
+        this.setState({callbackFormato: this.state.callbackFormato ? null : callbackFormato, 
+                       criarSlideFinal: criarSlideFinal});
         this.definirCallbackFinal();
     }
 
     definirCallbackFinal = () => {
-        if (!this.state.callbackMeio || !this.state.callbackFormato) return;
-        var callback = (copiaDOM, imagensBase64, previews, nomeArquivo) => {
-            this.state.callbackMeio(this.state.callbackFormato(copiaDOM, imagensBase64, previews, nomeArquivo))
-        }
-        this.setState({callback: callback});
+        setTimeout(() => { 
+            if (!this.state.callbackMeio || !this.state.callbackFormato) return;
+            var callback = (copiaDOM, imagensBase64, previews, nomeArquivo) => {
+                this.state.callbackMeio(this.state.callbackFormato(copiaDOM, imagensBase64, previews, nomeArquivo))
+            }
+            this.setState({callback: callback});
+        }, 10);
     }
 
     render() {
@@ -131,8 +135,4 @@ class MenuExportacao extends Component {
     }
 }
 
-const mapState = state => (
-    {formatoExportacao: state.present.apresentacao.formatoExportacao}
-)
-
-export default connect(mapState)(MenuExportacao);
+export default MenuExportacao;

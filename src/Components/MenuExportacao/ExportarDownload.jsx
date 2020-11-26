@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import BotaoExportador from './BotaoExportador';
 import { MdFileDownload } from 'react-icons/md';
 
@@ -33,8 +32,8 @@ class ExportarDownload extends Component {
     }   
   }
 
-  componentDidMount = () => {
-    if(this.props.formatoExportacao)
+  componentDidUpdate = (prevProps) => {
+    if(!prevProps.formatoExportacao && this.props.formatoExportacao)
       this.props.definirMeioExportacao(this.exportarDownload, this.props.posicao);
   }
 
@@ -47,9 +46,5 @@ class ExportarDownload extends Component {
 
 }
 
-const mapState = state => (
-  {formatoExportacao: state.present.apresentacao.formatoExportacao}
-)
-
-export default connect(mapState)(ExportarDownload);
+export default ExportarDownload;
 

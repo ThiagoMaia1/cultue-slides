@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import { alturaTela, larguraTela } from '../Preview/TamanhoTela/TamanhoTela'
 import BotaoExportador from './BotaoExportador';
 import { jsPDF } from "jspdf";
@@ -49,10 +48,5 @@ class ExportadorPDF extends Component {
   }
 
 }
-
-const mapState = state => (
-  {formatoExportacao: state.present.apresentacao.formatoExportacao}
-)
-
-export default connect(mapState)(ExportadorPDF);
+export default ExportadorPDF;
 

@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import BotaoExportador from './BotaoExportador';
 import pptxgen from "pptxgenjs";
 import { fonteBase, larguraTela, alturaTela } from '../Preview/TamanhoTela/TamanhoTela';
@@ -159,8 +158,4 @@ const getDimensoesInches = (keysAbrev = true) => {
   }
 }
 
-const mapState = state => (
-  {formatoExportacao: state.present.apresentacao.formatoExportacao}
-)
-
-export default connect(mapState)(ExportarPptx);
+export default ExportarPptx;

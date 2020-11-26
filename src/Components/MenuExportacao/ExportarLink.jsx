@@ -31,7 +31,6 @@ class ExportarLink extends Component {
           { online
             ? <select id='selecionar-autorizacao-link' className='combo-popup' defaultValue={this.autorizacaoPadrao} onChange={this.changeAutorizacao}>
                 <option value='ver'>Ver</option>
-                {/* <option value='exportar'>Exportar</option> */}
                 <option value='editar'>Editar</option>
               </select>        
             : null

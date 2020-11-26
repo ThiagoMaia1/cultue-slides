@@ -11,8 +11,6 @@
     justify-content: flex-start;
     z-index: 2000;
     font-family: 'Myriad Pro';
-    --largura-logo: 40vh;
-    --altura-logo: calc(var(--largura-logo)/1.2614);
 }
 
 #logo-splash {

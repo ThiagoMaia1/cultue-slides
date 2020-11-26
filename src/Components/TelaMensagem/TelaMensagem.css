@@ -1,0 +1,18 @@
+#tela-mensagem {
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    width: 100vw;
+    top: 6vh;
+    height: 80vh;
+    z-index: 250;
+    background-color: white;
+}
+
+.texto-mensagem {
+    font-family: 'Noto Sans';
+    font-size: 120%;
+    white-space: pre-wrap;
+}

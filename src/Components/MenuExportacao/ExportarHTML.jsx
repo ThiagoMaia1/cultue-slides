@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import BotaoExportador from './BotaoExportador';
 import { toggleFullscreen as fullScreen } from '../Preview/Preview';
 import { alturaTela } from '../Preview/TamanhoTela/TamanhoTela';
@@ -118,10 +117,9 @@ class ExportarHTML extends Component {
     this.stringArquivo = copiaDOM.body.parentElement.innerHTML;
     return {nomeArquivo: nomeArquivo + this.formato, arquivo: this.stringArquivo, formato: this.formato};
   }
-
   
-  componentDidMount = () => {
-    if(this.props.formatoExportacao === this.formato)
+  componentDidUpdate = (prevProps) => {
+    if(!prevProps.formatoExportacao && this.props.formatoExportacao === this.formato)
       this.props.definirCallback(this.exportarHTML, true);
   }
 
@@ -134,9 +132,5 @@ class ExportarHTML extends Component {
 
 }
 
-const mapState = state => (
-  {formatoExportacao: state.present.apresentacao.formatoExportacao}
-)
-
-export default connect(mapState)(ExportarHTML);
+export default ExportarHTML;
 
