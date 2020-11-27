@@ -119,7 +119,12 @@ class ExportarHTML extends Component {
   }
   
   componentDidUpdate = (prevProps) => {
-    if(!prevProps.formatoExportacao && this.props.formatoExportacao === this.formato)
+    if(!prevProps.formatoExportacao === this.formato && this.props.formatoExportacao === this.formato)
+      this.props.definirCallback(this.exportarHTML, true);
+  }
+
+  componentDidMount = () => {
+    if (this.props.formatoExportacao === this.formato)
       this.props.definirCallback(this.exportarHTML, true);
   }
 

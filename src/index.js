@@ -48,6 +48,7 @@
 //   Html descaracterizado ao enviar em anexo no e-mail.
 //   Preview-fake do menu exportacao está visível
 //   Envio da apresentação para o BD quando o estilo é limpado.
+//   Definir callback meio e formato no menu exportação inconsistente.
 //
 /*// Features:
 //   ✔️ Envio de imagens.

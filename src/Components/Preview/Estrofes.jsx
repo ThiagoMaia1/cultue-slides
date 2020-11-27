@@ -14,7 +14,7 @@ export default function Estrofes(props) {
         return (
             <Fragment key={i}>
                 <span contentEditable={props.editavel} key={i} onInput={props.onInput} onFocus={() => props.ativarRealce('paragrafo')}>
-                    {t}
+                    {t} 
                 </span>
                 {breaks}
             </Fragment>

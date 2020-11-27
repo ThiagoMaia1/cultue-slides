@@ -33,7 +33,15 @@ class ExportarDownload extends Component {
   }
 
   componentDidUpdate = (prevProps) => {
-    if(!prevProps.formatoExportacao && this.props.formatoExportacao)
+    if(!prevProps.formatoExportacao && this.props.formatoExportacao) {
+      this.props.definirMeioExportacao(this.exportarDownload, this.props.posicao);
+    } else if(prevProps.formatoExportacao && !this.props.formatoExportacao) {
+      this.props.definirMeioExportacao(null, this.props.posicao);
+    }
+  }
+
+  componentDidMount = () => {
+    if (this.props.formatoExportacao)
       this.props.definirMeioExportacao(this.exportarDownload, this.props.posicao);
   }
 

@@ -5,23 +5,6 @@ import Login from '../Login/Login';
 import QuadroAtalhos from './QuadroAtalhos';
 import { definirApresentacaoPadrao, zerarApresentacao } from '../../firestore/apresentacoesBD';
 
-// function MensagemAutorizacao (props) {
-
-// var mensagem = '';
-// switch (props.autorizacao) { 
-// case 'ver':
-//   mensagem = 'Autorização: Somente Ver';
-//   break;
-// case 'exportar':
-//   mensagem = 'Autorização: Somente Ver e Exportar';
-//   break;
-// }
-
-//   return ( 
-//     <div id='mensagem-autorizacao'>{props.autorizacao === 'ver' ? 'Somente Leitura' : ''}</div>
-//   );
-// }
-
 class NavBar extends React.Component {
 
   constructor (props) {
@@ -52,15 +35,20 @@ class NavBar extends React.Component {
       <div id="navbar">
           <div id='botoes-navbar'>
             <button onClick={() => zerarApresentacao(this.props.usuario)}>Nova Apresentação</button>
-            <button onClick={() => definirApresentacaoPadrao(u.uid, this.props.elementos, 'atual')}>Definir Padrão</button>
-            <div className='div-botao-navbar'>
-              <button onClick={() => this.toggleQuadroAtalhos(true)} style={this.state.quadroAtalhos ? {pointerEvents: 'none', cursor: 'pointer'} : null}>Atalhos</button>
-              {this.state.quadroAtalhos
-                ? <QuadroAtalhos callback={this.toggleQuadroAtalhos}/>
-                : null
-              }
-            </div>
-            <button>Express</button>
+            {this.props.autorizacao !== 'baixar'
+              ? <>
+                  <button onClick={() => definirApresentacaoPadrao(u.uid, this.props.elementos, 'atual')}>Definir Padrão</button>
+                  <div className='div-botao-navbar'>
+                    <button onClick={() => this.toggleQuadroAtalhos(true)} style={this.state.quadroAtalhos ? {pointerEvents: 'none', cursor: 'pointer'} : null}>Atalhos</button>
+                    {this.state.quadroAtalhos
+                      ? <QuadroAtalhos callback={this.toggleQuadroAtalhos}/>
+                      : null
+                    }
+                  </div>
+                  <button>Express</button>
+                </>
+              : null
+            }
           </div>
           <div id='mensagem-autorizacao'>{this.props.autorizacao === 'ver' ? 'Somente Leitura' : ''}</div>
           <div id='info-usuario' onClick={this.toggleQuadroLogin}>

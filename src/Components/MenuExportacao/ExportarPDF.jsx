@@ -34,11 +34,15 @@ class ExportadorPDF extends Component {
     return {nomeArquivo: nomeArquivo + this.formato, arquivo: pdf, formato: this.formato};
   }
 
-  componentDidMount = () => {
-    if(this.props.formatoExportacao === this.formato)
+  componentDidUpdate = (prevProps) => {
+    if(!prevProps.formatoExportacao === this.formato && this.props.formatoExportacao === this.formato)
       this.props.definirCallback(this.exportarPDF);
   }
 
+  componentDidMount = () => {
+    if (this.props.formatoExportacao === this.formato)
+      this.props.definirCallback(this.exportarPDF);
+  }
 
   render() {
     return (

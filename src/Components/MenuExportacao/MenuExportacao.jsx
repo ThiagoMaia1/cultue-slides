@@ -46,8 +46,12 @@ class MenuExportacao extends Component {
             .slice(0, this.state.posicaoArrow === 2 ? 4 : 3)
             .map((f, i) => {
                 const BotaoFormato = f;
-                return <BotaoFormato key={i} definirCallback={this.definirCallback} 
-                                     formatoExportacao={this.props.formatoExportacao}/>
+                return (
+                    <BotaoFormato key={i} 
+                                  definirCallback={this.definirCallback} 
+                                  formatoExportacao={this.props.formatoExportacao}
+                    />
+                )
             })
     )
 
