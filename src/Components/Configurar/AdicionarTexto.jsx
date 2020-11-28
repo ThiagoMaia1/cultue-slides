@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import '../LetrasMusica/style.css';
 import Element from '../../Element'
 import { connect } from 'react-redux';
+import Carrossel from '../Carrossel/Carrossel';
 
 class AdicionarTexto extends Component {
     
@@ -66,9 +67,13 @@ class AdicionarTexto extends Component {
                     defaultValue={this.props.input2} 
                     onChange={e => this.setState({textoSlide: e.target.value})}></textarea>
                 <div className='lista-slides-padrao'>
-                    <div className='titulo-secao-popup'>Slides Padrão: </div>
-                    {this.gerarListaSlidesPadrao()}
-                    <button className='botao-adicionar-slide-padrao' onClick={this.criarSlidePadrao}>+</button>
+                    <Carrossel tamanhoIcone={45} tamanhoMaximo='20vh' direcao='vertical' style={{zIndex: '400', width: '100%'}} percentualBeirada={0.12}>
+                        <div className='itens-lista-slides-padrao'>
+                            <div className='titulo-secao-popup'>Slides Padrão: </div>
+                            {this.gerarListaSlidesPadrao()}
+                            <button id='botao-adicionar-slide-padrao' onClick={this.criarSlidePadrao}>+</button>
+                        </div>
+                    </Carrossel>
                 </div>
                 <div className='mensagem-erro'>
                     <div>{this.state.mensagemErro}</div>

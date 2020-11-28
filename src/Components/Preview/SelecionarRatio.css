@@ -1,0 +1,32 @@
+#selecionar-aspect-ratio {
+    position: absolute;
+    left: 2px;
+    min-width: 3vh;
+    min-height: 3vh;
+    z-index: 250;
+    visibility: visible;
+    overflow: hidden;
+}
+
+#fundo-selecionar-aspect-ratio {
+    background-color: black;
+    border-radius: 0 0 0.8vh 0;
+    transition: height 0.25s ease-in-out, width 0.25s ease-in-out, min-width 0.25s ease-in-out, min-height 0.25s ease-in-out, color 0.25s ease-in-out, transform 0.1s;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.opcao-ratio {
+    min-width: 7vw;
+    margin-left: 0.4vw;
+    padding: 0.6vh 0 0.4vh;
+    user-select: none;
+    text-align: center;
+}
+
+.opcao-ratio:hover {
+    background-color: var(--preto-fraco);
+}

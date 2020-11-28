@@ -49,6 +49,7 @@
 //   Preview-fake do menu exportacao está visível
 //   Envio da apresentação para o BD quando o estilo é limpado.
 //   Definir callback meio e formato no menu exportação inconsistente.
+//   Acabar com splash mais rápido se não houver conexão
 //
 /*// Features:
 //   ✔️ Envio de imagens.

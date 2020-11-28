@@ -135,7 +135,7 @@ class EtapaTutorial extends Component {
   
   constructor (props) {
     super(props);
-    this.state = {...props.itens[props.indice]};
+    this.state = {item: {...props.itens[props.indice]}};
   }
 
   componentDidUpdate = prevProps => {
@@ -145,19 +145,21 @@ class EtapaTutorial extends Component {
 
   componentDidMount = () => {
     this.removerCss();
-    this.styleSheet = document.createElement("style");
-    var elementos = document.querySelectorAll(this.state.selectorElemento);
+    var item = this.state.item;
+    if (!item.texto) return;
+    var elementos = document.querySelectorAll(item.selectorElemento);
     if (!elementos.length) return null;
+    this.styleSheet = document.createElement("style");
     this.styleSheet.innerHTML = getCSSFade(elementos);
-    if (this.state.callbackAntes) this.state.callbackAntes();
+    if (item.callbackAntes) item.callbackAntes();
     document.head.appendChild(this.styleSheet);
   }
 
   static getDerivedStateFromProps = (props, state) => {
-    var item = props.itens[props.indice] || {};
-    if(state.texto !== item.texto) {
-      if (state.callbackDepois) state.callbackDepois();
-      return {arrow: null, callbackAntes: null, callbackDepois: null, ...item};
+    var itemProps = props.itens[props.indice] || {};
+    if(state.item.texto !== itemProps.texto) {
+      if (state.item.callbackDepois) state.item.callbackDepois();
+      return {item: {...itemProps}};
     }
     return null;
   }
@@ -173,16 +175,17 @@ class EtapaTutorial extends Component {
 
   render() {
     if(!this.props.itens.length) return null;
+    var item = this.state.item;
     return (
-      <div className='container-caixa-tutorial' style={{top: this.state.coordenadas[0] + 'vh', left: this.state.coordenadas[1] + 'vw'}}>
-        {this.state.arrow 
-          ? <div className='arrow' style={{transform: 'rotate(' + this.state.arrow.rotacao + 'deg)', ...this.state.arrow.posicao}}>
+      <div className='container-caixa-tutorial' style={{top: item.coordenadas[0] + 'vh', left: item.coordenadas[1] + 'vw'}}>
+        {item.arrow 
+          ? <div className='arrow' style={{transform: 'rotate(' + item.arrow.rotacao + 'deg)', ...item.arrow.posicao}}>
               <FaLongArrowAltRight size={150}/>
             </div>
           : null
         }
         <div className='caixa-tutorial'>
-          {this.state.texto}
+          {item.texto}
         </div>
       </div>
     )

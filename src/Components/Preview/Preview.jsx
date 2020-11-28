@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { MdFullscreen, MdFullscreenExit } from 'react-icons/md';
 import SlideFormatado from './SlideFormatado';
 import { alturaTela } from './TamanhoTela/TamanhoTela';
+import SelecionarRatio from './SelecionarRatio';
 
 const full = {icone: <MdFullscreenExit className='icone-botao' size={100}/>, proporcao: 1, opacidadeBotao: '0%'}
 export const small = {icone: <MdFullscreen className='icone-botao' size={60}/>, proporcao: 0.45, opacidadeBotao: '30%'}
@@ -93,6 +94,7 @@ class Preview extends Component {
             <div id='borda-slide-mestre' style={{height: alturaTela*proporcao + 0.051*window.innerHeight, 
                                                         visibility: slidePreview.eMestre ? '' : 'hidden',
                                                         ...this.realcarElemento('tampao', 'fora')}}>
+                <SelecionarRatio/>
                 <SlideFormatado
                     proporcao={proporcao}
                     id='preview'

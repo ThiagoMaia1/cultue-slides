@@ -116,7 +116,7 @@ ol {
 }
 
 #slide-mestre:hover {
-  background-color: #202020;
+  background-color: var(--preto-fraco);
 }
 
 #adicionar-slide {
