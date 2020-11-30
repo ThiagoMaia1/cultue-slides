@@ -1,4 +1,3 @@
-import { fonteBase, alturaTela, larguraTela } from './Components/Preview/TamanhoTela/TamanhoTela';
 import AdicionarMusica from './Components/LetrasMusica/AdicionarMusica';
 import AdicionarTextoBiblico from './Components/TextoBiblico/AdicionarTextoBiblico';
 import AdicionarTexto from './Components/Configurar/AdicionarTexto';
@@ -47,9 +46,13 @@ export class Estilo {
     this.imagem = {};
   }
 }
+
+export const fontePadrao = 'Noto Sans';
+
+export const getFonteBase = () => ({numero: 0.025*store.getState().present.ratio.height, unidade: 'px', fontFamily: fontePadrao});
   
 const estiloPadrao = {
-  texto: {fontFamily: fonteBase.fontFamily}, 
+  texto: {fontFamily: fontePadrao}, 
   titulo: {fontSize: 3, height: 0.25, paddingRight: 0.08, textAlign: 'center'}, 
   paragrafo: {fontSize: 1.5, paddingRight: 0.08, lineHeight: 1.9}, 
   fundo: {src: './Galeria/Fundos/Cor Sólida.jpg'}, 
@@ -151,6 +154,7 @@ export default class Element {
     var slide = thisP.slides[nSlide];  
     var estSlide = slide.estilo;
     estGlobal = estGlobal ? estGlobal : store.getState().present.elementos[0].slides[0].estilo;
+    var ratio = store.getState().present.ratio;
     
     var estP = {...estGlobal.paragrafo, ...estElemento.paragrafo , ...estSlide.paragrafo};
     var estT = {...estGlobal.texto, ...estElemento.texto, ...estSlide.texto};
@@ -158,10 +162,10 @@ export default class Element {
     // Variáveis relacionadas ao tamanho do slide.
     var padV = estP.paddingTop + estP.paddingRight; //Right é a base de cálculo, bottom varia.
     var padH = estP.paddingRight + estP.paddingLeft;
-    var larguraLinha = larguraTela*(1-padH);
-    var alturaLinha = estP.lineHeight*estP.fontSize*fonteBase.numero;
-    var alturaSecaoTitulo = estTitulo.height*alturaTela;
-    var alturaSecaoParagrafo = alturaTela-alturaSecaoTitulo;
+    var larguraLinha = ratio.width*(1-padH);
+    var alturaLinha = estP.lineHeight*estP.fontSize*getFonteBase().numero;
+    var alturaSecaoTitulo = estTitulo.height*ratio.height;
+    var alturaSecaoParagrafo = ratio.height-alturaSecaoTitulo;
     var alturaParagrafo = alturaSecaoParagrafo*(1-padV);
     var nLinhas = alturaParagrafo/alturaLinha;
   
@@ -170,7 +174,7 @@ export default class Element {
     } else {
       nLinhas = Math.floor(nLinhas);
     }
-    slide.estilo.paragrafo.paddingBottom = ((alturaSecaoParagrafo-nLinhas*alturaLinha)/larguraTela)-estP.paddingTop; 
+    slide.estilo.paragrafo.paddingBottom = ((alturaSecaoParagrafo-nLinhas*alturaLinha)/ratio.width)-estP.paddingTop; 
     
     var duasColunas = false;
     if (estP.duasColunas) {
@@ -182,7 +186,7 @@ export default class Element {
       }
     }
 
-    var estiloFonte = [(estT.fontStyle || ''), (estT.fontWeight || ''), estP.fontSize*fonteBase.numero + fonteBase.unidade, "'" + estT.fontFamily + "'"];
+    var estiloFonte = [(estT.fontStyle || ''), (estT.fontWeight || ''), estP.fontSize*getFonteBase().numero + getFonteBase().unidade, "'" + estT.fontFamily + "'"];
     estiloFonte = estiloFonte.filter(a => a !== '').join(' ');
     var caseTexto = estT.caseTexto || estP.caseTexto;
     var separador = thisP.tipo === 'TextoBíblico' ? '' : '\n\n';

@@ -2,14 +2,11 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { MdFullscreen, MdFullscreenExit } from 'react-icons/md';
 import SlideFormatado from './SlideFormatado';
-import { alturaTela } from './TamanhoTela/TamanhoTela';
 import SelecionarRatio from './SelecionarRatio';
 
-const full = {icone: <MdFullscreenExit className='icone-botao' size={100}/>, proporcao: 1, opacidadeBotao: '0%'}
-export const small = {icone: <MdFullscreen className='icone-botao' size={60}/>, proporcao: 0.45, opacidadeBotao: '30%'}
 
 export function toggleFullscreen (element = null) {        
-
+    
     if (document.fullscreenElement || !element) {
         document.exitFullscreen()
         .catch(function(error) {
@@ -27,17 +24,19 @@ class Preview extends Component {
     
     constructor(props) {
         super(props);
+        this.full = {icone: <MdFullscreenExit className='icone-botao' size={100}/>, proporcao: 1, opacidadeBotao: '0%'}
+        this.small = {icone: <MdFullscreen className='icone-botao' size={60}/>, proporcao: 0.45, opacidadeBotao: '30%'}
         this.ref = React.createRef();
         this.state = {screen: this.props.slidePreviewFake ? 
-            {...full, icone: <MdFullscreen className='icone-botao' size={100}/>} : 
-            {...small}};
+            {...this.full, icone: <MdFullscreen className='icone-botao' size={100}/>} : 
+            {...this.small}};
 
         document.addEventListener('fullscreenchange', () => {
             if (document.fullscreenElement) {
-                if (this.props.slidePreview.eMestre) this.offsetSlide(1);
-                this.setState({screen: {...full}});
+                if (this.props.slidePreview.eMestre) this.offsetSlide(0);
+                this.setState({screen: {...this.full}});
             } else {
-                this.setState({screen: {...small}});
+                this.setState({screen: {...this.small}});
             }
           });
     }
@@ -49,10 +48,10 @@ class Preview extends Component {
     }
 
     tornarBotaoInvisivel = () => {
-        if (this.state.screen.proporcao === full.proporcao) {
-            this.setState({screen: {...this.state.screen, opacidadeBotao: full.opacidadeBotao}})
+        if (this.state.screen.proporcao === this.full.proporcao) {
+            this.setState({screen: {...this.state.screen, opacidadeBotao: this.full.opacidadeBotao}})
         } else {
-            this.setState({screen: {...this.state.screen, opacidadeBotao: small.opacidadeBotao}})    
+            this.setState({screen: {...this.state.screen, opacidadeBotao: this.small.opacidadeBotao}})    
         }
     }
 
@@ -88,19 +87,20 @@ class Preview extends Component {
     render() {
         var eMini = this.props.mini;
         var slidePreview = this.props.slidePreview;
-        var proporcao = this.state.screen.proporcao;
-        const telaCheia = proporcao === full.proporcao;
+        var proporcao = this.state.screen.proporcao*Math.min(window.screen.height/this.props.ratio.height, window.screen.width/this.props.ratio.width);
+        const telaCheia = this.state.screen.proporcao === this.full.proporcao;
         return (
-            <div id='borda-slide-mestre' style={{height: alturaTela*proporcao + 0.051*window.innerHeight, 
-                                                        visibility: slidePreview.eMestre ? '' : 'hidden',
-                                                        ...this.realcarElemento('tampao', 'fora')}}>
-                <SelecionarRatio/>
+            <div id='borda-slide-mestre' ref={this.ref} 
+                                         style={{height: this.props.ratio.height*proporcao + 0.051*window.innerHeight, 
+                                         visibility: slidePreview.eMestre ? '' : 'hidden',
+                                         padding: telaCheia ? '' : '1vh',
+                                         ...this.realcarElemento('tampao', 'fora')}}>
+                {telaCheia ? null : <SelecionarRatio/>}
                 <SlideFormatado
                     proporcao={proporcao}
                     id='preview'
                     className='preview'
                     realcarElemento={this.realcarElemento}
-                    referencia={this.ref}
                     editavel={!slidePreview.eMestre && this.props.autorizacao === 'editar' && !telaCheia}
                     slidePreview={slidePreview}
                     style={telaCheia ? {overflow: 'visible'} : null}
@@ -132,7 +132,8 @@ class Preview extends Component {
 }
 
 const mapState = function (state) {
-    return {slidePreview: state.slidePreview, abaAtiva: state.present.abaAtiva, autorizacao: state.present.apresentacao.autorizacao}
+    const sP = state.present;
+    return {slidePreview: state.slidePreview, abaAtiva: sP.abaAtiva, autorizacao: sP.apresentacao.autorizacao, ratio: sP.ratio}
 }
 
 export default connect(mapState)(Preview);

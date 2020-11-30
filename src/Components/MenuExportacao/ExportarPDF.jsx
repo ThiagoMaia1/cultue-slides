@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { alturaTela, larguraTela } from '../Preview/TamanhoTela/TamanhoTela'
+import { connect } from 'react-redux';
 import BotaoExportador from './BotaoExportador';
 import { jsPDF } from "jspdf";
 import TratarDadosHTML from './tratarDadosHTML';
@@ -20,11 +20,10 @@ class ExportadorPDF extends Component {
     const pdf = new jsPDF(({
       orientation: "landscape",
       unit: "px",
-      format: [larguraTela, alturaTela]
+      format: [this.props.ratio.width, this.props.ratio.height]
     }));
     
     copiaDOM = TratarDadosHTML(copiaDOM).copiaDOM;
-    // var paginas = copiaDOM.querySelectorAll('.preview-fake');
 
     pdf.html(copiaDOM.body, {
       callback: function (pdf) {
@@ -52,5 +51,10 @@ class ExportadorPDF extends Component {
   }
 
 }
-export default ExportadorPDF;
+
+const mapState = state => (
+  {ratio: state.present.ratio}
+)
+
+export default connect(mapState)(ExportadorPDF);
 

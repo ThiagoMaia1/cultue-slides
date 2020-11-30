@@ -34,7 +34,7 @@ export const checarLogin = (callbackLogin) => {
             }
         }
         store.dispatch({type: tipoEvento, usuario: user});
-        definirApresentacaoAtiva(user, apresentacao, undefined, pushar);
+        definirApresentacaoAtiva(user, apresentacao, undefined, undefined, pushar);
         if (callbackLogin) callbackLogin(user);
     });
 }

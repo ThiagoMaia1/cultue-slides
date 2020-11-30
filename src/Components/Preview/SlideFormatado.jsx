@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import './style.css';
 import { connect } from 'react-redux';
 import Estrofes from './Estrofes';
-import { alturaTela, larguraTela, fonteBase } from './TamanhoTela/TamanhoTela';
+import { getFonteBase } from '../../Element';
 
 class SlideFormatado extends Component {
     
@@ -38,13 +38,13 @@ class SlideFormatado extends Component {
                 <div ref={this.props.referencia} 
                      id={this.props.id} 
                      className={this.props.className}
-                     style={{width: larguraTela*proporcao, 
-                             height: alturaTela*proporcao,
+                     style={{width: this.props.ratio.width*proporcao, 
+                             height: this.props.ratio.height*proporcao,
                              ...this.realcarElemento('tampao', 'dentro'),
                              ...this.props.style}}>
                     <div className='tampao' style={slidePreview.estilo.tampao}></div>
                     <Img imagem={slidePreview.estilo.fundo} />
-                    <div className='texto-preview' style={{fontSize: fonteBase.numero*proporcao + fonteBase.unidade}}>
+                    <div className='texto-preview' style={{fontSize: getFonteBase().numero*proporcao + getFonteBase().unidade}}>
                         <div className='slide-titulo' style={slidePreview.estilo.titulo}>
                             <div><span id='textoTitulo' onInput={this.editarTexto} onFocus={() => this.ativarRealce('titulo')} 
                                 contentEditable={this.props.editavel}
@@ -78,7 +78,8 @@ const Img = ({imagem}) => {
 };
 
 const mapState = function (state) {
-    return {abaAtiva: state.present.abaAtiva}
+    const sP = state.present;
+    return {abaAtiva: sP.abaAtiva, ratio: sP.ratio}
 }
 
 export default connect(mapState)(SlideFormatado);

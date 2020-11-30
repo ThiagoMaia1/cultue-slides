@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import BotaoExportador from './BotaoExportador';
 import { toggleFullscreen as fullScreen } from '../Preview/Preview';
-import { alturaTela } from '../Preview/TamanhoTela/TamanhoTela';
 import TratarDadosHTML from './tratarDadosHTML';
 
 const toggleFullscreen = fullScreen;
@@ -26,15 +25,17 @@ function scriptHTML () {
   window.addEventListener('resize', function(){
     var telaCheiaElemento = !!document.fullscreenElement;
     var botaoAApertar = telaCheiaElemento ? 'Esc' : 'F11';
-    var msgFinal = document.getElementById('paragrafo-textoArray-999-0-0');
     var botaoTela = document.getElementById('ativar-tela-cheia')
-    msgFinal.innerHTML = msgFinal.innerHTML.replace(/Esc|F11/, botaoAApertar);
+    var msgFinal = document.getElementById('mensagem-slide-final');
+    if (msgFinal)
+      msgFinal.innerHTML = msgFinal.innerHTML.replace(/Esc|F11/, botaoAApertar);
 
-    if(window.innerHeight > alturaTela -100 && !telaCheiaElemento){
+    if(window.innerHeight > window.screen.height -100 && !telaCheiaElemento){
       botaoTela.style.display = 'none';
     } else {
       botaoTela.style.display = '';
     }
+    adicionarEstiloTamanho();
   });
 
   document.addEventListener("click", function (event) {
@@ -75,6 +76,19 @@ function scriptHTML () {
   }, false);
 
   document.getElementById('preview-fake0').classList.add('slide-ativo')
+
+  function adicionarEstiloTamanho() {
+    var sheets = document.styleSheets;
+    console.log(sheets[sheets.length - 2]);
+    var rule = sheets[sheets.length - 2].cssRules[0];
+    var slide = document.getElementById('preview-fake0');
+    var quadro = document.getElementById('container-apresentacao');
+    var scale = Math.min(quadro.offsetWidth/slide.offsetWidth, quadro.offsetHeight/ slide.offsetHeight);
+    rule.style.transform = 'scale(' + scale + ')';
+    rule.style.transformOrigin = 'center';
+  }
+    
+  adicionarEstiloTamanho();
 } 
 
 class ExportarHTML extends Component {
@@ -95,7 +109,8 @@ class ExportarHTML extends Component {
     copiaDOM = tratado.copiaDOM;
     var { botaoTelaCheia, setaMovimento } = tratado;
     
-    copiaDOM.body.innerHTML = botaoTelaCheia + setaMovimento + copiaDOM.body.innerHTML;
+    var apresentacao = '<div id="container-apresentacao">' + copiaDOM.body.innerHTML + '</div>'
+    copiaDOM.body.innerHTML = botaoTelaCheia + setaMovimento + apresentacao;
     for (var img of imagensBase64) { //Criar o css para as imagens.
       var { classe, data } = img;
       this.cssImagens.push('.' + classe + '::before{content: url(' + data + '); position: absolute; z-index: 0;}')

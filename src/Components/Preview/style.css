@@ -1,9 +1,12 @@
 #borda-slide-mestre {
     border-radius: var(--round-border-grande);
-    padding: 1vh;
     background-color: black;
     box-shadow: var(--box-shadow);
     position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 .preview {
@@ -96,7 +99,6 @@ img {
     height: 100%;
     position: absolute;
     z-index: 10;
-    border-radius: var(--round-border-grande);
     display: flex;
     justify-content: space-between;
 }

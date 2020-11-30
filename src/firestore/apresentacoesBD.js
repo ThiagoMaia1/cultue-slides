@@ -8,8 +8,11 @@ import history, { getIdHash } from '../history';
 const colecaoApresentacoes = 'apresentações';
 const colecaoPermissoes = 'permissões';
 
-const autorizacoesApresentacao = {baixar: 'componente', ver: 'componente', exportar: 'componente', editar: 'componente'}
+const autorizacoesApresentacao = ['baixar', 'ver', 'exportar', 'editar']
 
+const wWidth = window.screen.width;
+const wHeight = window.screen.height;
+export const ratioPadrao = {width: Math.max(wWidth, wHeight), height: Math.min(wWidth, wHeight)};
 
 export const getElementosPadrao = (usuario) => {
   if (usuario && usuario.apresentacaoPadrao) {
@@ -23,25 +26,31 @@ export const getApresentacaoPadrao = (usuario) => ({
   selecionado: {elemento: 0, slide: 0}
 });
 
-export const gerarNovaApresentacao = async (idUsuario, elementos, ePadrao) => {
+export const gerarNovaApresentacao = async (idUsuario, elementos, ePadrao, ratio) => {
   if (elementos)
     elementos = getElementosConvertidos(elementos);
   return await gerarNovoRegistro(
     colecaoApresentacoes,
     {
       idUsuario: idUsuario,
-      elementos: elementos
+      elementos: elementos,
+      ratio: ratio
     },
     true
   );
 };
 
-export const definirApresentacaoAtiva = async (usuario, apresentacao = {}, elementos = null, mudarURL = true) => {
+export const definirApresentacaoAtiva = async (usuario, apresentacao = {}, elementos = null, ratio = null, mudarURL = true) => {
   if (!apresentacao) apresentacao = {};
   var novaApresentacao = apresentacao;
   var zerada = false;
   if (apresentacao.elementos)
     elementos = getElementosDesconvertidos(apresentacao.elementos);
+  if (apresentacao.ratio) {
+    ratio = apresentacao.ratio 
+  } else if (!ratio) {
+    ratio = {...ratioPadrao};
+  }
   if (!elementos) {
     zerada = true;
     elementos = getElementosPadrao(usuario);
@@ -51,18 +60,18 @@ export const definirApresentacaoAtiva = async (usuario, apresentacao = {}, eleme
   } else {
     limparApresentacoesVazias(usuario.uid);
     if (!apresentacao.id)
-      novaApresentacao = await gerarNovaApresentacao(usuario.uid, elementos, zerada);
+      novaApresentacao = await gerarNovaApresentacao(usuario.uid, elementos, zerada, ratio);
   }
   delete novaApresentacao.elementos;
   novaApresentacao = {...novaApresentacao, zerada: zerada};
   if (mudarURL) history.replace('/app' + (novaApresentacao.id ? '/#/' + novaApresentacao.id : ''));
-  store.dispatch({type: 'definir-apresentacao-ativa', apresentacao: novaApresentacao, elementos: elementos})
+  store.dispatch({type: 'definir-apresentacao-ativa', apresentacao: novaApresentacao, elementos: elementos, ratio: ratio})
 }
 
 export const excluirApresentacao = async idApresentacao => {
   var state = store.getState();
   if (state.present.apresentacao.id === idApresentacao)
-    await definirApresentacaoAtiva(state.usuario, getUltimaApresentacaoUsuario(state.usuario), undefined, false);
+    await definirApresentacaoAtiva(state.usuario, getUltimaApresentacaoUsuario(state.usuario), undefined, undefined, false);
   await excluirRegistro(idApresentacao, colecaoApresentacoes);
   var permissoes = getRegistrosQuery(colecaoPermissoes, 'idApresentacao', idApresentacao);
   for (var p of permissoes) {
@@ -81,11 +90,11 @@ const limparApresentacoesVazias = idUsuario => {
   });
 }
 
-export const atualizarApresentacao = async (elementos, idApresentacao) => {
+export const atualizarApresentacao = async (elementos, ratio, idApresentacao) => {
   return await atualizarRegistro(
-    {elementos: getElementosConvertidos(elementos), ePadrao: false},
-    colecaoApresentacoes,
-    idApresentacao
+    {elementos: getElementosConvertidos(elementos), ratio: ratio, ePadrao: false},
+     colecaoApresentacoes,
+     idApresentacao
   );
 }
 
@@ -172,7 +181,6 @@ export const getApresentacaoComLocation = async (location) => {
   }
   if (apresentacao === null) {
     store.dispatch({type: 'inserir-notificacao', conteudo: 'URL Inválida: ' + window.location.origin.toString() + location.pathname + location.hash})
-    // history.replace('/app');
   }
   return apresentacao;
 }
@@ -191,61 +199,6 @@ const getApresentacaoComPermissao = async idPermissao => {
   }
 }
 
-// export const definirApresentacaoComLocation = async (location, user) => {
-//   var apresentacao = 0;
-//   if (location.hash) {
-//     var idHash = getIdHash(location);
-//     var temApp = location.pathname === '/app/';
-//     var getApresentacao = temApp ? getApresentacaoComId : getApresentacaoPermissao; 
-//     apresentacao = await getApresentacao(idHash);
-//     if(apresentacao && apresentacao.idUsuario === user.uid) apresentacao.autorizacao = 'editar';
-//   }
-//   if (apresentacao === null) 
-//     store.dispatch({type: 'inserir-notificacao', conteudo: 'URL Inválida: ' + window.location.origin.toString() + location.pathname + location.hash})
-//     history.replace('/app');
-//   if (!apresentacao) {
-//     definirApresentacaoUsuario(user);
-//   } else {
-//     definirApresentacaoAtiva(user, apresentacao)
-//   }
-// }
-
-// const definirApresentacaoUsuario = user => {
-//   var state = store.getState();
-//   var z = state.present.apresentacao.zerada;
-//   var eNovoLogin = !state.usuario.uid && user.uid; 
-//   if (!user.uid) {
-//       if (!z)
-//           definirApresentacaoAtiva(user, {id: 0}, state.present.elementos)
-//       return
-//   }
-//   if (!z && eNovoLogin) {
-//     ativarPopupConfirmacao(
-//       'simNao', 
-//       'Apresentação', 
-//       'Deseja continuar editando a apresentação atual?', 
-//       fazer => {
-//           if(fazer) {
-//               associarApresentacaoUsuario(user);
-//           } else {
-//               selecionarUltimaApresentacaoUsuario(user);
-//           }
-//       }
-//   )
-//   } else {
-//       selecionarUltimaApresentacaoUsuario(user);
-//   }
-// }
-
-// const associarApresentacaoUsuario = user => {
-//   var state = store.getState().present;
-//   definirApresentacaoAtiva(
-//       user, 
-//       state.apresentacao,
-//       state.elementos
-//   )
-// }
-
 export const getUltimaApresentacaoUsuario = async user => {
   var apresentacoes = await getApresentacoesUsuario(user.uid || 0);
   return (
@@ -262,21 +215,8 @@ const apresentacaoERecente = (apresentacao, dias = 7) => {
   return tempoDecorrido < dias*oneDay
 }
 
-// const selecionarUltimaApresentacaoUsuario = async (user, pushar = true) => {
-//   var apresentacoes = await getApresentacoesUsuario(user.uid);
-//   if (apresentacoes.length !== 0) {
-//       var oneDay = 24 * 60 * 60 * 1000; // ms
-//       var tempoDecorrido = (new Date()) - apresentacoes[0].timestamp.toDate();
-//       if(tempoDecorrido < 7*oneDay || !pushar) {
-//         definirApresentacaoAtiva(user, apresentacoes[0], undefined, pushar);
-//         return;
-//       }
-//   }
-//   definirApresentacaoAtiva(user, undefined, undefined, pushar);
-// }
-
 export const gerarNovaPermissao = async (idApresentacao, autorizacao = 'ver', usuarios = [], formatoExportacao = null) => {
-  if (!autorizacoesApresentacao[autorizacao]) autorizacao = 'ver';
+  if (!autorizacoesApresentacao.includes(autorizacao)) autorizacao = 'ver';
   return await gerarNovoRegistro(
     colecaoPermissoes,
     {

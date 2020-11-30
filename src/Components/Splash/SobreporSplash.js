@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import Splash from './Splash';
-import LoadingSplash from './LoadingSplash';
-import { Redirect } from "react-router-dom";
+// import Splash from './Splash';
+// import LoadingSplash from './LoadingSplash';
+// import { Redirect } from "react-router-dom";
 import { connect } from 'react-redux';
 
 export default function sobreporSplash (Componente, exigeUsuario = false, funcaoChecar = null, conferirLogin = false, paginaInteira = false, desativarNoMount = false) {

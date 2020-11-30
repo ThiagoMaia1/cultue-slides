@@ -90,6 +90,7 @@
 //   Melhorar pesquisa de letra de música usando google.
 //   Favoritar músicas, fundos...
 //   Persistir redux
+//   Otimizar mobile
 //
 // Negócio:
 //   ✔️ Criar logo.
@@ -107,7 +108,7 @@ import { createStore } from 'redux';
 import hotkeys from 'hotkeys-js';
 import { getEstiloPadrao, Estilo, getPadding, tiposElemento, getDadosMensagem } from './Element.js';
 import { selecionadoOffset, getSlidePreview } from './Components/MenuExportacao/Exportador';
-import { atualizarApresentacao, getApresentacaoPadrao, definirApresentacaoAtiva, zerarApresentacao, autorizacaoEditar } from './firestore/apresentacoesBD';
+import { atualizarApresentacao, getApresentacaoPadrao, definirApresentacaoAtiva, zerarApresentacao, autorizacaoEditar, ratioPadrao } from './firestore/apresentacoesBD';
 import { atualizarRegistro, slidesPadraoDefault } from './firestore/apiFirestore';
 import { keysTutoriais } from './Components/Tutorial/Tutorial';
 
@@ -133,6 +134,7 @@ var defaultList = {...getApresentacaoPadrao(),
   abaAtiva: 'texto',
   popupAdicionar: {},
   apresentacao: {id: 0, zerada: true, autorizacao: autorizacaoPadrao},
+  ratio: {...ratioPadrao}
 };
 
 export const reducerElementos = function (state = defaultList, action) {
@@ -149,7 +151,9 @@ export const reducerElementos = function (state = defaultList, action) {
       action.apresentacao.autorizacao = autorizacao;
       if (!autorizacaoEditar(autorizacao))
         sel = selecionadoOffset(action.elementos, getApresentacaoPadrao().selecionado, 1, true);
-      return {...state, apresentacao: action.apresentacao, elementos: action.elementos, selecionado: sel};
+      return {...state, apresentacao: action.apresentacao, elementos: action.elementos, ratio: action.ratio, selecionado: sel};
+    case 'selecionar-ratio-apresentacao':
+      return {...state, ratio: {...action.ratio}}
     case "inserir":
       var elNovo = action.elemento;
       elNovo.input1 = action.popupAdicionar.input1;
@@ -243,9 +247,10 @@ export const reducerElementos = function (state = defaultList, action) {
         sel = selecionadoOffset(state.elementos, action.selecionado, 0, true);
       return {...state, selecionado: sel};
     case "offset-selecao":  
-      sel = {...selecionadoOffset(state.elementos, state.selecionado, action.offset, !autorizacaoEditar(state.apresentacao.autorizacao))};
+      sel = {...selecionadoOffset(state.elementos, state.selecionado, action.offset, autorizacaoEditar(state.apresentacao.autorizacao) ? undefined : true)};
       if (sel.slide > 0 && el[sel.elemento].colapsado) 
-        el[sel.elemento].colapsado = false;
+        sel.slide = 0;
+        // el[sel.elemento].colapsado = false; //Para descolapsar
       return {...state, selecionado: sel, elementos: el};
     default:
       return state;
@@ -358,10 +363,10 @@ function undoable(reducer) {
         var mudanca = houveMudanca(present, newPresent);
         if (mudanca.length > 0) {
           past = [...past, present];
-          if(mudanca.includes('elementos')) {
+          if(mudanca.includes('elementos') || mudanca.includes('ratio')) {
             newPresent.apresentacao = {...newPresent.apresentacao, zerada: false}
             if(usuario.uid && !newPresent.apresentacao.id)
-              definirApresentacaoAtiva(usuario, newPresent.apresentacao, newPresent.elementos);
+              definirApresentacaoAtiva(usuario, newPresent.apresentacao, newPresent.elementos, newPresent.ratio);
           }
           if (action.type === 'inserir')
           present.popupAdicionar = {...action.popupAdicionar, tipo: action.elemento.tipo};
@@ -393,13 +398,13 @@ const atualizarDadosUsuario = (idUsuario, dados) => {
 
 function atualizarApresentacaoBD (present, newPresent, mudanca = null) {       
   if (!mudanca) mudanca = houveMudanca(present, newPresent);
-  if (mudanca.includes('elementos') && !mudanca.includes('apresentacao') && newPresent.apresentacao.id) {
+  if ((mudanca.includes('elementos') || mudanca.includes('ratio')) && !mudanca.includes('apresentacao') && newPresent.apresentacao.id) {
     atualizarApresentacao(newPresent.elementos, newPresent.apresentacao.id);
   } 
 }
 
 function houveMudanca(estado1, estado2) {
-  const keysRelevantes = ['elementos', 'popupAdicionar', 'apresentacao'];
+  const keysRelevantes = ['elementos', 'popupAdicionar', 'apresentacao', 'ratio'];
   var retorno = [];
   for (var k of keysRelevantes) {
     if (JSON.stringify(estado1[k]) !== JSON.stringify(estado2[k]))
@@ -414,6 +419,7 @@ function deepSpreadPresente(present) {
   var popupAdicionar = {...present.popupAdicionar};
   var abaAtiva = present.abaAtiva;
   var apresentacao = {...present.apresentacao};
+  var ratio = {...present.ratio}
 
   for (var e of present.elementos) {
     var slides = [];
@@ -426,7 +432,7 @@ function deepSpreadPresente(present) {
     }
     elementos.push({...e, slides: slides});
   }
-  return {...present, elementos: elementos, selecionado: selecionado, abaAtiva: abaAtiva, popupAdicionar: popupAdicionar, apresentacao: apresentacao};
+  return {...present, elementos: elementos, selecionado: selecionado, abaAtiva: abaAtiva, popupAdicionar: popupAdicionar, apresentacao: apresentacao, ratio: ratio};
 }
 
 export let store = createStore(undoable(reducerElementos), /* preloadedState, */

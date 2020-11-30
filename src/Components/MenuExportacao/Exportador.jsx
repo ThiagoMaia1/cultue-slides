@@ -2,9 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { capitalize, getNomeInterfaceTipo } from '../../Element';
 import SlideFormatado from '../Preview/SlideFormatado'; 
-import { alturaTela, larguraTela } from '../Preview/TamanhoTela/TamanhoTela';
 
-export function getBase64Image(src, classe, total, callback) {
+export function getBase64Image(src, classe, total, ratio, callback) {
   const img = new Image();
   img.crossOrigin = 'Anonymous';
   img.onload = () => {
@@ -13,8 +12,8 @@ export function getBase64Image(src, classe, total, callback) {
     let dataURL;
     var iw = img.width;
     var ih = img.height;
-    var windowW = larguraTela;
-    var windowH = alturaTela;
+    var windowW = ratio.width;
+    var windowH = ratio.height;
     var scale = Math.max((windowW/iw), (windowH/ih));
     var wScaled = windowW/scale;
     var hScaled = windowH/scale;
@@ -44,6 +43,7 @@ export function selecionadoOffset (elementos, selecionado, offset, apresentacao)
     var elem = slidesOrdenados(elementos, !apresentacao, selecionado);
     for (var i = 0; i < elem.length; i++) { //Acha o selecionado atual.
       if (elem[i].elemento === selecionado.elemento && elem[i].slide === selecionado.slide) {
+        if (!offset && elem[i].eMestre) offset = 1;
         var novoIndex = i + offset;
         if (novoIndex < 0) {
           novoIndex = 0;
@@ -141,6 +141,13 @@ class Exportador extends Component {
     })
     setTimeout(() => {
       this.copiaDOM = document.cloneNode(true);
+      var spans = this.copiaDOM.querySelectorAll('span');
+      for (var s of spans) {
+        if (s.innerText === slideFinal.textoArray[0]) {
+          s.id = 'mensagem-slide-final';
+          break;
+        }
+      }
       this.getImagensBase64();
     }, 10);
     
@@ -167,7 +174,7 @@ class Exportador extends Component {
       }
     }
     for (var j = 0; j < imgsUnique.length; j++) {
-      getBase64Image(imgsUnique[j].src, imgsUnique[j].className, imgsUnique.length,
+      getBase64Image(imgsUnique[j].src, imgsUnique[j].className, imgsUnique.length, this.props.ratio,
         (dataURL, classe, total, src) => {
           this.imagensBase64.push({data: dataURL, classe: classe});
           if (total === this.imagensBase64.length) {
@@ -198,7 +205,8 @@ class Exportador extends Component {
 }
 
 const mapState = function (state) {
-  return {elementos: state.present.elementos};
+  const sP = state.present;
+  return {elementos: sP.elementos, ratio: sP.ratio};
 }
 
 export default connect(mapState)(Exportador);

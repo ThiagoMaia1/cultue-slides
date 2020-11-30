@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import BotaoExportador from './BotaoExportador';
 import pptxgen from "pptxgenjs";
-import { fonteBase, larguraTela, alturaTela } from '../Preview/TamanhoTela/TamanhoTela';
+import { getFonteBase } from '../../Element';
 
 class ExportarPptx extends Component {
     
@@ -23,7 +24,7 @@ class ExportarPptx extends Component {
       return resultado;
     }, {});
     let pptx = new pptxgen();
-    pptx.defineLayout({name: 'LayoutTela', ...getDimensoesInches(false)});
+    pptx.defineLayout({name: 'LayoutTela', ...getDimensoesInches(this.props.ratio, false)});
     pptx.layout = 'LayoutTela';
     var quadro = document.getElementById('preview')
     var alturaQuadro = quadro.offsetHeight;
@@ -33,7 +34,7 @@ class ExportarPptx extends Component {
     for (var p of previews) {
       let slide = pptx.addSlide();
       substituirPorcentagensPreview(p.estilo);
-      slide.background = ({data: imagens[p.classeImagemFundo], ...getDimensoesInches()});
+      slide.background = ({data: imagens[p.classeImagemFundo], ...getDimensoesInches(this.props.ratio)});
       if (p.classeImagem) {
         var opcoesImagem = getDimensaoImagem(p.estilo.imagem);
         slide.addImage({data: imagens[p.classeImagem], sizing: {type: 'contain'}, ...opcoesImagem});
@@ -121,12 +122,12 @@ const atributosHtmlPptx = {textAlign: v => {
                             if (v === 'justify') v = 'left';
                             return {align: v}},
                            color: v => ({color: v.replace('#', '')}),
-                           lineHeight: o => ({lineSpacing: Math.round(o.lineHeight*o.fontSize*correcaoPixels*fonteBase.numero)/100}),
+                           lineHeight: o => ({lineSpacing: Math.round(o.lineHeight*o.fontSize*correcaoPixels*getFonteBase().numero)/100}),
                            fontWeight: v => {if (v > 550) return{bold: true}},
                            fontStyle: v => {if (v === 'italic') return{italic: true}},
                            textDecorationLine: v => {if (v === 'underline') return {underline: true}},
                            fontFamily: v => ({fontFace: v}),
-                           fontSize: v => ({fontSize: correcaoPixels*fonteBase.numero*v/100}) 
+                           fontSize: v => ({fontSize: correcaoPixels*getFonteBase().numero*v/100}) 
 }
 
 function converterAtributosPptx(atributoHTML, valor) {
@@ -148,14 +149,14 @@ function substituirPorcentagensPreview(estilo) {
   }
 }
 
-const getDimensoesInches = (keysAbrev = true) => {
+const getDimensoesInches = (ratio, keysAbrev = true) => {
   var divDpi = document.createElement('div');
   divDpi.setAttribute('style', "height: 1in; width: 1in; left: 100%; position: fixed; top: 100%;");
   document.body.appendChild(divDpi);
   var dpi_x = divDpi.offsetWidth;
   var dpi_y = divDpi.offsetHeight;
-  var width = larguraTela/dpi_x;
-  var height = alturaTela/dpi_y;
+  var width = ratio.width/dpi_x;
+  var height = ratio.height/dpi_y;
   if (keysAbrev) {
     return {w: width, h: height};
   } else {
@@ -163,4 +164,8 @@ const getDimensoesInches = (keysAbrev = true) => {
   }
 }
 
-export default ExportarPptx;
+const mapState = state => (
+  {ratio: state.present.ratio}
+)
+
+export default connect(mapState)(ExportarPptx);

@@ -1,9 +1,10 @@
-const styleSheet = '.slide-ativo {z-index: 20;}' +
-             '.preview-fake {background-color: white; position: absolute}' +
-             '#ativar-tela-cheia {opacity: 0.2; right: 4vh; bottom: 4vh; width: 10vh; height: 10vh;}' +
-             '#ativar-tela-cheia:hover {opacity: 0.8;}' + 
-             '.tampao {z-index: 1; border-radius: 0}' + 
-             '.texto-preview {z-index: 2;}';
+const styleSheet = '.preview-fake {background-color: white; position: absolute}' +
+                   '.slide-ativo {z-index: 20;}' +
+                   '#ativar-tela-cheia {opacity: 0.2; right: 4vh; bottom: 4vh; width: 10vh; height: 10vh; background: rgba(255,255,255,0.5);}' +
+                   '#ativar-tela-cheia:hover {opacity: 0.8;}' + 
+                   '.tampao {z-index: 1; border-radius: 0}' + 
+                   '.texto-preview {z-index: 2;}' + 
+                   '#container-apresentacao {background: black; display: flex; justify-content: center; align-items: center; width: 100%; height: 100%;}';
 
 export default function TratarDadosHTML(copiaDOM) {
 
