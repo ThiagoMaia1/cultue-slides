@@ -109,8 +109,8 @@ class Preview extends Component {
                     style={telaCheia ? {overflow: 'visible'} : null}>
                     <button id='ativar-tela-cheia' onClick={() => toggleFullscreen(this.ref.current)} 
                         style={{opacity: this.state.screen.opacidadeBotao, color: slidePreview.estilo.texto.color, 
-                                width: 140*proporcao + 'px', height: 140*proporcao + 'px',
-                                right: 5.5*proporcao*0.7 + 'vh', bottom: 4.5*proporcao*0.7 + 'vh'}}
+                                width: 140*this.state.screen.proporcao + 'px', height: 140*this.state.screen.proporcao + 'px',
+                                right: 3.85*this.state.screen.proporcao + 'vh', bottom: 3.15*this.state.screen.proporcao + 'vh'}}
                         onMouseOver={this.tornarBotaoVisivel} onMouseLeave={this.tornarBotaoInvisivel}>
                         {this.state.screen.icone}
                     </button>

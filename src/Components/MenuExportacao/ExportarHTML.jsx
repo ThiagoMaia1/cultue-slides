@@ -79,7 +79,6 @@ function scriptHTML () {
 
   function adicionarEstiloTamanho() {
     var sheets = document.styleSheets;
-    console.log(sheets[sheets.length - 2]);
     var rule = sheets[sheets.length - 2].cssRules[0];
     var slide = document.getElementById('preview-fake0');
     var quadro = document.getElementById('container-apresentacao');

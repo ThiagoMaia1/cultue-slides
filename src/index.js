@@ -42,12 +42,12 @@
 //   ✔️ Fontes que não suportam números superscritos.
 //   ✔️ Html descaracterizado ao enviar em anexo no e-mail.
 //   ✔️ Definir callback meio e formato no menu exportação inconsistente.
+//   ✔️ Envio da apresentação para o BD quando o estilo é limpado.
 //   ✔️ Carrossel do Input Imagem não vai até o final.*/
 // Errinhos:
 //   Redividir quando o texto de um slide é todo deletado.
 //   Problemas ao dividir texto em duas colunas
 //   Edição do conteúdo do parágrafo dando muitos erros (falha ao perder foco, não exibe cursor).
-//   Envio da apresentação para o BD quando o estilo é limpado.
 //   Acabar com splash mais rápido se não houver conexão
 //   Largura e altura auto no menu exportação.
 //   Nova apresentação sair da tela de download.
@@ -79,22 +79,24 @@
 //   ✔️ Criar texto livre padrão personalizado
 //   ✔️ Selecionar resolução personalizada.
 //   ✔️ Exportar como Power Point.*/
-//   Tela perfil do usuário: informações básicas, predefinições. 
-//   Exportar como PDF.
+//   Tela perfil do usuário: informações básicas, predefinições, assinatura. 
 //   Enviar por e-mail.
-//   Calcular resolução da segunda tela.
+//   Shenanigans de segunda tela.
 //   Editar tamanho da imagem direto no preview.
 //   Exportação de slides de imagem
+//   Melhorar pesquisa de letra de música usando google.
+//   Persistir redux
+
+/*/ Features não necessários:
+//   Exportar como PDF.
 //   Incorporar vídeos do youtube.
 //   Criar slides a partir de lista com separador.
 //   Combo de número de capítulos e versículos da bíblia.
 //   ColorPicker personalizado.
 //   Adicionar logo da igreja (upload ou a partir de lista de logos famosas de denominações).
-//   Melhorar pesquisa de letra de música usando google.
 //   Favoritar músicas, fundos...
-//   Persistir redux
 //   Otimizar mobile
-//   Indicar que há estilização nos slides/elementos.
+//   Indicar que há estilização nos slides/elementos.*/
 //
 // Negócio:
 //   ✔️ Criar logo.
@@ -218,7 +220,7 @@ export const reducerElementos = function (state = defaultList, action) {
     }
     case "limpar-estilo": {
       dadosMensagem = getDadosMensagem(el[sel.elemento]);
-      const limparEstiloSlide = s => s.estilo = new Estilo();
+      const limparEstiloSlide = s => s.estilo = JSON.parse(JSON.stringify(new Estilo()));
       const limparEstiloElemento = e => {
         for (var s of e.slides) {
           limparEstiloSlide(s);
@@ -400,7 +402,7 @@ const atualizarDadosUsuario = (idUsuario, dados) => {
     atualizarRegistro(dados, 'usuários', idUsuario);
 }
 
-function atualizarApresentacaoBD (present, newPresent, mudanca = null) {       
+function atualizarApresentacaoBD (present, newPresent, mudanca = null) {
   if (!mudanca) mudanca = houveMudanca(present, newPresent);
   if ((mudanca.includes('elementos') || mudanca.includes('ratio')) && !mudanca.includes('apresentacao') && newPresent.apresentacao.id) {
     atualizarApresentacao(newPresent.elementos, newPresent.ratio, newPresent.apresentacao.id);

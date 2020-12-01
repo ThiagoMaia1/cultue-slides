@@ -32,7 +32,6 @@ class SlideFormatado extends Component {
                 selecionado: this.props.selecionado
             };
             if (numero) objAction.numero = numero;
-            console.log(objAction)
             this.props.dispatch(objAction);
         }, 1000, e.target);
     }
