@@ -24,11 +24,11 @@ class Preview extends Component {
     
     constructor(props) {
         super(props);
-        this.full = {icone: <MdFullscreenExit className='icone-botao' size={100}/>, proporcao: 1, opacidadeBotao: '0%'}
-        this.small = {icone: <MdFullscreen className='icone-botao' size={60}/>, proporcao: 0.45, opacidadeBotao: '30%'}
+        this.full = {icone: <MdFullscreenExit className='icone-botao' size={80}/>, proporcao: 1, opacidadeBotao: '0%'}
+        this.small = {icone: <MdFullscreen className='icone-botao' size={50}/>, proporcao: 0.45, opacidadeBotao: '30%'}
         this.ref = React.createRef();
         this.state = {screen: this.props.slidePreviewFake ? 
-            {...this.full, icone: <MdFullscreen className='icone-botao' size={100}/>} : 
+            {...this.full, icone: <MdFullscreen className='icone-botao' size={80}/>} : 
             {...this.small}};
 
         document.addEventListener('fullscreenchange', () => {
@@ -73,17 +73,6 @@ class Preview extends Component {
         return {...this.realcarElemento('imagem'), height: e.height*100 + '%', width: e.width*100 + '%'}
     }
 
-    editarTexto = e => {
-        clearTimeout(this.timeoutEditar);
-        this.timeoutEditar = setTimeout(div => {
-            var dados = div.id.split('-');
-            var [ objeto, numero ] = [ dados[1], dados[4] ]; 
-            var objAction = {type: 'editar-slide', objeto: objeto, valor: div.innerHTML, redividir: true};
-            if (numero) objAction.numero = numero;
-            this.props.dispatch(objAction);
-        }, 1000, e.target);
-    }
-
     render() {
         var slidePreview = this.props.slidePreview;
         var proporcao = this.state.screen.proporcao*Math.min(window.screen.height/this.props.ratio.height, window.screen.width/this.props.ratio.width);
@@ -109,8 +98,7 @@ class Preview extends Component {
                     style={telaCheia ? {overflow: 'visible'} : null}>
                     <button id='ativar-tela-cheia' onClick={() => toggleFullscreen(this.ref.current)} 
                         style={{opacity: this.state.screen.opacidadeBotao, color: slidePreview.estilo.texto.color, 
-                                width: 140*this.state.screen.proporcao + 'px', height: 140*this.state.screen.proporcao + 'px',
-                                right: 3.85*this.state.screen.proporcao + 'vh', bottom: 3.15*this.state.screen.proporcao + 'vh'}}
+                                right: '1vh', bottom: '0.5vh'}}
                         onMouseOver={this.tornarBotaoVisivel} onMouseLeave={this.tornarBotaoInvisivel}>
                         {this.state.screen.icone}
                     </button>

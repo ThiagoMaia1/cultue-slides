@@ -51,6 +51,8 @@
     flex-direction: column;
     justify-content: center;
     border-radius: var(--round-border-grande);
+    overflow: hidden;
+    word-break: break-word;
 }
 
 #botao-enviar-fundo {

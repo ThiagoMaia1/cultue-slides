@@ -42,6 +42,7 @@ export const gerarNovaApresentacao = async (idUsuario, elementos, ePadrao, ratio
 
 export const definirApresentacaoAtiva = async (usuario, apresentacao = {}, elementos = null, ratio = null, mudarURL = true) => {
   if (!apresentacao) apresentacao = {};
+  if (!apresentacao.autorizacao) apresentacao.autorizacao = 'editar';
   var novaApresentacao = apresentacao;
   var zerada = false;
   if (apresentacao.elementos)

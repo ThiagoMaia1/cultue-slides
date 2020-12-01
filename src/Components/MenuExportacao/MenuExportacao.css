@@ -1,22 +1,43 @@
 #menu-exportacao {
     position: fixed;
     overflow: hidden;
-    justify-content: flex-end;
+    justify-content: center;
     flex-wrap: wrap;
     --diametro-bolinha: 3.7vw;
+    min-width: 8vw;
+    min-height: 8vh;
+}
+
+.div-botao-exportar {
+    transition: max-width 0.2s linear, max-height 0.2s linear;
+}
+
+#rotulo-exportar {
+    transition: max-width 0.1s linear, max-height 0.1s linear;
+}
+
+#menu-exportacao, #opcoes-menu-exportacao, #formatos-exportacao {
+    transition: max-width 0.2s linear, max-height 0.2s linear, margin 0.2s linear;
+}
+
+#rotulo-exportar {
+    overflow: hidden;
 }
 
 #opcoes-menu-exportacao {
-    margin-bottom: 0.8vw;
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: center;
+    pointer-events: all;
 }
 
-.opcoes-menu-exportacao {
+#meios-exportacao {
     display: flex;
     flex-direction: row;
-    flex-wrap: wrap-reverse;
+    flex-wrap: nowrap;
     align-items: center;
     justify-content: center;
-    pointer-events: all;
+    margin: 0 1vh 1vh;
 }
 
 .botao-exportar {
@@ -128,6 +149,11 @@
 #formatos-exportacao {
     background: #14213d;
     border-radius: var(--round-border-medio);
+    margin: 2vh 2vh 0 2vh;
+    flex-wrap: nowrap;
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
 }
 
 .arrow-down {

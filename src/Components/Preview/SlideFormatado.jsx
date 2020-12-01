@@ -39,6 +39,20 @@ class SlideFormatado extends Component {
     
     ativarRealce = aba => this.props.dispatch({type: 'ativar-realce', abaAtiva: aba});
 
+    getClasseLetraClara = nomeObjeto => {
+        var cor = this.props.slidePreview.estilo[nomeObjeto].color;
+        if (!cor) return '';
+        var eClara = true;
+        var partesCor = [cor.slice(1,3), cor.slice(3, 5), cor.slice(5)];
+        for (var p of partesCor) {
+            if (parseInt('0x' + p) < 210) {
+                eClara = false;
+                break;
+            }
+        }
+        return eClara ? 'letra-clara' : '';   
+    }
+
     render() {
         var slidePreview = this.props.slidePreview;
         var proporcao = this.props.proporcao;
@@ -53,12 +67,12 @@ class SlideFormatado extends Component {
                     <div className='tampao' style={slidePreview.estilo.tampao}></div>
                     <Img imagem={slidePreview.estilo.fundo} />
                     <div className='texto-preview' style={{fontSize: getFonteBase().numero*proporcao + getFonteBase().unidade}}>
-                        <div className='slide-titulo' style={slidePreview.estilo.titulo}>
+                        <div className={'slide-titulo ' + this.getClasseLetraClara('titulo')} style={slidePreview.estilo.titulo}>
                             <div><span id='textoTitulo' onInput={this.editarTexto} onFocus={() => this.ativarRealce('titulo')} 
                                 contentEditable={this.props.editavel} suppressContentEditableWarning='true'
                                 style={this.realcarElemento('titulo')}>{slidePreview.titulo}</span></div>
                         </div>
-                        <div id='paragrafo-slide' className='slide-paragrafo' style={slidePreview.estilo.paragrafo}>
+                        <div id='paragrafo-slide' className={'slide-paragrafo ' + this.getClasseLetraClara('paragrafo')} style={slidePreview.estilo.paragrafo}>
                             <div style={this.realcarElemento('paragrafo')} 
                                  className={'realce-paragrafo ' + (slidePreview.estilo.paragrafo.duasColunas ? 'dividido-colunas' : '')}>
                                 {<Estrofes slidePreview={slidePreview} onInput={this.editarTexto} ativarRealce={this.ativarRealce} editavel={this.props.editavel}/>}

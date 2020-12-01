@@ -9,36 +9,58 @@ const opcoesRatio = [{width: 1024, height: 768}
                     ,{width: 1920, height: 1080}
                     ,{width: 1920, height: 1200}]
 
+const getEstiloAnimacao = (maxHeight = '0', maxWidth = '0', color = 'white', transform = 'none') => (
+    {maxHeight: maxHeight + 'vh', maxWidth: maxWidth + 'vw', color: color, transform: transform}
+)
+
 class SelecionarRatio extends React.Component {
 
     constructor (props) {
         super(props);
-        this.state = {estiloFundo: {height: 0, width: 0, minHeight: 0, minWidth: 0, color: 'black'}, opcoesVisiveis: false};
+        this.ref = React.createRef();
+        this.estiloInvisivel = getEstiloAnimacao();
+        this.estiloIntermediario = getEstiloAnimacao(3.4, 2.8, 'white', 'skewX(-5deg)');
+        this.estiloAberto = getEstiloAnimacao(40, 10);
+        this.state = {estiloFundo: this.estiloInvisivel, opcoesVisiveis: false};
     }
+
+    sair = () => this.setState({estiloFundo: this.estiloInvisivel, opcoesVisiveis: false})
 
     onMouseLeave = () => {
-        this.setState({estiloFundo: {height: 0, width: 0, minHeight: 0, minWidth: 0, color: 'black', transform: 'none'}});
-        this.setState({opcoesVisiveis: false});
+        this.esperaLeave = setTimeout(
+            this.sair,
+            300
+        );
     }
 
-    onMouseOver = () => {
-        if (!this.state.opcoesVisiveis)
-            this.setState({estiloFundo: {height: '3.4vh', width: '2.8vw', minHeight: 0, minWidth: 0, color: 'white', transform: 'skewX(-5deg)'}});
+    onMouseEnter = () => {
+        clearTimeout(this.esperaLeave);
+        if (!this.state.opcoesVisiveis && this.ref.current.offsetHeight < 50) {
+            this.setState({estiloFundo: this.estiloIntermediario});
+        }
     }
 
     onClick = () => {
-        this.setState({estiloFundo: {minHeight: '10vh', minWidth: '9vh', color: 'white', transform: 'none'}, opcoesVisiveis: true});
+        this.setState({estiloFundo: this.estiloAberto, opcoesVisiveis: true});
     }
 
     selecionarRatio = ratio => {
         this.props.dispatch({type: 'selecionar-ratio-apresentacao', ratio: ratio})
-        this.onMouseLeave();
+        this.sair();
+    }
+
+    getDimensoesAtuais = () => {
+        if (this.ref.current)
+            return {width: this.ref.current.offsetWidth + 'px', height: this.ref.current.offsetHeight + 'px'}
+        return {width: 0, height: 0};
     }
 
     render() {
+        if (!this.props.eMestre) return null;
+        var estiloFundo = this.props.tutorial ? this.estiloIntermediario : this.state.estiloFundo
         return (
-            <div id='selecionar-aspect-ratio' onMouseOver={this.onMouseOver} onMouseLeave={this.onMouseLeave}>
-                <div id='fundo-selecionar-aspect-ratio' style={{...this.state.estiloFundo}}>
+            <div id='selecionar-aspect-ratio' onMouseEnter={this.onMouseEnter} onMouseLeave={this.onMouseLeave}>
+                <div id='fundo-selecionar-aspect-ratio' style={{...estiloFundo}} ref={this.ref}>
                     {this.state.opcoesVisiveis 
                         ? opcoesRatio.map((o, i) => 
                                 <div className='opcao-ratio' onClick={() => this.selecionarRatio(o)} key={i} 
@@ -46,11 +68,11 @@ class SelecionarRatio extends React.Component {
                                     {o.width + 'x' + o.height}
                                 </div>
                             )
-                        : (this.state.estiloFundo.height 
-                            ? <button onClick={this.onClick}>
+                        : (estiloFundo.maxHeight !== this.estiloInvisivel.maxHeight 
+                            ? <button id='botao-selecionar-ratio' onClick={this.onClick}>
                                 <BsAspectRatio size={20}/>
                               </button> 
-                            : null
+                            : <div style={this.getDimensoesAtuais()}></div>
                           )
                     }
                 </div>
@@ -60,7 +82,7 @@ class SelecionarRatio extends React.Component {
 };
 
 const mapState = state => (
-    {elementos: state.present.elementos, searchAtivo: state.searchAtivo}
+    {elementos: state.present.elementos, searchAtivo: state.searchAtivo, eMestre: state.present.selecionado.elemento === 0, tutorial: state.itensTutorial.includes('slides')}
 )
   
 export default connect(mapState)(SelecionarRatio);

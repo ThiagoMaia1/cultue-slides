@@ -43,15 +43,16 @@
 //   ✔️ Html descaracterizado ao enviar em anexo no e-mail.
 //   ✔️ Definir callback meio e formato no menu exportação inconsistente.
 //   ✔️ Envio da apresentação para o BD quando o estilo é limpado.
+//   ✔️ Largura e altura auto no menu exportação.
+//   ✔️ Nova apresentação sair da tela de download.
 //   ✔️ Carrossel do Input Imagem não vai até o final.*/
 // Errinhos:
 //   Redividir quando o texto de um slide é todo deletado.
 //   Problemas ao dividir texto em duas colunas
 //   Edição do conteúdo do parágrafo dando muitos erros (falha ao perder foco, não exibe cursor).
 //   Acabar com splash mais rápido se não houver conexão
-//   Largura e altura auto no menu exportação.
-//   Nova apresentação sair da tela de download.
 //   Carrossel com espaço extra que desconfigura tudo.
+//   Carrossel às vezes não funciona no "Arrastar".
 //
 /*// Features:
 //   ✔️ Envio de imagens.
@@ -86,6 +87,8 @@
 //   Exportação de slides de imagem
 //   Melhorar pesquisa de letra de música usando google.
 //   Persistir redux
+//   Incluir fontes como base64.
+//   Nomear apresentacao
 
 /*/ Features não necessários:
 //   Exportar como PDF.
@@ -155,8 +158,7 @@ export const reducerElementos = function (state = defaultList, action) {
     case 'definir-apresentacao-ativa':
       var autorizacao = action.apresentacao.autorizacao || autorizacaoPadrao;
       action.apresentacao.autorizacao = autorizacao;
-      if (!autorizacaoEditar(autorizacao))
-        sel = selecionadoOffset(action.elementos, getApresentacaoPadrao().selecionado, 1, true);
+      sel = selecionadoOffset(action.elementos, getApresentacaoPadrao().selecionado, 0, !autorizacaoEditar(autorizacao));
       return {...state, apresentacao: action.apresentacao, elementos: action.elementos, ratio: action.ratio, selecionado: sel};
     case 'selecionar-ratio-apresentacao':
       return {...state, elementos: redividirSlides(el, {elemento: 0, slide: 0}, action.ratio), ratio: {...action.ratio}}

@@ -9,7 +9,8 @@ const cssCorFundo = 'background-color: #d0d9ec; box-shadow: 2px 2px 6px rgba(0,0
 const selectorQuadradinhoCanto = '.itens.lista-slides .quadradinho-canto';
 
 const setOpacidadeQuadradinhoCanto = opacidade => {
-  document.querySelectorAll(selectorQuadradinhoCanto)[0].setAttribute('opacity', opacidade)
+  store.dispatch({type: 'definir-selecao', selecionado: {elemento: opacidade ? 1 : 2, slide: 0}})
+  document.querySelectorAll(selectorQuadradinhoCanto)[0].style.opacity = opacidade || null;
 }
 
 const getCSSFade = elementos => {
@@ -64,7 +65,12 @@ const listaBoxes = {
      coordenadas: [15, 25], 
      arrow: {rotacao: 180, posicao: {top: '-19vh'}},
      selectorElemento: '#slide-mestre',
-     callbackAntes: () => store.dispatch({type: 'definir-selecao', selecionado: {elemento: 0, slide: 0}}),
+     callbackAntes: () => store.dispatch({type: 'definir-selecao', selecionado: {elemento: 0, slide: 0}})
+    },
+    {texto: 'Clique no canto superior esquerdo do slide-mestre para alterar as dimensões da tela/projetor.', 
+     coordenadas: [15, 9], 
+     arrow: {rotacao: 0, posicao: {top: '-19vh', left: '4vw'}},
+     selectorElemento: '#borda-slide-mestre',
      callbackDepois: () => store.dispatch({type: 'definir-selecao', selecionado: {elemento: 1, slide: 0}})
     },
     {texto: 'Clique para alterar as configurações e a imagem de fundo do slide selecionado', 
@@ -80,17 +86,17 @@ const listaBoxes = {
     {texto: 'Clique no slide, ou utilize as setas para navegar', 
      coordenadas: [23, 25], 
      arrow: {rotacao: 180, posicao: {top: '-18vh', left: ''}},
-     selectorElemento: '#slide-mestre'},
+     selectorElemento: '#ordem-elementos'},
     {texto: 'Arraste os elementos para reordenar a apresentação', 
      coordenadas: [23, 25], 
      arrow: {rotacao: 180, posicao: {top: '-18vh', left: ''}},
      selectorElemento: '#ordem-elementos'},
-    {texto: 'Clique no canto superior direito de um slide ou grupo de slides para exclui-lo, ou clique no botão do lápis para editar o conteúdo do slide na janela de adição', 
-     coordenadas: [23, 25], 
-     arrow: {rotacao: 180, posicao: {top: '-19vh'}},
+    {texto: 'Clique no canto superior direito de um grupo de slides para exclui-lo, ou clique no lápis para editar o conteúdo do slide', 
+     coordenadas: [21.5, 25], 
+     arrow: {rotacao: 180, posicao: {top: '-19vh', left: '-1.5vw'}},
      selectorElemento: selectorQuadradinhoCanto,
-     callbackAntes: setOpacidadeQuadradinhoCanto,
-     callbackDepois: setOpacidadeQuadradinhoCanto
+     callbackAntes: () => setOpacidadeQuadradinhoCanto(1),
+     callbackDepois: () => setOpacidadeQuadradinhoCanto(0)
     },
     {texto: 'Ao concluir, clique para exportar a apresentação pronta', 
      coordenadas: [59, 74], 

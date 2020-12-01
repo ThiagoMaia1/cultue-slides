@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
 import { getNumeroVersiculo } from '../Preview/TextoPreview.jsx';
 import { connect } from 'react-redux';
-// import { Estilo } from '../../Element';
 
-// const estiloVazio = JSON.stringify(new Estilo());
 const eEstiloVazio = estilo => {
     var keysEstilo = Object.keys(estilo);
     for (var k of keysEstilo) {
@@ -30,7 +28,7 @@ class SublistaSlides extends Component {
             case 'Imagem':
                 return elemento.titulo || slide.imagem.alt;
             case 'TextoBíblico':
-                return 'v. ' + getNumeroVersiculo(t0).numero.padStart(2, 0);
+                return 'v. ' + (getNumeroVersiculo(t0).numero || '').padStart(2, 0);
             default:
                 return t0.substr(0, 50);
         }

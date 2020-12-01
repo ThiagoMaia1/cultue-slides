@@ -2,8 +2,8 @@
     position: absolute;
     top: 1vh;
     left: 2px;
-    min-width: 3vh;
-    min-height: 3vh;
+    min-width: 5vw;
+    min-height: 5vh;
     z-index: 250;
     visibility: visible;
     overflow: hidden;
@@ -12,7 +12,7 @@
 #fundo-selecionar-aspect-ratio {
     background-color: black;
     border-radius: 0 0 0.8vh 0;
-    transition: height 0.25s ease-in-out, width 0.25s ease-in-out, min-width 0.25s ease-in-out, min-height 0.25s ease-in-out, color 0.25s ease-in-out, transform 0.1s;
+    transition: max-width 0.21s ease-in-out, max-height 0.25s ease-in-out, color 0.25s ease-in-out, transform 0.1s;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -21,7 +21,7 @@
 }
 
 .opcao-ratio {
-    min-width: 7vw;
+    min-width: 8vw;
     margin-left: 0.4vw;
     padding: 0.6vh 0 0.4vh;
     user-select: none;
@@ -30,4 +30,8 @@
 
 .opcao-ratio:hover {
     background-color: var(--preto-fraco);
+}
+
+#botao-selecionar-ratio {
+    padding: 0 1vh;
 }

@@ -9,7 +9,7 @@ class AdicionarTexto extends Component {
     constructor (props) {
         super(props);
         this.refTitulo = React.createRef();
-        this.state = {botoesVisiveis: false, titulo: '', textoSlide: '', mensagemErro: ''};
+        this.state = {botoesVisiveis: false, titulo: this.props.input1 || '', textoSlide: this.props.input2 || '', mensagemErro: ''};
     }
 
     gerarListaSlidesPadrao = () => 
@@ -60,11 +60,9 @@ class AdicionarTexto extends Component {
                 <div>
                     <h4 className='titulo-popup'>Adicionar Slide de Texto</h4>
                     <input ref={this.refTitulo} id="input-titulo" className='combo-popup' type='text' placeholder='Título do slide' value={this.state.titulo}
-                        defaultValue={this.props.input1} 
                         onChange={this.changeTitulo}/>
                 </div>
                 <textarea id="input-texto-slide" className='combo-popup' placeholder='Texto do slide' value={this.state.textoSlide}
-                    defaultValue={this.props.input2} 
                     onChange={e => this.setState({textoSlide: e.target.value})}></textarea>
                 <div className='lista-slides-padrao'>
                     <Carrossel tamanhoIcone={45} tamanhoMaximo='20vh' direcao='vertical' style={{zIndex: '400', width: '100%'}} percentualBeirada={0.12}>

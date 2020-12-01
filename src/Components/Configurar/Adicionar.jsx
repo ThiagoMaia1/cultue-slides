@@ -10,7 +10,7 @@ class Adicionar extends Component {
         super(props);
         this.state = {...props};
         this.listaBotoes = [];
-        for (var i = 0; i < 5; i++) {
+        for (var i = 0; i < tipos.length; i++) {
             this.listaBotoes.push(
                 <button key={i} data-id={i} className="botao-azul itens" onClick={e => this.abrirPopup(e)}>
                     {getNomeInterfaceTipo(tipos[i])}

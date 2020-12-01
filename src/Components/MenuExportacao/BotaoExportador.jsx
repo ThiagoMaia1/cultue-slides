@@ -23,7 +23,7 @@ class BotaoExportacao extends Component {
 
   render() {
       return (
-        <div className='div-botao-exportar' onClick={this.conferirClick}> 
+        <div className='div-botao-exportar' onClick={this.conferirClick} style={this.props.style}> 
           {this.props.arrow ? <div className='arrow-down'></div> : null}
           <button id={'exportar-' + this.props.formato} className='botao-exportar sombrear-selecao'>{this.props.logo}</button>
           <div className='rotulo-botao-exportar'>{this.props.rotulo}</div>

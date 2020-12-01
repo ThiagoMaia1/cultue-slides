@@ -209,8 +209,17 @@ class Exportador extends Component {
     }
   }
 
+  
+  componentWillUnmount = () => {
+    this.finalizar();
+  }
+
   render() {
-    return <>{this.state.previews}</>
+    return (
+      <div style={{width: '0px', height: '0px', overflow: 'hidden', opacity: 0}}>
+        {this.state.previews}
+      </div>
+    )
   }
 
 }

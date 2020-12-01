@@ -3,11 +3,12 @@ import { connect } from 'react-redux';
 import './NavBar.css';
 import Login from '../Login/Login';
 import QuadroAtalhos from './QuadroAtalhos';
-import QuadroExpress from './QuadroExpress';
+// import QuadroExpress from './QuadroExpress';
 import { definirApresentacaoPadrao, zerarApresentacao } from '../../firestore/apresentacoesBD';
 
-const listaBotoesQuadros = [{nome: 'Atalhos', componente: QuadroAtalhos},
-                            {nome: 'Express', componente: QuadroExpress}
+const listaBotoesQuadros = [
+  {nome: 'Atalhos', componente: QuadroAtalhos}
+  // {nome: 'Express', componente: QuadroExpress}
 ]
 
 class NavBar extends React.Component {
@@ -38,19 +39,19 @@ class NavBar extends React.Component {
 
   render() {
     var u = this.props.usuario;
+    var eDownload = this.props.autorizacao !== 'baixar';
     return (
       <div id="navbar">
           <div id='botoes-navbar'>
             <button onClick={() => zerarApresentacao(this.props.usuario)}>Nova Apresentação</button>
-            {this.props.autorizacao !== 'baixar'
+            {eDownload
               ? <>
                   <button onClick={() => definirApresentacaoPadrao(u.uid, this.props.elementos, 'atual')}>Definir Padrão</button>
                     {listaBotoesQuadros.map(b => {
                         const ComponenteQuadro = b.componente;
                         return (
                           <div className='div-botao-navbar' key={b.nome}>
-                            <button onClick={() => this.toggleQuadro(getNomeVariavelEstado(b), true)} 
-                                    style={this.state[getNomeVariavelEstado(b)] ? {pointerEvents: 'none', cursor: 'pointer'} : null}>
+                            <button onClick={() => this.toggleQuadro(getNomeVariavelEstado(b), true)}>
                               {b.nome}
                             </button>
                             {this.state[getNomeVariavelEstado(b)]

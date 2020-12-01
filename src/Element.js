@@ -2,14 +2,15 @@ import AdicionarMusica from './Components/LetrasMusica/AdicionarMusica';
 import AdicionarTextoBiblico from './Components/TextoBiblico/AdicionarTextoBiblico';
 import AdicionarTexto from './Components/Configurar/AdicionarTexto';
 import AdicionarImagem from './Components/AdicionarImagem/AdicionarImagem';
-import AdicionarVideo from './Components/AdicionarVideo/AdicionarVideo';
+// import AdicionarVideo from './Components/AdicionarVideo/AdicionarVideo';
 import { store } from './index';
 
-export const tiposElemento = {Música: AdicionarMusica,
-                              TextoBíblico: AdicionarTextoBiblico,
-                              TextoLivre: AdicionarTexto,
-                              Imagem: AdicionarImagem,
-                              Vídeo: AdicionarVideo
+export const tiposElemento = {
+    Música: AdicionarMusica
+  , TextoBíblico: AdicionarTextoBiblico
+  , TextoLivre: AdicionarTexto
+  , Imagem: AdicionarImagem
+  // , Vídeo: AdicionarVideo
 }
 
 export function getNomeInterfaceTipo(nome) {
@@ -49,7 +50,7 @@ export class Estilo {
 
 export const fontePadrao = 'Noto Sans';
 
-export const getFonteBase = ratio => ({numero: 0.025*(ratio || store.getState().present.ratio.height), unidade: 'px', fontFamily: fontePadrao});
+export const getFonteBase = (ratio = {}) => ({numero: 0.025*(ratio.height || store.getState().present.ratio.height), unidade: 'px', fontFamily: fontePadrao});
   
 const estiloPadrao = {
   texto: {fontFamily: fontePadrao}, 
@@ -161,8 +162,8 @@ export default class Element {
     var estT = {...estGlobal.texto, ...estElemento.texto, ...estSlide.texto};
     var estTitulo = {...estGlobal.titulo, ...estElemento.titulo, ...estSlide.titulo};
     // Variáveis relacionadas ao tamanho do slide.
-    var padV = estP.paddingTop + estP.paddingRight; //Right é a base de cálculo, bottom varia.
-    var padH = estP.paddingRight + estP.paddingLeft;
+    var padV = Number(estP.paddingTop) + Number(estP.paddingRight); //Right é a base de cálculo, bottom varia.
+    var padH = Number(estP.paddingRight) + Number(estP.paddingLeft);
     var larguraLinha = ratio.width*(1-padH);
     var alturaLinha = estP.lineHeight*estP.fontSize*fonteBase.numero;
     var alturaSecaoTitulo = estTitulo.height*ratio.height;
@@ -175,7 +176,7 @@ export default class Element {
     } else {
       nLinhas = Math.floor(nLinhas);
     }
-    slide.estilo.paragrafo.paddingBottom = ((alturaSecaoParagrafo-nLinhas*alturaLinha)/ratio.width)-estP.paddingTop; 
+    slide.estilo.paragrafo.paddingBottom = ((alturaSecaoParagrafo-nLinhas*alturaLinha)/ratio.width)-Number(estP.paddingTop); 
     
     var duasColunas = false;
     if (estP.duasColunas) {
@@ -206,7 +207,7 @@ export default class Element {
       widthResto = /\n/.test(separador) ? 0 : linhas.widthResto;        
       if ((contLinhas + (widthResto > 0 ? 1 : 0)) > nLinhas) { //Se próximo versículo vai ultrapassar o slide, conclui slide atual.
         if (duasColunas) [ contLinhas, widthResto, duasColunas ] = [ 0, 0, false ]; 
-        thisP.dividirTexto(texto.slice(i+1), nSlide+1, estElemento, estGlobal, thisP);
+        thisP.dividirTexto(texto.slice(i+1), nSlide+1, estElemento, estGlobal, ratio, thisP);
         break;
       }
     }

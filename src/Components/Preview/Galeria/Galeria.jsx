@@ -58,30 +58,33 @@ class Galeria extends Component {
     render () {
         if (this.props.autorizacao !== 'editar') return null;
         return (
-            <div id='botao-mostrar-galeria' className='botao-azul' onClick={this.mostrarGaleria} 
-                style={{top: this.state.coordenadas[0] + 'vh', right: this.state.coordenadas[1] + 'vw', bottom: this.state.coordenadas[2] + 'vh', left: this.state.coordenadas[3] + 'vw',
-                        pointerEvents: this.state.galeriaVisivel ? 'none' : 'all', background: this.state.galeriaVisivel ? 'var(--azul-forte)' : ''}}>
-                <div className='colapsar-menu galeria' 
-                     onClick={this.mostrarGaleria} 
-                     style={{display: this.state.galeriaVisivel ? '' : 'none'}}>◣
-                </div>
-                <div style={{display: !this.state.galeriaVisivel ? '' : 'none'}}>Galeria de Fundos</div>
-                <div className={'container-carrossel-fundos'} style={{display: this.state.galeriaVisivel ? '' : 'none'}}
-                     onClick={e => e.stopPropagation()}>
-                    <Carrossel tamanhoIcone={100} tamanhoMaximo='96vw' style={{zIndex: '45'}} corGradiente='var(--azul-forte)'
-                               percentualBeirada={0.03}>
-                        <div className='galeria-fundos'>
-                            <div className='div-img' onClick={this.abrirPopup}>
-                                <div id='botao-enviar-fundo' className='imagem-galeria'>Enviar Fundo Personalizado</div>
+            <>
+                <div id='botao-mostrar-galeria' className='botao-azul' onClick={this.mostrarGaleria} 
+                    style={{top: this.state.coordenadas[0] + 'vh', right: this.state.coordenadas[1] + 'vw', bottom: this.state.coordenadas[2] + 'vh', left: this.state.coordenadas[3] + 'vw',
+                            pointerEvents: this.state.galeriaVisivel ? 'none' : 'all', background: this.state.galeriaVisivel ? 'var(--azul-forte)' : ''}}>
+                    <div className='colapsar-menu galeria' 
+                        onClick={this.mostrarGaleria} 
+                        style={{display: this.state.galeriaVisivel ? '' : 'none'}}>◣
+                    </div>
+                    <div style={{display: !this.state.galeriaVisivel ? '' : 'none'}}>Galeria de Fundos</div>
+                    <div className={'container-carrossel-fundos'} style={{display: this.state.galeriaVisivel ? '' : 'none'}}
+                        onClick={e => e.stopPropagation()}>
+                        <Carrossel tamanhoIcone={100} tamanhoMaximo='96vw' style={{zIndex: '45'}} corGradiente='var(--azul-forte)'
+                                percentualBeirada={0.03}>
+                            <div className='galeria-fundos'>
+                                <div className='div-img' onClick={this.abrirPopup}>
+                                    <div id='botao-enviar-fundo' className='imagem-galeria'>Enviar Fundo Personalizado</div>
+                                </div>
+                                {this.state.imagens.map((imagem, i) => (
+                                    <Img key={i} imagem={imagem} />
+                                    ))
+                                }
                             </div>
-                            {this.state.imagens.map((imagem, i) => (
-                                <Img key={i} imagem={imagem} />
-                                ))
-                            }
-                        </div>
-                    </Carrossel>
+                        </Carrossel>
+                    </div>
                 </div>
-            </div>
+                {this.state.popupCompleto}
+            </>
         )
     }
 }

@@ -75,6 +75,10 @@ button, input[type="submit"], input[type="reset"], [contentEditable="true"]:focu
   vertical-align: top;
 }
 
+.letra-clara [contentEditable="true"]:focus {
+  background-color: rgb(202, 202, 202);
+}
+
 sup {
   font-size: 80%;
 }
