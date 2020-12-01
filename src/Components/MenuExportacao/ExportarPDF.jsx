@@ -27,7 +27,7 @@ class ExportadorPDF extends Component {
 
     pdf.html(copiaDOM.body, {
       callback: function (pdf) {
-        pdf.save();
+        // pdf.save();
       }
     });
     return {nomeArquivo: nomeArquivo + this.formato, arquivo: pdf, formato: this.formato};
@@ -35,17 +35,17 @@ class ExportadorPDF extends Component {
 
   componentDidUpdate = (prevProps) => {
     if(!prevProps.formatoExportacao === this.formato && this.props.formatoExportacao === this.formato)
-      this.props.definirCallback(this.exportarPDF);
+      this.props.definirFormatoExportacao(this.exportarPDF, this.formato);
   }
 
   componentDidMount = () => {
     if (this.props.formatoExportacao === this.formato)
-      this.props.definirCallback(this.exportarPDF);
+      this.props.definirFormatoExportacao(this.exportarPDF, this.formato);
   }
 
   render() {
     return (
-      <BotaoExportador formato={this.formato} onClick={() => this.props.definirCallback(this.exportarPDF)} 
+      <BotaoExportador formato={this.formato} onClick={() => this.props.definirFormatoExportacao(this.exportarPDF, this.formato)} 
         logo={this.logo} rotulo={this.formato.toUpperCase()}/>
     )
   }

@@ -1,31 +1,6 @@
 import React from 'react';
 import { RefInvalida } from "../TextoBiblico/referenciaBiblica"
 
-// export class Element {
-//     constructor(apiKey, tipo, titulo, texto) {
-//       idElement++;
-//       this.id = idElement;
-//       this.apiKey = apiKey;
-//       this.tipo = tipo;
-//       this.titulo = titulo;
-//       this.texto = texto;
-//     }
-//   }
-
-// function textoPreview (elemento) {
-//     var textoDividido = [];
-//     switch (elemento.tipo) {
-//         case 'TextoBíblico':
-//             formatarVersiculos(elemento.texto);
-//         case 'Música':
-//             formatarMusica(elemento.texto);
-//         case 'TextoLivre':
-
-//         case 'Imagem':
-
-//     }
-// }
-
 function numSuperscrito(num) {
     var lista = String(num).split('');
     var sup = [];
@@ -33,6 +8,17 @@ function numSuperscrito(num) {
         sup.push("⁰¹²³⁴⁵⁶⁷⁸⁹"[Number(n)]);
     }
     return sup.join('');
+}
+
+function superscritoPrevia(num) {
+    return <sup>{num}</sup>;
+}
+
+export function markupParaSuperscrito (texto) {
+    var splitado = texto.split('<sup>');
+    if (splitado.length < 2) return texto;
+    var numero = Number(splitado[1].split('</sup>')[0]);
+    return texto.replace(/<sup>.*<\/sup>/g, numSuperscrito(numero));
 }
 
 export function reverterSuperscrito(sup) {
@@ -46,6 +32,17 @@ export function reverterSuperscrito(sup) {
     }
     if (num.length === 0) return;
     return num.join('');
+}
+
+export function getNumeroVersiculo(texto) {
+    var verso;
+    var n = -1;
+    var palavras = texto.split(' ');
+    do {
+        n++;
+        verso = reverterSuperscrito(palavras[n]);
+    } while (isNaN(verso) && !(n >= palavras.length))
+    return {textoAntes: palavras.slice(0, Math.max(n,0)).join(' '), numero: verso, textoDepois: palavras.slice(n+1).join(' ')};
 }
 
 export function formatarVersiculosSlide(versiculos) {
@@ -85,7 +82,7 @@ export function formatarVersiculos(versiculos) {
                 r.push(c);
             }
         } 
-        r.push(<><b>{numSuperscrito(v.vers)}</b> {v.texto} </>);
+        r.push(<><b>{superscritoPrevia(v.vers)}</b> {v.texto} </>);
         return r;
     })
 }

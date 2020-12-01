@@ -30,7 +30,7 @@ class QuadroAtalhos extends React.Component {
 
     render() {
         return (
-            <QuadroNavbar callback={this.props.callback}>
+            <QuadroNavbar callback={this.props.callback} onKeyUp={true} onBlur={true}>
                 {listaAtalhos.map(a => {
                     if (a.autorizacao && a.autorizacao !== this.props.autorizacao) return null;
                     return (

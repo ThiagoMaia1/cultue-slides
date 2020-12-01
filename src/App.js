@@ -15,6 +15,7 @@ import MensagemBaixar from './Components/TelaMensagem/MensagemBaixar';
 class App extends Component {
 
   render() {
+    console.log(this.props.apresentacao);
     return (
       <div id='App'>
         <BarraPesquisa/>

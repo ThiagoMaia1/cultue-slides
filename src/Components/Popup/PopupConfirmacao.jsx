@@ -42,10 +42,10 @@ class PopupConfirmacao extends React.Component {
     if (!this.props.popup) return null;
     
     var grupoBotoes = gruposDeBotoes[this.props.botoes];
-    var botoesJSX = grupoBotoes.map(g => {
+    var botoesJSX = grupoBotoes.map((g, i) => {
       var b = botoes[g];
       return (
-        <button className={'botao ' + (b.classe || '')} onClick={() => this.chamarCallback(b.parametroCallback)}>
+        <button className={'botao ' + (b.classe || '')} onClick={() => this.chamarCallback(b.parametroCallback)} key={i}>
           {b.texto}
         </button>
       )

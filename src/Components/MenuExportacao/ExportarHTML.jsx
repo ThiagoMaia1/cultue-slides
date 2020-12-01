@@ -135,17 +135,17 @@ class ExportarHTML extends Component {
   
   componentDidUpdate = (prevProps) => {
     if(!prevProps.formatoExportacao === this.formato && this.props.formatoExportacao === this.formato)
-      this.props.definirCallback(this.exportarHTML, true);
+      this.props.definirFormatoExportacao(this.exportarHTML, this.formato, true);
   }
 
   componentDidMount = () => {
     if (this.props.formatoExportacao === this.formato)
-      this.props.definirCallback(this.exportarHTML, true);
+      this.props.definirFormatoExportacao(this.exportarHTML, this.formato, true);
   }
 
   render() {
     return (
-      <BotaoExportador formato={this.formato} onClick={() => this.props.definirCallback(this.exportarHTML, true)} 
+      <BotaoExportador formato={this.formato} onClick={() => this.props.definirFormatoExportacao(this.exportarHTML, this.formato, true)} 
         logo={this.logo} rotulo={this.formato.toUpperCase()}/>
     )
   }

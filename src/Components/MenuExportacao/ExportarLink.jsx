@@ -71,10 +71,11 @@ class ExportarLink extends Component {
   getLinkPermissao = idPermissao => window.location.origin.toString() + '/#/' + idPermissao;
 
   render() {
-      return (
-        <BotaoExportador formato='link' onClick={() => this.props.definirMeioExportacao(this.exportarLink, this.props.posicao)} 
-          arrow={this.props.posicaoArrow === this.props.posicao} logo={<BsLink45Deg size={this.props.tamIcones}/>} rotulo='Link'/>
-      )
+    const meio = 'link'
+    return (
+      <BotaoExportador formato={meio} onClick={() => this.props.definirMeioExportacao(this.exportarLink, this.props.posicao, meio)} 
+        arrow={this.props.posicaoArrow === this.props.posicao} logo={<BsLink45Deg size={this.props.tamIcones}/>} rotulo='Link'/>
+    )
   }
 }
 

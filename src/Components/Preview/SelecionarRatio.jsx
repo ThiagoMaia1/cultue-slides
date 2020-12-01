@@ -3,7 +3,11 @@ import { connect } from 'react-redux';
 import './SelecionarRatio.css';
 import { BsAspectRatio } from 'react-icons/bs';
 
-const opcoesRatio = [{width: 1920, height: 1080}, {width: 1366, height: 768}, {width: 800, height: 600}]
+const opcoesRatio = [{width: 1024, height: 768}
+                    ,{width: 1280, height: 800}
+                    ,{width: 1400, height: 1050}
+                    ,{width: 1920, height: 1080}
+                    ,{width: 1920, height: 1200}]
 
 class SelecionarRatio extends React.Component {
 
@@ -37,7 +41,7 @@ class SelecionarRatio extends React.Component {
                 <div id='fundo-selecionar-aspect-ratio' style={{...this.state.estiloFundo}}>
                     {this.state.opcoesVisiveis 
                         ? opcoesRatio.map((o, i) => 
-                                <div className='opcao-ratio' onClick={() => this.selecionarRatio(o)} key={o} 
+                                <div className='opcao-ratio' onClick={() => this.selecionarRatio(o)} key={i} 
                                      style={i === 0 ? {borderRadius: '1vh 0 0 0'} : null}>
                                     {o.width + 'x' + o.height}
                                 </div>

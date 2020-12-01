@@ -38,18 +38,20 @@
 //   ✔️ Borda na tela cheia está arredondada
 //   ✔️ Gradiente das notificações por cima das coisas
 //   ✔️ Criar nova apresentação não funciona lá em cima e no atalho
+//   ✔️ Incluir webfonts na combo de fontes disponíveis.
+//   ✔️ Fontes que não suportam números superscritos.
+//   ✔️ Html descaracterizado ao enviar em anexo no e-mail.
+//   ✔️ Definir callback meio e formato no menu exportação inconsistente.
 //   ✔️ Carrossel do Input Imagem não vai até o final.*/
 // Errinhos:
-//   Incluir webfonts na combo de fontes disponíveis.
-//   Fontes que não suportam números superscritos.
 //   Redividir quando o texto de um slide é todo deletado.
-//   Duas colunas
-//   Indicar que há estilização nos slides/elementos.
-//   Html descaracterizado ao enviar em anexo no e-mail.
-//   Preview-fake do menu exportacao está visível
+//   Problemas ao dividir texto em duas colunas
+//   Edição do conteúdo do parágrafo dando muitos erros (falha ao perder foco, não exibe cursor).
 //   Envio da apresentação para o BD quando o estilo é limpado.
-//   Definir callback meio e formato no menu exportação inconsistente.
 //   Acabar com splash mais rápido se não houver conexão
+//   Largura e altura auto no menu exportação.
+//   Nova apresentação sair da tela de download.
+//   Carrossel com espaço extra que desconfigura tudo.
 //
 /*// Features:
 //   ✔️ Envio de imagens.
@@ -75,11 +77,12 @@
 //   ✔️ Navegação pelas setas causar rolagem na lista de slides.
 //   ✔️ Tela de propagandas
 //   ✔️ Criar texto livre padrão personalizado
+//   ✔️ Selecionar resolução personalizada.
 //   ✔️ Exportar como Power Point.*/
 //   Tela perfil do usuário: informações básicas, predefinições. 
 //   Exportar como PDF.
 //   Enviar por e-mail.
-//   Calcular resolução do datashow.
+//   Calcular resolução da segunda tela.
 //   Editar tamanho da imagem direto no preview.
 //   Exportação de slides de imagem
 //   Incorporar vídeos do youtube.
@@ -91,6 +94,7 @@
 //   Favoritar músicas, fundos...
 //   Persistir redux
 //   Otimizar mobile
+//   Indicar que há estilização nos slides/elementos.
 //
 // Negócio:
 //   ✔️ Criar logo.
@@ -114,12 +118,12 @@ import { keysTutoriais } from './Components/Tutorial/Tutorial';
 
 const tipos = Object.keys(tiposElemento);
 
-const redividirSlides = (elementos, sel) => {
+const redividirSlides = (elementos, sel, ratio) => {
   if (elementos.length !== 1) {
       var [ i, slide, repetir ] = (sel.elemento === 0 ? [ 1, 0, 1 ] : [ sel.elemento, sel.slide, 0]);
     do {
       var e = elementos[i];
-      e.criarSlides(e.getArrayTexto(slide, e), e.slides[0].estilo, slide, elementos[0].slides[0].estilo, e);
+      e.criarSlides(e.getArrayTexto(slide, e), e.slides[0].estilo, slide, elementos[0].slides[0].estilo, ratio, e);
       i++;
     } while (repetir && i < elementos.length)
   }
@@ -153,7 +157,7 @@ export const reducerElementos = function (state = defaultList, action) {
         sel = selecionadoOffset(action.elementos, getApresentacaoPadrao().selecionado, 1, true);
       return {...state, apresentacao: action.apresentacao, elementos: action.elementos, ratio: action.ratio, selecionado: sel};
     case 'selecionar-ratio-apresentacao':
-      return {...state, ratio: {...action.ratio}}
+      return {...state, elementos: redividirSlides(el, {elemento: 0, slide: 0}, action.ratio), ratio: {...action.ratio}}
     case "inserir":
       var elNovo = action.elemento;
       elNovo.input1 = action.popupAdicionar.input1;
@@ -165,7 +169,7 @@ export const reducerElementos = function (state = defaultList, action) {
           elNovo.slides[i].estilo = elSub.slides[i].estilo;
         }
         el.splice(action.elementoASubstituir, 1, elNovo);
-        el = redividirSlides(el, {elemento: action.elementoASubstituir, slide: 0});
+        el = redividirSlides(el, {elemento: action.elementoASubstituir, slide: 0}, state.ratio);
       } else {
         el.push(elNovo);
       }
@@ -209,7 +213,7 @@ export const reducerElementos = function (state = defaultList, action) {
         est[action.objeto] = {...est[action.objeto], ...action.valor};
       }
       el[sel.elemento] = e;
-      if (action.redividir) el = redividirSlides(el, sel);
+      if (action.redividir) el = redividirSlides(el, sel, state.ratio);
       return {...state, elementos: [...el], selecionado: sel};
     }
     case "limpar-estilo": {
@@ -233,7 +237,7 @@ export const reducerElementos = function (state = defaultList, action) {
         limparEstiloSlide(el[sel.elemento].slides[sel.slide]);
         notificacao = 'Estilo do Slide' + sel.slide + ' d' + dadosMensagem.genero + ' ' + dadosMensagem.elementos + '" Limp' + dadosMensagem.genero;
       }
-      el = redividirSlides(el, sel);
+      el = redividirSlides(el, sel, state.ratio);
       return {...state, elementos: [...el], selecionado: action.selecionado, abaAtiva: 'texto', notificacao: notificacao};
     }
     case "ativar-popup-adicionar": {
@@ -399,7 +403,7 @@ const atualizarDadosUsuario = (idUsuario, dados) => {
 function atualizarApresentacaoBD (present, newPresent, mudanca = null) {       
   if (!mudanca) mudanca = houveMudanca(present, newPresent);
   if ((mudanca.includes('elementos') || mudanca.includes('ratio')) && !mudanca.includes('apresentacao') && newPresent.apresentacao.id) {
-    atualizarApresentacao(newPresent.elementos, newPresent.apresentacao.id);
+    atualizarApresentacao(newPresent.elementos, newPresent.ratio, newPresent.apresentacao.id);
   } 
 }
 

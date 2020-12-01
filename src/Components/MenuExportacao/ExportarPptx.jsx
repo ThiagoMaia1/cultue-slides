@@ -58,17 +58,17 @@ class ExportarPptx extends Component {
 
   componentDidUpdate = (prevProps) => {
     if(!prevProps.formatoExportacao === this.formato && this.props.formatoExportacao === this.formato)
-      this.props.definirCallback(this.exportarPptx);
+      this.props.definirFormatoExportacao(this.exportarPptx, this.formato);
   }
 
   componentDidMount = () => {
     if (this.props.formatoExportacao === this.formato)
-      this.props.definirCallback(this.exportarPptx);
+      this.props.definirFormatoExportacao(this.exportarPptx, this.formato);
   }
 
   render() {
       return (
-        <BotaoExportador formato={this.formato} onClick={() => this.props.definirCallback(this.exportarPptx)} 
+        <BotaoExportador formato={this.formato} onClick={() => this.props.definirFormatoExportacao(this.exportarPptx, this.formato)} 
           logo={this.logo} rotulo='PowerPoint'/>
       )
   }

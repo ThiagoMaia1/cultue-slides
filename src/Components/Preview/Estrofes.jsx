@@ -1,4 +1,8 @@
 import React, { Fragment } from 'react';
+// import ReactDOMServer from 'react-dom/server';
+import { getNumeroVersiculo, markupParaSuperscrito } from './TextoPreview';
+import { limparHighlights } from '../BarraPesquisa/BarraPesquisa';
+
 
 export default function Estrofes(props) {
     var s = props.slidePreview;
@@ -7,13 +11,26 @@ export default function Estrofes(props) {
     var spans;
     var estiloDivEstrofe;
 
-    const getSpan = (t, i, _array, comBreaks = false) => {
+    const getSpan = (t, i, _array, comBreaks = false, eVersiculo = false) => {
         
         var breaks = null;
         if (comBreaks) breaks = (divBreak);
+        var versiculo = {};
+        if (eVersiculo) {
+            versiculo = getNumeroVersiculo(t);
+            t = <>{versiculo.textoAntes} <sup>{versiculo.numero}</sup> {versiculo.textoDepois}</>;
+        }
         return (
             <Fragment key={i}>
-                <span contentEditable={props.editavel} key={i} onInput={props.onInput} onFocus={() => props.ativarRealce('paragrafo')}>
+                <span id={'textoArray-' + i} 
+                      contentEditable={props.editavel} suppressContentEditableWarning='true'
+                      onInput={props.onInput} 
+                      onFocus={e => {
+                        e.target.innerHTML = markupParaSuperscrito(limparHighlights(e.target.innerHTML));
+                        props.ativarRealce('paragrafo')
+                      }}
+                    //   onBlur={e => e.target.innerHTML = ReactDOMServer.renderToStaticMarkup(t)}
+                >
                     {t} 
                 </span>
                 {breaks}
@@ -24,7 +41,7 @@ export default function Estrofes(props) {
     const getSpanRepetidor = vezes => {
         if (!s.estilo.paragrafo.multiplicadores)
             return null;
-        return <span className='marcador-estrofe' contentEditable='true'>✕{vezes}</span>
+        return <span className='marcador-estrofe' contentEditable='true' suppressContentEditableWarning='true'>✕{vezes}</span>
     }
     
     const getConteudoWraper = (t, i, array) => (
@@ -50,7 +67,7 @@ export default function Estrofes(props) {
 
     if (s.tipo === 'TextoBíblico') {
         estiloDivEstrofe = {display: 'inline'};
-        spans = tA.map(getSpan)
+        spans = tA.map((t, i) => getSpan(t, i, null, undefined, true))
     } else {
         estiloDivEstrofe = {display: 'flex', width: '100%', flexDirection: 'column'};
         estiloDivEstrofe.alignItems = getAlinhamento(s.estilo.paragrafo.textAlign);

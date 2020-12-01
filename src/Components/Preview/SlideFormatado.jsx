@@ -3,6 +3,8 @@ import './style.css';
 import { connect } from 'react-redux';
 import Estrofes from './Estrofes';
 import { getFonteBase } from '../../Element';
+import { limparHighlights } from '../BarraPesquisa/BarraPesquisa';
+import { markupParaSuperscrito } from '../Preview/TextoPreview';
 
 class SlideFormatado extends Component {
     
@@ -21,9 +23,16 @@ class SlideFormatado extends Component {
         clearTimeout(this.timeoutEditar);
         this.timeoutEditar = setTimeout(div => {
             var dados = div.id.split('-');
-            var [ objeto, numero ] = [ dados[1], dados[4] ]; 
-            var objAction = {type: 'editar-slide', objeto: objeto, valor: div.innerHTML, redividir: true};
+            var [ objeto, numero ] = [ dados[0], dados[1] ]; 
+            var objAction = {
+                type: 'editar-slide', 
+                objeto: objeto, 
+                valor: markupParaSuperscrito(limparHighlights(div.innerHTML)), 
+                redividir: true, 
+                selecionado: this.props.selecionado
+            };
             if (numero) objAction.numero = numero;
+            console.log(objAction)
             this.props.dispatch(objAction);
         }, 1000, e.target);
     }
@@ -47,7 +56,7 @@ class SlideFormatado extends Component {
                     <div className='texto-preview' style={{fontSize: getFonteBase().numero*proporcao + getFonteBase().unidade}}>
                         <div className='slide-titulo' style={slidePreview.estilo.titulo}>
                             <div><span id='textoTitulo' onInput={this.editarTexto} onFocus={() => this.ativarRealce('titulo')} 
-                                contentEditable={this.props.editavel}
+                                contentEditable={this.props.editavel} suppressContentEditableWarning='true'
                                 style={this.realcarElemento('titulo')}>{slidePreview.titulo}</span></div>
                         </div>
                         <div id='paragrafo-slide' className='slide-paragrafo' style={slidePreview.estilo.paragrafo}>
@@ -79,7 +88,7 @@ const Img = ({imagem}) => {
 
 const mapState = function (state) {
     const sP = state.present;
-    return {abaAtiva: sP.abaAtiva, ratio: sP.ratio}
+    return {abaAtiva: sP.abaAtiva, ratio: sP.ratio, selecionado: sP.selecionado}
 }
 
 export default connect(mapState)(SlideFormatado);

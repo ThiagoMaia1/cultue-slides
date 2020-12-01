@@ -2,6 +2,9 @@ import React from 'react';
 import { connect } from 'react-redux';
 import './BarraPesquisa.css';
 
+const htmlHighlight = ['<span class="highlight">', '</span>'];
+export const limparHighlights = (texto) => texto.replaceAll(htmlHighlight[0],'').replaceAll(htmlHighlight[1], '')
+
 class BarraPesquisa extends React.Component {
 
     constructor (props) {
@@ -25,12 +28,13 @@ class BarraPesquisa extends React.Component {
             var slides = elementos[i].slides;
             for (var j = 0; j < slides.length; j++) {
                 if (slides[j].eMestre) continue;
-                var sel = (
-                        this.contemTermo(elementos[i].titulo, termo) ||
-                        this.contemTermo(slides[j].textoArray.join(' '), termo)
-                    ) ? {elemento: i, slide: j} 
-                      : null;
-                if(sel) this.arrayResultados.push(sel);
+                var estrofes = [...slides[j].textoArray, elementos[i].titulo];
+                for (var k = 0; k < estrofes.length; k++) {
+                    var sel = this.contemTermo(estrofes[k], termo)
+                              ? {elemento: i, slide: j, estrofe: k} 
+                              : null;
+                    if(sel) this.arrayResultados.push(sel);
+                }
             }
         }
         this.setState({lenArray: this.arrayResultados.length})
@@ -63,8 +67,18 @@ class BarraPesquisa extends React.Component {
 
     highlightSlides = () => {
         var spansConteudo = document.querySelectorAll('.texto-preview span');
+        const classeMarcada = 'estrofe-marcada';
+        var marcadoAnterior = document.getElementsByClassName(classeMarcada)[0];
+        if(marcadoAnterior) marcadoAnterior.classList.remove(classeMarcada);
+        var sel = this.arrayResultados[this.state.indiceResultadoSelecionado];
+        var idElemento = sel.estrofe === this.props.elementos[sel.elemento].slides[sel.slide].textoArray.length 
+                         ? 'textoTitulo' 
+                         : 'textoArray' + sel.estrofe;
+        document.getElementById(idElemento).classList.add(classeMarcada);
         for (var s of spansConteudo) {
-            s.innerHTML = s.innerText.replace(this.state.termoPesquisa, resultado => '<span class="highlight">' + resultado + '</span>');
+            var reg = new RegExp('(' + this.state.termoPesquisa + ')', 'gi');
+            s.innerHTML = limparHighlights(s.innerHTML);
+            s.innerHTML = s.innerHTML.replace(reg, resultado => htmlHighlight.join(resultado));
         }
     }
 

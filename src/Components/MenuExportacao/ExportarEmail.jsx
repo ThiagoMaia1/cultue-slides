@@ -45,7 +45,7 @@ class ExportarEmail extends Component {
       'enviarCancelar', 
       'E-mails', 
       'Selecione os endereços de e-mail para os quais você deseja enviar o arquivo.',
-      () => this.enviarArquivoEmail(obj),
+      fazer => {if(fazer) this.enviarArquivoEmail(obj)},
       this.filhosPopup
     )
   }
@@ -133,8 +133,9 @@ class ExportarEmail extends Component {
   }
 
   render() {
+      const meio = 'email'
       return (
-        <BotaoExportador formato='email' onClick={() => this.props.definirMeioExportacao(this.exportarEmail, this.props.posicao)} 
+        <BotaoExportador formato={meio} onClick={() => this.props.definirMeioExportacao(this.exportarEmail, this.props.posicao, meio)} 
           arrow={this.props.posicaoArrow === this.props.posicao} logo={<IoMdMail size={this.props.tamIcones}/>} rotulo='E-mail'/>
       )
   }

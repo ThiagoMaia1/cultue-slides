@@ -13,7 +13,9 @@ const casesTexto = [{valor: 'Nenhum', icone: (<span style={{color: '#999'}}>Aa</
 ];
 
 const listaFontes = ['Montserrat', 'Roboto', 'Source Sans Pro', 'Noto Sans', 'Helvetica', 'Arial', 'Times New Roman', 'Courier', 'Courier New', 'Verdana', 
-                     'Tahoma', 'Arial Black', 'Georgia', 'Impact'
+                     'Tahoma', 'Arial Black', 'Georgia', 'Impact', 'Amatic SC', 'Big Shoulders Stencil Display', 'Bree Serif', 'Cinzel', 
+                     'Comfortaa', 'Dosis', 'Indie Flower', 'Kanit', 'Lato', 'Libre Baskerville', 'Lobster', 'Major Mono Display',
+                     'Nunito', 'Oswald', 'Pacifico', 'Poppins', 'PT Sans', 'Texturina'
 ]
 
 const listaBotoesAbas = [{nomeCodigo: 'texto', nomeInterface: 'Texto'},

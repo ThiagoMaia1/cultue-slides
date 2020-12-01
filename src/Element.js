@@ -49,7 +49,7 @@ export class Estilo {
 
 export const fontePadrao = 'Noto Sans';
 
-export const getFonteBase = () => ({numero: 0.025*store.getState().present.ratio.height, unidade: 'px', fontFamily: fontePadrao});
+export const getFonteBase = ratio => ({numero: 0.025*(ratio || store.getState().present.ratio.height), unidade: 'px', fontFamily: fontePadrao});
   
 const estiloPadrao = {
   texto: {fontFamily: fontePadrao}, 
@@ -100,14 +100,14 @@ export default class Element {
     this.criarSlides(this.texto, est);
   }
 
-  criarSlides = (texto, estiloMestre, nSlide = 0, estGlobal = null, thisP = this) => {
+  criarSlides = (texto, estiloMestre, nSlide = 0, estGlobal = null, ratio = null, thisP = this) => {
     
     if (thisP.eMestre) return;
     if (thisP.slides[nSlide].eMestre) nSlide++;
     if (thisP.tipo === 'Imagem') {
       thisP.dividirImagens();
     } else {
-      thisP.dividirTexto(texto, nSlide, estiloMestre, estGlobal, thisP);
+      thisP.dividirTexto(texto, nSlide, estiloMestre, estGlobal, ratio, thisP);
     }
     if (thisP.slides.length > 1 && !thisP.slides[0].eMestre) {
       thisP.slides.unshift({estilo: {...estiloMestre}, textoArray: [textoMestre], eMestre: true});
@@ -142,7 +142,7 @@ export default class Element {
     }
   }
 
-  dividirTexto = (texto, nSlide, estElemento, estGlobal = null, thisP = this) => {
+  dividirTexto = (texto, nSlide, estElemento, estGlobal = null, ratio = null, thisP = this) => {
     
     //Divide o texto a ser incluído em quantos slides forem necessários, mantendo a estilização de cada slide.
     if (nSlide === thisP.slides.length) {
@@ -154,7 +154,8 @@ export default class Element {
     var slide = thisP.slides[nSlide];  
     var estSlide = slide.estilo;
     estGlobal = estGlobal ? estGlobal : store.getState().present.elementos[0].slides[0].estilo;
-    var ratio = store.getState().present.ratio;
+    if(!ratio) ratio = store.getState().present.ratio;
+    var fonteBase = getFonteBase(ratio);
     
     var estP = {...estGlobal.paragrafo, ...estElemento.paragrafo , ...estSlide.paragrafo};
     var estT = {...estGlobal.texto, ...estElemento.texto, ...estSlide.texto};
@@ -163,7 +164,7 @@ export default class Element {
     var padV = estP.paddingTop + estP.paddingRight; //Right é a base de cálculo, bottom varia.
     var padH = estP.paddingRight + estP.paddingLeft;
     var larguraLinha = ratio.width*(1-padH);
-    var alturaLinha = estP.lineHeight*estP.fontSize*getFonteBase().numero;
+    var alturaLinha = estP.lineHeight*estP.fontSize*fonteBase.numero;
     var alturaSecaoTitulo = estTitulo.height*ratio.height;
     var alturaSecaoParagrafo = ratio.height-alturaSecaoTitulo;
     var alturaParagrafo = alturaSecaoParagrafo*(1-padV);
@@ -186,7 +187,8 @@ export default class Element {
       }
     }
 
-    var estiloFonte = [(estT.fontStyle || ''), (estT.fontWeight || ''), estP.fontSize*getFonteBase().numero + getFonteBase().unidade, "'" + estT.fontFamily + "'"];
+
+    var estiloFonte = [(estT.fontStyle || ''), (estT.fontWeight || ''), estP.fontSize*fonteBase.numero + fonteBase.unidade, "'" + estT.fontFamily + "'"];
     estiloFonte = estiloFonte.filter(a => a !== '').join(' ');
     var caseTexto = estT.caseTexto || estP.caseTexto;
     var separador = thisP.tipo === 'TextoBíblico' ? '' : '\n\n';

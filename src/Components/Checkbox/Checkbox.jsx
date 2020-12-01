@@ -8,7 +8,7 @@ export default function Checkbox(props) {
 
     return (
         <div className='checkbox' onClick={onClick} style={style}>
-            <input type="checkbox" checked={checked} disabled={disabled} style={{width: size, height: size}}/>
+            <input type="checkbox" checked={checked} disabled={disabled} style={{width: size, height: size}} readOnly={disabled}/>
             <label className='label-checkbox' style={disabled ? {color: 'gray'} : null}>
                 {label}
             </label>

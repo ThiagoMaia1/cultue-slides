@@ -20,7 +20,7 @@ class ExportadorPDF extends Component {
   render() {
     if (this.props.autorizacao !== 'editar') return null;
     return (
-      <BotaoExportador formato={this.formato} onClick={() => this.props.definirCallback(this.exportarOnline)} 
+      <BotaoExportador formato={this.formato} onClick={() => this.props.definirFormatoExportacao(this.exportarOnline, this.formato)} 
         logo={this.logo} rotulo='Online'/>
     )
   }

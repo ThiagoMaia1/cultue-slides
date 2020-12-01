@@ -6,7 +6,7 @@
     display: flex;
     align-items: center;
     flex-direction: column-reverse;
-    z-index: 1000;
+    z-index: 1100;
     overflow: hidden;
     --altura-notificacao: 8vh;
     --largura-notificacao: 17vw;

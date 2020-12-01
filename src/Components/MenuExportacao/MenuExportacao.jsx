@@ -10,6 +10,8 @@ import ExportarEmail from './ExportarEmail';
 import ExportarLink from './ExportarLink';
 import ExportarDownload from './ExportarDownload';
 
+const getChamada = () => new Date().getTime();
+
 class MenuExportacao extends Component {
 
     constructor (props) {
@@ -20,7 +22,8 @@ class MenuExportacao extends Component {
         this.state = {coordenadas: [...this.coordenadasBotao], 
             menuVisivel: false, 
             menuFormatos: false,
-            posicaoArrow: null  
+            posicaoArrow: null,
+            chamada: getChamada()  
         };
     }
 
@@ -48,7 +51,7 @@ class MenuExportacao extends Component {
                 const BotaoFormato = f;
                 return (
                     <BotaoFormato key={i} 
-                                  definirCallback={this.definirCallback} 
+                                  definirFormatoExportacao={this.definirFormatoExportacao} 
                                   formatoExportacao={this.props.formatoExportacao}
                     />
                 )
@@ -86,31 +89,24 @@ class MenuExportacao extends Component {
         )
     }
 
-    definirMeioExportacao = (callbackMeio, posicaoArrow) => {
+    definirMeioExportacao = (callbackMeio, posicaoArrow, meio) => {
         var posicao = posicaoArrow === this.state.posicaoArrow ? null : posicaoArrow
-        var callback = this.state.callbackMeio ? null : callbackMeio;
         if ((posicao !== null) !== (this.state.posicaoArrow !== null)) 
             this.abrirMenuFormatos(posicao);
         var timeout = (posicao !== null ? 100 : 20);
         setTimeout(() => this.setState({posicaoArrow: posicao}), timeout);
-        this.setState({callbackMeio: callback});
-        this.definirCallbackFinal();
+        var objState = {callbackMeio: this.state.callbackMeio === callbackMeio ? null : callbackMeio, meio: meio};
+        if(this.props.formatoExportacao) objState.chamada = getChamada();
+        this.setState(objState);
     }
 
-    definirCallback = (callbackFormato, criarSlideFinal = false) => {
-        this.setState({callbackFormato: this.state.callbackFormato ? null : callbackFormato, 
-                       criarSlideFinal: criarSlideFinal});
-        this.definirCallbackFinal();
-    }
-
-    definirCallbackFinal = () => {
-        setTimeout(() => { 
-            if (!this.state.callbackMeio || !this.state.callbackFormato) return;
-            var callback = (copiaDOM, imagensBase64, previews, nomeArquivo) => {
-                this.state.callbackMeio(this.state.callbackFormato(copiaDOM, imagensBase64, previews, nomeArquivo))
-            }
-            this.setState({callback: callback});
-        }, 10);
+    definirFormatoExportacao = (callbackFormato, formato, criarSlideFinal = false) => {
+        this.setState({
+            callbackFormato: callbackFormato, 
+            criarSlideFinal: criarSlideFinal,
+            chamada: getChamada(),
+            formato: formato
+        });
     }
 
     render() {
@@ -132,7 +128,14 @@ class MenuExportacao extends Component {
                         {this.getFormatos()}
                     </div>
                 </div>
-                <Exportador callback={this.state.callback} criarSlideFinal={this.state.criarSlideFinal}/>
+                <Exportador 
+                    callbackMeio={this.state.callbackMeio} 
+                    callbackFormato={this.state.callbackFormato} 
+                    criarSlideFinal={this.state.criarSlideFinal} 
+                    chamada={this.state.chamada}
+                    meio={this.state.meio}
+                    formato={this.state.formato}
+                />
                 <div style={{display: this.state.menuVisivel ? 'none' : '', marginBottom: '0.7vw'}}>Exportar Slides</div>
             </div>
         )

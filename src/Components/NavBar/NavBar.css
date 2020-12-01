@@ -7,7 +7,7 @@
     justify-content: space-between;
     box-shadow: 2px 2px 8px rgba(0,0,0,0.3);
     position: relative;
-    z-index: 1100;
+    z-index: 900;
 }
 
 #botoes-navbar, .div-botao-navbar{
@@ -125,4 +125,9 @@
     color: red;
     display: flex;
     align-items: center;
+}
+
+.inserir-lista-express {
+    height: 20vh;
+    margin: 2vh 0;
 }

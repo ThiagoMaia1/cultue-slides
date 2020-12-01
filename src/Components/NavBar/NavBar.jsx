@@ -3,22 +3,29 @@ import { connect } from 'react-redux';
 import './NavBar.css';
 import Login from '../Login/Login';
 import QuadroAtalhos from './QuadroAtalhos';
+import QuadroExpress from './QuadroExpress';
 import { definirApresentacaoPadrao, zerarApresentacao } from '../../firestore/apresentacoesBD';
+
+const listaBotoesQuadros = [{nome: 'Atalhos', componente: QuadroAtalhos},
+                            {nome: 'Express', componente: QuadroExpress}
+]
 
 class NavBar extends React.Component {
 
   constructor (props) {
     super(props);
     this.esperando = false;
-    this.state = {quadroLogin: false, quadroAtalhos: false, paginaPerfil: false}
+    this.state = {quadroLogin: false, quadroAtalhos: false, quadroExpress: false, paginaPerfil: false}
   }
 
   toggleQuadroLogin = () => {
     this.setState({quadroLogin: !this.state.quadroLogin});
   }
  
-  toggleQuadroAtalhos = bool => {
-    this.setState({quadroAtalhos: bool});
+  toggleQuadro = (quadro, bool) => {
+    var obj = {};
+    obj[quadro] = bool;
+    this.setState(obj);
   }
 
   togglePerfil = (bool) => {
@@ -38,14 +45,22 @@ class NavBar extends React.Component {
             {this.props.autorizacao !== 'baixar'
               ? <>
                   <button onClick={() => definirApresentacaoPadrao(u.uid, this.props.elementos, 'atual')}>Definir Padrão</button>
-                  <div className='div-botao-navbar'>
-                    <button onClick={() => this.toggleQuadroAtalhos(true)} style={this.state.quadroAtalhos ? {pointerEvents: 'none', cursor: 'pointer'} : null}>Atalhos</button>
-                    {this.state.quadroAtalhos
-                      ? <QuadroAtalhos callback={this.toggleQuadroAtalhos}/>
-                      : null
-                    }
-                  </div>
-                  <button>Express</button>
+                    {listaBotoesQuadros.map(b => {
+                        const ComponenteQuadro = b.componente;
+                        return (
+                          <div className='div-botao-navbar' key={b.nome}>
+                            <button onClick={() => this.toggleQuadro(getNomeVariavelEstado(b), true)} 
+                                    style={this.state[getNomeVariavelEstado(b)] ? {pointerEvents: 'none', cursor: 'pointer'} : null}>
+                              {b.nome}
+                            </button>
+                            {this.state[getNomeVariavelEstado(b)]
+                              ? <ComponenteQuadro callback={bool => this.toggleQuadro(getNomeVariavelEstado(b), bool)}/>
+                              : null
+                            }
+                          </div>
+                        )  
+                      }
+                    )}
                 </>
               : null
             }
@@ -71,6 +86,10 @@ class NavBar extends React.Component {
   
 const mapState = state => {
   return {usuario: state.usuario, elementos: state.present.elementos, autorizacao: state.present.apresentacao.autorizacao};
+}
+
+function getNomeVariavelEstado(b) {
+  return 'quadro' + b.nome;
 }
 
 export default connect(mapState)(NavBar);

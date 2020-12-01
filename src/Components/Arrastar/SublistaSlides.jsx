@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { reverterSuperscrito } from '../Preview/TextoPreview.jsx';
+import { getNumeroVersiculo } from '../Preview/TextoPreview.jsx';
 import { connect } from 'react-redux';
 // import { Estilo } from '../../Element';
 
@@ -30,13 +30,7 @@ class SublistaSlides extends Component {
             case 'Imagem':
                 return elemento.titulo || slide.imagem.alt;
             case 'TextoBíblico':
-                var n = 0;
-                var palavras = t0.split(' ');
-                do {
-                    var verso = reverterSuperscrito(palavras[n]);
-                    n++;
-                } while (isNaN(verso))
-                return 'v. ' + verso.padStart(2, 0);
+                return 'v. ' + getNumeroVersiculo(t0).numero.padStart(2, 0);
             default:
                 return t0.substr(0, 50);
         }

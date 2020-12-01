@@ -119,86 +119,97 @@ const slideFinal = {
 }
 
 class Exportador extends Component {
-    
+
   constructor (props) {
     super(props);
-    this.ref = React.createRef();
-    this.state = {slidePreviewFake: true, previews: [], callback: null, feito: false};
-  } 
+    this.state = {previews: []};
+  }
 
   getCopiaDOM = () => {
-    this.imagensBase64 = [];
+    document.body.style.cursor = 'progress';
+    var imagensBase64 = [];
     var sOrdenados = slidesOrdenados(this.props.elementos, false);
-    this.previews = sOrdenados.map((s, i) => ({...getSlidePreview({elementos: this.props.elementos, selecionado: s}), indice: i}));
-    if (this.props.criarSlideFinal) this.previews.push({...slideFinal, indice: this.previews.length});
-    this.setState({previews: this.previews.map((s, i) => 
+    var ratio = this.props.ratio;
+    var previews = sOrdenados.map((s, i) => ({...getSlidePreview({elementos: this.props.elementos, selecionado: s}), indice: i}));
+    if (this.props.criarSlideFinal) previews.push({...slideFinal, indice: previews.length});
+    this.setState({previews: previews.map((s, i) => 
       <SlideFormatado slidePreview={s}
         id={'preview-fake' + i}
         className='preview-fake'
         editavel={false}
         proporcao={1}
+        key={i}
       />)
     })
-    setTimeout(() => {
-      this.copiaDOM = document.cloneNode(true);
-      var spans = this.copiaDOM.querySelectorAll('span');
-      for (var s of spans) {
-        if (s.innerText === slideFinal.textoArray[0]) {
-          s.id = 'mensagem-slide-final';
-          break;
-        }
-      }
-      this.getImagensBase64();
-    }, 10);
-    
-  }
-
-  getImagensBase64 = () => {
-    var [ uniques, imgsUnique] = [{}, []];
-    var i;
-    for (var p of this.previews) {
-      var imgs = this.copiaDOM.querySelectorAll('#preview-fake' + p.indice + ' img');
-      for(i = 0; i < imgs.length; i++) {
-        if(!uniques[imgs[i].src]) {
-          uniques[imgs[i].src] = 'classeImagem' + i;
-          imgsUnique.push(imgs[i]);
-        }
-        var classe = uniques[imgs[i].src];
-        imgs[i].className = classe;
-        var classesPai = imgs[i].parentElement.classlist;
-        if (classesPai && classesPai.includes('div-imagem-slide')) {
-          p.classeImagem = classe;
-        } else {
-          p.classeImagemFundo = classe;
-        }
-      }
-    }
-    for (var j = 0; j < imgsUnique.length; j++) {
-      getBase64Image(imgsUnique[j].src, imgsUnique[j].className, imgsUnique.length, this.props.ratio,
-        (dataURL, classe, total, src) => {
-          this.imagensBase64.push({data: dataURL, classe: classe});
-          if (total === this.imagensBase64.length) {
-            var nomeArquivo = getDate() + ' Apresentação.';
-            this.state.callback(this.copiaDOM, this.imagensBase64, this.previews, nomeArquivo);
-            this.setState({previews: null});
+    if (this.props.meio === 'link') {
+      this.callbackMeio({formato: this.props.formato});
+    } else {
+      setTimeout(() => {
+        var copiaDOM = document.cloneNode(true);
+        var spans = copiaDOM.querySelectorAll('span');
+        for (var s of spans) {
+          if (s.innerText === slideFinal.textoArray[0]) {
+            s.id = 'mensagem-slide-final';
+            break;
           }
         }
-      );
+        this.getImagensBase64(previews, imagensBase64, copiaDOM, ratio, this.callbackMeio, this.props.callbackFormato);
+      }, 10);
     }
   }
 
-  static getDerivedStateFromProps = (props, state) => {
-    if (props.callback && props.callback !== state.callback) {
-      return {callback: props.callback, feito: false}
-    } 
-    return null;
+  getImagensBase64 = (previews, imagensBase64, copiaDOM, ratio, callbackMeio, callbackFormato) => {
+    var [ uniques, imgsUnique] = [{}, []];
+    var i;
+    setTimeout(() => {
+      for (var p of previews) {
+        var imgs = copiaDOM.querySelectorAll('#preview-fake' + p.indice + ' img');
+        for(i = 0; i < imgs.length; i++) {
+          if(!uniques[imgs[i].src]) {
+            uniques[imgs[i].src] = 'classeImagem' + i;
+            imgsUnique.push(imgs[i]);
+          }
+          var classe = uniques[imgs[i].src];
+          imgs[i].className = classe;
+          var classesPai = imgs[i].parentElement.classlist;
+          if (classesPai && classesPai.includes('div-imagem-slide')) {
+            p.classeImagem = classe;
+          } else {
+            p.classeImagemFundo = classe;
+          }
+        }
+      }
+      for (var j = 0; j < imgsUnique.length; j++) {
+        getBase64Image(imgsUnique[j].src, imgsUnique[j].className, imgsUnique.length, ratio,
+          (dataURL, classe, total, src) => {
+            imagensBase64.push({data: dataURL, classe: classe});
+            if (total === imagensBase64.length) {
+              var nomeArquivo = getDate() + ' Apresentação.';
+              callbackMeio(callbackFormato(copiaDOM, imagensBase64, previews, nomeArquivo));
+            }
+          }
+        );
+      }
+    }, 1000);
+  }
+
+  finalizar = () => {
+    document.body.style.cursor = 'default';
+    this.setState({previews: null});
+  }
+
+  componentDidUpdate = (prevProps) => {
+    const p = this.props;
+    if (p.callbackMeio && p.callbackFormato && p.chamada !== prevProps.chamada) {
+      this.callbackMeio = obj => {
+        this.props.callbackMeio(obj)
+        this.finalizar();
+      }
+      this.getCopiaDOM();
+    }
   }
 
   render() {
-    if (this.state.callback && !this.state.feito) {
-      this.getCopiaDOM();
-      this.setState({feito: true});
-    }
     return <>{this.state.previews}</>
   }
 

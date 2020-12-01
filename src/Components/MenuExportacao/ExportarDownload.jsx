@@ -14,7 +14,12 @@ const downloadArquivoTexto = function(nomeArquivo, conteudoArquivo) {
 }
 
 class ExportarDownload extends Component {
-    
+
+  constructor (props) {
+    super(props);
+    this.meio = 'download';
+  }
+
   exportarDownload = obj => {
     var { nomeArquivo, arquivo, formato } = obj;
     switch (formato) {
@@ -34,22 +39,22 @@ class ExportarDownload extends Component {
 
   componentDidUpdate = (prevProps) => {
     if(!prevProps.formatoExportacao && this.props.formatoExportacao) {
-      this.props.definirMeioExportacao(this.exportarDownload, this.props.posicao);
+      this.props.definirMeioExportacao(this.exportarDownload, this.props.posicao, this.meio);
     } else if(prevProps.formatoExportacao && !this.props.formatoExportacao) {
-      this.props.definirMeioExportacao(null, this.props.posicao);
+      this.props.definirMeioExportacao(null, this.props.posicao, this.meio);
     }
   }
 
   componentDidMount = () => {
     if (this.props.formatoExportacao)
-      this.props.definirMeioExportacao(this.exportarDownload, this.props.posicao);
+      this.props.definirMeioExportacao(this.exportarDownload, this.props.posicao, this.meio);
   }
 
   render() {
-      return (
-        <BotaoExportador formato='download' onClick={() => this.props.definirMeioExportacao(this.exportarDownload, this.props.posicao)} 
-          arrow={this.props.posicaoArrow === this.props.posicao} logo={<MdFileDownload size={this.props.tamIcones}/>} rotulo='Baixar'/>
-      )
+    return (
+      <BotaoExportador formato={this.meio} onClick={() => this.props.definirMeioExportacao(this.exportarDownload, this.props.posicao, this.meio)} 
+        arrow={this.props.posicaoArrow === this.props.posicao} logo={<MdFileDownload size={this.props.tamIcones}/>} rotulo='Baixar'/>
+    )
   }
 
 }

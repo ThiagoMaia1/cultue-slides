@@ -38,5 +38,9 @@
 }
 
 .highlight {
+    background-color: cyan;
+}
+
+.estrofe-marcada .highlight {
     background-color: var(--azul-forte);
 }

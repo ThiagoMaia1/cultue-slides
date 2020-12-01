@@ -85,7 +85,6 @@ class Preview extends Component {
     }
 
     render() {
-        var eMini = this.props.mini;
         var slidePreview = this.props.slidePreview;
         var proporcao = this.state.screen.proporcao*Math.min(window.screen.height/this.props.ratio.height, window.screen.width/this.props.ratio.width);
         const telaCheia = this.state.screen.proporcao === this.full.proporcao;
@@ -96,6 +95,10 @@ class Preview extends Component {
                                          padding: telaCheia ? '' : '1vh',
                                          ...this.realcarElemento('tampao', 'fora')}}>
                 {telaCheia ? null : <SelecionarRatio/>}
+                <div className='container-setas' style={{visibility: 'visible', display: telaCheia ? '' : 'none'}}>
+                    <div className='movimentar-slide esquerda' onClick={() => this.offsetSlide(-1)}></div>
+                    <div className='movimentar-slide direita' onClick={() => this.offsetSlide(1)}></div>
+                </div>
                 <SlideFormatado
                     proporcao={proporcao}
                     id='preview'
@@ -103,25 +106,16 @@ class Preview extends Component {
                     realcarElemento={this.realcarElemento}
                     editavel={!slidePreview.eMestre && this.props.autorizacao === 'editar' && !telaCheia}
                     slidePreview={slidePreview}
-                    style={telaCheia ? {overflow: 'visible'} : null}
-                >
-                    {eMini ? null :
-                        <>
-                            <div className='container-setas' style={{display: telaCheia ? '' : 'none'}}>
-                                <div className='movimentar-slide esquerda' onClick={() => this.offsetSlide(-1)}></div>
-                                <div className='movimentar-slide direita' onClick={() => this.offsetSlide(1)}></div>
-                            </div>
-                            <button id='ativar-tela-cheia' onClick={() => toggleFullscreen(this.ref.current)} 
-                                style={{opacity: this.state.screen.opacidadeBotao, color: slidePreview.estilo.texto.color, 
-                                        width: 140*proporcao + 'px', height: 140*proporcao + 'px',
-                                        right: 5.5*proporcao*0.7 + 'vh', bottom: 4.5*proporcao*0.7 + 'vh'}}
-                                onMouseOver={this.tornarBotaoVisivel} onMouseLeave={this.tornarBotaoInvisivel}>
-                                {this.state.screen.icone}
-                            </button>
-                        </>
-                    }
+                    style={telaCheia ? {overflow: 'visible'} : null}>
+                    <button id='ativar-tela-cheia' onClick={() => toggleFullscreen(this.ref.current)} 
+                        style={{opacity: this.state.screen.opacidadeBotao, color: slidePreview.estilo.texto.color, 
+                                width: 140*proporcao + 'px', height: 140*proporcao + 'px',
+                                right: 5.5*proporcao*0.7 + 'vh', bottom: 4.5*proporcao*0.7 + 'vh'}}
+                        onMouseOver={this.tornarBotaoVisivel} onMouseLeave={this.tornarBotaoInvisivel}>
+                        {this.state.screen.icone}
+                    </button>
                 </SlideFormatado>
-                {(!slidePreview.eMestre || eMini) ? null : 
+                {(!slidePreview.eMestre) ? null : 
                     <div id="texto-slide-mestre" style={{textAlign: 'center', paddingTop: '0.7vh'}}>
                         Slide-Mestre - {slidePreview.selecionado.elemento === 0 ? 'Global' : slidePreview.nomeLongoElemento}
                     </div>
