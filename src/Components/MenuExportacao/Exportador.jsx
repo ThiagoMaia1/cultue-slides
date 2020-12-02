@@ -58,10 +58,13 @@ export function selecionadoOffset (elementos, selecionado, offset, apresentacao)
 
 export const slidesOrdenados = (elementos, incluirMestre = false, selecionado = {}) => {
   var elem = elementos.flatMap((e, i) => { 
-    return e.slides.map((s, j) => ({elemento: i, slide: j, eMestre: s.eMestre})); //Gera um array ordenado com todos os slides que existem representados por objetos do tipo "selecionado".
+    return e.slides.map((s, j) => ({elemento: i, slide: j, eMestre: s.eMestre, colapsado: e.colapsado})); //Gera um array ordenado com todos os slides que existem representados por objetos do tipo "selecionado".
   })
+  const eElementoSelecionado = e => (e.elemento === selecionado.elemento && e.slide === selecionado.slide);
   if (!incluirMestre) {
-    elem = elem.filter(e => (!e.eMestre || (e.elemento === selecionado.elemento && e.slide === selecionado.slide)));
+    elem = elem.filter(e => (!(e.eMestre) || eElementoSelecionado(e)));
+  } else {
+    elem = elem.filter(e => (!(e.colapsado && e.slide > 0) || eElementoSelecionado(e)));
   }
   return elem;
 }

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './Carrossel.css';
 import { connect } from 'react-redux';
 import { MdKeyboardArrowUp, MdKeyboardArrowRight, MdKeyboardArrowDown, MdKeyboardArrowLeft } from 'react-icons/md';
+import { capitalize } from '../../Element';
 
 function getCoords(elem) {
     var box = elem.getBoundingClientRect();
@@ -21,91 +22,151 @@ function getCoords(elem) {
     return { top: Math.round(top), left: Math.round(left) };
 }
 
+const estilosSeta = ['estiloSetaUm', 'estiloSetaDois'];
+
 class Carrossel extends Component {
 
     constructor (props) {
         super(props);
-        this.state = {...props, estilo: {}};
+        this.state = {...props, estiloGaleria: {}};
         this.refGaleria = React.createRef();
         this.refCarrossel = React.createRef();
         this.corGradiente = this.props.corGradiente || 'rgba(255, 255, 255, 9)';
         this.percentualBeirada = this.props.percentualBeirada || 0;
+        var dimensoes = ['height', 'width'];
 
         if (this.props.direcao === 'vertical') {
-            this.direcao = 'top'
+            this.direcao = ['top', 'bottom'];
+            this.dimensoes = {principal: dimensoes[0], secundaria: dimensoes[1]};
             this.setaUm = MdKeyboardArrowUp;
             this.setaDois = MdKeyboardArrowDown;
-            this.estiloSeta = {height: '10%', width: '100%', flexDirection: 'column'};
-            this.state.estiloSetaUm = {backgroundImage: 'linear-gradient(to bottom, ' + this.corGradiente + ', rgba(0,0,0,0))', top: '0', opacity: '0'};
-            this.state.estiloSetaDois = {backgroundImage: 'linear-gradient(to top, ' + this.corGradiente + ', rgba(0,0,0,0))', bottom: '0', opacity: '0'};
-            this.style = {maxHeight: this.props.tamanhoMaximo}
+            this.estiloSeta = {flexDirection: 'column'};
         } else {
-            this.direcao = 'left';
+            this.direcao = ['left', 'right'];
+            this.dimensoes = {principal: dimensoes[1], secundaria: dimensoes[0]};
             this.setaUm = MdKeyboardArrowLeft;
             this.setaDois = MdKeyboardArrowRight;
-            this.estiloSeta = {height: '100%', width: '10%', flexDirection: 'row'}
-            this.state.estiloSetaUm = {backgroundImage: 'linear-gradient(to right, ' + this.corGradiente + ', rgba(0,0,0,0))', left: '0', opacity: '0'};
-            this.state.estiloSetaDois = {backgroundImage: 'linear-gradient(to left, ' + this.corGradiente + ', rgba(0,0,0,0))', right: '0', opacity: '0'};
-            this.style = {maxWidth: this.props.tamanhoMaximo}
+            this.estiloSeta = {flexDirection: 'row'}
         }
-        this.style = {...this.style, ...this.props.style};
-        this.estiloSeta = {...this.estiloSeta, color: this.props.corSeta || 'gray'}
-
-        this.state.estilo[this.direcao] = '0';
+        
+        this.style = {...this.props.style};
+        this.style['max' + capitalize(this.dimensoes.principal, 'Primeira Maiúscula')] = this.props.tamanhoMaximo
+        this.estiloSeta[this.dimensoes.principal] = '10%';
+        this.estiloSeta[this.dimensoes.secundaria] = '100%';
+        for (var i = 0; i < this.direcao.length; i++) {
+            this.state[estilosSeta[i]] = {backgroundImage: 'linear-gradient(to ' + this.direcao[i] + ', rgba(0,0,0,0), ' + this.corGradiente + ')', 
+            opacity: '0'};
+            this.state[estilosSeta[i]][this.direcao[i]] = 0;
+        }
+        this.estiloSeta.color = this.props.corSeta || 'gray';
+        this.state.estiloGaleria[this.direcao[0]] = '0';
     }
 
-    ativarSetas = (sentido, tamanhoPasso = 10) => {
-        var o = Number(this.state.estilo[this.direcao]);
-        var passo = - sentido*tamanhoPasso;
-
-        this.setState({estiloSetaUm: {...this.state.estiloSetaUm, display: ''}, estiloSetaDois: {...this.state.estiloSetaDois, display: ''}});
-        
-        if (sentido < 0 && o + passo < this.state.tamanhoCarrossel*this.percentualBeirada) {
-            //TODO: conferir se funciona tudo como display em vez de display e opacity.
-            if (this.state.estiloSetaUm.opacity === '0') this.setState({estiloSetaUm: {...this.state.estiloSetaUm, opacity: '1'}});
-        } else if (sentido > 0 && o + passo > this.state.tamanhoCarrossel*(1-this.percentualBeirada) - this.state.tamanhoGaleria) {
-            if (this.state.estiloSetaDois.opacity === '0') this.setState({estiloSetaDois: {...this.state.estiloSetaDois, opacity: '1'}});
+    getLimiteInicial = () => this.state.tamanhoCarrossel*this.percentualBeirada;
+    getLimiteFinal = () => this.state.tamanhoCarrossel*(1-this.percentualBeirada) - this.state.tamanhoGaleria;
+    getOffsetAtual = () => Number(this.state.estiloGaleria[this.direcao[0]]);
+    getPasso = (sentido, tamanhoPasso) => - (sentido ? 1 : -1)*tamanhoPasso;
+    eSetaInvisivel = iSeta => this.state[estilosSeta[iSeta]].opacity === '0';
+    getDimensaoCamel = palavra => palavra + capitalize(this.dimensoes.principal, 'Primeira Maiúscula');
+    setTimeoutSetas = (intervalo = 100) => this.timeoutSetas = setTimeout(() => this.ativarSetas(0), intervalo);
+    
+    definirEstiloSeta = (iSeta = 2, opacidade, display) => {
+        if (display !== undefined) display = display ? '' : 'none';
+        var nomeEstiloSeta = estilosSeta[iSeta];
+        if (nomeEstiloSeta) {
+            var objState = {};
+            objState[nomeEstiloSeta] = {...this.state[nomeEstiloSeta]};
+            if (opacidade !== undefined) objState[nomeEstiloSeta].opacity = opacidade;
+            if (display !== undefined) objState[nomeEstiloSeta].display = display;
+            this.setState(objState);
         } else {
-            this.setState({estiloSetaUm: {...this.state.estiloSetaUm, opacity: '0'}, estiloSetaDois: {...this.state.estiloSetaDois, opacity: '0'}})
-            return;
-        }   
+            this.definirEstiloSeta(0, opacidade, display);
+            this.definirEstiloSeta(1, opacidade, display);
+        }
+    }
+
+    definirOffset(passo) {
+        this.ativarSetas(passo);
+        var objEstilo = {...this.state.estiloGaleria};
+        objEstilo[this.direcao[0]] = 
+            Math.min(
+                Math.max(
+                    this.getOffsetAtual() + passo, 
+                    this.getLimiteFinal()
+                ), 
+                this.getLimiteInicial()
+            );
+        this.setState({estiloGaleria: objEstilo});
+        this.definirDisplaySetas(passo);
+    }
+
+    limparTransition = () => {
+        var objState = {...this.state.estiloGaleria};
+        objState.transition = '';
+        this.setState({estiloGaleria: objState});
+    }
+
+    ativarSetas = (passo) => {
+        clearTimeout(this.timeoutSetas);
+        this.definirEstiloSeta(2, 0);
+        var seta = passo > 0 ? 0 : passo < 0 ? 1 : 2;
+        var opacidade = seta === 2 ? 0 : 1;
+        this.definirEstiloSeta(seta, opacidade);
     }
 
     encontrarSelecionado = async elemento => {
+        var dimensao = this.getDimensaoCamel('offset');
         if (!this.state.tamanhoCarrossel || this.state.tamanhoCarrossel > this.state.tamanhoGaleria) return;
-        var coordElemento = getCoords(elemento)[this.direcao];
+        var coordElemento = getCoords(elemento)[this.direcao[0]];
         var carrossel = this.refCarrossel.current;
-        var coordCarrossel = getCoords(carrossel)[this.direcao];
-        var o = this.state.estilo[this.direcao];
+        var coordCarrossel = getCoords(carrossel)[this.direcao[0]];
         const espacoExtra = 30;
         var distancia = coordCarrossel > coordElemento
                         ? Math.max(coordCarrossel - coordElemento + espacoExtra, 0)
-                        : Math.min(coordCarrossel + carrossel.offsetHeight - (coordElemento + elemento.offsetHeight) - espacoExtra, 0)
-        var objEstilo = {transition: this.direcao + ' ' + distancia/300 + 's linear'};
-        objEstilo[this.direcao] = o + distancia;
-        this.setState({estilo: objEstilo});
+                        : Math.min(coordCarrossel + carrossel[dimensao] - (coordElemento + elemento[dimensao]) - espacoExtra, 0);
+        this.offsetComTransition(distancia);
     }
     
     deslizar = (sentido, tamanhoPasso = 10, tempo = 20) => {
-        this.ativarSetas(sentido, tamanhoPasso)     
-
         clearInterval(this.animacao);
         this.animacao = setInterval(() => {
-            var o = Number(this.state.estilo[this.direcao]);
-            var passo = - sentido*tamanhoPasso;
-            if (o + passo > this.state.tamanhoCarrossel*this.percentualBeirada || o + passo < this.state.tamanhoCarrossel*(1-this.percentualBeirada) - this.state.tamanhoGaleria) {
-                if (sentido === -1) {
-                    this.setState({estiloSetaUm: {...this.state.estiloSetaUm, display: 'none'}});
-                } else {
-                    this.setState({estiloSetaDois: {...this.state.estiloSetaDois, display: 'none'}});
-                }
-                clearInterval(this.animacao);
+            var o = this.getOffsetAtual();
+            var passo = this.getPasso(sentido, tamanhoPasso);
+            if (o + passo > this.getLimiteInicial() || o + passo < this.getLimiteFinal()) {
+                this.pararDeslizar();
             } else {
-                var objEstilo = {};
-                objEstilo[this.direcao] = o + passo;
-                this.setState({estilo: objEstilo});
+                this.definirOffset(passo);
             }
         }, tempo);
+    }
+
+    definirDisplaySetas = (passo = 0) => {
+        setTimeout(() => {
+            var galeria = this.refGaleria.current;
+            var tamanho = galeria ? galeria['offset' + capitalize(this.direcao[0], 'Primeira Maiúscula')] : 0;
+            var posicao = tamanho + passo;
+            this.definirEstiloSeta(0, undefined, posicao < this.getLimiteInicial());
+            this.definirEstiloSeta(1, undefined, posicao > this.getLimiteFinal());
+        }, 10);
+    }
+
+    offsetComTransition(distancia, taxaTransition = 300) {
+        clearTimeout(this.timeoutTransition);
+        const tempoTransition = Math.abs(distancia) / taxaTransition;
+        this.setState({
+            estiloGaleria: {
+                ...this.state.estiloGaleria,
+                transition: distancia !== 0
+                    ? this.direcao[0] + ' ' + tempoTransition + 's ease-in-out'
+                    : this.state.estiloGaleria.transition
+            }
+        });
+        setTimeout(() => {
+            this.definirOffset(distancia);
+            this.setTimeoutSetas(tempoTransition*1000);
+            this.definirDisplaySetas();
+        }, 10);
+        this.timeoutTransition = setTimeout(() => this.limparTransition(), tempoTransition*1000 + 100);
     }
 
     saltar(sentido) {
@@ -117,66 +178,70 @@ class Carrossel extends Component {
     }
 
     pararDeslizar = () => {
-        this.setState({estiloSetaUm: {...this.state.estiloSetaUm, opacity: '0'}, estiloSetaDois: {...this.state.estiloSetaDois, opacity: '0'}})
-        clearInterval(this.animacao);
-    }
+        clearInterval(this.animacao)
+        this.setTimeoutSetas(5);
+    };
 
     deslizarWheel = e => {
-        e.preventDefault();
-        var obj = {};
-        obj[this.direcao] = Math.min(Math.max(
-            this.state.estilo[this.direcao] - e.deltaY, 
-            this.state.tamanhoCarrossel*(1-this.percentualBeirada) - this.state.tamanhoGaleria), 
-            this.state.tamanhoCarrossel*this.percentualBeirada);
-        this.setState({estilo: obj});
-        this.ativarSetas(0);
+        this.offsetComTransition(-e.deltaY);
     }
 
-    onMouseOver = () => {
-        if (this.direcao === 'top') {
-            this.setState({tamanhoCarrossel: this.refCarrossel.current.offsetHeight, tamanhoGaleria: this.refGaleria.current.offsetHeight});
-        } else {
-            this.setState({tamanhoCarrossel: this.refCarrossel.current.offsetWidth, tamanhoGaleria: this.refGaleria.current.offsetWidth});
-        }
-        if (this.state.tamanhoCarrossel >= this.state.tamanhoGaleria && this.state.estilo[this.direcao] !== '0') {
+    detectarTamanho = () => {
+        this.setState({tamanhoCarrossel: this.getDimensaoRef(this.refCarrossel), tamanhoGaleria: this.getDimensaoRef(this.refGaleria)});
+        if (this.state.tamanhoCarrossel >= this.state.tamanhoGaleria && this.state.estiloGaleria[this.direcao[0]] !== '0') {
             var objEstilo = {};
-            objEstilo[this.direcao] = '0';
-            this.setState({estilo: objEstilo});
+            objEstilo[this.direcao[0]] = '0';
+            this.setState({estiloGaleria: objEstilo});
         }
+        this.offsetComTransition(0.1);
+    }
+
+    getDimensaoRef = (ref, palavra = 'offset') => {
+        if (!ref.current) return 0;
+        var dimensao = this.getDimensaoCamel(palavra);
+        return ref.current[dimensao];
     }
 
     componentDidUpdate = prevProps => {
+        this.rO.observe(this.refCarrossel.current);
+        var dimensao = this.getDimensaoCamel('offset');
         if(!this.props.refElemento || (prevProps.selecionado.elemento === this.props.selecionado.elemento && prevProps.selecionado.slide === this.props.selecionado.slide)) return;
         var elemento = this.props.refElemento.current;
         if(!elemento) return;
         var slide = this.props.refSlide;
-        if(elemento.offsetHeight > this.refCarrossel.current.offsetHeight && slide && slide.current)
+        console.log(slide.current);
+        if(elemento[dimensao] > this.refCarrossel.current[dimensao] && slide && slide.current)
             elemento = slide.current;
         this.encontrarSelecionado(elemento);
     }
 
+    componentDidMount = () => {
+        this.rO = new ResizeObserver (this.detectarTamanho);
+        this.rO.observe(this.refGaleria.current);
+        this.detectarTamanho();
+    }
+
     render () {
-        var SetaUm = this.setaUm;
-        var SetaDois = this.setaDois;
+        var setas = [this.setaUm, this.setaDois];
         return (
-            <div ref={this.refCarrossel} className='carrossel' onMouseOver={this.onMouseOver} onWheel={this.deslizarWheel} style={this.style}>
-                {this.state.tamanhoGaleria > this.state.tamanhoCarrossel ? 
-                    <>
-                        <div className="seta-galeria" 
-                             onMouseOver={() => this.deslizar(-1)} 
-                             onMouseLeave={this.pararDeslizar}
-                             onClick={() => this.saltar(-1)}
-                             style={{...this.estiloSeta, ...this.state.estiloSetaUm}}>
-                             <SetaUm size={this.props.tamanhoIcone}/></div>
-                        <div className="seta-galeria" 
-                             onMouseOver={() => this.deslizar(1)} 
-                             onMouseLeave={this.pararDeslizar}
-                             onClick={() => this.saltar(1)}
-                             style={{...this.estiloSeta, ...this.state.estiloSetaDois}}>
-                             <SetaDois size={this.props.tamanhoIcone}/></div>
-                    </> : null}
+            <div ref={this.refCarrossel} className='carrossel' onWheel={this.deslizarWheel} style={this.style}>
+                {this.state.tamanhoGaleria > this.state.tamanhoCarrossel 
+                    ? setas.map((s, i) => {
+                        const Seta = s;
+                        return (
+                            <div className="seta-galeria" 
+                                onMouseEnter={() => this.deslizar(i)} 
+                                onMouseLeave={this.pararDeslizar}
+                                onClick={() => this.saltar(i)}
+                                style={{...this.estiloSeta, ...this.state[estilosSeta[i]]}}
+                                key={i}>
+                                    <Seta size={this.props.tamanhoIcone}/>
+                            </div>
+                        )
+                    })
+                    : null}
                 <div className='container-galeria'>
-                    <div ref={this.refGaleria} className='movimentador-galeria' style={this.state.estilo}>
+                    <div ref={this.refGaleria} className='movimentador-galeria' style={this.state.estiloGaleria}>
                         {this.props.children}
                     </div>                    
                 </div>

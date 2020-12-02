@@ -20,7 +20,7 @@ class ItemListaSlides extends Component {
     toggleColapsar = e => {
         if (this.props.selecionado.elemento === this.props.ordem && !this.props.selecionado.slide) 
             e.stopPropagation();
-        this.props.dispatch({type: 'toggle-colapsar'});
+        this.props.dispatch({type: 'toggle-colapsar', selecionado: {elemento: this.props.ordem, slide: 0}});
     }
 
     excluirElemento = (e) => {
@@ -83,8 +83,8 @@ class ItemListaSlides extends Component {
                             marginBottom: this.props.placeholder.posicao === i 
                             ? this.props.placeholder.tamanho + 'px' 
                             : (this.eSelecionado(i) ? this.getMargin(elemento) + (this.props.ultimo ? -2 : 0.4) + 'vh' : (this.props.ultimo ? '-1.5vh': ''))}}>
-                    <div data-id={i} className='itens lista-slides' onClick={() => this.props.marcarSelecionado(i, (editavel ? 0 : 0 + (elemento.slides.length > 1)))}>
-                        { editavel
+                    <div data-id={i} className='itens lista-slides' onClick={() => this.props.marcarSelecionado(i, (editavel ? 0 : 0 + (elemento.slides.length > 1)))} ref={this.props.selecionado.slide ? null : this.props.objRef.slide}>
+                        {editavel
                             ? <div className='quadradinho-canto'>
                                   <div data-id={i} className='botao-quadradinho' onClick={e => this.excluirElemento(e)}>✕</div>
                                   <div data-id={i} className='botao-quadradinho' onClick={e => this.editarElemento(e)}>

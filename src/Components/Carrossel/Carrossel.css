@@ -6,6 +6,7 @@
     flex: inherit;
     display: inherit;
     overflow: inherit;
+    line-height: 0;
 }
 
 .seta-galeria {
@@ -23,6 +24,7 @@
     width: inherit;
     height: inherit;
     flex: inherit;
+    line-height: initial;
 }
 
 .movimentador-galeria {

@@ -13,18 +13,19 @@ const getEstiloAnimacao = (maxHeight = '0', maxWidth = '0', color = 'white', tra
     {maxHeight: maxHeight + 'vh', maxWidth: maxWidth + 'vw', color: color, transform: transform}
 )
 
+const estiloInvisivel = getEstiloAnimacao();
+const estiloIntermediario = getEstiloAnimacao(3.4, 2.8, 'white', 'skewX(-5deg)');
+const estiloAberto = getEstiloAnimacao(40, 10);
+
 class SelecionarRatio extends React.Component {
 
     constructor (props) {
         super(props);
         this.ref = React.createRef();
-        this.estiloInvisivel = getEstiloAnimacao();
-        this.estiloIntermediario = getEstiloAnimacao(3.4, 2.8, 'white', 'skewX(-5deg)');
-        this.estiloAberto = getEstiloAnimacao(40, 10);
-        this.state = {estiloFundo: this.estiloInvisivel, opcoesVisiveis: false};
+        this.state = {estiloFundo: estiloInvisivel, opcoesVisiveis: false};
     }
 
-    sair = () => this.setState({estiloFundo: this.estiloInvisivel, opcoesVisiveis: false})
+    sair = () => this.setState({estiloFundo: estiloInvisivel, opcoesVisiveis: false})
 
     onMouseLeave = () => {
         this.esperaLeave = setTimeout(
@@ -36,12 +37,12 @@ class SelecionarRatio extends React.Component {
     onMouseEnter = () => {
         clearTimeout(this.esperaLeave);
         if (!this.state.opcoesVisiveis && this.ref.current.offsetHeight < 50) {
-            this.setState({estiloFundo: this.estiloIntermediario});
+            this.setState({estiloFundo: estiloIntermediario});
         }
     }
 
     onClick = () => {
-        this.setState({estiloFundo: this.estiloAberto, opcoesVisiveis: true});
+        this.setState({estiloFundo: estiloAberto, opcoesVisiveis: true});
     }
 
     selecionarRatio = ratio => {
@@ -55,9 +56,16 @@ class SelecionarRatio extends React.Component {
         return {width: 0, height: 0};
     }
 
+    static getDerivedStateFromProps = (props, state) => {
+        if (!props.eMestre && state.opcoesVisiveis) {
+            return {opcoesVisiveis: false, estiloFundo: estiloInvisivel};
+        }
+        return null;
+    }
+
     render() {
         if (!this.props.eMestre) return null;
-        var estiloFundo = this.props.tutorial ? this.estiloIntermediario : this.state.estiloFundo
+        var estiloFundo = this.props.tutorial ? estiloIntermediario : this.state.estiloFundo
         return (
             <div id='selecionar-aspect-ratio' onMouseEnter={this.onMouseEnter} onMouseLeave={this.onMouseLeave}>
                 <div id='fundo-selecionar-aspect-ratio' style={{...estiloFundo}} ref={this.ref}>
@@ -68,7 +76,7 @@ class SelecionarRatio extends React.Component {
                                     {o.width + 'x' + o.height}
                                 </div>
                             )
-                        : (estiloFundo.maxHeight !== this.estiloInvisivel.maxHeight 
+                        : (estiloFundo.maxHeight !== estiloInvisivel.maxHeight 
                             ? <button id='botao-selecionar-ratio' onClick={this.onClick}>
                                 <BsAspectRatio size={20}/>
                               </button> 

@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
 // import ReactDOMServer from 'react-dom/server';
-import { getNumeroVersiculo, markupParaSuperscrito } from './TextoPreview';
-import { limparHighlights } from '../BarraPesquisa/BarraPesquisa';
+import { getNumeroVersiculo /*, markupParaSuperscrito */ } from './TextoPreview';
+// import { limparHighlights } from '../BarraPesquisa/BarraPesquisa';
 
 
 export default function Estrofes(props) {
@@ -21,12 +21,12 @@ export default function Estrofes(props) {
             t = <>{versiculo.textoAntes} <sup>{versiculo.numero}</sup> {versiculo.textoDepois}</>;
         }
         return (
-            <Fragment key={i}>
+            <Fragment key={i + t}>
                 <span id={'textoArray-' + i} 
                       contentEditable={props.editavel} suppressContentEditableWarning='true'
                       onInput={props.onInput} 
                       onFocus={e => {
-                        e.target.innerHTML = markupParaSuperscrito(limparHighlights(e.target.innerHTML));
+                        // e.target.innerHTML = markupParaSuperscrito(limparHighlights(e.target.innerHTML));
                         props.ativarRealce('paragrafo')
                       }}
                     //   onBlur={e => e.target.innerHTML = ReactDOMServer.renderToStaticMarkup(t)}

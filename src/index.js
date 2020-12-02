@@ -45,14 +45,15 @@
 //   ✔️ Envio da apresentação para o BD quando o estilo é limpado.
 //   ✔️ Largura e altura auto no menu exportação.
 //   ✔️ Nova apresentação sair da tela de download.
+//   ✔️ Carrossel com espaço extra que desconfigura tudo.
+//   ✔️ Carrossel às vezes não funciona no "Arrastar".
 //   ✔️ Carrossel do Input Imagem não vai até o final.*/
 // Errinhos:
 //   Redividir quando o texto de um slide é todo deletado.
 //   Problemas ao dividir texto em duas colunas
 //   Edição do conteúdo do parágrafo dando muitos erros (falha ao perder foco, não exibe cursor).
-//   Acabar com splash mais rápido se não houver conexão
-//   Carrossel com espaço extra que desconfigura tudo.
-//   Carrossel às vezes não funciona no "Arrastar".
+//   Barra de pesquisa está com muitos erros (editando todas as estrofes de todos os slides).
+//   Update firestore está dando undefined
 //
 /*// Features:
 //   ✔️ Envio de imagens.
@@ -89,6 +90,7 @@
 //   Persistir redux
 //   Incluir fontes como base64.
 //   Nomear apresentacao
+//   Recuperar senha
 
 /*/ Features não necessários:
 //   Exportar como PDF.
@@ -256,9 +258,6 @@ export const reducerElementos = function (state = defaultList, action) {
       return {...state, selecionado: sel};
     case "offset-selecao":  
       sel = {...selecionadoOffset(state.elementos, state.selecionado, action.offset, autorizacaoEditar(state.apresentacao.autorizacao) ? undefined : true)};
-      if (sel.slide > 0 && el[sel.elemento].colapsado) 
-        sel.slide = 0;
-        // el[sel.elemento].colapsado = false; //Para descolapsar
       return {...state, selecionado: sel, elementos: el};
     default:
       return state;
