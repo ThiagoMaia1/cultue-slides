@@ -43,7 +43,6 @@ class SublistaSlides extends Component {
             <ol className='sublista'>
                 {elemento.slides.map((slide, j) => {
                     if (j === 0) return null; //Pula o slide 0, pois se tem múltiplos slides, o slide 0 é o mestre.
-                    console.log(sel.slide, j)
                     return (
                         <li className={'item-sublista ' + elemento.tipo + ' fade-estilizado ' +
                                        (this.props.selecionado.elemento === i && sel.slide === j ? 'selecionado' : '') + ' ' +

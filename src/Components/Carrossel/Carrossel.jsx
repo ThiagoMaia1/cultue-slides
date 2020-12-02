@@ -62,8 +62,8 @@ class Carrossel extends Component {
         this.state.estiloGaleria[this.direcao[0]] = '0';
     }
 
-    getLimiteInicial = () => this.state.tamanhoCarrossel*this.percentualBeirada;
-    getLimiteFinal = () => this.state.tamanhoCarrossel*(1-this.percentualBeirada) - this.state.tamanhoGaleria;
+    getLimiteInicial = () => Math.round(this.state.tamanhoCarrossel*this.percentualBeirada);
+    getLimiteFinal = () => Math.round(this.state.tamanhoCarrossel*(1-this.percentualBeirada) - this.state.tamanhoGaleria);
     getOffsetAtual = () => Number(this.state.estiloGaleria[this.direcao[0]]);
     getPasso = (sentido, tamanhoPasso) => - (sentido ? 1 : -1)*tamanhoPasso;
     eSetaInvisivel = iSeta => this.state[estilosSeta[iSeta]].opacity === '0';
@@ -97,7 +97,7 @@ class Carrossel extends Component {
                 this.getLimiteInicial()
             );
         this.setState({estiloGaleria: objEstilo});
-        this.definirDisplaySetas(passo);
+        this.definirDisplaySetas();
     }
 
     limparTransition = () => {
@@ -140,11 +140,11 @@ class Carrossel extends Component {
         }, tempo);
     }
 
-    definirDisplaySetas = (passo = 0) => {
+    definirDisplaySetas = () => {
         setTimeout(() => {
             var galeria = this.refGaleria.current;
             var tamanho = galeria ? galeria['offset' + capitalize(this.direcao[0], 'Primeira Maiúscula')] : 0;
-            var posicao = tamanho + passo;
+            var posicao = tamanho;
             this.definirEstiloSeta(0, undefined, posicao < this.getLimiteInicial());
             this.definirEstiloSeta(1, undefined, posicao > this.getLimiteFinal());
         }, 10);
