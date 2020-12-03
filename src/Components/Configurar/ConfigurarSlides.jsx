@@ -231,6 +231,7 @@ class ConfigurarSlides extends Component {
   
 	render() {
     var aba = this.props.abaAtiva;
+    var slidePreview = this.props.slidePreview;
     return (
       <div id='painel-configuracao'>
         <div id='abas'>
@@ -239,12 +240,14 @@ class ConfigurarSlides extends Component {
         {this.state.painelCor}
         <div className='configuracoes'>
           <div className='botoes-direita'>
-            <button title='Aplicar Estilo ao Slide-Mestre' className='botao-configuracao bool' 
-                    style={{visibility: this.props.selecionado.elemento === 0 ? 'hidden' : 'visible'}}
+            <button id='botao-clonar-estilo' className='botao-configuracao bool'
+                    title='Aplicar Estilo ao Slide-Mestre'  
+                    style={{visibility: (slidePreview.eMestre && !this.props.tutorialAtivo) ? 'hidden' : 'visible'}}
                     onClick={this.aplicarEstiloAoMestre}>
               <RiMastercardLine size={this.state.tamIcones} />
             </button>
-            <button title='Limpar Estilos do Slide' className='botao-configuracao bool' 
+            <button id='botao-limpar-estilo'  className='botao-configuracao bool' 
+                    title='Limpar Estilos do Slide'
                     onClick={this.limparEstilo}>
               <CgErase size={this.state.tamIcones} />
             </button>
@@ -257,8 +260,8 @@ class ConfigurarSlides extends Component {
                 <div className='cor-texto' style={{backgroundColor: this.props.slideSelecionado.estilo[aba].color}}></div>
               </button>
               <select className={'botao-configuracao combo-fonte'} onChange={this.mudarFonte} ref={this.ref}
-                      defaultValue={this.props.slidePreview.estilo[aba].fontFamily}
-                      style={{fontFamily: this.props.slidePreview.estilo[aba].fontFamily}}>
+                      defaultValue={slidePreview.estilo[aba].fontFamily}
+                      style={{fontFamily: slidePreview.estilo[aba].fontFamily}}>
                         {this.listaFontes}
               </select>
             </div>
@@ -270,7 +273,7 @@ class ConfigurarSlides extends Component {
             </div>
             <div className='linha-configuracoes-texto'>
               {this.gerarBotoesEstiloTexto(aba, 0, 2)}
-              <div id='rotulo-configuracoes-musica' style={this.props.slidePreview.tipo === 'Música' ? null : {display: 'none'}}>
+              <div id='rotulo-configuracoes-musica' style={slidePreview.tipo === 'Música' ? null : {display: 'none'}}>
                 <BsMusicNoteBeamed size={this.state.tamIcones}/>
               </div>
               {this.gerarBotoesEstiloTexto(aba, 4)}
@@ -301,7 +304,8 @@ const mapState = function (state) {
   return {slideSelecionado: state.present.elementos[sel.elemento].slides[sel.slide], 
           selecionado: state.present.selecionado, 
           slidePreview: state.slidePreview, 
-          abaAtiva: state.present.abaAtiva
+          abaAtiva: state.present.abaAtiva,
+          tutorialAtivo: state.itensTutorial.includes('configuracoesSlide')
   }
 }
 

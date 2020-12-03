@@ -13,6 +13,9 @@ const setOpacidadeQuadradinhoCanto = opacidade => {
   document.querySelectorAll(selectorQuadradinhoCanto)[0].style.opacity = opacidade || null;
 }
 
+const selecionarSlide = (elemento, slide) => store.dispatch({type: 'definir-selecao', selecionado: {elemento, slide}});
+const selecionarAba = abaAtiva => store.dispatch({ type: 'ativar-realce', abaAtiva });
+
 const getCSSFade = elementos => {
   var elemento = elementos[0];
   var pai = elemento.parentElement;
@@ -64,12 +67,12 @@ const listaBoxes = {
      coordenadas: [15, 25], 
      arrow: {posicao: 'centerRight', posicaoChildren: 'bottom'},
      selectorElemento: '#slide-mestre',
-     callbackAntes: () => store.dispatch({type: 'definir-selecao', selecionado: {elemento: 0, slide: 0}})
+     callbackAntes: () => selecionarSlide(0, 0)
     },
     {texto: 'Clique no canto superior esquerdo do slide-mestre para alterar as dimensões da tela/projetor.', 
      arrow: {posicao: 'centerLeft', posicaoChildren: 'bottom', selectorElemento: '#selecionar-aspect-ratio'},
      selectorElemento: '#borda-slide-mestre',
-     callbackDepois: () => store.dispatch({type: 'definir-selecao', selecionado: {elemento: 1, slide: 0}})
+     callbackDepois: () => selecionarSlide(1, 0)
     },
     {texto: 'Clique para alterar as configurações e a imagem de fundo do slide selecionado', 
      coordenadas: [40, 40], 
@@ -113,15 +116,23 @@ const listaBoxes = {
    {texto: 'Você pode alterar a cor de fundo, e a opacidade da camada que se sobrepõe à imagem de fundo', 
     arrow: {posicao: 'centerLeft', posicaoChildren: 'bottom'},
     selectorElemento: '#botao-menu-configurar',
-    callbackAntes: () => store.dispatch({type: 'ativar-realce', abaAtiva: 'tampao'}),
-    callbackDepois: () => store.dispatch({type: 'ativar-realce', abaAtiva: 'texto'})
+    callbackAntes: () => selecionarAba('tampao'),
+    callbackDepois: () => selecionarAba('texto')
    },
    {texto: 'Clique diretamente no texto do slide para editar seu conteúdo', 
     coordenadas: [30, 50], 
     selectorElemento: '#borda-slide-mestre',
-    callbackAntes: () => store.dispatch({type: 'ativar-realce', abaAtiva: 'paragrafo'}),
-    callbackDepois: () => store.dispatch({type: 'ativar-realce', abaAtiva: 'texto'})
-  }
+    callbackAntes: () => selecionarAba('paragrafo'),
+    callbackDepois: () => selecionarAba('texto')
+  },
+   {texto: 'Clique para aplicar o estilo do slide selecionado ao slide-mestre do grupo ou da apresentação.',
+    arrow: {posicao: 'centerLeft', posicaoChildren: 'bottom'},
+    selectorElemento: '#botao-clonar-estilo'
+   },
+   {texto: 'Clique para limpar os estilos do slide, grupo ou apresentação selecionados.',
+    arrow: {posicao: 'centerLeft', posicaoChildren: 'bottom'},
+    selectorElemento: '#botao-limpar-estilo'
+   }
   ]
 }
 
@@ -264,3 +275,4 @@ const mapState = state => {
 }
 
 export default connect(mapState)(Tutorial);
+

@@ -6,8 +6,8 @@ import Background from './QuadradoC.svg';
 const coresQuadrados = ['azul-puro', 'azul-claro', 'cinza'];
 const proporcaoWidth = 1.2614;
 const taxaDiferencaQuadrado = 1.09;
-const taxaInterpolacao = 0.02;
-const tamanhoMinimoVw = 0.1;
+const taxaInterpolacao = 0.03;
+const tamanhoMinimoVw = 10;
 const rateSombra = 0.06;
 const metade = 0.5;
 
@@ -24,7 +24,7 @@ class Fundo3D extends React.Component {
 
     render() {
         var [x, y] = this.props.coordenadas;
-        var tamanhoMinimo = window.innerWidth*tamanhoMinimoVw;
+        var tamanhoMinimo = window.innerWidth*tamanhoMinimoVw/100;
         var tamanho = tamanhoMinimo;
         var arrayQuadrados = [];
         while (tamanho < window.innerWidth || tamanho/proporcaoWidth < window.innerHeight) {
