@@ -2,6 +2,7 @@
     position: fixed;
     justify-content: flex-start;
     overflow: hidden;
+    min-height: 8vh;
 }
 
 .div-titulo-botao {

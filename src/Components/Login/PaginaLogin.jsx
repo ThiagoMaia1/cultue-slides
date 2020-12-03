@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Redirect } from "react-router-dom";
 import Fundo3D from '../Splash/Fundo3D';
 
-class PaginaLogin extends React.Component {
+class PaginaLogin extends React.Component {
 
     constructor(props) {
         super(props);
@@ -14,8 +14,8 @@ class PaginaLogin extends React.Component {
     onMouseMove = (e) => {
         var center = this.getCenter();
         var novasCoordenadas = [
-            (e.nativeEvent.clientX - center[0]), 
-            (e.nativeEvent.clientY - center[1])
+            -(e.nativeEvent.clientX - center[0]), 
+            -(e.nativeEvent.clientY - center[1])
         ];
         this.setState({coordenadas: novasCoordenadas});
     }
@@ -47,5 +47,3 @@ const mapState = state => {
 }
 
 export default connect(mapState)(PaginaLogin);
-  
-

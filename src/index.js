@@ -61,6 +61,8 @@
 //   Clonar estilo não está funcionando
 //   Atalho avançar tutorial com setas
 //   'Arraste uma imagem, ou clique para selecionar o arquivo.' não está clicável.
+//   Diferença topleft no fundo 3D ou mudar estilo por completo.
+//   Posição do preview ao alterar ratio.
 //
 /*// Features:
 //   ✔️ Envio de imagens.
@@ -98,6 +100,8 @@
 //   Incluir fontes como base64.
 //   Nomear apresentacao
 //   Recuperar senha
+//   E-mails não caírem no spam.
+//   Pedir cadastro ao tentar enviar e-mail.
 
 /*/ Features não necessários:
 //   Exportar como PDF.
@@ -108,6 +112,7 @@
 //   Adicionar logo da igreja (upload ou a partir de lista de logos famosas de denominações).
 //   Favoritar músicas, fundos...
 //   Otimizar mobile
+//   Reutilizar links de compartilhamento.
 //   Indicar que há estilização nos slides/elementos.*/
 //
 // Negócio:

@@ -1,9 +1,12 @@
 #selecionar-aspect-ratio {
+    min-width: 3.4vw;
+    min-height: 2.8vh;
+}
+
+#selecionar-aspect-ratio, #fundo-selecionar-aspect-ratio  {
     position: absolute;
     top: 1vh;
     left: 2px;
-    min-width: 5vw;
-    min-height: 5vh;
     z-index: 250;
     visibility: visible;
     overflow: hidden;
@@ -17,7 +20,6 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    overflow: hidden;
 }
 
 .opcao-ratio {

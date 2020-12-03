@@ -25,6 +25,7 @@
     border-radius: var(--round-border-grande);
     overflow: hidden;
     box-shadow: var(--box-shadow);
+    transition: width 0.2s ease-in-out, height 0.2s ease-in-out;
 }
 
 #fundo-preview {
@@ -166,4 +167,5 @@ img {
 
 #texto-slide-mestre {
     color: white;
+    user-select: none;
 }

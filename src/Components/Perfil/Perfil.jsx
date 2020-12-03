@@ -11,12 +11,13 @@ import InformacoesPessoais from './InformacoesPessoais';
 
 export const urlPerfil = '/perfil';
 
-const paginasPerfil = [{nome: 'info-pessoal', nomeInterface: 'Informações Pessoais', componente: InformacoesPessoais},
-                       {nome: 'apresentacoes', nomeInterface: 'Apresentações', componente: ApresentacoesUsuario},
-                       {nome: 'predefinicoes', nomeInterface: 'Predefinições', componente: ApresentacoesUsuario},
-                       {nome: 'emails', nomeInterface: 'E-mails', componente: ListaEmails},
-                       {nome: 'assinatura', nomeInterface: 'Assinatura', componente: ApresentacoesUsuario},
-                       {nome: 'compartilhamento', nomeInterface: 'Compartilhamento', componente: ApresentacoesUsuario}
+const paginasPerfil = [
+    {nome: 'info-pessoal', nomeInterface: 'Informações Pessoais', componente: InformacoesPessoais},
+    {nome: 'apresentacoes', nomeInterface: 'Apresentações', componente: ApresentacoesUsuario},
+    {nome: 'predefinicoes', nomeInterface: 'Predefinições', componente: ApresentacoesUsuario},
+    {nome: 'emails', nomeInterface: 'E-mails', componente: ListaEmails}
+    //    {nome: 'assinatura', nomeInterface: 'Assinatura', componente: ApresentacoesUsuario},
+    //    {nome: 'compartilhamento', nomeInterface: 'Compartilhamento', componente: ApresentacoesUsuario}
 ]
 
 class Perfil extends React.Component {

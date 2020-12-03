@@ -97,7 +97,10 @@ class ItemListaEmails extends React.Component {
         return (
             <div className='item-lista-perfil email' style={selecao ? {background: 'var(--platinum-forte)'} : null}>
                 {selecao
-                    ? <Checkbox checked={this.state.emailSelecionado} label='' onClick={this.selecionarEmail} size='2.4vh' style={{flex: 'none'}}/>
+                    ? <Checkbox checked={this.state.emailSelecionado} 
+                                label='' onClick={this.selecionarEmail} 
+                                size='2.4vh' 
+                                style={{flex: 'none', visibility: this.state.editando ? 'hidden' : ''}}/>
                     : null
                 }
                 <div className='container-email'>

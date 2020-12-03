@@ -2,16 +2,35 @@ import React, { Component } from 'react';
 import './style.css';
 import { connect } from 'react-redux';
 
+export const getPathImagemReduzida = (path, px) => {
+    if (px) {
+        path = path.replace('/Fundos/','/Fundos/' + px + 'px/');
+        path = path.replace(/.jpg|.png/,'.jpg');
+    }
+    return path;
+}
+
 class Img extends Component {
 
+    constructor (props) {
+        super(props);
+        this.estiloAnterior = this.getEstiloAnterior(props);
+    }
+
+    getEstiloAnterior = (props = this.props) => ({...props.slideSelecionado.estilo});
+
     onMouseOver = () => {
-        var t = this.mudancaTemporaria;
-        this.mudancaTemporaria = true;
-        if (!t || !this.estiloAnterior) this.estiloAnterior = {...this.props.slideSelecionado.estilo};
-        this.togglePrevia(this.props.imagem);
+        clearTimeout(this.esperaMouseOver);
+        this.esperaMouseOver = setTimeout(() => {
+            var t = this.mudancaTemporaria;
+            this.mudancaTemporaria = true;
+            if (!t || !this.estiloAnterior) this.estiloAnterior = this.getEstiloAnterior();
+            this.togglePrevia(this.props.imagem);
+        }, 100);
     }
 
     onMouseLeave = () => {
+        clearTimeout(this.esperaMouseOver);
         this.mudancaTemporaria = false;
         this.togglePrevia(this.estiloAnterior);
     }
@@ -44,7 +63,7 @@ class Img extends Component {
                 </div>
                 <div className='tampao' style={this.props.imagem.tampao}></div>
                 <img className='imagem-galeria' 
-                     src={this.props.imagem.fundo.src.substr(0, 4) === 'blob' ? this.props.imagem.fundo.src : require('' + this.props.imagem.fundo.src.replace(/.jpg|.png/,'-300px.jpg'))} 
+                     src={this.props.imagem.fundo.src.substr(0, 4) === 'blob' ? this.props.imagem.fundo.src : require('' + getPathImagemReduzida(this.props.imagem.fundo.src, 300))} 
                      alt={this.props.imagem.alt}
                 />
             </div>

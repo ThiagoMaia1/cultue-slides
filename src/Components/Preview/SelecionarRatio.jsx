@@ -27,7 +27,9 @@ class SelecionarRatio extends React.Component {
 
     sair = () => this.setState({estiloFundo: estiloInvisivel, opcoesVisiveis: false})
 
-    onMouseLeave = () => {
+    onMouseLeave = e => {
+        var novoAlvo = e.toElement || e.relatedTarget;
+        if (this.ref.current.contains(novoAlvo)) return; 
         this.esperaLeave = setTimeout(
             this.sair,
             300
@@ -36,7 +38,7 @@ class SelecionarRatio extends React.Component {
 
     onMouseEnter = () => {
         clearTimeout(this.esperaLeave);
-        if (!this.state.opcoesVisiveis && this.ref.current.offsetHeight < 50) {
+        if (!this.state.opcoesVisiveis) {
             this.setState({estiloFundo: estiloIntermediario});
         }
     }
@@ -67,24 +69,25 @@ class SelecionarRatio extends React.Component {
         if (!this.props.eMestre) return null;
         var estiloFundo = this.props.tutorial ? estiloIntermediario : this.state.estiloFundo
         return (
-            <div id='selecionar-aspect-ratio' onMouseEnter={this.onMouseEnter} onMouseLeave={this.onMouseLeave}>
-                <div id='fundo-selecionar-aspect-ratio' style={{...estiloFundo}} ref={this.ref}>
-                    {this.state.opcoesVisiveis 
-                        ? opcoesRatio.map((o, i) => 
-                                <div className='opcao-ratio' onClick={() => this.selecionarRatio(o)} key={i} 
-                                     style={i === 0 ? {borderRadius: '1vh 0 0 0'} : null}>
-                                    {o.width + 'x' + o.height}
-                                </div>
+            <>
+                <div id='selecionar-aspect-ratio' onMouseEnter={this.onMouseEnter} onMouseLeave={this.onMouseLeave}></div>
+                <div id='fundo-selecionar-aspect-ratio' style={{...estiloFundo}} ref={this.ref} onMouseLeave={this.onMouseLeave}>
+                        {this.state.opcoesVisiveis 
+                            ? opcoesRatio.map((o, i) => 
+                                    <div className='opcao-ratio' onClick={() => this.selecionarRatio(o)} key={i} 
+                                        style={i === 0 ? {borderRadius: '1vh 0 0 0'} : null}>
+                                        {o.width + 'x' + o.height}
+                                    </div>
+                                )
+                            : (estiloFundo.maxHeight !== estiloInvisivel.maxHeight 
+                                ? <button id='botao-selecionar-ratio' onClick={this.onClick}>
+                                    <BsAspectRatio size={20}/>
+                                </button> 
+                                : <div style={this.getDimensoesAtuais()}></div>
                             )
-                        : (estiloFundo.maxHeight !== estiloInvisivel.maxHeight 
-                            ? <button id='botao-selecionar-ratio' onClick={this.onClick}>
-                                <BsAspectRatio size={20}/>
-                              </button> 
-                            : <div style={this.getDimensoesAtuais()}></div>
-                          )
-                    }
+                        }
                 </div>
-            </div>
+            </>
         );
     }
 };

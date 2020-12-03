@@ -5,6 +5,7 @@ import Estrofes from './Estrofes';
 import { getFonteBase } from '../../Element';
 import { limparHighlights } from '../BarraPesquisa/BarraPesquisa';
 import { markupParaSuperscrito } from '../Preview/TextoPreview';
+import { getPathImagemReduzida } from './Galeria/Img';
 
 class SlideFormatado extends Component {
     
@@ -65,7 +66,7 @@ class SlideFormatado extends Component {
                              ...this.realcarElemento('tampao', 'dentro'),
                              ...this.props.style}}>
                     <div className='tampao' style={slidePreview.estilo.tampao}></div>
-                    <Img imagem={slidePreview.estilo.fundo} />
+                    <Img imagem={slidePreview.estilo.fundo} proporcao={proporcao}/>
                     <div className='texto-preview' style={{fontSize: getFonteBase().numero*proporcao + getFonteBase().unidade}}>
                         <div className={'slide-titulo ' + this.getClasseLetraClara('titulo')} style={slidePreview.estilo.titulo}>
                             <div><span id='textoTitulo' onInput={this.editarTexto} onFocus={() => this.ativarRealce('titulo')} 
@@ -91,11 +92,18 @@ class SlideFormatado extends Component {
     }
 }
 
-const Img = ({imagem}) => {
+const Img = ({imagem, proporcao}) => {
     if (imagem.src.substr(0, 4) === 'blob') {
         return <img id='fundo-preview' src={imagem.src} alt='' />
     } else {
-        return <img id='fundo-preview' src={require('' + imagem.src)} alt='' />
+        var path = getPathImagemReduzida(imagem.src,
+            proporcao < 0.2
+                ? 300
+                : proporcao < 0.8
+                    ? 600
+                    : null
+        ) 
+        return <img id='fundo-preview' src={require('' + path)} alt=''/>
     }
 };
 

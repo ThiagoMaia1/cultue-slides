@@ -4,8 +4,10 @@ import { MdFullscreen, MdFullscreenExit } from 'react-icons/md';
 import SlideFormatado from './SlideFormatado';
 import SelecionarRatio from './SelecionarRatio';
 
-const alturaTela = window.screen.height;
-const larguraTela = window.screen.width;
+let windowH = window.screen.height;
+let windowW = window.screen.width;
+const alturaTela = Math.min(windowH, windowW);
+const larguraTela = Math.max(windowH, windowW);
 
 export function toggleFullscreen (element = null) {        
     

@@ -4,6 +4,7 @@ import './Login.css';
 import { firebaseAuth, googleAuth } from "../../firebase";
 import { gerarDocumentoUsuario } from '../../firestore/apiFirestore';
 import { checarLogin } from './ModulosLogin';
+import SelectCargo from './SelectCargo';
 
 function getMensagemErro(error) {
     var codigo = error.code.replace('auth/', '');
@@ -26,10 +27,6 @@ function getMensagemErro(error) {
             return '';
     }
 }
-
-const listaCargos = ['Pastor', 'Presbítero', 'Diácono', 'Líder de Jovens', 'Líder de Ministério de Mulheres',
-                     'Líder de Ministério de Homens', 'Secretário(a)', 'Funcionário da Igreja', 'Membro Voluntário', 'Outro'
-]
 
 class Login extends React.Component {
 
@@ -123,10 +120,7 @@ class Login extends React.Component {
                                 <>
                                     <input id='nome-completo' className='combo-popup' placeholder='Nome Completo' type='text' 
                                         value={this.state.nomeCompleto} onChange={e => this.setState({nomeCompleto: e.target.value})}></input>
-                                    <select id='cargo-usuario' className='combo-popup' placeholder='Cargo' type='select' value={this.state.cargo}
-                                        onChange={e => this.setState({cargo: e.target.value})}>
-                                            {listaCargos.map((c, i) => <option key={i} value={c}>{c}</option>)}
-                                    </select>
+                                    <SelectCargo value={this.state.cargo} onChange={e => this.setState({cargo: e.target.value})}/>
                                 </> 
                                 : null 
                             }

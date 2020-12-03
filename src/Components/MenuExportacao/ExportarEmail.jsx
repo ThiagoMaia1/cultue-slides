@@ -45,7 +45,10 @@ class ExportarEmail extends Component {
       'enviarCancelar', 
       'E-mails', 
       'Selecione os endereços de e-mail para os quais você deseja enviar o arquivo.',
-      fazer => {if(fazer) this.enviarArquivoEmail(obj)},
+      fazer => {if(fazer) {
+        this.enviarArquivoEmail(obj);
+        document.body.style.cursor = 'progress';
+      }},
       this.filhosPopup
     )
   }
@@ -84,7 +87,10 @@ class ExportarEmail extends Component {
         //   cid: this.cidLogo
         }  
     ]}
-    const inserirNotificacao = conteudo => this.props.dispatch({type: 'inserir-notificacao', conteudo: conteudo})
+    const inserirNotificacao = conteudo => {
+      this.props.dispatch({type: 'inserir-notificacao', conteudo: conteudo});
+      document.body.style.cursor = 'default';
+    }  
     enviarEmail(objEmail).then(
       () => inserirNotificacao('E-mail enviado com sucesso'), 
       error => {

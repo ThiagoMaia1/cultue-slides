@@ -2,59 +2,78 @@ import React from 'react';
 import { connect  } from 'react-redux';
 import './InformacoesPessoais.css';
 import { atualizarRegistro, getDocumentoUsuario } from '../../firestore/apiFirestore';
+import SelectCargo from '../Login/SelectCargo';
 
-const InputTexto = props => {
+const campos = {
+  nomeCompleto: {label: 'Nome Completo'},
+  email: {label: 'E-mail'}, 
+  cargo: {label: 'Cargo', Componente: SelectCargo}
+}
+
+const keysCampos = Object.keys(campos);
+
+const Input = props => {
   
   const onChange = e => {
     if(props.editaveis[props.campo] !== e.target.value) {
       var obj = {};
       obj[props.campo] = e.target.value;
-      props.callback({camposEditaveis: {...props.editaveis, ...obj}, editado: true});
+      props.callback({...props.editaveis, ...obj});
     }
   }
+  
+  var id = 'info-pessoal-' + props.campo;
+  const ChildBasico = (props) => <input type='text' {...props}></input>;
+  const Child = props.children || ChildBasico;
 
-  var id = 'info-pessoal' + props.campo;
   return (
     <div>
       <label to={id}>{props.label}</label>
-      <input id={id} type='text' 
-            value={props.editaveis[props.campo]} 
-            onChange={onChange}></input>
+      <Child onChange={onChange} value={props.editaveis[props.campo]} id={id}/>
     </div>
   )
 }
+
 
 class InformacoesPessoais extends React.Component {
   
   constructor (props) {
     super(props);
-    var u = props.usuario;
-    this.campos = {nomeCompleto: 'Nome Completo', cargo: 'Cargo', email: 'E-mail'}
-    this.keysCampos = Object.keys(this.campos);
-    var camposEditaveis = this.keysCampos.reduce((resultado, k) => {
-      resultado[k] = u[k] || '';
+    
+    var camposEditaveis = keysCampos.reduce((resultado, k) => {
+      resultado[k] = props.usuario[k] || '';
       return resultado;
     }, {})
-    this.state = {editado: false, camposEditaveis: camposEditaveis}
+    this.state = {editado: false, ...camposEditaveis}
   }
 
   componentDidMount = () => {
     if (this.props.desativarSplash) this.props.desativarSplash();
   }
 
-  componentDidUpdate = () => {
-    if (this.state.editado === false) return;
-    for (var k of this.keysCampos) {
-      if (this.props.usuario[k] !== this.state.camposEditaveis[k]) {
-        return;
+  componentDidUpdate = (_p, prevState) => {
+    if (JSON.stringify(this.getEditaveis()) === JSON.stringify(this.getEditaveis(prevState))) return;
+    var editado = false;
+    for (var k of keysCampos) {
+      if (this.props.usuario[k] !== this.state[k]) {
+        editado = true;
+        break;
       }
     }
-    this.setState({editado: false});
+    this.setState({editado});
+  }
+
+  getEditaveis = (state = this.state) => {
+    var editaveis = {};
+    for (var k of keysCampos) {
+      editaveis[k] = state[k];
+    }
+    return(editaveis);
   }
   
   atualizarDadosUsuario = () => {
     const uid = this.props.usuario.uid;
-    atualizarRegistro(this.state.camposEditaveis, 'usuários', uid);
+    atualizarRegistro(this.getEditaveis(), 'usuários', uid);
     this.props.dispatch({type: 'login', usuario: getDocumentoUsuario(uid)})
   }
 
@@ -62,9 +81,11 @@ class InformacoesPessoais extends React.Component {
     return (
       <div id='info-pessoal'>
         <div className='campos-editaveis'>
-          {this.keysCampos.map(k => 
-            <InputTexto key={k} callback={novoState => this.setState(novoState)} editaveis={this.state.camposEditaveis} campo={k} usuario={this.props.usuario} label={this.campos[k]}/>)
-          }
+          {keysCampos.map(k => 
+            <Input key={k} callback={novoState => this.setState(novoState)} editaveis={this.getEditaveis()} campo={k} label={campos[k].label}>
+              {campos[k].Componente || null}
+            </Input>
+          )}
         </div>
         <div className='linha-flex'>
           <button className='botao botao-azul' 
