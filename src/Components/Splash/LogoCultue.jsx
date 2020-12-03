@@ -6,8 +6,8 @@ class LogoCultue extends React.Component {
   constructor(props) {
     super(props);
     this.rotate = (props.animado ? 1 : -1) * 15;
-    this.escalaGrande = 1.1;
-    this.escalaPequena = 1;
+    this.escalaPequena = props.escala || 1;
+    this.escalaGrande = this.escalaPequena = 1.1;
     this.state = {scale: this.escalaPequena, rotate: this.rotate};
   }
 

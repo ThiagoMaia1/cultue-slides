@@ -69,6 +69,8 @@ export function retiraAcentos(str) {
     return novastr;
 }  
 
+export const multiplicarArray = (array, rate) => array.map(c => c*rate); 
+
 // const getNomeId = nome => getNomeInterfaceTipo(nome).toLowerCase().replace(' ', '-');
 
 // const getNomeCamel = nome => nome.toLowerCase().replace(/-[a-z]/g, c => c.replace('-', '').toUpperCase());

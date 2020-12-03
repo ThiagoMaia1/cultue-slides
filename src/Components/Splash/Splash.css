@@ -31,13 +31,15 @@
     border-radius: calc(var(--largura-logo)*0.0685);
     position: absolute;
     transition: transform 1s ease-in-out;
-    /* box-shadow: 2px 2px 7px rgba(0,0,0,0.2); */
-
 }
 
 .quadrado-logo.azul {
     top: 0;
     right: 0;
+}
+
+.quadrado-logo.azul-puro {
+    background-color: var(--azul-forte);
 }
 
 .quadrado-logo.azul-claro {
@@ -46,4 +48,32 @@
 
 .quadrado-logo.cinza {
     background-color: var(--platinum);
+}
+
+#fundo-animacao-3d {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+#fundo-animacao-3d {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#fundo-animacao-3d > * {
+    position: absolute;
+    flex: 0 0;
+}
+
+#fundo-animacao-3d .quadrado-logo {
+    position: absolute;
+    overflow: hidden;
+}
+
+#fundo-popup.animacao-3d {
+    background-color: rgba(0, 0, 0, 0.5);
 }
