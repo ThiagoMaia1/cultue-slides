@@ -123,7 +123,7 @@ class Arrastar extends React.Component {
         </Carrossel>
         <div id='tampao-do-overflow'>
           { editavel
-            ? <>
+            ? <div id='bloco-adicionar'>
                 <div id="adicionar-slide" onClick={() => this.setState({painelAdicionar: !this.state.painelAdicionar})} 
                       className='botao-azul itens lista-slides'>Adicionar Slide</div>
                 {(this.state.painelAdicionar) 
@@ -133,7 +133,7 @@ class Arrastar extends React.Component {
                     </div> 
                   : null
                 }
-              </>
+              </div>
             : null
           }
         </div>

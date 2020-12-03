@@ -23,8 +23,12 @@ class LogoCultue extends React.Component {
   componentDidMount = () => {
     if (this.props.animado) {
       this.animacaoLogo();
-      setInterval(this.animacaoLogo, 1050);
+      this.intervalo = setInterval(this.animacaoLogo, 1050);
     }
+  }
+
+  componentWillUnmount = () => {
+    clearInterval(this.intervalo);
   }
 
   render() {

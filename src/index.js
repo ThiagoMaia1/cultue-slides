@@ -46,7 +46,10 @@
 //   ✔️ Largura e altura auto no menu exportação.
 //   ✔️ Nova apresentação sair da tela de download.
 //   ✔️ Carrossel com espaço extra que desconfigura tudo.
+//   ✔️ Mudar regras margem galeria de fundos
 //   ✔️ Carrossel às vezes não funciona no "Arrastar".
+//   ✔️ Posição dos tutoriais
+//   ✔️ Redividir slides ao mudar fonte
 //   ✔️ Carrossel do Input Imagem não vai até o final.*/
 // Errinhos:
 //   Redividir quando o texto de um slide é todo deletado.
@@ -54,6 +57,10 @@
 //   Edição do conteúdo do parágrafo dando muitos erros (falha ao perder foco, não exibe cursor).
 //   Barra de pesquisa está com muitos erros (editando todas as estrofes de todos os slides).
 //   Update firestore está dando undefined
+//   Exportação HTML está ficando sem css
+//   Clonar estilo não está funcionando
+//   Atalho avançar tutorial com setas
+//   'Arraste uma imagem, ou clique para selecionar o arquivo.' não está clicável.
 //
 /*// Features:
 //   ✔️ Envio de imagens.

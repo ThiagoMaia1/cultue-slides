@@ -212,7 +212,6 @@ ol {
 }
 
 #div-botoes {
-  position: absolute;
   display: flex;
   flex-wrap: wrap;
   width: 100%;

@@ -3,6 +3,7 @@ import AdicionarTextoBiblico from './Components/TextoBiblico/AdicionarTextoBibli
 import AdicionarTexto from './Components/Configurar/AdicionarTexto';
 import AdicionarImagem from './Components/AdicionarImagem/AdicionarImagem';
 // import AdicionarVideo from './Components/AdicionarVideo/AdicionarVideo';
+import { capitalize, canvasTextWidth, retiraAcentos } from './FuncoesGerais';
 import { store } from './index';
 
 export const tiposElemento = {
@@ -158,9 +159,9 @@ export default class Element {
     if(!ratio) ratio = store.getState().present.ratio;
     var fonteBase = getFonteBase(ratio);
     
-    var estP = {...estGlobal.paragrafo, ...estElemento.paragrafo , ...estSlide.paragrafo};
     var estT = {...estGlobal.texto, ...estElemento.texto, ...estSlide.texto};
-    var estTitulo = {...estGlobal.titulo, ...estElemento.titulo, ...estSlide.titulo};
+    var estP = {...estT, ...estGlobal.paragrafo, ...estElemento.paragrafo , ...estSlide.paragrafo};
+    var estTitulo = {...estT, ...estGlobal.titulo, ...estElemento.titulo, ...estSlide.titulo};
     // Variáveis relacionadas ao tamanho do slide.
     var padV = Number(estP.paddingTop) + Number(estP.paddingRight); //Right é a base de cálculo, bottom varia.
     var padH = Number(estP.paddingRight) + Number(estP.paddingLeft);
@@ -189,9 +190,9 @@ export default class Element {
     }
 
 
-    var estiloFonte = [(estT.fontStyle || ''), (estT.fontWeight || ''), estP.fontSize*fonteBase.numero + fonteBase.unidade, "'" + estT.fontFamily + "'"];
+    var estiloFonte = [(estP.fontStyle || ''), (estP.fontWeight || ''), estP.fontSize*fonteBase.numero + fonteBase.unidade, "'" + estP.fontFamily + "'"];
     estiloFonte = estiloFonte.filter(a => a !== '').join(' ');
-    var caseTexto = estT.caseTexto || estP.caseTexto;
+    var caseTexto = estP.caseTexto || estP.caseTexto;
     var separador = thisP.tipo === 'TextoBíblico' ? '' : '\n\n';
     if (thisP.tipo === 'Música' && estP.omitirRepeticoes) texto = marcarEstrofesRepetidas(texto);
     var { contLinhas, widthResto } = getLinhas(texto[0], estiloFonte, larguraLinha, caseTexto);
@@ -313,50 +314,3 @@ function linhasTrecho(texto, fontStyle, larguraLinha, widthInicial = 0) {
   }
   return [widthParcial];
 }
-
-function canvasTextWidth(texto, fontStyle) {
-  var canvas = canvasTextWidth.canvas || (canvasTextWidth.canvas = document.createElement("canvas"));
-  var context = canvas.getContext("2d");
-  context.font = fontStyle;
-  var metrics = context.measureText(texto);
-  return metrics.width;
-}
-
-export function capitalize (string, caseTexto) {
-
-  const primeiraMaiuscula = string => {
-    if (typeof string !== 'string') return '';
-    return string.charAt(0).toUpperCase() + string.slice(1);
-  }
-
-  switch (caseTexto) {
-    case 'Maiúsculas':
-      return string.toUpperCase();
-    case 'Minúsculas':
-      return string.toLowerCase();
-    case 'Primeira Maiúscula':
-      return primeiraMaiuscula(string);
-    default:
-      return string;
-  }
-}
-
-function retiraAcentos(str) {
-  var com_acento = "ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝŔÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûüýþÿŕ";
-  var sem_acento = "AAAAAAACEEEEIIIIDNOOOOOOUUUUYRsBaaaaaaaceeeeiiiionoooooouuuuybyr";
-  var novastr="";
-  for(var i = 0; i < str.length; i++) {
-      var troca = false;
-      for (var a = 0; a < com_acento.length; a++) {
-          if (str.substr(i,1) === com_acento.substr(a, 1)) {
-              novastr += sem_acento.substr(a, 1);
-              troca=true;
-              break;
-          }
-      }
-      if (!troca) {
-          novastr += str.substr(i, 1);
-      }
-  }
-  return novastr;
-}  

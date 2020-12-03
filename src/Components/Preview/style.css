@@ -9,6 +9,14 @@
     align-items: center;
 }
 
+.preview * {
+    transition: all 0.1s ease-in-out, font-size 1ms;
+}
+
+.sem-transition * {
+    transition: none !important;
+}
+
 .preview {
     color: initial;
     visibility: initial;

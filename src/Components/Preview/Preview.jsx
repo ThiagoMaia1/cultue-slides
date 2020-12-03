@@ -4,6 +4,8 @@ import { MdFullscreen, MdFullscreenExit } from 'react-icons/md';
 import SlideFormatado from './SlideFormatado';
 import SelecionarRatio from './SelecionarRatio';
 
+const alturaTela = window.screen.height;
+const larguraTela = window.screen.width;
 
 export function toggleFullscreen (element = null) {        
     
@@ -64,8 +66,11 @@ class Preview extends Component {
                 return;
             }
         }
-        return {boxShadow: (this.props.abaAtiva === aba ? '0px 0px 9px var(--azul-forte)' : ''), 
-                    borderRadius: aba === 'tampao' ? 'var(--round-border-grande)' : 'var(--round-border-medio)'};        
+        var ativa = this.props.abaAtiva === aba
+        return {...(ativa ? {boxShadow: '0px 0px 9px var(--azul-forte)', transition: 'font-size 0.1s'} : {}), 
+                borderRadius: aba === 'tampao' ? 'var(--round-border-grande)' : 'var(--round-border-medio)',
+                
+        };        
     }
 
     getEstiloImagem = () => {
@@ -75,7 +80,7 @@ class Preview extends Component {
 
     render() {
         var slidePreview = this.props.slidePreview;
-        var proporcao = this.state.screen.proporcao*Math.min(window.screen.height/this.props.ratio.height, window.screen.width/this.props.ratio.width);
+        var proporcao = this.state.screen.proporcao*Math.min(alturaTela/this.props.ratio.height, larguraTela/this.props.ratio.width);
         const telaCheia = this.state.screen.proporcao === this.full.proporcao;
         return (
             <div id='borda-slide-mestre' ref={this.ref} 
@@ -91,7 +96,7 @@ class Preview extends Component {
                 <SlideFormatado
                     proporcao={proporcao}
                     id='preview'
-                    className='preview'
+                    className={'preview' + (telaCheia ? ' sem-transition' : '')} 
                     realcarElemento={this.realcarElemento}
                     editavel={!slidePreview.eMestre && this.props.autorizacao === 'editar' && !telaCheia}
                     slidePreview={slidePreview}

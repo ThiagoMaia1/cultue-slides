@@ -72,6 +72,7 @@ class Galeria extends Component {
                         <Carrossel tamanhoIcone={100} tamanhoMaximo='96vw' style={{zIndex: '45'}} corGradiente='var(--azul-forte)'
                                 percentualBeirada={0.04}>
                             <div className='galeria-fundos'>
+                                <div className='pseudo-margem-galeria'></div>
                                 <div className='div-img' onClick={this.abrirPopup}>
                                     <div id='botao-enviar-fundo' className='imagem-galeria'>Enviar Fundo Personalizado</div>
                                 </div>
@@ -79,6 +80,7 @@ class Galeria extends Component {
                                     <Img key={i} imagem={imagem} />
                                     ))
                                 }
+                                <div className='pseudo-margem-galeria'></div>
                             </div>
                         </Carrossel>
                     </div>

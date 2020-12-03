@@ -86,6 +86,7 @@
 
 .texto-auxiliar {
     color: gray;
+    user-select: none;
 }
 
 .container-imagens-previa-upload {

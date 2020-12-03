@@ -97,6 +97,8 @@ class Login extends React.Component {
         checarLogin(this.callbackLogin);
     };
 
+    componentWillUnmount = () => this.removerEventListener();
+
     render() {
         return (
             <div id='quadro-login' className='quadro-navbar' ref={this.ref}>

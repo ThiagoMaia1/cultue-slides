@@ -43,7 +43,7 @@
 }
 
 .container-arrow {
-    position: relative;
+    position: fixed;
     width: min-content;
 }
 
@@ -51,6 +51,25 @@
     position: absolute;
     color: var(--azul-forte);
     filter: drop-shadow(-3px 3px 1px rgba(0,0,0,0.4));
+    transform-origin: top left;
+    transition: transform 0.2s, top 0.2s, left 0.2s;
+}
+
+.container-children-arrow {
+    position: absolute;
+}
+
+.container-children-interno {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.arrow svg {
+    right: -5.9vh;
+    top: 0.5vh;
+    position: relative; 
 }
 
 #fundo-tutorial .botao {

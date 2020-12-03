@@ -2,25 +2,7 @@ import React, { Component } from 'react';
 import './Carrossel.css';
 import { connect } from 'react-redux';
 import { MdKeyboardArrowUp, MdKeyboardArrowRight, MdKeyboardArrowDown, MdKeyboardArrowLeft } from 'react-icons/md';
-import { capitalize } from '../../Element';
-
-function getCoords(elem) {
-    var box = elem.getBoundingClientRect();
-
-    var body = document.body;
-    var docEl = document.documentElement;
-
-    var scrollTop = window.pageYOffset || docEl.scrollTop || body.scrollTop;
-    var scrollLeft = window.pageXOffset || docEl.scrollLeft || body.scrollLeft;
-
-    var clientTop = docEl.clientTop || body.clientTop || 0;
-    var clientLeft = docEl.clientLeft || body.clientLeft || 0;
-
-    var top  = box.top +  scrollTop - clientTop;
-    var left = box.left + scrollLeft - clientLeft;
-
-    return { top: Math.round(top), left: Math.round(left) };
-}
+import { getCoords, capitalize } from '../../FuncoesGerais';
 
 const estilosSeta = ['estiloSetaUm', 'estiloSetaDois'];
 
@@ -85,8 +67,8 @@ class Carrossel extends Component {
         }
     }
 
-    definirOffset(passo) {
-        this.ativarSetas(passo);
+    definirOffset(passo, opacidadeSetas = true) {
+        if (opacidadeSetas) this.ativarSetas(passo);
         var objEstilo = {...this.state.estiloGaleria};
         objEstilo[this.direcao[0]] = 
             Math.min(
@@ -98,6 +80,7 @@ class Carrossel extends Component {
             );
         this.setState({estiloGaleria: objEstilo});
         this.definirDisplaySetas();
+        return objEstilo[this.direcao[0]];
     }
 
     limparTransition = () => {
@@ -114,7 +97,7 @@ class Carrossel extends Component {
         this.definirEstiloSeta(seta, opacidade);
     }
 
-    encontrarSelecionado = async elemento => {
+    encontrarSelecionado = elemento => {
         var dimensao = this.getDimensaoCamel('offset');
         if (!this.state.tamanhoCarrossel || this.state.tamanhoCarrossel > this.state.tamanhoGaleria) return;
         var coordElemento = getCoords(elemento)[this.direcao[0]];
@@ -130,27 +113,23 @@ class Carrossel extends Component {
     deslizar = (sentido, tamanhoPasso = 10, tempo = 20) => {
         clearInterval(this.animacao);
         this.animacao = setInterval(() => {
-            var o = this.getOffsetAtual();
+            var offsetAtual = this.getOffsetAtual();
             var passo = this.getPasso(sentido, tamanhoPasso);
-            if (o + passo > this.getLimiteInicial() || o + passo < this.getLimiteFinal()) {
-                this.pararDeslizar();
-            } else {
-                this.definirOffset(passo);
-            }
+            if(this.definirOffset(passo) === offsetAtual) this.pararDeslizar();
         }, tempo);
     }
 
     definirDisplaySetas = () => {
-        setTimeout(() => {
+        this.timeoutDisplaySetas = setTimeout(() => {
             var galeria = this.refGaleria.current;
             var tamanho = galeria ? galeria['offset' + capitalize(this.direcao[0], 'Primeira Maiúscula')] : 0;
             var posicao = tamanho;
-            this.definirEstiloSeta(0, undefined, posicao < this.getLimiteInicial());
-            this.definirEstiloSeta(1, undefined, posicao > this.getLimiteFinal());
+            this.definirEstiloSeta(0, undefined, posicao < this.getLimiteInicial() -2);
+            this.definirEstiloSeta(1, undefined, posicao > this.getLimiteFinal() +2);
         }, 10);
     }
 
-    offsetComTransition(distancia, taxaTransition = 300) {
+    offsetComTransition(distancia, taxaTransition = 300, opacidadeSetas = true) {
         clearTimeout(this.timeoutTransition);
         const tempoTransition = Math.abs(distancia) / taxaTransition;
         this.setState({
@@ -161,9 +140,9 @@ class Carrossel extends Component {
                     : this.state.estiloGaleria.transition
             }
         });
-        setTimeout(() => {
-            this.definirOffset(distancia);
-            this.setTimeoutSetas(tempoTransition*1000);
+        this.timeoutLimpar = setTimeout(() => {
+            this.definirOffset(distancia, opacidadeSetas);
+            if (opacidadeSetas) this.setTimeoutSetas(tempoTransition*1000);
             this.definirDisplaySetas();
         }, 10);
         this.timeoutTransition = setTimeout(() => this.limparTransition(), tempoTransition*1000 + 100);
@@ -171,7 +150,7 @@ class Carrossel extends Component {
 
     saltar(sentido) {
         this.deslizar(sentido, 80); 
-        setTimeout(() => {
+        this.timeoutSalto = setTimeout(() => {
             clearInterval(this.animacao)
             this.deslizar(sentido)
         }, 200);
@@ -183,7 +162,7 @@ class Carrossel extends Component {
     };
 
     deslizarWheel = e => {
-        this.offsetComTransition(-e.deltaY);
+        this.offsetComTransition(-e.deltaY, 600);
     }
 
     detectarTamanho = () => {
@@ -193,7 +172,7 @@ class Carrossel extends Component {
             objEstilo[this.direcao[0]] = '0';
             this.setState({estiloGaleria: objEstilo});
         }
-        this.offsetComTransition(0.1);
+        this.offsetComTransition(0.1, undefined, false);
     }
 
     getDimensaoRef = (ref, palavra = 'offset') => {
@@ -209,7 +188,6 @@ class Carrossel extends Component {
         var elemento = this.props.refElemento.current;
         if(!elemento) return;
         var slide = this.props.refSlide;
-        console.log(slide.current);
         if(elemento[dimensao] > this.refCarrossel.current[dimensao] && slide && slide.current)
             elemento = slide.current;
         this.encontrarSelecionado(elemento);
@@ -219,6 +197,17 @@ class Carrossel extends Component {
         this.rO = new ResizeObserver (this.detectarTamanho);
         this.rO.observe(this.refGaleria.current);
         this.detectarTamanho();
+    }
+
+    componentWillUnmount = () => {
+        clearTimeout(this.timeoutSetas);
+        clearTimeout(this.timeoutTransition);
+        clearTimeout(this.timeoutDisplaySetas);
+        clearTimeout(this.timeoutLimpar);
+        clearTimeout(this.timeoutSalto);
+        clearInterval(this.animacao);
+        this.rO.disconnect();
+        delete this.rO;
     }
 
     render () {

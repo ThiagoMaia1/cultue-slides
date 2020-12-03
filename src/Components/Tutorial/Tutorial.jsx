@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import './Tutorial.css';
-import { FaLongArrowAltRight } from 'react-icons/fa';
+import Arrow from './Arrow';
 import { store } from '../../index';
 
 const cssOpacidade = 'opacity: 0.2';
@@ -56,20 +56,18 @@ const getSelectors = elemento => {
 const listaBoxes = {
   painelAdicionar: [{
     texto: 'Clique para criar um elemento', 
-    coordenadas: [43, 18], 
-    arrow: {rotacao: 270, posicao: {top: '-8vh', left: '-10vw'}},
-    selectorElemento: '#tampao-do-overflow'},
+    arrow: {posicao: 'bottomCenter', posicaoChildren: 'right', selectorElemento: '#div-botoes'},
+    selectorElemento: '#bloco-adicionar'},
   ],
   slides: [
     {texto: 'As configurações do Slide-Mestre se aplicam aos demais slides. Cada grupo de slides também possui seu próprio slide-mestre.', 
      coordenadas: [15, 25], 
-     arrow: {rotacao: 180, posicao: {top: '-19vh'}},
+     arrow: {posicao: 'centerRight', posicaoChildren: 'bottom'},
      selectorElemento: '#slide-mestre',
      callbackAntes: () => store.dispatch({type: 'definir-selecao', selecionado: {elemento: 0, slide: 0}})
     },
     {texto: 'Clique no canto superior esquerdo do slide-mestre para alterar as dimensões da tela/projetor.', 
-     coordenadas: [15, 9], 
-     arrow: {rotacao: 0, posicao: {top: '-19vh', left: '4vw'}},
+     arrow: {posicao: 'centerLeft', posicaoChildren: 'bottom', selectorElemento: '#selecionar-aspect-ratio'},
      selectorElemento: '#borda-slide-mestre',
      callbackDepois: () => store.dispatch({type: 'definir-selecao', selecionado: {elemento: 1, slide: 0}})
     },
@@ -78,29 +76,25 @@ const listaBoxes = {
      selectorElemento: '#botao-menu-configurar, #botao-mostrar-galeria'
     },
     {texto: 'Clique para ver a prévia da apresentação em tela cheia', 
-     coordenadas: [60, 51.5], 
-     arrow: {rotacao: 270, posicao: {top: '-3vh', left: '14vw'}},
-     selectorElemento: '#borda-slide-mestre'}
+     arrow: {posicao: 'bottomCenter', posicaoChildren: 'left', selectorElemento: '#ativar-tela-cheia'},
+     selectorElemento: '#borda-slide-mestre',
+    }
   ],
   arrastar: [
     {texto: 'Clique no slide, ou utilize as setas para navegar', 
-     coordenadas: [23, 25], 
-     arrow: {rotacao: 180, posicao: {top: '-18vh', left: ''}},
+     arrow: {posicao: 'centerRight', posicaoChildren: 'bottom'},
      selectorElemento: '#ordem-elementos'},
     {texto: 'Arraste os elementos para reordenar a apresentação', 
-     coordenadas: [23, 25], 
-     arrow: {rotacao: 180, posicao: {top: '-18vh', left: ''}},
+     arrow: {posicao: 'centerRight', posicaoChildren: 'bottom'},
      selectorElemento: '#ordem-elementos'},
     {texto: 'Clique no canto superior direito de um grupo de slides para exclui-lo, ou clique no lápis para editar o conteúdo do slide', 
-     coordenadas: [21.5, 25], 
-     arrow: {rotacao: 180, posicao: {top: '-19vh', left: '-1.5vw'}},
+     arrow: {posicao: 'centerRight', posicaoChildren: 'bottom', selectorElemento: '.itens.lista-slides'},
      selectorElemento: selectorQuadradinhoCanto,
      callbackAntes: () => setOpacidadeQuadradinhoCanto(1),
      callbackDepois: () => setOpacidadeQuadradinhoCanto(0)
     },
     {texto: 'Ao concluir, clique para exportar a apresentação pronta', 
-     coordenadas: [59, 74], 
-     arrow: {rotacao: 0, posicao: {top: '8vh', left: '2vw'}},
+     arrow: {posicao: 'centerLeft', posicaoChildren: 'top'},
      selectorElemento: '#menu-exportacao'},
   ],
   galeriaFundos: [
@@ -110,14 +104,14 @@ const listaBoxes = {
   ],
   configuracoesSlide: [
    {texto: 'Selecione a aba para aplicar as configurações', 
-    coordenadas: [15, 60], 
-    arrow: {rotacao: 0, posicao: {top: '-18.5vh', left: '5vw'}},
-    selectorElemento: '#botao-menu-configurar'},
+    arrow: {posicao: 'centerLeft', posicaoChildren: 'bottom', selectorElemento: '#abas'},
+    selectorElemento: '#botao-menu-configurar',
+  },
    {texto: 'Ao editar as configurações de texto, os slides são automaticamente redivididos para caber', 
     coordenadas: [45, 45], 
     selectorElemento: '#botao-menu-configurar'},
    {texto: 'Você pode alterar a cor de fundo, e a opacidade da camada que se sobrepõe à imagem de fundo', 
-    coordenadas: [45, 45], 
+    arrow: {posicao: 'centerLeft', posicaoChildren: 'bottom'},
     selectorElemento: '#botao-menu-configurar',
     callbackAntes: () => store.dispatch({type: 'ativar-realce', abaAtiva: 'tampao'}),
     callbackDepois: () => store.dispatch({type: 'ativar-realce', abaAtiva: 'texto'})
@@ -133,10 +127,6 @@ const listaBoxes = {
 
 export const keysTutoriais = Object.keys(listaBoxes);
 
-// const getNomeId = nome => getNomeInterfaceTipo(nome).toLowerCase().replace(' ', '-');
-
-// const getNomeCamel = nome => nome.toLowerCase().replace(/-[a-z]/g, c => c.replace('-', '').toUpperCase());
-
 class EtapaTutorial extends Component {
   
   constructor (props) {
@@ -150,6 +140,7 @@ class EtapaTutorial extends Component {
   }
 
   componentDidMount = () => {
+    this.listenerResize = window.addEventListener('resize', () => this.forceUpdate());
     this.removerCss();
     var item = this.state.item;
     if (!item.texto) return;
@@ -175,6 +166,7 @@ class EtapaTutorial extends Component {
       this.styleSheet.remove();
       this.styleSheet = null;
     }
+    window.removeEventListener('resize', this.listenerResize);
   }
 
   componentWillUnmount = () => this.removerCss();
@@ -182,18 +174,28 @@ class EtapaTutorial extends Component {
   render() {
     if(!this.props.itens.length) return null;
     var item = this.state.item;
-    return (
-      <div className='container-caixa-tutorial' style={{top: item.coordenadas[0] + 'vh', left: item.coordenadas[1] + 'vw'}}>
-        {item.arrow 
-          ? <div className='arrow' style={{transform: 'rotate(' + item.arrow.rotacao + 'deg)', ...item.arrow.posicao}}>
-              <FaLongArrowAltRight size={150}/>
-            </div>
-          : null
-        }
-        <div className='caixa-tutorial'>
-          {item.texto}
-        </div>
+    var a = item.arrow;
+    var caixa = (
+      <div className='caixa-tutorial'>
+        {item.texto}
       </div>
+    )
+    return (
+      <>
+        {a
+          ? <Arrow posicao={a.posicao} 
+                   selectorElemento={a.selectorElemento || item.selectorElemento} 
+                   posicaoChildren={a.posicaoChildren}
+                   distancia={a.distancia || '10'}
+                   tamanhoIcone={window.innerHeight*0.23}
+            >
+              {caixa}
+            </Arrow>
+          : <div style={{position: 'absolute', top: item.coordenadas[0] + 'vh', left: item.coordenadas[1] + 'vw'}}>
+              {caixa}
+            </div>
+        }
+      </>
     )
   }
 }

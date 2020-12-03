@@ -13,9 +13,7 @@ class Configurar extends Component {
     this.state = {aberto: 'hidden', coordenadas: [...this.coordenadasBotao], menuVisivel: false, tamIcones: window.innerWidth*0.027 + 'px'};
   }
 
-  abrirMenu = () => {
-    if (this.state.coordenadas[3] === this.coordenadasBotao[3])
-      this.props.dispatch({type: 'definir-item-tutorial', itemTutorial: 'configuracoesSlide'})
+  abrirMenu = () => {      
     var coor = this.state.coordenadas;
     coor[2] = this.coordenadasBotao[2];
     toggleAnimacao(
@@ -24,8 +22,9 @@ class Configurar extends Component {
         this.coordenadasMenu,
         c => this.setState({coordenadas: [c[0], c[1], (c[3] <= this.coordenadasMenu[3]+10 ? 'auto' : c[2]), c[3]]}),
         bool => {
-            if (this.state.menuVisivel !== bool)
-                this.setState({menuVisivel: bool})
+          if (this.state.menuVisivel !== bool)
+              this.setState({menuVisivel: bool})
+              setTimeout(() => this.props.dispatch({type: 'definir-item-tutorial', itemTutorial: 'configuracoesSlide'}), 10)
         },
         c => c[3] < 85
     )

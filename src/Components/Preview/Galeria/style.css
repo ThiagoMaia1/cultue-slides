@@ -17,21 +17,41 @@
     display: flex;
     position: relative;
     background-color: var(--azul-forte);
+    pointer-events: none;
 }
 
 .div-img {
     position: relative;
-    margin: 0 0 0 1vh;
+    margin: 0 0.3vw;
     height: 85%;
     width: 14vw;
     border-radius: var(--round-border-grande);
     overflow: hidden;
     box-shadow: var(--box-shadow);
+    pointer-events: all;
+}
+
+.div-img, .pseudo-margem-galeria {
+    transition: margin 0.1s ease-in-out, transform 0.1s ease-in-out;
 }
 
 .div-img:hover {
     transform: scale(1.08);
-    margin: 0 2vh 0 3vh
+    margin: 0 1.1vw;
+}
+
+.galeria-fundos .pseudo-margem-galeria {
+    transform: scale(1.08);
+    margin-left: 1.1vw;
+}
+
+.pseudo-margem-galeria {
+    height: 100%;
+    pointer-events: none;
+}
+
+.galeria-fundos:hover .pseudo-margem-galeria {
+    margin: 0;
 }
 
 .imagem-galeria {
@@ -52,6 +72,7 @@
     justify-content: center;
     overflow: hidden;
     word-break: break-word;
+    padding: 0 1vw;
 }
 
 #botao-enviar-fundo {

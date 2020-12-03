@@ -111,7 +111,7 @@ class InputImagem extends Component {
                         <Carrossel tamanhoIcone={45} tamanhoMaximo='100%' direcao='vertical' style={{zIndex: '400', width: '100%'}} percentualBeirada={0.09}>
                             <div className='file-input-container' >
                                 <div className='container-texto-input-file'>
-                                    <p className='texto-auxiliar'>Arraste uma imagem, ou clique para selecionar o arquivo.</p>
+                                    <div className='texto-auxiliar' onClick={() => {console.log('oi'); this.refInputFile.current.click()}}>Arraste uma imagem, ou clique para selecionar o arquivo.</div>
                                     {this.gerarListaImagens()}
                                 </div>
                             </div>

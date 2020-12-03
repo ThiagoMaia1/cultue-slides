@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { capitalize, getNomeInterfaceTipo } from '../../Element';
+import { getNomeInterfaceTipo } from '../../Element';
+import { capitalize } from '../../FuncoesGerais';
 import SlideFormatado from '../Preview/SlideFormatado'; 
 
 export function getBase64Image(src, classe, total, ratio, callback) {
