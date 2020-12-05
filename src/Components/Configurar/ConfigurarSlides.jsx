@@ -49,6 +49,23 @@ const listaSliders = [{rotulo: 'Fonte', aba: 'paragrafo', atributo: 'fontSize', 
                       {rotulo: 'Largura', aba: 'imagem', atributo: 'width', min: 0, max: 2, step: 0.01}
 ]
 
+const BotaoClonarEstilo = (props) => (
+  <button id='botao-clonar-estilo' className='botao-configuracao bool'
+          title='Aplicar Estilo ao Slide-Mestre'  
+          style={{visibility: props.visivel ? 'visible' : 'hidden'}}
+          onClick={props.aplicarEstiloAoMestre}>
+    <RiMastercardLine size={props.tamIcones} />
+  </button>
+)
+
+const BotaoLimparEstilo = (props) => (
+  <button id='botao-limpar-estilo'  className='botao-configuracao bool' 
+          title='Limpar Estilos do Slide'
+          onClick={props.limparEstilo}>
+    <CgErase size={props.tamIcones} />
+  </button>
+)
+
 class ConfigurarSlides extends Component {
   constructor(props) {
     super(props);
@@ -65,7 +82,7 @@ class ConfigurarSlides extends Component {
                                 simbolo: <div className='icone-duas-colunas'><BsJustify size={this.state.tamIcones}/><BsJustify size={this.state.tamIcones}/></div>, objeto: 'paragrafo'}, 
                               {apelido: 'Multiplicadores', nomeAtributo: 'multiplicadores', valorNormal: false, valorAlterado: true, simbolo: 'x2', tipo: 'Música', objeto: 'paragrafo'},
                               {apelido: 'Juntar Estrofes Repetidas', nomeAtributo: 'omitirRepeticoes', valorNormal: false, valorAlterado: true, simbolo: <VscCollapseAll size={1.2*this.state.tamIcones}/>, tipo: 'Música', objeto: 'paragrafo'}
-    ];
+    ]; 
   }
 
   gerarBotoesAbas = () => {
@@ -232,6 +249,14 @@ class ConfigurarSlides extends Component {
 	render() {
     var aba = this.props.abaAtiva;
     var slidePreview = this.props.slidePreview;
+    const botoesDireita = (
+      <>
+        <BotaoClonarEstilo visivel={this.props.selecionado.elemento || this.props.tutorialAtivo} 
+                      tamIcones={this.state.tamIcones} 
+                      aplicarEstiloAoMestre={this.aplicarEstiloAoMestre}/>
+        <BotaoLimparEstilo limparEstilo={this.limparEstilo} tamIcones={this.state.tamIcones}/>
+      </>
+    )
     return (
       <div id='painel-configuracao'>
         <div id='abas'>
@@ -239,44 +264,51 @@ class ConfigurarSlides extends Component {
         </div>
         {this.state.painelCor}
         <div className='configuracoes'>
-          <div className='botoes-direita'>
-            <button id='botao-clonar-estilo' className='botao-configuracao bool'
-                    title='Aplicar Estilo ao Slide-Mestre'  
-                    style={{visibility: (slidePreview.eMestre && !this.props.tutorialAtivo) ? 'hidden' : 'visible'}}
-                    onClick={this.aplicarEstiloAoMestre}>
-              <RiMastercardLine size={this.state.tamIcones} />
-            </button>
-            <button id='botao-limpar-estilo'  className='botao-configuracao bool' 
-                    title='Limpar Estilos do Slide'
-                    onClick={this.limparEstilo}>
-              <CgErase size={this.state.tamIcones} />
-            </button>
-          </div>
+          {aba === 'tampao' 
+            ? <div className='botoes-direita float'>
+                {botoesDireita}
+              </div> 
+            : null}
           <div className='configuracoes-texto' 
-                style={{display: (aba === 'tampao' || aba === 'imagem' ? 'none' : '')}}>
-            <div className='linha-configuracoes-texto'>
-              <button id={'cor-texto'} className='botao-configuracao bool' onMouseOver={() => this.ativarPainelCor(this.mudarCorFonte)}>
-                <span className='a-cor-texto' style={{color: this.props.slideSelecionado.estilo[aba].color}}>A</span>
-                <div className='cor-texto' style={{backgroundColor: this.props.slideSelecionado.estilo[aba].color}}></div>
-              </button>
-              <select className={'botao-configuracao combo-fonte'} onChange={this.mudarFonte} ref={this.ref}
-                      defaultValue={slidePreview.estilo[aba].fontFamily}
-                      style={{fontFamily: slidePreview.estilo[aba].fontFamily}}>
-                        {this.listaFontes}
-              </select>
+                style={{display: (aba === 'tampao' || aba === 'imagem' ? 'none' : '')}}>  
+            <div className='bloco-configuracoes-texto-botoes-direita'>
+              <div className='linha-configuracoes-texto'>
+                <button id={'cor-texto'} className='botao-configuracao bool' onMouseOver={() => this.ativarPainelCor(this.mudarCorFonte)}>
+                  <span className='a-cor-texto' style={{color: this.props.slideSelecionado.estilo[aba].color}}>A</span>
+                  <div className='cor-texto' style={{backgroundColor: this.props.slideSelecionado.estilo[aba].color}}></div>
+                </button>
+                <select className={'botao-configuracao combo-fonte'} onChange={this.mudarFonte} ref={this.ref}
+                        defaultValue={slidePreview.estilo[aba].fontFamily}
+                        style={{fontFamily: slidePreview.estilo[aba].fontFamily}}>
+                          {this.listaFontes}
+                </select>
+                <button title={casesTexto[this.state.caseTexto].valor} id='botao-case' className='botao-configuracao bool' 
+                          onClick={this.mudarCaseTexto}>{casesTexto[this.state.caseTexto].icone}</button>
+                <div id='container-botoes-alinhamento' className='botao-configuracao'>{this.gerarBotoesAlinhamento(aba)}</div>
+                {aba === 'paragrafo'
+                  ? this.gerarBotoesEstiloTexto(aba, 3, 3)
+                  : null
+                }
+                </div>
+                {aba !== 'tampao' 
+                    ? <div className='botoes-direita flex'>
+                        {botoesDireita}
+                      </div> 
+                : null}
             </div>
-            <div className='linha-configuracoes-texto'>
-              <button title={casesTexto[this.state.caseTexto].valor} id='botao-case' className='botao-configuracao bool' 
-                        onClick={this.mudarCaseTexto}>{casesTexto[this.state.caseTexto].icone}</button>
-              <div className='botao-configuracao'>{this.gerarBotoesAlinhamento(aba)}</div>
-              {this.gerarBotoesEstiloTexto(aba, 3, 3)}
-            </div>
-            <div className='linha-configuracoes-texto'>
-              {this.gerarBotoesEstiloTexto(aba, 0, 2)}
-              <div id='rotulo-configuracoes-musica' style={slidePreview.tipo === 'Música' ? null : {display: 'none'}}>
-                <BsMusicNoteBeamed size={this.state.tamIcones}/>
+            <div className='linha-configuracoes-texto abaixo'>
+              <div id='negrito-italico-sublinhado'>
+                {this.gerarBotoesEstiloTexto(aba, 0, 2)}
               </div>
-              {this.gerarBotoesEstiloTexto(aba, 4)}
+              {aba === 'paragrafo'
+                ? <div id='configuracoes-musica'>
+                    <div id='rotulo-configuracoes-musica' style={slidePreview.tipo === 'Música' ? null : {display: 'none'}}>
+                      <BsMusicNoteBeamed size={this.state.tamIcones}/>
+                    </div>
+                  {this.gerarBotoesEstiloTexto(aba, 4)}
+                </div>
+                : null
+              }
             </div>
           </div>
           <button className='botao-configuracao bool' onMouseOver={() => this.ativarPainelCor(this.mudarCorFundo)}

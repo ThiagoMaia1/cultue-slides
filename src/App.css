@@ -4,11 +4,9 @@
 
 #organizador {
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
   align-items: top;
-  width: 72%;
-  margin: 3vw;
+  width: 82%;
+  margin: 2vw;
 }
 
 .botao-azul {

@@ -241,12 +241,41 @@ class Tutorial extends Component {
     }
     setTimeout(() => this.props.dispatch({type: 'bloquear-tutoriais'}), 10);
   }
+  componentDidMount = () => {
+    this.listenerAtalhos = e => {
+      if (!this.temTutorialAtivo()) return;
+      var offset;
+      switch (e.code) {
+        case 'ArrowLeft':
+        case 'Backspace':
+          offset = -1;
+          break;
+        case 'ArrowRight':
+        case 'Enter':
+        case 'Space':
+          offset = 1;
+          break;
+        case 'Escape':
+          this.finalizar();
+          return;
+        default:
+          return;
+      }
+      this.offsetEtapaTutorial(offset);
+    }
+    this.listenerKeyup = window.addEventListener('keyup', this.listenerAtalhos);
+  }
+
+  componentWillUnmount = () => window.removeEventListener('keyup', this.listenerAtalhos);
+
+  temTutorialAtivo = (props = this.props) => !!props.itensTutorial.length; 
 
   render() {
+    var ativo = this.temTutorialAtivo();
     return (
-      <div id='fundo-tutorial' style={this.props.itensTutorial.length ? null : {pointerEvents: 'none'}}>
+      <div id='fundo-tutorial' style={ativo ? null : {pointerEvents: 'none'}}>
         <EtapaTutorial itens={[...this.props.itensTutorial]} indice={this.state.indiceEtapa}/>
-        {this.props.itensTutorial.length
+        {ativo
           ? <>
               <button id='pular-tutorial' className='botao limpar-input' onClick={this.finalizar}>Não Exibir Tutoriais</button>
               <div id='rodape-tutorial'>

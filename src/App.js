@@ -13,7 +13,7 @@ import BarraPesquisa from './Components/BarraPesquisa/BarraPesquisa';
 import MensagemBaixar from './Components/TelaMensagem/MensagemBaixar';
 
 class App extends Component {
-
+  
   render() {
     return (
       <div id='App'>

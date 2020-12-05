@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { MdFullscreen, MdFullscreenExit } from 'react-icons/md';
 import SlideFormatado from './SlideFormatado';
 import SelecionarRatio from './SelecionarRatio';
+import { objetosSaoIguais } from '../../FuncoesGerais';
 
 let windowH = window.screen.height;
 let windowW = window.screen.width;
@@ -29,9 +30,9 @@ class Preview extends Component {
     constructor(props) {
         super(props);
         this.full = {icone: <MdFullscreenExit className='icone-botao' size={80}/>, proporcao: 1, opacidadeBotao: '0%'}
-        this.small = {icone: <MdFullscreen className='icone-botao' size={50}/>, proporcao: 0.45, opacidadeBotao: '30%'}
+        this.small = {icone: <MdFullscreen className='icone-botao' size={50}/>, proporcao: 0.47, opacidadeBotao: '30%'}
         this.ref = React.createRef();
-        this.state = {screen: this.props.slidePreviewFake ? 
+        this.state = {transitionAtivo: true, screen: this.props.slidePreviewFake ? 
             {...this.full, icone: <MdFullscreen className='icone-botao' size={80}/>} : 
             {...this.small}};
 
@@ -75,6 +76,12 @@ class Preview extends Component {
         };        
     }
 
+    componentDidUpdate = prevProps => {
+        if (objetosSaoIguais(this.props.selecionado, prevProps.selecionado)) return;
+        this.setState({transitionAtivo: false});
+        setTimeout(() => this.setState({transitionAtivo: true}), 1000);
+    }
+
     getEstiloImagem = () => {
         var e = this.props.slidePreview.estilo.imagem;
         return {...this.realcarElemento('imagem'), height: e.height*100 + '%', width: e.width*100 + '%'}
@@ -84,37 +91,41 @@ class Preview extends Component {
         var slidePreview = this.props.slidePreview;
         var proporcao = this.state.screen.proporcao*Math.min(alturaTela/this.props.ratio.height, larguraTela/this.props.ratio.width);
         const telaCheia = this.state.screen.proporcao === this.full.proporcao;
+        const transition = this.state.transitionAtivo && !telaCheia; 
         return (
-            <div id='borda-slide-mestre' ref={this.ref} 
-                                         style={{height: this.props.ratio.height*proporcao + 0.051*window.innerHeight, 
-                                         visibility: slidePreview.eMestre ? '' : 'hidden',
-                                         padding: telaCheia ? '' : '1vh',
-                                         ...this.realcarElemento('tampao', 'fora')}}>
-                {telaCheia ? null : <SelecionarRatio/>}
-                <div className='container-setas' style={{visibility: 'visible', display: telaCheia ? '' : 'none'}}>
-                    <div className='movimentar-slide esquerda' onClick={() => this.offsetSlide(-1)}></div>
-                    <div className='movimentar-slide direita' onClick={() => this.offsetSlide(1)}></div>
-                </div>
-                <SlideFormatado
-                    proporcao={proporcao}
-                    id='preview'
-                    className={'preview' + (telaCheia ? ' sem-transition' : '')} 
-                    realcarElemento={this.realcarElemento}
-                    editavel={!slidePreview.eMestre && this.props.autorizacao === 'editar' && !telaCheia}
-                    slidePreview={slidePreview}
-                    style={telaCheia ? {overflow: 'visible'} : null}>
-                    <button id='ativar-tela-cheia' onClick={() => toggleFullscreen(this.ref.current)} 
-                        style={{opacity: this.state.screen.opacidadeBotao, color: slidePreview.estilo.texto.color, 
-                                right: '1vh', bottom: '0.5vh'}}
-                        onMouseOver={this.tornarBotaoVisivel} onMouseLeave={this.tornarBotaoInvisivel}>
-                        {this.state.screen.icone}
-                    </button>
-                </SlideFormatado>
-                {(!slidePreview.eMestre) ? null : 
-                    <div id="texto-slide-mestre" style={{textAlign: 'center', paddingTop: '0.7vh'}}>
-                        Slide-Mestre - {slidePreview.selecionado.elemento === 0 ? 'Global' : slidePreview.nomeLongoElemento}
+            <div id='centralizador-preview'>
+                <div id='borda-slide-mestre' ref={this.ref} 
+                                            style={{height: this.props.ratio.height*proporcao + 0.051*window.innerHeight, 
+                                            visibility: slidePreview.eMestre ? '' : 'hidden',
+                                            padding: telaCheia ? '' : '1vh',
+                                            ...this.realcarElemento('tampao', 'fora')}}>
+                    {telaCheia ? null : <SelecionarRatio/>}
+                    <div className='container-setas' style={{visibility: 'visible', display: telaCheia ? '' : 'none'}}>
+                        <div className='movimentar-slide esquerda' onClick={() => this.offsetSlide(-1)}></div>
+                        <div className='movimentar-slide direita' onClick={() => this.offsetSlide(1)}></div>
                     </div>
-                }
+                    <SlideFormatado
+                        proporcao={proporcao}
+                        id='preview'
+                        className={'preview' + (!transition ? ' sem-transition' : '')} 
+                        realcarElemento={this.realcarElemento}
+                        editavel={!slidePreview.eMestre && this.props.autorizacao === 'editar' && !telaCheia}
+                        slidePreview={slidePreview}
+                        style={telaCheia ? {overflow: 'visible'} : null}>
+                        <button id='ativar-tela-cheia' onClick={() => toggleFullscreen(this.ref.current)} 
+                            style={{opacity: this.state.screen.opacidadeBotao, color: slidePreview.estilo.texto.color, 
+                                    right: '1vh', bottom: '0.5vh'}}
+                            onMouseOver={this.tornarBotaoVisivel} onMouseLeave={this.tornarBotaoInvisivel}>
+                            {this.state.screen.icone}
+                        </button>
+                    </SlideFormatado>
+                    {telaCheia 
+                        ? null
+                        : <div id="texto-slide-mestre" style={{textAlign: 'center', paddingTop: '0.7vh'}}>
+                            Slide-Mestre - {slidePreview.selecionado.elemento === 0 ? 'Global' : slidePreview.nomeLongoElemento}
+                        </div>
+                    }
+                </div>
             </div>
         )
     }
@@ -122,7 +133,13 @@ class Preview extends Component {
 
 const mapState = function (state) {
     const sP = state.present;
-    return {slidePreview: state.slidePreview, abaAtiva: sP.abaAtiva, autorizacao: sP.apresentacao.autorizacao, ratio: sP.ratio}
+    return {
+        slidePreview: state.slidePreview, 
+        abaAtiva: sP.abaAtiva, 
+        autorizacao: sP.apresentacao.autorizacao,
+        ratio: sP.ratio, 
+        selecionado: sP.selecionado
+    }
 }
 
 export default connect(mapState)(Preview);

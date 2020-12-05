@@ -50,19 +50,23 @@
 //   ✔️ Carrossel às vezes não funciona no "Arrastar".
 //   ✔️ Posição dos tutoriais
 //   ✔️ Redividir slides ao mudar fonte
+//   ✔️ Diferença topleft no fundo 3D ou mudar estilo por completo.
+//   ✔️ Update firestore está dando undefined
+//   ✔️ Clonar estilo não está funcionando
+//   ✔️ Posição do preview ao alterar ratio.
+//   ✔️ Atalho avançar tutorial com setas
+//   ✔️ 'Arraste uma imagem, ou clique para selecionar o arquivo.' não está clicável.
+//   ✔️ Definir padrão incluir ratio.
+//   ✔️ Exportação HTML às vezes sem css
+//   ✔️ Excluir imagem do input.
+//   ✔️ Barra de pesquisa está com muitos erros (editando todas as estrofes de todos os slides).
 //   ✔️ Carrossel do Input Imagem não vai até o final.*/
 // Errinhos:
 //   Redividir quando o texto de um slide é todo deletado.
 //   Problemas ao dividir texto em duas colunas
 //   Edição do conteúdo do parágrafo dando muitos erros (falha ao perder foco, não exibe cursor).
-//   Barra de pesquisa está com muitos erros (editando todas as estrofes de todos os slides).
-//   Update firestore está dando undefined
-//   Exportação HTML está ficando sem css
-//   Clonar estilo não está funcionando
-//   Atalho avançar tutorial com setas
-//   'Arraste uma imagem, ou clique para selecionar o arquivo.' não está clicável.
-//   Diferença topleft no fundo 3D ou mudar estilo por completo.
-//   Posição do preview ao alterar ratio.
+//   Ao abrir app, slide 1 é selecionado e perde o tampao.
+//   Realçar apenas 1 resultado ao pesquisar.
 //
 /*// Features:
 //   ✔️ Envio de imagens.
@@ -345,7 +349,7 @@ function undoable(reducer) {
         if (past.length === 0) return state;
         const previous = past[past.length - 1];
         const newPast = past.slice(Math.max(0, past.length-limiteUndo), past.length - 1);
-        atualizarApresentacaoBD (present, previous);
+        atualizarApresentacaoBD (present, previous, action.type);
         return {
           ...state,
           past: newPast,
@@ -359,7 +363,7 @@ function undoable(reducer) {
         if (future.length === 0) return state;
         const next = future[0];
         const newFuture = future.slice(1);
-        atualizarApresentacaoBD (present, next);
+        atualizarApresentacaoBD (present, next, action.type);
         return {
           ...state,
           past: [...past, present],
@@ -390,7 +394,7 @@ function undoable(reducer) {
           if (action.type === 'inserir')
           present.popupAdicionar = {...action.popupAdicionar, tipo: action.elemento.tipo};
         } 
-        atualizarApresentacaoBD (present, newPresent, mudanca);
+        atualizarApresentacaoBD (present, newPresent, action.type, mudanca);
         if (past.length - contadorPropaganda*numeroAcoesPropaganda >= numeroAcoesPropaganda) {
           contadorPropaganda++;
           propagandaAtiva = true;
@@ -415,7 +419,7 @@ const atualizarDadosUsuario = (idUsuario, dados) => {
     atualizarRegistro(dados, 'usuários', idUsuario);
 }
 
-function atualizarApresentacaoBD (present, newPresent, mudanca = null) {
+function atualizarApresentacaoBD (present, newPresent, acao, mudanca = null) {
   if (!mudanca) mudanca = houveMudanca(present, newPresent);
   if ((mudanca.includes('elementos') || mudanca.includes('ratio')) && !mudanca.includes('apresentacao') && newPresent.apresentacao.id) {
     atualizarApresentacao(newPresent.elementos, newPresent.ratio, newPresent.apresentacao.id);
@@ -490,6 +494,7 @@ const atalhosAdicionar = {ctrlm: 0, ctrlb: 1, ctrll: 2, ctrli: 3, ctrld: 4};
 hotkeys('right,left,up,down,ctrl+z,ctrl+shift+z,ctrl+y,ctrl+o,ctrl+m,ctrl+i,ctrl+b,ctrl+l,ctrl+d,ctrl+f', function(event, handler){
   event.preventDefault();
   var offset = 0;
+  if (store.getState().itensTutorial.length) return;
   switch (handler.key) {
       case 'right':
       case 'down':

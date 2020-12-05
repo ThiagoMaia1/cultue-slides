@@ -66,12 +66,13 @@ export const gerarNovoRegistro = async (colecao, dados, gerarTimestampCriacao = 
 
 
 export const atualizarRegistro = async (dados, colecao, idRegistro) => {
+  // var strDados = JSON.stringify(dados);
   var refRegistro = firestore.doc(colecao + '/' + idRegistro)
   dados.timestamp = firebase.firestore.FieldValue.serverTimestamp();
   try {
     await refRegistro.update(dados);
   } catch (error) {
-    console.error("Erro ao atualizar registro da coleção: '" + colecao + "'.", error);
+    console.error("Erro ao atualizar registro da coleção: '" + colecao + "'.", error, dados);
     throw error;
   }
   var doc = await refRegistro.get();

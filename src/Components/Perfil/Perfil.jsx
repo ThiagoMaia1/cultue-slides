@@ -46,7 +46,7 @@ class Perfil extends React.Component {
                         </div>
                         <Switch>
                             {paginasPerfil.map(p => {
-                                var Pagina = sobreporSplash(p.componente);
+                                var Pagina = sobreporSplash(p.nome, p.componente);
                                 return (
                                     <Route exact path={urlPerfil + '/' + p.nome} key={p}>
                                         <div className='pagina-perfil'>

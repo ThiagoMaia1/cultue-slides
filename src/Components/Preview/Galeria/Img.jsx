@@ -49,7 +49,7 @@ class Img extends Component {
             fundo.src = fundo.src.replace('./','./Galeria/');
         this.props.dispatch({type: 'editar-slide-temporariamente', objeto: 'fundo', valor: fundo});
         this.props.dispatch({type: 'editar-slide-temporariamente', objeto: 'tampao', valor: img.tampao});
-        this.props.dispatch({type: 'editar-slide-temporariamente', objeto: 'texto', valor: {color: img.texto.color}});
+        if (img.texto.color) this.props.dispatch({type: 'editar-slide-temporariamente', objeto: 'texto', valor: {color: img.texto.color}});
     }
 
     render () {

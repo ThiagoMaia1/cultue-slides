@@ -13,7 +13,8 @@ class Configurar extends Component {
     this.state = {aberto: 'hidden', coordenadas: [...this.coordenadasBotao], menuVisivel: false, tamIcones: window.innerWidth*0.027 + 'px'};
   }
 
-  abrirMenu = () => {      
+  abrirMenu = () => {
+    this.props.dispatch({type: 'ativar-realce', abaAtiva: 'texto'});      
     var coor = this.state.coordenadas;
     coor[2] = this.coordenadasBotao[2];
     toggleAnimacao(

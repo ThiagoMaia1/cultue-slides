@@ -99,7 +99,7 @@ export const atualizarApresentacao = async (elementos, ratio, idApresentacao) =>
   );
 }
 
-export const definirApresentacaoPadrao = async (idUsuario, elementosPadrao, atualSelecionada = 'atual') => {
+export const definirApresentacaoPadrao = async (idUsuario, elementosPadrao, ratio, atualSelecionada = 'atual') => {
   var conteudo;
   if (!idUsuario) {
     ativarPopupConfirmacao(
@@ -117,7 +117,10 @@ export const definirApresentacaoPadrao = async (idUsuario, elementosPadrao, atua
         try { 
           await atualizarRegistro(
             {
-              apresentacaoPadrao: getSlideMestreApresentacao(elementosPadrao)
+              apresentacaoPadrao: {
+                ...getSlideMestreApresentacao(elementosPadrao),
+                ratio
+              }
             },
             'usuários',
             idUsuario

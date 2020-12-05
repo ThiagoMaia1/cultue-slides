@@ -45,7 +45,7 @@ class Carrossel extends Component {
     }
 
     getLimiteInicial = () => Math.round(this.state.tamanhoCarrossel*this.percentualBeirada);
-    getLimiteFinal = () => Math.round(this.state.tamanhoCarrossel*(1-this.percentualBeirada) - this.state.tamanhoGaleria);
+    getLimiteFinal = () => Math.round(this.state.tamanhoCarrossel*(1-this.percentualBeirada) - this.state.tamanhoGaleria) - (this.props.beiradaFinal || 0);
     getOffsetAtual = () => Number(this.state.estiloGaleria[this.direcao[0]]);
     getPasso = (sentido, tamanhoPasso) => - (sentido ? 1 : -1)*tamanhoPasso;
     eSetaInvisivel = iSeta => this.state[estilosSeta[iSeta]].opacity === '0';
@@ -161,7 +161,14 @@ class Carrossel extends Component {
         this.setTimeoutSetas(5);
     };
 
+    clickSeta = (e, i) => {
+        e.stopPropagation();
+        this.saltar(i);
+    }
+
     deslizarWheel = e => {
+        if (this.props.wheelDesativada) return;
+        e.stopPropagation();
         this.offsetComTransition(-e.deltaY, 600);
     }
 
@@ -221,7 +228,7 @@ class Carrossel extends Component {
                             <div className="seta-galeria" 
                                 onMouseEnter={() => this.deslizar(i)} 
                                 onMouseLeave={this.pararDeslizar}
-                                onClick={() => this.saltar(i)}
+                                onClick={e => this.clickSeta(e, i)}
                                 style={{...this.estiloSeta, ...this.state[estilosSeta[i]]}}
                                 key={i}>
                                     <Seta size={this.props.tamanhoIcone}/>

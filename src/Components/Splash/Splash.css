@@ -56,24 +56,9 @@
     bottom: 0;
     left: 0;
     right: 0;
-}
-
-#fundo-animacao-3d {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    background-color: white;
 }
 
 #fundo-animacao-3d > * {
     position: absolute;
-    flex: 0 0;
-}
-
-#fundo-animacao-3d .quadrado-logo {
-    position: absolute;
-    overflow: hidden;
-}
-
-#fundo-popup.animacao-3d {
-    background-color: rgba(0, 0, 0, 0.8)
 }

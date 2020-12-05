@@ -5,6 +5,7 @@ import { firebaseAuth, googleAuth } from "../../firebase";
 import { gerarDocumentoUsuario } from '../../firestore/apiFirestore';
 import { checarLogin } from './ModulosLogin';
 import SelectCargo from './SelectCargo';
+import QuadroNavbar from '../NavBar/QuadroNavbar';
 
 function getMensagemErro(error) {
     var codigo = error.code.replace('auth/', '');
@@ -32,8 +33,7 @@ class Login extends React.Component {
 
     constructor (props) {
         super(props);
-        this.ref = React.createRef();
-        this.ref1 = React.createRef();
+        this.refUsername = React.createRef();
         this.state = {email: '', senha: '', erro: '', nomeCompleto: '', logando: true, cadastrando: false}
     }
 
@@ -66,14 +66,6 @@ class Login extends React.Component {
         this.setState({cadastrando: true});
     }
 
-    clickFora = e => {
-        if (!this.props.callback) return;
-        if (!this.ref.current) return;
-        if (!this.ref.current.contains(e.target)) {
-            this.removerEventListener();
-        }
-    }
-
     removerEventListener = () => {
         if (!this.props.callback) return;
         document.removeEventListener("click", this.clickFora, false);
@@ -81,7 +73,7 @@ class Login extends React.Component {
     }
 
     callbackLogin = user => {
-        if (!user.nomeCompleto || !user.cargo) {
+        if (user.uid && (!user.nomeCompleto || !user.cargo)) {
             this.setState({cadastrando: true, logando: false});
         }
         this.removerEventListener();
@@ -89,27 +81,28 @@ class Login extends React.Component {
     }
 
     componentDidMount = async () => {
-        if (this.ref1.current) this.ref1.current.focus();
+        if (this.refUsername.current) this.refUsername.current.focus();
         if (this.props.callback) document.addEventListener("click", this.clickFora, false);
         checarLogin(this.callbackLogin);
     };
 
-    componentWillUnmount = () => this.removerEventListener();
+    componentWillUnmount = () => {
+        this.removerEventListener();
+    }
 
     render() {
-        return (
-            <div id='quadro-login' className='quadro-navbar' ref={this.ref}>
+        const interiorLogin = (
+            <div id='quadro-login'>
                 {this.props.usuario.uid
                     ? <>
                         <button className='botao-azul botao' onClick={() => this.props.history.push('/perfil')}>Meu Perfil</button>  
                         <button className='botao limpar-input' onClick={() => firebaseAuth.signOut()}>✕ Sair</button>
                     </>
-                    :  
-                    <>
+                    : <>
                         <form className='inputs-login'> 
                             {this.state.logando ?
                                 <>
-                                    <input ref={this.ref1} id='username' className='combo-popup' placeholder='E-mail' type='email' value={this.state.email}
+                                    <input ref={this.refUsername} id='username' className='combo-popup' placeholder='E-mail' type='email' value={this.state.email}
                                             onChange={e => this.setState({email: e.target.value})}></input>
                                     <input id='password' className='combo-popup' placeholder='Senha' type='password' value={this.state.senha}
                                             onChange={e => this.setState({senha: e.target.value})}></input>
@@ -143,6 +136,16 @@ class Login extends React.Component {
                     </>
                 }
             </div>
+        )
+        return (
+            <>
+                {this.props.callback
+                    ? <QuadroNavbar callback={this.removerEventListener} esquerda={true}>
+                        {interiorLogin}
+                      </QuadroNavbar>
+                    : interiorLogin
+                }
+            </> 
         );
     }
 };

@@ -106,7 +106,7 @@ class ItemListaSlides extends Component {
                             </div>) : null
                         }
                     </div>
-                    {elemento.slides.length > 1 && !this.props.elemento.colapsado ? 
+                    {elemento.slides.length > 1 ? 
                         <SublistaSlides elemento={this.props.elemento} ordem={i} marcarSelecionado={this.props.marcarSelecionado} refSlide={this.props.objRef.slide}/> 
                     : null}
                 </li>

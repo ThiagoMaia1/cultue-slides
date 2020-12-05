@@ -18,7 +18,7 @@ class ExportarEmail extends Component {
     this.state = {listaEmails: []};
     this.cidLogo = 'logo';
 
-    const ListaComLoading = sobreporSplash(ListaEmails);
+    const ListaComLoading = sobreporSplash('listaEmails', ListaEmails);
 
     this.filhosPopup = (
       <div style={{maxHeight: '50vh', minHeight:'50vh', width: '100%', marginBottom: '2vh', overflow: 'hidden'}}>

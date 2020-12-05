@@ -70,7 +70,7 @@ class Arrastar extends React.Component {
 
   componentDidUpdate = (prevProps) => {
     if(this.ref.current) {
-      var aA = this.ref.current.offsetHeight >= 0.55*window.innerHeight;
+      var aA = this.ref.current.offsetHeight >= 0.5*window.innerHeight;
       if (aA !== this.state.adicionarAcima)
         this.setState({adicionarAcima: aA})
     }

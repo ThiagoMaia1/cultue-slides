@@ -17,7 +17,8 @@
 .wraper-login {
     display: flex;
     justify-content: space-between;
-    width: 60%;
+    width: 55%;
+    height: 55%;
 }
 
 #quadro-login input, #quadro-login hr, #quadro-login select {
@@ -60,7 +61,7 @@
 }
 
 #comece-usar {
-    padding: 10vh;
+    padding: 10vh 4vw;
 }
 
 #comece-usar div {
@@ -79,4 +80,8 @@
     margin-top: 1vh;
     line-height: 2.5vh;
     min-height: 2.5vh;
+}
+
+.quadro-centralizado {
+    width: min-content;
 }

@@ -60,7 +60,8 @@ class ApresentacoesUsuario extends React.Component {
                                 </div>
                                 <div className='container-carrossel-previews'>
                                     <Carrossel tamanhoIcone={20} tamanhoMaximo={'100%'} percentualBeirada={0.02} 
-                                            style={{zIndex: '650', width: 'fit-content', overflow: 'hidden'}} corGradiente='var(--platinum)'>
+                                            style={{zIndex: '650', width: 'fit-content', overflow: 'hidden'}} corGradiente='var(--platinum)'
+                                            wheelDesativada={true}>
                                         <div className='previews-slides-elementos' ref={this.ref}>
                                             {a.elementos.map((e, i) => (
                                                 e.slides.map((s, j) => {
@@ -92,7 +93,7 @@ class ApresentacoesUsuario extends React.Component {
                                         Selecionar
                                     </button>
                                     <button className='botao-azul botao'
-                                            onClick={() => definirApresentacaoPadrao(this.props.usuario.uid, a.elementos, 'selecionada')}>
+                                            onClick={() => definirApresentacaoPadrao(this.props.usuario.uid, a.elementos, a.ratio, 'selecionada')}>
                                         Definir como Padrão
                                     </button>
                                 </div>

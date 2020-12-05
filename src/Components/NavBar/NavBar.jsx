@@ -19,8 +19,8 @@ class NavBar extends React.Component {
     this.state = {quadroLogin: false, quadroAtalhos: false, quadroExpress: false, paginaPerfil: false}
   }
 
-  toggleQuadroLogin = () => {
-    this.setState({quadroLogin: !this.state.quadroLogin});
+  toggleQuadroLogin = (bool = !this.state.quadroLogin) => {
+    this.setState({quadroLogin: bool});
   }
  
   toggleQuadro = (quadro, bool) => {
@@ -46,7 +46,7 @@ class NavBar extends React.Component {
             <button onClick={() => zerarApresentacao(this.props.usuario)}>Nova Apresentação</button>
             {eDownload
               ? <>
-                  <button onClick={() => definirApresentacaoPadrao(u.uid, this.props.elementos, 'atual')}>Definir Padrão</button>
+                  <button onClick={() => definirApresentacaoPadrao(u.uid, this.props.elementos, this.props.ratio, 'atual')}>Definir Padrão</button>
                     {listaBotoesQuadros.map(b => {
                         const ComponenteQuadro = b.componente;
                         return (
@@ -67,7 +67,7 @@ class NavBar extends React.Component {
             }
           </div>
           <div id='mensagem-autorizacao'>{this.props.autorizacao === 'ver' ? 'Somente Leitura' : ''}</div>
-          <div id='info-usuario' onClick={this.toggleQuadroLogin}>
+          <div id='info-usuario' onClick={() => this.toggleQuadroLogin(true)}>
             {u.uid
               ? <img className='foto-usuario pequena' src={u.photoURL || require('./Usuário Padrão.png')} alt='Foto Usuário'></img>
               : null
@@ -76,7 +76,7 @@ class NavBar extends React.Component {
           </div>
           {this.state.quadroLogin 
               ? <div className='container-quadro-login'>
-                  <Login history={this.props.history} callback={this.toggleQuadroLogin}/>
+                  <Login history={this.props.history} callback={() => this.toggleQuadroLogin(false)}/>
                 </div>
               : null
             }
@@ -86,7 +86,11 @@ class NavBar extends React.Component {
 };
   
 const mapState = state => {
-  return {usuario: state.usuario, elementos: state.present.elementos, autorizacao: state.present.apresentacao.autorizacao};
+  return {
+    usuario: state.usuario, 
+    elementos: state.present.elementos, 
+    autorizacao: state.present.apresentacao.autorizacao, 
+    ratio: state.present.ratio};
 }
 
 function getNomeVariavelEstado(b) {

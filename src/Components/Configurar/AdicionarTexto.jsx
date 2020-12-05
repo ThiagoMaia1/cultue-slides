@@ -13,8 +13,8 @@ class AdicionarTexto extends Component {
     }
 
     gerarListaSlidesPadrao = () => 
-        this.props.usuario.slidesPadrao.map(s => (
-            <button className='botao' key={s.titulo} tabIndex='-1' 
+        this.props.usuario.slidesPadrao.map((s, i) => (
+            <button className='botao' key={i + s.titulo} tabIndex='-1' 
                     onClick={() => this.setState({titulo: s.titulo, textoSlide: s.textoSlide})}>
                         {s.titulo}
             </button>

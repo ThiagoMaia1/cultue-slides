@@ -69,9 +69,19 @@
     position: relative;
     border-radius: var(--round-border-pequeno);
     background-color: white;
-    padding: 0.8vh 0 0.8vh 0.8vh;
+    padding: 0.8vh 1.7vh 0.8vh 0.8vh;
     box-shadow: var(--box-shadow);
     text-align: left;
+    overflow: hidden;
+}
+
+#configuracoes-musica, #negrito-italico-sublinhado {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.linha-configuracoes-texto.abaixo {
+    justify-content: space-between;
 }
 
 .container-botoes-direita {
@@ -81,14 +91,21 @@
 }
 
 .botoes-direita {
-    position: absolute;
-    right: 4%;
-    /* width: 4vh; */
     pointer-events: auto;
     display: flex;
     flex-direction: column;
     color: white;
     z-index: 25;
+}
+
+.botoes-direita > * {
+    right: 0;
+}
+
+.botoes-direita.float {
+    position: absolute;
+    right: 0;
+    margin-right: 1.5vh;
 }
 
 .botoes-direita .bool {
@@ -101,7 +118,6 @@
 }
 
 .configuracoes-texto {
-    width: 84%;
     margin-bottom: 1vh;
     display: flex;
     flex-direction: column;
@@ -109,6 +125,19 @@
 
 .linha-configuracoes-texto {
     display: flex;
+    flex-wrap: wrap;
+    flex: 0 0;
+    min-width: 13.7vw;
+}
+
+.bloco-configuracoes-texto-botoes-direita {
+    display: flex;
+    justify-content: flex-start;
+    flex: 1 1;
+}
+
+.container-botoes-alinhamento {
+    min-width: 16vh;
 }
 
 .div-sliders {
@@ -144,7 +173,7 @@
 .combo-fonte {
     flex: 1 1;
     padding-left: 0.6vh;
-    max-width: 20.9vh;
+    max-width: 78%;
 }
 
 #rotulo-configuracoes-musica {

@@ -15,12 +15,20 @@ const eEstiloVazio = estilo => {
     return true;
 }
 
+const getMaxHeight = props => {
+
+    var [ maxHeight, overflow ] = [0, 'hidden'];
+    if(!props.elemento.colapsado) 
+        [ maxHeight, overflow ] = [5*props.elemento.slides.length + 'vh', ''];
+    return {maxHeight: maxHeight, overflow: overflow};
+}
+
 class SublistaSlides extends Component {
 
     constructor (props) {
         super(props);
-        this.state = {...props};
-    }
+        this.state = {...props, estiloBloco: getMaxHeight(props)};
+    }   
 
     getRotuloSlide = (elemento, slide) => {
         var t0 = slide.textoArray.filter(t => !/\$\d\$/.test(t))[0] || '';
@@ -34,27 +42,35 @@ class SublistaSlides extends Component {
         }
     }
 
+    static getDerivedStateFromProps = (props, state) => {
+        if(props.elemento.colapsado !== !state.estiloBloco.maxHeight)
+            return {estiloBloco: getMaxHeight(props)};
+        return null;
+    }
+
     render () {
         //Se elemento tem múltiplos slides, cria subdivisão ol.
         var elemento = this.props.elemento;
         var i = this.props.ordem;
         var sel = this.props.selecionado;
         return (
-            <ol className='sublista'>
-                {elemento.slides.map((slide, j) => {
-                    if (j === 0) return null; //Pula o slide 0, pois se tem múltiplos slides, o slide 0 é o mestre.
-                    return (
-                        <li className={'item-sublista ' + elemento.tipo + ' fade-estilizado ' +
-                                       (this.props.selecionado.elemento === i && sel.slide === j ? 'selecionado' : '') + ' ' +
-                                       (eEstiloVazio(slide.estilo) ? '' : 'elemento-slide-estilizado')
-                                    }
-                            ref={sel.slide === j ? this.props.refSlide : null}
-                            onClick={() => this.props.marcarSelecionado(i, j)} key={j}>
-                            {this.getRotuloSlide(elemento, slide)}
-                        </li>
-                    )
-                })}
-            </ol>
+            <div className='container-sublista' style={this.state.estiloBloco}>
+                <ol className='sublista'>
+                    {elemento.slides.map((slide, j) => {
+                        if (j === 0) return null; //Pula o slide 0, pois se tem múltiplos slides, o slide 0 é o mestre.
+                        return (
+                            <li className={'item-sublista ' + elemento.tipo + ' fade-estilizado ' +
+                                        (this.props.selecionado.elemento === i && sel.slide === j ? 'selecionado' : '') + ' ' +
+                                        (eEstiloVazio(slide.estilo) ? '' : 'elemento-slide-estilizado')
+                                        }
+                                ref={sel.slide === j ? this.props.refSlide : null}
+                                onClick={() => this.props.marcarSelecionado(i, j)} key={j}>
+                                {this.getRotuloSlide(elemento, slide)}
+                            </li>
+                        )
+                    })}
+                </ol>
+            </div>
         );
     }
 }

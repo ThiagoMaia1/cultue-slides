@@ -20,8 +20,9 @@ export default function Estrofes(props) {
             versiculo = getNumeroVersiculo(t);
             t = <>{versiculo.textoAntes} <sup>{versiculo.numero}</sup> {versiculo.textoDepois}</>;
         }
+        var sel = props.selecionado;
         return (
-            <Fragment key={i + t}>
+            <Fragment key={sel.elemento + '.' + sel.slide + '.' + i}>
                 <span id={'textoArray-' + i} 
                       contentEditable={props.editavel} suppressContentEditableWarning='true'
                       onInput={props.onInput} 

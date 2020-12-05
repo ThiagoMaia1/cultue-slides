@@ -48,6 +48,12 @@ ol {
   width: 100%;
 }
 
+.container-sublista {
+  display: flex;
+  align-items: flex-end;
+  transition: max-height 0.5s linear, overflow 0.5s linear 0.5s;
+}
+
 .sublista {
   padding-left: 10px;
   display: flex;
@@ -74,6 +80,7 @@ ol {
   width: 100%;
   margin-bottom: 1vh;
   overflow: visible;
+  transition: margin 0.001ms ease-in-out 0.2s, transform 0.05s ease-in-out;
 }
 
 .itens {
@@ -98,9 +105,10 @@ ol {
 
 .icone-colapsar {
   height: 0px;
-  float: right;
   cursor: pointer;
   color: inherit;
+  float: right;
+  margin-right: 0.5vw;
 }
 
 #slide-mestre {
@@ -227,9 +235,9 @@ ol {
 }
 
 #div-botoes .itens {
-  min-width: 5vw;
-  max-width: 5vw;
-  height: 8vh;
+  min-width: 5.2vw;
+  max-width: 5.2vw;
+  min-height: 4.2vw;
   margin: 1vh 1vh 0 0;
   text-align: center;
   color: var(--platinum-forte);
@@ -239,6 +247,9 @@ ol {
   justify-content: center;
   align-items: center;
   box-shadow: 3px 6px 7px rgba(0,0,0,0.7);
+  padding: 0.5vh;
+  overflow: hidden;
+  word-break: break-word;
 }
 
 #div-botoes .itens:hover {

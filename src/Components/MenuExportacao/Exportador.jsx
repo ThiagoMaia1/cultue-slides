@@ -1,28 +1,17 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { getNomeInterfaceTipo } from '../../Element';
-import { capitalize } from '../../FuncoesGerais';
+import { capitalize, getImgBase64 } from '../../FuncoesGerais';
 import SlideFormatado from '../Preview/SlideFormatado'; 
 
 export function getBase64Image(src, classe, total, ratio, callback) {
   const img = new Image();
   img.crossOrigin = 'Anonymous';
   img.onload = () => {
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
-    let dataURL;
-    var iw = img.width;
-    var ih = img.height;
-    var windowW = ratio.width;
-    var windowH = ratio.height;
-    var scale = Math.max((windowW/iw), (windowH/ih));
-    var wScaled = windowW/scale;
-    var hScaled = windowH/scale;
-    canvas.width = windowW;
-    canvas.height = windowH;
-    ctx.drawImage(img, (iw - wScaled)/2, (ih - hScaled)/2, wScaled, hScaled, 0, 0, windowW, windowH);
-    dataURL = canvas.toDataURL("image/png");
-    callback(dataURL, classe, total, src);
+    getImgBase64(
+      img, ratio.width, ratio.height, 
+      dataURL => callback(dataURL, classe, total, src)
+    )
   };
 
   img.src = src;
@@ -164,13 +153,14 @@ class Exportador extends Component {
 
   getImagensBase64 = (previews, imagensBase64, copiaDOM, ratio, callbackMeio, callbackFormato) => {
     var [ uniques, imgsUnique] = [{}, []];
-    var i;
+    var nClasses = 0;
     setTimeout(() => {
       for (var p of previews) {
         var imgs = copiaDOM.querySelectorAll('#preview-fake' + p.indice + ' img');
-        for(i = 0; i < imgs.length; i++) {
+        for(var i = 0; i < imgs.length; i++) {
           if(!uniques[imgs[i].src]) {
-            uniques[imgs[i].src] = 'classeImagem' + i;
+            uniques[imgs[i].src] = 'classeImagem' + nClasses;
+            nClasses++;
             imgsUnique.push(imgs[i]);
           }
           var classe = uniques[imgs[i].src];
@@ -183,6 +173,7 @@ class Exportador extends Component {
           }
         }
       }
+
       for (var j = 0; j < imgsUnique.length; j++) {
         getBase64Image(imgsUnique[j].src, imgsUnique[j].className, imgsUnique.length, ratio,
           (dataURL, classe, total, src) => {

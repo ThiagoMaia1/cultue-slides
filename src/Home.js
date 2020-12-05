@@ -33,8 +33,8 @@ class Home extends Component {
             <Notificacoes/>
             <Switch>
                 {paginas.map((p, i) => (
-                    <Route exact path={'/' + p.nome} key={i}
-                           component={sobreporSplash(p.componente, p.exigeLogin, checarLogin, true, true, true)}
+                    <Route exact path={'/' + p.nome} key={p.nome}
+                           component={sobreporSplash(p.nome, p.componente, p.exigeLogin, checarLogin, true, true, true)}
                     />
                     )    
                 )};
