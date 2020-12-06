@@ -6,6 +6,7 @@ import { gerarDocumentoUsuario } from '../../firestore/apiFirestore';
 import { checarLogin } from './ModulosLogin';
 import SelectCargo from './SelectCargo';
 import QuadroNavbar from '../NavBar/QuadroNavbar';
+import { store } from '../../index';
 
 function getMensagemErro(error) {
     var codigo = error.code.replace('auth/', '');
@@ -77,7 +78,7 @@ class Login extends React.Component {
             this.setState({cadastrando: true, logando: false});
         }
         this.removerEventListener();
-        if(user.uid) this.props.history.push('/app');
+        // if(user.uid) this.props.history.push('/app');
     }
 
     componentDidMount = async () => {
@@ -90,13 +91,26 @@ class Login extends React.Component {
         this.removerEventListener();
     }
 
+    logOut = () => {
+        firebaseAuth.signOut()
+        const tryLoggedOutUser = () => {
+            if (store.getState().usuario.uid) {
+                timeoutLogout();
+            } else {
+                this.props.history.push('/login')
+            }
+        }
+        const timeoutLogout = () => setTimeout(() => tryLoggedOutUser(), 100);
+        tryLoggedOutUser();
+    }
+
     render() {
         const interiorLogin = (
             <div id='quadro-login'>
                 {this.props.usuario.uid
                     ? <>
                         <button className='botao-azul botao' onClick={() => this.props.history.push('/perfil')}>Meu Perfil</button>  
-                        <button className='botao limpar-input' onClick={() => firebaseAuth.signOut()}>✕ Sair</button>
+                        <button className='botao limpar-input' onClick={this.logOut}>✕ Sair</button>
                     </>
                     : <>
                         <form className='inputs-login'> 

@@ -51,7 +51,6 @@ ol {
 .container-sublista {
   display: flex;
   align-items: flex-end;
-  transition: max-height 0.5s linear, overflow 0.5s linear 0.5s;
 }
 
 .sublista {
@@ -69,6 +68,7 @@ ol {
   overflow: hidden;
   white-space: nowrap;
   background-color: var(--platinum);
+  transition: max-height 0.2s ease-in-out, padding 0.2s ease-in-out, margin 0.2s ease-in-out;
 }
 
 .item-sublista:hover {
@@ -80,7 +80,7 @@ ol {
   width: 100%;
   margin-bottom: 1vh;
   overflow: visible;
-  transition: margin 0.001ms ease-in-out 0.2s, transform 0.05s ease-in-out;
+  transition: margin 0.45ms ease-in-out, transform 0.05s ease-in-out;
 }
 
 .itens {

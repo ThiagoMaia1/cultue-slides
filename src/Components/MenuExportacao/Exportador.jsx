@@ -33,7 +33,7 @@ export function selecionadoOffset (elementos, selecionado, offset, apresentacao)
     var elem = slidesOrdenados(elementos, !apresentacao, selecionado);
     for (var i = 0; i < elem.length; i++) { //Acha o selecionado atual.
       if (elem[i].elemento === selecionado.elemento && elem[i].slide === selecionado.slide) {
-        if (!offset && elem[i].eMestre) offset = 1;
+        if (!offset && apresentacao && elem[i].eMestre) offset = 1;
         var novoIndex = i + offset;
         if (novoIndex < 0) {
           novoIndex = 0;

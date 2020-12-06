@@ -17,10 +17,9 @@ const eEstiloVazio = estilo => {
 
 const getMaxHeight = props => {
 
-    var [ maxHeight, overflow ] = [0, 'hidden'];
     if(!props.elemento.colapsado) 
-        [ maxHeight, overflow ] = [5*props.elemento.slides.length + 'vh', ''];
-    return {maxHeight: maxHeight, overflow: overflow};
+        return {maxHeight: '5vh'};
+    return {maxHeight: 0, paddingTop: 0, paddingBottom: 0, marginTop: 0, marginBottom: 0}
 }
 
 class SublistaSlides extends Component {
@@ -54,7 +53,7 @@ class SublistaSlides extends Component {
         var i = this.props.ordem;
         var sel = this.props.selecionado;
         return (
-            <div className='container-sublista' style={this.state.estiloBloco}>
+            <div className='container-sublista'>
                 <ol className='sublista'>
                     {elemento.slides.map((slide, j) => {
                         if (j === 0) return null; //Pula o slide 0, pois se tem múltiplos slides, o slide 0 é o mestre.
@@ -64,7 +63,8 @@ class SublistaSlides extends Component {
                                         (eEstiloVazio(slide.estilo) ? '' : 'elemento-slide-estilizado')
                                         }
                                 ref={sel.slide === j ? this.props.refSlide : null}
-                                onClick={() => this.props.marcarSelecionado(i, j)} key={j}>
+                                onClick={() => this.props.marcarSelecionado(i, j)} key={j}
+                                style={this.state.estiloBloco}>
                                 {this.getRotuloSlide(elemento, slide)}
                             </li>
                         )

@@ -7,8 +7,8 @@ class LogoCultue extends React.Component {
     super(props);
     this.rotate = (props.animado ? 1 : -1) * 15;
     this.escalaPequena = props.escala || 1;
-    this.escalaGrande = this.escalaPequena = 1.1;
-    this.state = {scale: this.escalaPequena, rotate: this.rotate};
+    this.escalaGrande = this.escalaPequena * 1.1;
+    this.state = {scale: this.escalaGrande, rotate: 0};
   }
 
   animacaoLogo = () => {
@@ -22,7 +22,7 @@ class LogoCultue extends React.Component {
   
   componentDidMount = () => {
     if (this.props.animado) {
-      this.animacaoLogo();
+      setTimeout(() => this.animacaoLogo(), 1);
       this.intervalo = setInterval(this.animacaoLogo, 1050);
     }
   }

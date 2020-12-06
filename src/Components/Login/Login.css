@@ -1,6 +1,6 @@
 #container-login {
-    /* background-color: var(--platinum); */
     border-radius: var(--round-border-medio);
+    pointer-events: none;
 }
 
 .fundo-login {
@@ -19,6 +19,10 @@
     justify-content: space-between;
     width: 55%;
     height: 55%;
+}
+
+.wraper-login > * {
+    pointer-events: all;
 }
 
 #quadro-login input, #quadro-login hr, #quadro-login select {

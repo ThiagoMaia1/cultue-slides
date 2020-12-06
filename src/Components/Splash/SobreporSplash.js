@@ -8,7 +8,7 @@ export default function sobreporSplash (NomeKey, Componente, exigeUsuario = fals
   
   class ComponenteMontado extends Component {
     componentDidMount = () => { 
-      if(desativarNoMount) this.props.desativarSplash();
+      if(desativarNoMount) setTimeout(() => this.props.desativarSplash(), 1900);
     }
     render() {
       return <Componente {...this.props}/>
@@ -46,7 +46,9 @@ export default function sobreporSplash (NomeKey, Componente, exigeUsuario = fals
                       ? <Redirect to='/login'/> 
                       : null
                     }
-                    <ComponenteMontado {...this.props} desativarSplash={() => (this.state.loading ? this.setState({loading: false}) : null)}/>
+                    <ComponenteMontado {...this.props} desativarSplash={() => {
+                      if(this.state.loading) this.setState({loading: false})
+                    }}/>
                 </Fragment>
               )
           }  

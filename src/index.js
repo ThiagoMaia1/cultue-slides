@@ -60,14 +60,19 @@
 //   ✔️ Exportação HTML às vezes sem css
 //   ✔️ Excluir imagem do input.
 //   ✔️ Barra de pesquisa está com muitos erros (editando todas as estrofes de todos os slides).
+//   ✔️ Realçar apenas 1 resultado ao pesquisar.
+//   ✔️ Ao abrir app, slide 1 é selecionado.
 //   ✔️ Carrossel do Input Imagem não vai até o final.*/
 // Errinhos:
 //   Redividir quando o texto de um slide é todo deletado.
 //   Problemas ao dividir texto em duas colunas
 //   Edição do conteúdo do parágrafo dando muitos erros (falha ao perder foco, não exibe cursor).
-//   Ao abrir app, slide 1 é selecionado e perde o tampao.
-//   Realçar apenas 1 resultado ao pesquisar.
-//
+//   Slides perdendo o tampão ao prever galeria.
+//   Imagem de menor qualidade não carrega se a de maior qualidade não tiver carregado.
+//   Na exportacao pegar apenas as de qualidade certa.
+//   Pular splash para página de login ao fazer logout.
+//   
+
 /*// Features:
 //   ✔️ Envio de imagens.
 //   ✔️ Navegar slides clicando à direita ou esquerda.
@@ -94,18 +99,18 @@
 //   ✔️ Criar texto livre padrão personalizado
 //   ✔️ Selecionar resolução personalizada.
 //   ✔️ Exportar como Power Point.*/
-//   Tela perfil do usuário: informações básicas, predefinições, assinatura. 
-//   Enviar por e-mail.
-//   Shenanigans de segunda tela.
 //   Editar tamanho da imagem direto no preview.
 //   Exportação de slides de imagem
-//   Melhorar pesquisa de letra de música usando google.
-//   Persistir redux
-//   Incluir fontes como base64.
-//   Nomear apresentacao
 //   Recuperar senha
+//   Nomear apresentacao
+//   Tela perfil do usuário: informações básicas, predefinições, assinatura. 
+//   Enviar por e-mail.
 //   E-mails não caírem no spam.
 //   Pedir cadastro ao tentar enviar e-mail.
+//   Shenanigans de segunda tela.
+//   Persistir redux
+//   Melhorar pesquisa de letra de música usando google.
+//   Incluir fontes como base64.
 
 /*/ Features não necessários:
 //   Exportar como PDF.
@@ -117,7 +122,8 @@
 //   Favoritar músicas, fundos...
 //   Otimizar mobile
 //   Reutilizar links de compartilhamento.
-//   Indicar que há estilização nos slides/elementos.*/
+//   Indicar que há estilização nos slides/elementos.
+//   Blend-mode tampão*/
 //
 // Negócio:
 //   ✔️ Criar logo.

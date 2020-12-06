@@ -6,6 +6,7 @@ import { getFonteBase } from '../../Element';
 import { limparHighlights } from '../BarraPesquisa/BarraPesquisa';
 import { markupParaSuperscrito } from '../Preview/TextoPreview';
 import { getPathImagemReduzida } from './Galeria/Img';
+import { ratioPadrao } from '../../firestore/apresentacoesBD';
 
 class SlideFormatado extends Component {
     
@@ -57,6 +58,7 @@ class SlideFormatado extends Component {
     render() {
         var slidePreview = this.props.slidePreview;
         var proporcao = this.props.proporcao;
+        var proporcaoTela = proporcao*this.props.ratio.width/ratioPadrao.width;
         return (
                 <div ref={this.props.referencia} 
                      id={this.props.id} 
@@ -66,7 +68,7 @@ class SlideFormatado extends Component {
                              ...this.realcarElemento('tampao', 'dentro'),
                              ...this.props.style}}>
                     <div className='tampao' style={slidePreview.estilo.tampao}></div>
-                    <Img imagem={slidePreview.estilo.fundo} proporcao={proporcao}/>
+                    <Img imagem={slidePreview.estilo.fundo} proporcao={proporcaoTela}/>
                     <div className='texto-preview' style={{fontSize: getFonteBase().numero*proporcao + getFonteBase().unidade}}>
                         <div className={'slide-titulo ' + this.getClasseLetraClara('titulo')} style={slidePreview.estilo.titulo}>
                             <div><span id='textoTitulo' onInput={this.editarTexto} onFocus={() => this.ativarRealce('titulo')} 
@@ -93,18 +95,17 @@ class SlideFormatado extends Component {
     }
 }
 
+const ImgNormal = ({imagem, px}) => <img id='fundo-preview' src={require('' + getPathImagemReduzida(imagem.src, px))} alt=''/>
+
 const Img = ({imagem, proporcao}) => {
     if (imagem.src.substr(0, 4) === 'blob') {
         return <img id='fundo-preview' src={imagem.src} alt='' />
     } else {
-        var path = getPathImagemReduzida(imagem.src,
-            proporcao < 0.2
-                ? 300
-                : proporcao < 0.8
-                    ? 600
-                    : null
-        ) 
-        return <img id='fundo-preview' src={require('' + path)} alt=''/>
+        var pixeis = [[300, 0], [600, 0.3], [null, 0.65]];
+        return pixeis.reduce((resultado, px) => {
+            if(px[1] < proporcao) resultado.push(<ImgNormal imagem={imagem} px={px[0]}/>);
+            return resultado;            
+        }, []);
     }
 };
 

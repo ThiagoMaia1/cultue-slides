@@ -4,11 +4,7 @@ import { MdFullscreen, MdFullscreenExit } from 'react-icons/md';
 import SlideFormatado from './SlideFormatado';
 import SelecionarRatio from './SelecionarRatio';
 import { objetosSaoIguais } from '../../FuncoesGerais';
-
-let windowH = window.screen.height;
-let windowW = window.screen.width;
-const alturaTela = Math.min(windowH, windowW);
-const larguraTela = Math.max(windowH, windowW);
+import { ratioPadrao } from '../../firestore/apresentacoesBD';
 
 export function toggleFullscreen (element = null) {        
     
@@ -89,7 +85,7 @@ class Preview extends Component {
 
     render() {
         var slidePreview = this.props.slidePreview;
-        var proporcao = this.state.screen.proporcao*Math.min(alturaTela/this.props.ratio.height, larguraTela/this.props.ratio.width);
+        var proporcao = this.state.screen.proporcao*Math.min(ratioPadrao.height/this.props.ratio.height, ratioPadrao.width/this.props.ratio.width);
         const telaCheia = this.state.screen.proporcao === this.full.proporcao;
         const transition = this.state.transitionAtivo && !telaCheia; 
         return (

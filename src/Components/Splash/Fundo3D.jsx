@@ -53,14 +53,19 @@ class Fundo3D extends React.Component {
 
     constructor (props) {
         super(props);
-        this.quadrados = [];
+        this.state = this.gerarQuadrados();
+    }
+
+    gerarQuadrados = () => {
+        var quadrados = [];
         for (var i = 0; i < numeroQuadrados; i++) {
-            this.quadrados.push(new Quadrado(
+            quadrados.push(new Quadrado(
                 i % coresQuadrados.length,
                 this.getTamanhoAleatorio(i),
                 [inteiroAleatorio(-20, 110)/100, inteiroAleatorio(-20, 110)/100]
             ).Componente);
         }
+        return {quadrados};
     }
 
     getTamanhoAleatorio = i => {
@@ -75,12 +80,23 @@ class Fundo3D extends React.Component {
         return 0.05 + inteiroAleatorio(tamanhoMinimo*100, tamanhoMaximo*100)/100;
     }
 
+    mudarFundo = () => {
+        this.setState({coordenadasMouseLoucas: this.props.coordenadas})
+        this.animacaoLouca = setInterval(() => {
+            this.setState({coordenadasMouseLoucas: multiplicarArray(this.state.coordenadasMouseLoucas, 1.3)});
+        }, 20);
+        setTimeout(() => {
+            clearInterval(this.animacaoLouca)
+            this.setState({coordenadasMouseLoucas: false, ...this.gerarQuadrados()})
+        }, 500);
+    }
+
     render() {
         return (
-            <div id='#fundo-animacao-3d' className='animacao-3d'>
-                {this.quadrados.map((q, i) => {
+            <div id='fundo-animacao-3d' className='animacao-3d' onClick={this.mudarFundo}>
+                {this.state.quadrados.map((q, i) => {
                     var Componente = q;
-                    return <Componente key={i} coordenadasMouse={this.props.coordenadas}/>;
+                    return <Componente key={i} coordenadasMouse={this.state.coordenadasMouseLoucas || this.props.coordenadas}/>;
                 })}
             </div>
         );

@@ -73,7 +73,7 @@ class BarraPesquisa extends React.Component {
         var sel = this.arrayResultados[this.state.indiceResultadoSelecionado];
         var idElemento = sel.estrofe === this.props.elementos[sel.elemento].slides[sel.slide].textoArray.length 
                          ? 'textoTitulo' 
-                         : 'textoArray' + sel.estrofe;
+                         : 'textoArray-' + sel.estrofe;
         var elemento = document.getElementById(idElemento)
         if (elemento) elemento.classList.add(classeMarcada);
         for (var s of spansConteudo) {
