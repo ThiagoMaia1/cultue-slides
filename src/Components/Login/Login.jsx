@@ -7,6 +7,9 @@ import { checarLogin } from './ModulosLogin';
 import SelectCargo from './SelectCargo';
 import QuadroNavbar from '../NavBar/QuadroNavbar';
 import { store } from '../../index';
+import { eEmailValido } from '../../FuncoesGerais';
+
+const msgEmailInvalido = 'Endereço de e-mail inválido.';
 
 function getMensagemErro(error) {
     var codigo = error.code.replace('auth/', '');
@@ -18,7 +21,7 @@ function getMensagemErro(error) {
         case 'user-disabled':
             return 'Usuário desabilitado.';
         case 'invalid-email':
-            return 'Endereço de e-mail inválido.';
+            return msgEmailInvalido;
         case 'email-already-in-use':
             return 'Já existe uma conta cadastrada para esse e-mail.';
         case 'operation-not-allowed':
@@ -26,7 +29,32 @@ function getMensagemErro(error) {
         case 'weak-password':
             return 'Defina uma senha mais forte.';
         default:
-            return '';
+            return codigo;
+    }
+}
+
+class MenuLogado extends React.Component {
+    
+    logOut = () => {
+        firebaseAuth.signOut()
+        const tryLoggedOutUser = () => {
+            if (store.getState().usuario.uid) {
+                timeoutLogout();
+            } else {
+                this.props.history.push('/logout')
+            }
+        }
+        const timeoutLogout = () => setTimeout(() => tryLoggedOutUser(), 100);
+        tryLoggedOutUser();
+    }
+
+    render() {
+        return (
+            <>
+                <button className='botao-azul botao' onClick={() => this.props.history.push('/perfil')}>Meu Perfil</button>  
+                <button className='botao limpar-input' onClick={this.logOut}>✕ Sair</button>
+            </>
+        )
     }
 }
 
@@ -35,7 +63,7 @@ class Login extends React.Component {
     constructor (props) {
         super(props);
         this.refUsername = React.createRef();
-        this.state = {email: '', senha: '', erro: '', nomeCompleto: '', logando: true, cadastrando: false}
+        this.state = {email: '', senha: '', erro: '', nomeCompleto: '', logando: true, cadastrando: false, esqueceuSenha: false}
     }
 
     entrar = event => {
@@ -73,12 +101,32 @@ class Login extends React.Component {
         this.props.callback();
     }
 
+    recuperarSenha = () => {
+        // firebaseAuth.onAuthStateChanged(() => null);
+        firebaseAuth.sendPasswordResetEmail(this.state.email)
+            .then(() =>
+                alert('Email de recuperação de senha enviado')
+            )
+            .catch(erro =>
+                this.setState({erro: getMensagemErro(erro)})
+            );
+    }
+
+    onClick = e => {
+        if (!eEmailValido(this.state.email)) {
+            this.setState({erro: msgEmailInvalido}); 
+        } else {
+            this.state.esqueceuSenha
+                ? this.recuperarSenha()
+                : this.entrar(e)
+        }
+    }
+
     callbackLogin = user => {
         if (user.uid && (!user.nomeCompleto || !user.cargo)) {
             this.setState({cadastrando: true, logando: false});
         }
         this.removerEventListener();
-        // if(user.uid) this.props.history.push('/app');
     }
 
     componentDidMount = async () => {
@@ -91,35 +139,21 @@ class Login extends React.Component {
         this.removerEventListener();
     }
 
-    logOut = () => {
-        firebaseAuth.signOut()
-        const tryLoggedOutUser = () => {
-            if (store.getState().usuario.uid) {
-                timeoutLogout();
-            } else {
-                this.props.history.push('/login')
-            }
-        }
-        const timeoutLogout = () => setTimeout(() => tryLoggedOutUser(), 100);
-        tryLoggedOutUser();
-    }
-
     render() {
         const interiorLogin = (
             <div id='quadro-login'>
                 {this.props.usuario.uid
-                    ? <>
-                        <button className='botao-azul botao' onClick={() => this.props.history.push('/perfil')}>Meu Perfil</button>  
-                        <button className='botao limpar-input' onClick={this.logOut}>✕ Sair</button>
-                    </>
+                    ? <MenuLogado history={this.props.history} />
                     : <>
-                        <form className='inputs-login'> 
+                        <form className='inputs-login'>
                             {this.state.logando ?
                                 <>
                                     <input ref={this.refUsername} id='username' className='combo-popup' placeholder='E-mail' type='email' value={this.state.email}
                                             onChange={e => this.setState({email: e.target.value})}></input>
-                                    <input id='password' className='combo-popup' placeholder='Senha' type='password' value={this.state.senha}
+                                    {this.state.esqueceuSenha ? null
+                                        : <input id='password' className='combo-popup' placeholder='Senha' type='password' value={this.state.senha}
                                             onChange={e => this.setState({senha: e.target.value})}></input>
+                                    }
                                 </>
                                 : null
                             }   
@@ -134,9 +168,11 @@ class Login extends React.Component {
                                 <div className='mensagem-erro'>
                                     <div>{this.state.erro}</div>
                                 </div>
-                                <button className='botao-azul botao' onClick={this.entrar}>Entrar</button>
+                                <button className='botao-azul botao' onClick={this.onClick}>
+                                    {this.state.esqueceuSenha ? 'Recuperar Senha' : 'Entrar'}
+                                </button>
                         </form>
-                        {this.state.cadastrando ? null :
+                        {this.state.cadastrando || this.state.esqueceuSenha ? null :
                             <>
                                 <hr></hr>
                                 <button id='login-google' className='botao limpar-input' 
@@ -144,7 +180,7 @@ class Login extends React.Component {
                                 <button id='cadastre-se' className='itens' onClick={this.cadastrando}>
                                     Cadastre-se
                                 </button>
-                                <button id='esqueceu-senha'>Esqueceu sua senha?</button>
+                                <button id='esqueceu-senha' onClick={() => this.setState({esqueceuSenha: true})}>Esqueceu sua senha?</button>
                             </>
                         }
                     </>

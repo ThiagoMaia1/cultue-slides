@@ -62,16 +62,16 @@
 //   ✔️ Barra de pesquisa está com muitos erros (editando todas as estrofes de todos os slides).
 //   ✔️ Realçar apenas 1 resultado ao pesquisar.
 //   ✔️ Ao abrir app, slide 1 é selecionado.
+//   ✔️ Pular splash para página de login ao fazer logout.
 //   ✔️ Carrossel do Input Imagem não vai até o final.*/
 // Errinhos:
 //   Redividir quando o texto de um slide é todo deletado.
 //   Problemas ao dividir texto em duas colunas
-//   Edição do conteúdo do parágrafo dando muitos erros (falha ao perder foco, não exibe cursor).
+//   Edição do conteúdo do parágrafo dando alguns erros (falha ao perder foco, não exibe cursor).
 //   Slides perdendo o tampão ao prever galeria.
 //   Imagem de menor qualidade não carrega se a de maior qualidade não tiver carregado.
 //   Na exportacao pegar apenas as de qualidade certa.
-//   Pular splash para página de login ao fazer logout.
-//   
+//   Nova Apresentação usuário criada a cada login.
 
 /*// Features:
 //   ✔️ Envio de imagens.
@@ -123,6 +123,7 @@
 //   Otimizar mobile
 //   Reutilizar links de compartilhamento.
 //   Indicar que há estilização nos slides/elementos.
+//   Lista de slides no arquivo html.
 //   Blend-mode tampão*/
 //
 // Negócio:
@@ -132,6 +133,7 @@
 //   Comprar domínio.
 //   Configurar site para ser encontrado pelo google.
 //   Pedir amigos para compartilharem.
+//   Logos "Apoio"
 
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -141,7 +143,7 @@ import { createStore } from 'redux';
 import hotkeys from 'hotkeys-js';
 import { getEstiloPadrao, Estilo, getPadding, tiposElemento, getDadosMensagem } from './Element.js';
 import { selecionadoOffset, getSlidePreview } from './Components/MenuExportacao/Exportador';
-import { atualizarApresentacao, getApresentacaoPadrao, definirApresentacaoAtiva, zerarApresentacao, autorizacaoEditar, ratioPadrao } from './firestore/apresentacoesBD';
+import { atualizarApresentacao, getApresentacaoPadrao, definirApresentacaoAtiva, zerarApresentacao, autorizacaoEditar, ratioPadrao, autorizacaoPadrao } from './firestore/apresentacoesBD';
 import { atualizarRegistro, slidesPadraoDefault } from './firestore/apiFirestore';
 import { keysTutoriais } from './Components/Tutorial/Tutorial';
 
@@ -160,7 +162,6 @@ const redividirSlides = (elementos, sel, ratio) => {
   return elementos;
 }
 
-const autorizacaoPadrao = 'editar';
 const numeroAcoesPropaganda = 20;
 
 var defaultList = {...getApresentacaoPadrao(), 
@@ -170,7 +171,7 @@ var defaultList = {...getApresentacaoPadrao(),
   ratio: {...ratioPadrao}
 };
 
-export const reducerElementos = function (state = defaultList, action) {
+export const reducerElementos = function (state = defaultList, action, usuario) {
 
   var el = [...state.elementos];
   var sel = action.selecionado || state.selecionado;
@@ -181,6 +182,8 @@ export const reducerElementos = function (state = defaultList, action) {
   switch (action.type) {
     case 'definir-apresentacao-ativa':
       var autorizacao = action.apresentacao.autorizacao || autorizacaoPadrao;
+      if (action.apresentacao.idUsuario === usuario.uid && autorizacao !== 'baixar')
+        autorizacao = 'editar';
       action.apresentacao.autorizacao = autorizacao;
       sel = selecionadoOffset(action.elementos, getApresentacaoPadrao().selecionado, 0, !autorizacaoEditar(autorizacao));
       return {...state, apresentacao: action.apresentacao, elementos: action.elementos, ratio: action.ratio, selecionado: sel};
@@ -326,7 +329,7 @@ function undoable(reducer) {
         novosItensTutorial = itensTutorial.filter(n => !feitos.includes(n))
         return {...state, usuario: action.usuario, tutoriaisFeitos: feitos, itensTutorial: novosItensTutorial};
       case 'logout':
-        return {...state, usuario: usuarioAnonimo}
+        return {...state, usuario: usuarioAnonimo};
       case 'toggle-search':
         return {...state, searchAtivo: !searchAtivo};
       case 'ativar-popup-confirmacao':
@@ -380,13 +383,13 @@ function undoable(reducer) {
           notificacoes: notificacoesAtualizado
         }
       case 'editar-slide-temporariamente':
-        newPresent = reducer(deepSpreadPresente(present), {...action, type: 'editar-slide'})
+        newPresent = reducer(deepSpreadPresente(present), {...action, type: 'editar-slide'}, usuario)
         return {...state, 
           present: newPresent, 
           previousTemp: previousTemp || deepSpreadPresente(present), 
           slidePreview: getSlidePreview(newPresent)};
       default:
-        newPresent = reducer(deepSpreadPresente(present), action);
+        newPresent = reducer(deepSpreadPresente(present), action, usuario);
         notificacoesAtualizado = getNotificacoes(notificacoesAtualizado, newPresent.notificacao);
         if (previousTemp) present = previousTemp;
         var mudanca = houveMudanca(present, newPresent);
@@ -500,7 +503,8 @@ const atalhosAdicionar = {ctrlm: 0, ctrlb: 1, ctrll: 2, ctrli: 3, ctrld: 4};
 hotkeys('right,left,up,down,ctrl+z,ctrl+shift+z,ctrl+y,ctrl+o,ctrl+m,ctrl+i,ctrl+b,ctrl+l,ctrl+d,ctrl+f', function(event, handler){
   event.preventDefault();
   var offset = 0;
-  if (store.getState().itensTutorial.length) return;
+  const state = store.getState();
+  if (state.itensTutorial.length) return;
   switch (handler.key) {
       case 'right':
       case 'down':
@@ -518,7 +522,7 @@ hotkeys('right,left,up,down,ctrl+z,ctrl+shift+z,ctrl+y,ctrl+o,ctrl+m,ctrl+i,ctrl
         store.dispatch({type: 'REDO'});
         break;
       case 'ctrl+o':
-        zerarApresentacao(store.getState().usuario);
+        zerarApresentacao(state.usuario, state.apresentacao);
         break;
       case 'ctrl+f':
         store.dispatch({type: 'toggle-search'});

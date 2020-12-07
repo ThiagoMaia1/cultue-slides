@@ -8,7 +8,8 @@ import history, { getIdHash } from '../history';
 const colecaoApresentacoes = 'apresentações';
 const colecaoPermissoes = 'permissões';
 
-const autorizacoesApresentacao = ['baixar', 'ver', 'exportar', 'editar']
+const autorizacoesApresentacao = ['ver', 'baixar', 'exportar', 'editar'];
+export const autorizacaoPadrao = autorizacoesApresentacao[0];
 
 const wWidth = window.screen.width;
 const wHeight = window.screen.height;
@@ -42,7 +43,7 @@ export const gerarNovaApresentacao = async (idUsuario, elementos, ePadrao, ratio
 
 export const definirApresentacaoAtiva = async (usuario, apresentacao = {}, elementos = null, ratio = null, mudarURL = true) => {
   if (!apresentacao) apresentacao = {};
-  if (!apresentacao.autorizacao) apresentacao.autorizacao = 'editar';
+  if (!apresentacao.autorizacao) apresentacao.autorizacao = autorizacaoPadrao;
   var novaApresentacao = apresentacao;
   var zerada = false;
   if (apresentacao.elementos)
@@ -57,7 +58,7 @@ export const definirApresentacaoAtiva = async (usuario, apresentacao = {}, eleme
     elementos = getElementosPadrao(usuario);
   }
   if (!usuario.uid) {
-    novaApresentacao = {id: 0}
+    if(!apresentacao.id) novaApresentacao = {id: 0}
   } else {
     limparApresentacoesVazias(usuario.uid);
     if (!apresentacao.id)
@@ -163,19 +164,19 @@ export const getSlideMestreApresentacao = elementos => {
   return getElementosConvertidos(elementos.filter(e => e.eMestre));
 }
 
-export const zerarApresentacao = usuario => {
+export const zerarApresentacao = (usuario, apresentacao) => {
   ativarPopupConfirmacao(
     'simNao',
     'Atenção', 
     'Deseja iniciar uma nova apresentação?' + 
-      (!usuario.uid ? '\n\n(A apresentação atual será excluída)' : ''), 
+      (!apresentacao.id ? '\n\n(A apresentação atual será excluída)' : ''), 
     fazer => {
       if(fazer) definirApresentacaoAtiva(usuario);
     }
   );
 }
 
-export const getApresentacaoComLocation = async (location) => {
+export const getApresentacaoComLocation = async (location, idUsuario) => {
   var apresentacao;
   if (location.hash) {
     var idHash = getIdHash(location);

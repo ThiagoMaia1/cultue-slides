@@ -25,7 +25,7 @@ export const checarLogin = (callbackLogin) => {
         var user = await gerarDocumentoUsuario(userAuth) || {};
         var apresentacao = {elementos: elementos};
         if (primeiraTentativa) {
-            apresentacao = await getApresentacaoComLocation(history.location) || 
+            apresentacao = await getApresentacaoComLocation(history.location, user.uid) || 
                            await getUltimaApresentacaoUsuario(user);
             primeiraTentativa = false;
         } else {

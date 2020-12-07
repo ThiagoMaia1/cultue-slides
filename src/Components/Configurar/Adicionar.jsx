@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+// import './Adicionar.css';
 import { connect } from 'react-redux';
 import { tiposElemento, getNomeInterfaceTipo } from '../../Element';
 

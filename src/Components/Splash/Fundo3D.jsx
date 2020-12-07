@@ -81,14 +81,21 @@ class Fundo3D extends React.Component {
     }
 
     mudarFundo = () => {
-        this.setState({coordenadasMouseLoucas: this.props.coordenadas})
+        this.setState({coordenadasMouseLoucas: multiplicarArray(this.props.coordenadas, 0.05)})
         this.animacaoLouca = setInterval(() => {
-            this.setState({coordenadasMouseLoucas: multiplicarArray(this.state.coordenadasMouseLoucas, 1.3)});
+            this.setState({coordenadasMouseLoucas: multiplicarArray(this.state.coordenadasMouseLoucas, 1.8)});
         }, 20);
         setTimeout(() => {
             clearInterval(this.animacaoLouca)
-            this.setState({coordenadasMouseLoucas: false, ...this.gerarQuadrados()})
-        }, 500);
+            this.setState({...this.gerarQuadrados(), coordenadasMouseLoucas: multiplicarArray(this.state.coordenadasMouseLoucas, -1)})
+            this.animacaoLouca = setInterval(() => {
+                this.setState({coordenadasMouseLoucas: multiplicarArray(this.state.coordenadasMouseLoucas, 1/1.8)});
+            }, 20);
+            setTimeout(() => {
+                clearInterval(this.animacaoLouca)
+                this.setState({coordenadasMouseLoucas: false})
+            }, 300);
+        }, 300);
     }
 
     render() {

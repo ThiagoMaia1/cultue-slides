@@ -3,12 +3,9 @@ import { connect } from 'react-redux';
 import { gerarNovoRegistro, atualizarRegistro, excluirRegistro } from '../../firestore/apiFirestore';
 import Checkbox from '../Checkbox/Checkbox';
 import { ativarPopupConfirmacao } from '../Popup/PopupConfirmacao';
+import { eEmailValido } from '../../FuncoesGerais';
 
 export const colecaoEmails = 'emails';
-
-export const eEmailValido = enderecoEmail => {
-    return /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/.test(enderecoEmail);
-}
   
 class ItemListaEmails extends React.Component {
   

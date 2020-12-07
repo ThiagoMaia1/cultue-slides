@@ -95,15 +95,19 @@ class SlideFormatado extends Component {
     }
 }
 
-const ImgNormal = ({imagem, px}) => <img id='fundo-preview' src={require('' + getPathImagemReduzida(imagem.src, px))} alt=''/>
+const ImgNormal = ({src, id}) => <img id={id} className='imagem-fundo-preview' src={src} alt=''/>
 
 const Img = ({imagem, proporcao}) => {
     if (imagem.src.substr(0, 4) === 'blob') {
-        return <img id='fundo-preview' src={imagem.src} alt='' />
+        return <ImgNormal src={imagem.src}/>
     } else {
-        var pixeis = [[300, 0], [600, 0.3], [null, 0.65]];
+        var pixeis = [[300, 0], [600, 0.3]];
         return pixeis.reduce((resultado, px) => {
-            if(px[1] < proporcao) resultado.push(<ImgNormal imagem={imagem} px={px[0]}/>);
+            if(px[1] < proporcao) 
+                resultado.push(
+                    <ImgNormal key={px[0]} 
+                               id={!px[0] ? 'imagem-fundo-full' : ''}
+                               src={require('' + getPathImagemReduzida(imagem.src, px[0]))}/>);
             return resultado;            
         }, []);
     }

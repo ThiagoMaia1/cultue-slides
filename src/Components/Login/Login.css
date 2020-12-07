@@ -21,6 +21,17 @@
     height: 55%;
 }
 
+@media (max-width: 500px) {
+    .wraper-login {
+        flex-direction: column;
+    }
+    
+    #comece-usar div{
+        font-size: 200%;
+        padding: 4vh 10vw;
+    }
+}
+
 .wraper-login > * {
     pointer-events: all;
 }
@@ -88,4 +99,5 @@
 
 .quadro-centralizado {
     width: min-content;
+    justify-content: center !important;
 }

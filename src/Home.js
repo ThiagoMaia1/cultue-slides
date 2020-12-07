@@ -16,6 +16,11 @@ import history from './history';
 const paginas = [{nome: 'app', componente: App},
                  {nome: 'login', componente: PaginaLogin},
                  {nome: 'perfil', componente: Perfil, exigeLogin: true},
+                 {nome: 'splash', componente: Splash, semSplash: true},
+                 {nome: 'logout', componente: props => {
+                    window.history.replaceState(undefined, undefined, '/login');
+                    return <PaginaLogin {...props}/>}, semSplash: true
+                 },
                  {nome: '', componente: props => {
                     if (props.location.hash) {return <App/>}
                     else {return <Redirect to='/login'/>}
@@ -31,13 +36,16 @@ class Home extends Component {
             <PopupConfirmacao/>
             <Notificacoes/>
             <Switch>
-                {paginas.map((p, i) => (
+                {paginas.map(p => (
                     <Route exact path={'/' + p.nome} key={p.nome}
-                           component={sobreporSplash(p.nome, p.componente, p.exigeLogin, checarLogin, true, true, true)}
+                           component={
+                             p.semSplash 
+                              ? p.componente
+                              : sobreporSplash(p.nome, p.componente, p.exigeLogin, checarLogin, true, true, true)
+                            }
                     />
                     )    
                 )};
-                <Route exact path='/splash' component={Splash}/>
                 <Route render={() => <Redirect to='/login'/>} />
             </Switch>
         </Router>

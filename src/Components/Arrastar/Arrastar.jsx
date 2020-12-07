@@ -89,7 +89,7 @@ class Arrastar extends React.Component {
   }
 
 	render() {
-    var editavel = this.props.autorizacao === 'editar';
+    var editavel = this.props.apresentacao.autorizacao === 'editar';
     var sel = this.props.selecionado;
     return (
       <div className='coluna-lista-slides'>
@@ -105,7 +105,7 @@ class Arrastar extends React.Component {
                     style={{marginBottom: this.state.placeholder.posicao === 0 ? this.state.placeholder.tamanho + 'px' : '', 
                     display: this.props.elementos.length === 1 ? 'none' : ''}}
                     ref={sel.elemento === 0 ? this.refElemento : null}>
-                    <div data-id={0} id='criar-nova-apresentacao' className='botao-quadradinho quadradinho-canto' onClick={() => zerarApresentacao(this.props.usuario)}>*</div>
+                    <div data-id={0} id='criar-nova-apresentacao' className='botao-quadradinho quadradinho-canto' onClick={() => zerarApresentacao(this.props.usuario, this.props.apresentacao)}>*</div>
                     Slide-Mestre
                   </div>
                 : null
@@ -147,7 +147,7 @@ const mapState = function (state) {
     elementos: state.present.elementos, 
     selecionado: state.present.selecionado, 
     popupAdicionar: state.present.popupAdicionar,
-    autorizacao: state.present.apresentacao.autorizacao,
+    apresentacao: state.present.apresentacao,
     usuario: state.usuario
   }
 }

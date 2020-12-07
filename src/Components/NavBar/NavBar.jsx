@@ -39,11 +39,11 @@ class NavBar extends React.Component {
 
   render() {
     var u = this.props.usuario;
-    var eDownload = this.props.autorizacao !== 'baixar';
+    var eDownload = this.props.apresentacao.autorizacao !== 'baixar';
     return (
       <div id="navbar">
           <div id='botoes-navbar'>
-            <button onClick={() => zerarApresentacao(this.props.usuario)}>Nova Apresentação</button>
+            <button onClick={() => zerarApresentacao(this.props.usuario, this.props.apresentacao)}>Nova Apresentação</button>
             {eDownload
               ? <>
                   <button onClick={() => definirApresentacaoPadrao(u.uid, this.props.elementos, this.props.ratio, 'atual')}>Definir Padrão</button>
@@ -66,7 +66,7 @@ class NavBar extends React.Component {
               : null
             }
           </div>
-          <div id='mensagem-autorizacao'>{this.props.autorizacao === 'ver' ? 'Somente Leitura' : ''}</div>
+          <div id='mensagem-autorizacao'>{this.props.apresentacao.autorizacao === 'ver' ? 'Somente Leitura' : ''}</div>
           <div id='info-usuario' onClick={() => this.toggleQuadroLogin(true)}>
             {u.uid
               ? <img className='foto-usuario pequena' src={u.photoURL || require('./Usuário Padrão.png')} alt='Foto Usuário'></img>
@@ -89,7 +89,7 @@ const mapState = state => {
   return {
     usuario: state.usuario, 
     elementos: state.present.elementos, 
-    autorizacao: state.present.apresentacao.autorizacao, 
+    apresentacao: state.present.apresentacao, 
     ratio: state.present.ratio};
 }
 

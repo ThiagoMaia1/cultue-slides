@@ -120,3 +120,7 @@ export const getImgBase64 = (img, frameW = null, frameH = null, callback = null)
     if (callback) callback(dataURL);
     return dataURL;
 }
+
+export const eEmailValido = enderecoEmail => {
+    return /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/.test(enderecoEmail);
+}
