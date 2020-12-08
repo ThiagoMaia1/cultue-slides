@@ -57,7 +57,7 @@ const estiloPadrao = {
   texto: {fontFamily: fontePadrao}, 
   titulo: {fontSize: 3, height: 0.25, paddingRight: 0.08, textAlign: 'center'}, 
   paragrafo: {fontSize: 1.5, paddingRight: 0.08, lineHeight: 1.9}, 
-  fundo: {src: './Galeria/Fundos/Cor Sólida.jpg'}, 
+  fundo: {}, 
   tampao: {backgroundColor: '#ffffff', opacity: 0.2},
   imagem: {padding: 0.02}
 };
@@ -216,7 +216,7 @@ export default class Element {
   }
 
   conversorFirestore = thisP => {
-    return {
+    var elementoSimplificado = {
       tipo: thisP.tipo,
       titulo: thisP.titulo,
       texto: thisP.texto,
@@ -226,6 +226,7 @@ export default class Element {
       input2: thisP.input2 || null,
       slides: thisP.slides
     }
+    return elementoSimplificado;
   }
 
   descoversorFirestore = elementoDB => {

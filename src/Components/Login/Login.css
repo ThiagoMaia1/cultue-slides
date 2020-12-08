@@ -34,9 +34,12 @@
 
 .wraper-login > * {
     pointer-events: all;
+    min-width: 23vw;
+    max-width: 23vw;
 }
 
-#quadro-login input, #quadro-login hr, #quadro-login select {
+
+#quadro-login, #quadro-login input, #quadro-login hr, #quadro-login select {
     width: 100%;
 }
 
@@ -50,6 +53,15 @@
 
 #quadro-login hr {
     border-top: 1px solid var(--platinum);
+}
+
+#quadro-login.cadastrando > *:not(div) {
+    margin-bottom: 0.7vh;
+}
+
+#mensagem-redefinicao-senha {
+    text-align: center;
+    font-size: 150%;
 }
 
 .inputs-login {

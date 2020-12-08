@@ -12,8 +12,9 @@ class AdicionarImagem extends Component {
 
     adicionarSlideImagem = imgs => {
         var imagensValidas = imgs.filter(i => i.width);
-        var popupAdicionar = {input1: this.state.titulo, input2: imagensValidas};
-        this.props.dispatch({type: 'inserir', elemento: new Element('Imagem', this.state.titulo, [], imagensValidas),
+        var srcs = imagensValidas.map(i => ({src: i.src, ...(i.idUpload ? {idUpload: i.idUpload} : {})}));
+        var popupAdicionar = {input1: this.state.titulo, input2: srcs};
+        this.props.dispatch({type: 'inserir', elemento: new Element('Imagem', this.state.titulo || imagensValidas[0].alt, [], srcs),
                              popupAdicionar: popupAdicionar, elementoASubstituir: this.props.elementoASubstituir})
     }
 

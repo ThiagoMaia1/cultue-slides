@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import './style.css';
-import listaFundos from './listaFundos.json';
+import './Galeria.css';
+import listaFundos from './Fundos/listaFundos.json';
 import { connect } from 'react-redux';
 import Img from './Img';
-import Carrossel from '../../Carrossel/Carrossel';
-import InputImagem from '../../AdicionarImagem/InputImagem';
-import Popup from '../../Popup/Popup';
-import { toggleAnimacao } from '../../Animacao/animacaoCoordenadas.js'
+import Carrossel from '../Carrossel/Carrossel';
+import InputImagem from '../AdicionarImagem/InputImagem';
+import Popup from '../Popup/Popup';
+import { toggleAnimacao } from '../Animacao/animacaoCoordenadas.js'
 
 class Galeria extends Component {
 
@@ -36,7 +36,7 @@ class Galeria extends Component {
     getImagens() {
         var imagens = [];
         for (var i of listaFundos.imagens) {
-            imagens.push({fundo: {src:'./Fundos/' + i.path}, alt: i.path.split('.')[0], tampao: i.tampao, texto: {color: i.color}})
+            imagens.push({fundo: {path: i.path}, alt: i.path ? i.path.split('.')[0] : 'Cor Sólida', tampao: i.tampao, texto: {color: i.color}})
         }
         return imagens;
     }
@@ -45,13 +45,26 @@ class Galeria extends Component {
         this.setState({popupCompleto: (
             <Popup ocultarPopup={() => this.setState({popupCompleto: null})}>
                 <h4>Enviar Fundo Personalizado</h4>
-                <InputImagem callback={this.enviarImagensFundo}/>
+                <InputImagem callback={this.enviarImagensFundo} callbackUpload={this.callbackUpload}/>
             </Popup>
         ), painelAdicionar: false});
     }
 
+    callbackUpload = (idUpload, urlUpload) => {
+        var imgs = [...this.state.imagens];
+        this.setState({
+            imagens: imgs.map(i => {
+                if(i.fundo.idUpload === idUpload) 
+                    i.fundo.src = urlUpload;
+                return i;
+            })
+        });
+    }
+
     enviarImagensFundo = imagens => {
-        var imgs = imagens.map(i => ({imagem: i, fundo: {src: i.src}, alt: i.alt, height: i.height, width: i.width, texto: {color: '#000'}, tampao: {opacity: 0}}))
+        var imgs = imagens.map(i => (
+            {imagem: i, fundo: {src: i.src, idUpload: i.idUpload}, alt: i.alt, height: i.height, width: i.width, texto: {color: '#000'}, tampao: {opacity: 0}}
+        ))
         this.setState({imagens: [...imgs, ...this.state.imagens]})
     }
 
@@ -76,8 +89,8 @@ class Galeria extends Component {
                                 <div className='div-img' onClick={this.abrirPopup}>
                                     <div id='botao-enviar-fundo' className='imagem-galeria'>Enviar Fundo Personalizado</div>
                                 </div>
-                                {this.state.imagens.map((imagem, i) => (
-                                    <Img key={i} imagem={imagem} />
+                                {this.state.imagens.map(img => (
+                                    <Img key={img.path || img.src} imagem={img} />
                                     ))
                                 }
                                 <div className='pseudo-margem-galeria'></div>

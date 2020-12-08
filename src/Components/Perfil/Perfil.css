@@ -14,31 +14,6 @@
     flex: 0 0;
 }
 
-.container-seta-voltar {
-    width: 20vw;
-    height: 25vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-#seta-voltar {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 8vw;
-    height: 8vw;
-    background-color: var(--azul-forte);
-    border-radius: 100vw;
-    color: white;
-    box-shadow: var(--box-shadow);
-    cursor: pointer;
-}
-
-#seta-voltar:hover {
-    background-color: var(--azul-oxford);
-}
-
 #organizador-perfil {
     flex: 1 0;
     display: flex;

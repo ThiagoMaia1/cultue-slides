@@ -1,0 +1,21 @@
+
+.container-seta-voltar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#seta-voltar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--azul-forte);
+    border-radius: 100vw;
+    color: white;
+    box-shadow: var(--box-shadow);
+    cursor: pointer;
+}
+
+#seta-voltar:hover {
+    background-color: var(--azul-oxford);
+}

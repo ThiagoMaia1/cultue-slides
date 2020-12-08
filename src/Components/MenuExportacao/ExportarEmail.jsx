@@ -154,3 +154,18 @@ const mapState = state => {
 
 export default connect(mapState)(ExportarEmail);
 
+// <div style="background-color:#3757a9;height:70px;width:100%"></div><div style="padding:25px; font-family:'Roboto'; text-align: center; font-size: 15px;">
+//           <p><b>Olá!</b> Clique no botão a seguir para redefinir sua senha do aplicativo Cultue.</p>
+// <br>
+// <div><a style="color: white; text-decoration: none; background-color: #3757a9; padding:1.5vh; font-size: 110%; border-radius:0.8vh" href="%LINK%" target="_blank" >Redefinir Senha</a></div>
+// <br>
+// <p>Se você não solicitou uma redefinição de senha, ignore este e-mail.</p>
+// <p><i>Equipe Cultue</i></p>
+//         </div>
+// <a href="https://slidesigreja-ff51f.web.app/login" rel="noopener noreferrer" target="_blank" data-saferedirecturl="https://slidesigreja-ff51f.web.app/login">
+//           <div style="background-color:#3757a9; height: 20px; width:100%"></div>
+// <div style="width:100%;padding: 20px 0;">
+// <img src="https://firebasestorage.googleapis.com/v0/b/slidesigreja-ff51f.appspot.com/o/public%2FLogoCultue.png?alt=media&amp;token=e525c9f9-b0cf-4ffa-a595-77998ceca9b3" alt="Logotipo Cultue" style="object-fit: contain; display: block; margin: auto">
+// </div>
+// <div style="background-color:#3757a9;height:20px;width:100%"></div>
+//  </a>

@@ -226,8 +226,8 @@ class Carrossel extends Component {
                         const Seta = s;
                         return (
                             <div className="seta-galeria" 
-                                onMouseEnter={() => this.deslizar(i)} 
-                                onMouseLeave={this.pararDeslizar}
+                                onMouseOver={() => this.deslizar(i)} 
+                                onMouseOut={this.pararDeslizar}
                                 onClick={e => this.clickSeta(e, i)}
                                 style={{...this.estiloSeta, ...this.state[estilosSeta[i]]}}
                                 key={i}>

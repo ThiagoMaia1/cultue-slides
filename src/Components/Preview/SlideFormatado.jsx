@@ -3,10 +3,11 @@ import './style.css';
 import { connect } from 'react-redux';
 import Estrofes from './Estrofes';
 import { getFonteBase } from '../../Element';
+import { getPathImagem } from './Img';
 import { limparHighlights } from '../BarraPesquisa/BarraPesquisa';
 import { markupParaSuperscrito } from '../Preview/TextoPreview';
-import { getPathImagemReduzida } from './Galeria/Img';
 import { ratioPadrao } from '../../firestore/apresentacoesBD';
+
 
 class SlideFormatado extends Component {
     
@@ -45,7 +46,9 @@ class SlideFormatado extends Component {
         var cor = this.props.slidePreview.estilo[nomeObjeto].color;
         if (!cor) return '';
         var eClara = true;
-        var partesCor = [cor.slice(1,3), cor.slice(3, 5), cor.slice(5)];
+        var partesCor = cor.length === 7 
+                        ? [cor.slice(1,3), cor.slice(3, 5), cor.slice(5)]
+                        : [cor.slice(1,2), cor.slice(2,3), cor.slice(3,4)].map(c => c.repeat(2));
         for (var p of partesCor) {
             if (parseInt('0x' + p) < 210) {
                 eClara = false;
@@ -95,22 +98,23 @@ class SlideFormatado extends Component {
     }
 }
 
-const ImgNormal = ({src, id}) => <img id={id} className='imagem-fundo-preview' src={src} alt=''/>
+const ImgNormal = ({urlImgs, id}) => (
+    <div id={id} className='imagem-fundo-preview' style={{backgroundImage: urlImgs}} />
+)
 
 const Img = ({imagem, proporcao}) => {
-    if (imagem.src.substr(0, 4) === 'blob') {
-        return <ImgNormal src={imagem.src}/>
-    } else {
-        var pixeis = [[300, 0], [600, 0.3]];
-        return pixeis.reduce((resultado, px) => {
+    var urlImgs = '';
+    if (imagem.src) {
+        urlImgs = 'url("' + imagem.src + '")';
+    } else if(imagem.path) {
+        var pixeis = [[300, 0], [600, 0.3], [null, 0.65]];
+        urlImgs = pixeis.reverse().reduce((resultado, px, i) => {
             if(px[1] < proporcao) 
-                resultado.push(
-                    <ImgNormal key={px[0]} 
-                               id={!px[0] ? 'imagem-fundo-full' : ''}
-                               src={require('' + getPathImagemReduzida(imagem.src, px[0]))}/>);
+                resultado.push('url("' + require('' + getPathImagem(imagem.path, px[0])) + '")');
             return resultado;            
-        }, []);
+        }, []).join(', ');
     }
+    return <ImgNormal urlImgs={urlImgs}/>
 };
 
 const mapState = function (state) {

@@ -57,6 +57,7 @@
 .imagem-galeria {
     height: 100%;
     width: 100%;
+    background: white;
 }
 
 .texto-mini-preview {

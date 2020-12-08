@@ -63,15 +63,17 @@
 //   ✔️ Realçar apenas 1 resultado ao pesquisar.
 //   ✔️ Ao abrir app, slide 1 é selecionado.
 //   ✔️ Pular splash para página de login ao fazer logout.
+//   ✔️ Imagem de menor qualidade não carrega se a de maior qualidade não tiver carregado.
 //   ✔️ Carrossel do Input Imagem não vai até o final.*/
 // Errinhos:
 //   Redividir quando o texto de um slide é todo deletado.
 //   Problemas ao dividir texto em duas colunas
 //   Edição do conteúdo do parágrafo dando alguns erros (falha ao perder foco, não exibe cursor).
 //   Slides perdendo o tampão ao prever galeria.
-//   Imagem de menor qualidade não carrega se a de maior qualidade não tiver carregado.
-//   Na exportacao pegar apenas as de qualidade certa.
+//   Na exportacao pegar apenas as imagens de qualidade certa.
 //   Nova Apresentação usuário criada a cada login.
+//   Otimizar trocas de dados com BD.
+//   Padding bottom redividir slides um pouco errado.
 
 /*// Features:
 //   ✔️ Envio de imagens.
@@ -98,10 +100,10 @@
 //   ✔️ Tela de propagandas
 //   ✔️ Criar texto livre padrão personalizado
 //   ✔️ Selecionar resolução personalizada.
+//   ✔️ Exportação de slides de imagem
+//   ✔️ Recuperar senha
 //   ✔️ Exportar como Power Point.*/
 //   Editar tamanho da imagem direto no preview.
-//   Exportação de slides de imagem
-//   Recuperar senha
 //   Nomear apresentacao
 //   Tela perfil do usuário: informações básicas, predefinições, assinatura. 
 //   Enviar por e-mail.
@@ -111,6 +113,7 @@
 //   Persistir redux
 //   Melhorar pesquisa de letra de música usando google.
 //   Incluir fontes como base64.
+//   Olhinho de ver senha no login.
 
 /*/ Features não necessários:
 //   Exportar como PDF.
@@ -124,6 +127,8 @@
 //   Reutilizar links de compartilhamento.
 //   Indicar que há estilização nos slides/elementos.
 //   Lista de slides no arquivo html.
+//   Página de redefinição de senha em português.
+//   Gradiente como fundo.
 //   Blend-mode tampão*/
 //
 // Negócio:
@@ -223,6 +228,8 @@ export const reducerElementos = function (state = defaultList, action, usuario) 
       var est = s.estilo;
       if (action.objeto === 'estilo') {
         s.estilo = {...action.valor};
+      } else if(action.objeto === 'imagem') {
+        s.imagem = {...s.imagem, ...action.valor};
       } else if (action.objeto === 'textoArray') {
         if (action.valor === '') {
           s.textoArray.splice(action.numero, 1);
@@ -240,6 +247,8 @@ export const reducerElementos = function (state = defaultList, action, usuario) 
       } else if (Object.keys(action.valor)[0] === 'paddingRight') {
         est[action.objeto].paddingRight = action.valor.paddingRight;
         est[action.objeto] = getPadding(est, action.objeto);
+      } else if (action.objeto === 'fundo') {
+        est.fundo = {...action.valor};
       } else {
         est[action.objeto] = {...est[action.objeto], ...action.valor};
       }

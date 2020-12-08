@@ -1,26 +1,50 @@
-import React, { Component } from 'react';
+// import React, { Component } from 'react';
 
-class ComboCapVers extends Component {
+// class ComboCapVers extends Component {
 
-    constructor (props) {
-        super(props);
-    }
+//     constructor (props) {
+//         super(props);
+//     }
 
-    limitarInput(e) {
+//     limitarInput(e) {
 
-    }
+//     }
 
-    render {
-        return (
-            <input className='combo-popup' type="text" list="versiculos"
-                onKeyUp={e => this.limitarInput(e, this.props.num)} />
-            <datalist id='versiculos'>
-                {this.criarLista(this.state.comboVersos)}
-            </datalist>  
-        )
-    }
+//     render (){
+//         return (
+//             <input className='combo-popup' type="text" list="versiculos"
+//                 onKeyUp={e => this.limitarInput(e, this.props.num)} />
+//             <datalist id='versiculos'>
+//                 {this.criarLista(this.state.comboVersos)}
+//             </datalist>  
+//         )
+//     }
+// }
 
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
  // criarLista(num){
     //     var r = []
@@ -49,7 +73,7 @@ class ComboCapVers extends Component {
     //     }
     // }
 
-    {/* <input className='combo-popup' type="text" list="capitulos" 
+    /* <input className='combo-popup' type="text" list="capitulos" 
                     onKeyUp={e => this.limitarInput(e, this.state.comboCapInicial, )}/>
                 <datalist id='capitulos'>
                     {this.criarLista(this.state.comboCaps)}
@@ -58,4 +82,4 @@ class ComboCapVers extends Component {
                     onKeyUp={e => this.limitarInput(e, this.state.comboCaps)} />
                 <datalist id='versiculos'>
                     {this.criarLista(this.state.comboVersos)}
-                </datalist>                      */}
+                </datalist>                      */

@@ -8,6 +8,7 @@ import SelectCargo from './SelectCargo';
 import QuadroNavbar from '../NavBar/QuadroNavbar';
 import { store } from '../../index';
 import { eEmailValido } from '../../FuncoesGerais';
+import SetaVoltar from '../Perfil/SetaVoltar';
 
 const msgEmailInvalido = 'Endereço de e-mail inválido.';
 
@@ -28,6 +29,8 @@ function getMensagemErro(error) {
             return 'Operação não autorizada.';
         case 'weak-password':
             return 'Defina uma senha mais forte.';
+        case 'too-many-requests':
+            return 'Pedido bloqueado devido a número elevado de solicitações. Tente novamente mais tarde.'
         default:
             return codigo;
     }
@@ -63,11 +66,14 @@ class Login extends React.Component {
     constructor (props) {
         super(props);
         this.refUsername = React.createRef();
-        this.state = {email: '', senha: '', erro: '', nomeCompleto: '', logando: true, cadastrando: false, esqueceuSenha: false}
+        this.refPassword = React.createRef();
+        this.state = {email: '', senha: '', erro: '', nomeCompleto: '', logando: true, cadastrando: false, esqueceuSenha: false, redefinicaoDeSenhaEnviado: false}
     }
 
-    entrar = event => {
-        event.preventDefault();
+    entrar = e => {
+        e.preventDefault();
+        if(!this.state.email) this.refUsername.current.focus();
+        if(!this.state.senha) this.refPassword.current.focus();
         this.setState({erro: ''});
         if (this.state.cadastrando && this.state.logando) { 
             this.criarUsuarioComEmailSenha();
@@ -92,7 +98,7 @@ class Login extends React.Component {
     };
 
     cadastrando = () => {
-        this.setState({cadastrando: true});
+        this.setState({cadastrando: true, erro: ''});
     }
 
     removerEventListener = () => {
@@ -102,14 +108,14 @@ class Login extends React.Component {
     }
 
     recuperarSenha = () => {
-        // firebaseAuth.onAuthStateChanged(() => null);
         firebaseAuth.sendPasswordResetEmail(this.state.email)
             .then(() =>
-                alert('Email de recuperação de senha enviado')
+                this.setState({redefinicaoDeSenhaEnviado: true})
             )
-            .catch(erro =>
-                this.setState({erro: getMensagemErro(erro)})
-            );
+            .catch(erro => {
+                this.setState({erro: getMensagemErro(erro)});
+                console.log(erro);
+            });
     }
 
     onClick = e => {
@@ -139,53 +145,64 @@ class Login extends React.Component {
         this.removerEventListener();
     }
 
+    enviarForm = e => {
+        if(!this.state.esqueceuSenha && e.code === 'Enter') this.entrar(e);
+    }
+
     render() {
         const interiorLogin = (
-            <div id='quadro-login'>
-                {this.props.usuario.uid
-                    ? <MenuLogado history={this.props.history} />
-                    : <>
-                        <form className='inputs-login'>
-                            {this.state.logando ?
-                                <>
-                                    <input ref={this.refUsername} id='username' className='combo-popup' placeholder='E-mail' type='email' value={this.state.email}
-                                            onChange={e => this.setState({email: e.target.value})}></input>
-                                    {this.state.esqueceuSenha ? null
-                                        : <input id='password' className='combo-popup' placeholder='Senha' type='password' value={this.state.senha}
-                                            onChange={e => this.setState({senha: e.target.value})}></input>
-                                    }
-                                </>
-                                : null
-                            }   
-                            {this.state.cadastrando ?
-                                <>
-                                    <input id='nome-completo' className='combo-popup' placeholder='Nome Completo' type='text' 
-                                        value={this.state.nomeCompleto} onChange={e => this.setState({nomeCompleto: e.target.value})}></input>
-                                    <SelectCargo value={this.state.cargo} onChange={e => this.setState({cargo: e.target.value})}/>
-                                </> 
-                                : null 
-                            }
-                                <div className='mensagem-erro'>
-                                    <div>{this.state.erro}</div>
-                                </div>
-                                <button className='botao-azul botao' onClick={this.onClick}>
-                                    {this.state.esqueceuSenha ? 'Recuperar Senha' : 'Entrar'}
-                                </button>
-                        </form>
-                        {this.state.cadastrando || this.state.esqueceuSenha ? null :
-                            <>
-                                <hr></hr>
-                                <button id='login-google' className='botao limpar-input' 
-                                        onClick={() => firebaseAuth.signInWithPopup(googleAuth)}>Entrar com Google</button>
-                                <button id='cadastre-se' className='itens' onClick={this.cadastrando}>
-                                    Cadastre-se
-                                </button>
-                                <button id='esqueceu-senha' onClick={() => this.setState({esqueceuSenha: true})}>Esqueceu sua senha?</button>
+            <>
+                {!this.state.esqueceuSenha && !this.state.cadastrando ? null
+                    : <SetaVoltar title='Voltar' callback={() => this.setState({esqueceuSenha: false, redefinicaoDeSenhaEnviado: false, cadastrando: false, erro: ''})}
+                        tamanhoIcone={window.innerHeight*0.025} style={{position: 'absolute', left: '3vh', top: '3vh'}}/> }
+                <div id='quadro-login' className={this.state.cadastrando ? 'cadastrando' : ''}>
+                    {this.state.redefinicaoDeSenhaEnviado 
+                        ? <div id='mensagem-redefinicao-senha'>
+                            Um e-mail foi enviado para <span style={{wordBreak: 'break-all'}}>{this.state.email}</span> com instruções para redefinição da senha.
+                          </div>
+                        : this.props.usuario.uid
+                            ? <MenuLogado history={this.props.history}/>
+                            : <>
+                                {!this.state.logando ? null
+                                    : <>
+                                        {this.state.cadastrando ? <div style={{marginTop: '4vh'}}></div> : null}
+                                        <input ref={this.refUsername} id='username' className='combo-popup' placeholder='E-mail' type='email' value={this.state.email}
+                                                onChange={e => this.setState({email: e.target.value})} onKeyUp={this.enviarForm}></input>
+                                        {this.state.esqueceuSenha ? null
+                                            : <input ref={this.refPassword} id='password' className='combo-popup' placeholder='Senha' type='password' value={this.state.senha}
+                                                onChange={e => this.setState({senha: e.target.value})} onKeyUp={this.enviarForm}></input>
+                                        }
+                                    </>
+                                }   
+                                {!this.state.cadastrando ? null 
+                                    : <>
+                                        <input id='nome-completo' className='combo-popup' placeholder='Nome Completo' type='text' 
+                                            value={this.state.nomeCompleto} onChange={e => this.setState({nomeCompleto: e.target.value})}></input>
+                                        <SelectCargo value={this.state.cargo} onChange={e => this.setState({cargo: e.target.value})}/>
+                                    </> 
+                                }
+                                    <div className='mensagem-erro'>
+                                        <div>{this.state.erro}</div>
+                                    </div>
+                                    <button className='botao-azul botao' onClick={this.onClick}>
+                                        {this.state.esqueceuSenha ? 'Recuperar Senha' : this.state.cadastrando ? 'Cadastrar' : 'Entrar'}
+                                    </button>
+                            
+                                {this.state.cadastrando || this.state.esqueceuSenha ? null :
+                                    <>
+                                        <hr></hr>
+                                        <button id='login-google' className='botao limpar-input' 
+                                                onClick={() => firebaseAuth.signInWithPopup(googleAuth)}>Entrar com Google</button>
+                                        <button id='cadastre-se' className='itens' onClick={this.cadastrando}>
+                                            Cadastre-se
+                                        </button>
+                                        <button id='esqueceu-senha' onClick={() => this.setState({esqueceuSenha: true, erro: ''})}>Esqueceu sua senha?</button>
+                                    </>
+                                }
                             </>
-                        }
-                    </>
-                }
-            </div>
+                    }
+                </div>
+            </>
         )
         return (
             <>

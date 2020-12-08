@@ -34,7 +34,7 @@ class Preview extends Component {
 
         document.addEventListener('fullscreenchange', () => {
             if (document.fullscreenElement) {
-                if (this.props.slidePreview.eMestre) this.offsetSlide(0);
+                if (this.props.eMestre) this.offsetSlide(0);
                 this.setState({screen: {...this.full}});
             } else {
                 this.setState({screen: {...this.small}});
@@ -59,9 +59,9 @@ class Preview extends Component {
     realcarElemento = (aba, foraOuDentro = null) => {
         if (document.fullscreenElement) return;
         if (foraOuDentro) {
-            if (foraOuDentro === 'fora' && !this.props.slidePreview.eMestre) {
+            if (foraOuDentro === 'fora' && !this.props.eMestre) {
                 return;
-            } else if(foraOuDentro === 'dentro' && this.props.slidePreview.eMestre) {
+            } else if(foraOuDentro === 'dentro' && this.props.eMestre) {
                 return;
             }
         }
@@ -88,11 +88,12 @@ class Preview extends Component {
         var proporcao = this.state.screen.proporcao*Math.min(ratioPadrao.height/this.props.ratio.height, ratioPadrao.width/this.props.ratio.width);
         const telaCheia = this.state.screen.proporcao === this.full.proporcao;
         const transition = this.state.transitionAtivo && !telaCheia; 
+        const eMestre = slidePreview.eMestre;
         return (
             <div id='centralizador-preview'>
                 <div id='borda-slide-mestre' ref={this.ref} 
                                             style={{height: this.props.ratio.height*proporcao + 0.051*window.innerHeight, 
-                                            visibility: slidePreview.eMestre ? '' : 'hidden',
+                                            visibility: eMestre ? '' : 'hidden',
                                             padding: telaCheia ? '' : '1vh',
                                             ...this.realcarElemento('tampao', 'fora')}}>
                     {telaCheia ? null : <SelecionarRatio/>}
@@ -105,7 +106,7 @@ class Preview extends Component {
                         id='preview'
                         className={'preview' + (!transition ? ' sem-transition' : '')} 
                         realcarElemento={this.realcarElemento}
-                        editavel={!slidePreview.eMestre && this.props.autorizacao === 'editar' && !telaCheia}
+                        editavel={!eMestre && this.props.autorizacao === 'editar' && !telaCheia}
                         slidePreview={slidePreview}
                         style={telaCheia ? {overflow: 'visible'} : null}>
                         <button id='ativar-tela-cheia' onClick={() => toggleFullscreen(this.ref.current)} 
@@ -115,9 +116,9 @@ class Preview extends Component {
                             {this.state.screen.icone}
                         </button>
                     </SlideFormatado>
-                    {telaCheia 
-                        ? null
-                        : <div id="texto-slide-mestre" style={{textAlign: 'center', paddingTop: '0.7vh'}}>
+                    {telaCheia && !eMestre ? null
+                        : <div id="texto-slide-mestre" 
+                               style={{textAlign: 'center', ...(telaCheia ? {padding: '1vh 0', fontSize: '110%'} : {paddingTop: '0.7vh'})}}>
                             Slide-Mestre - {slidePreview.selecionado.elemento === 0 ? 'Global' : slidePreview.nomeLongoElemento}
                         </div>
                     }

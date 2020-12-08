@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import './App.css';
 import Arrastar from './Components/Arrastar/Arrastar';
 import Preview from './Components/Preview/Preview';
-import Galeria from './Components/Preview/Galeria/Galeria'
+import Galeria from './Components/Preview/Galeria'
 import Configurar from './Components/Configurar/Configurar.jsx';
 import MenuExportacao from './Components/MenuExportacao/MenuExportacao';
 import NavBar from './Components/NavBar/NavBar';

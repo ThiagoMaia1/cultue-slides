@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import './Perfil.css';
 import ApresentacoesUsuario from './ApresentacoesUsuario';
 import ListaEmails from './ListaEmails';
-import { BsArrowLeft } from 'react-icons/bs'
+import SetaVoltar from './SetaVoltar';
 import Carrossel from '../Carrossel/Carrossel';
 import sobreporSplash from "../Splash/SobreporSplash";
 import InformacoesPessoais from './InformacoesPessoais';
@@ -28,11 +28,8 @@ class Perfil extends React.Component {
             <Router>
                 <div id='perfil'>
                     <div id='barra-lateral-perfil'>
-                        <div className='container-seta-voltar' title='Voltar ao App'>
-                            <div id='seta-voltar' onClick={() => this.props.history.push('/app/#/' + this.props.apresentacao.id)}>
-                                <BsArrowLeft size={window.innerWidth*0.06}/>
-                            </div>
-                        </div>
+                        <SetaVoltar title='Voltar ao App' callback={() => this.props.history.push('/app/#/' + this.props.apresentacao.id)}
+                                    tamanhoIcone={window.innerWidth*0.06}/>
                         <div id='menu-perfil'>
                             {paginasPerfil.map(p => 
                                 <Link key={p.nome} to={urlPerfil + '/' + p.nome}>{p.nomeInterface}</Link>

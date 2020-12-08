@@ -34,11 +34,15 @@
     transition: width 0.2s ease-in-out, height 0.2s ease-in-out;
 }
 
-.fundo-preview {
+.imagem-fundo-preview {
     height:100%;
     width: 100%;
     object-fit: cover;
     position: absolute;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-color: white;
 }
 
 img {

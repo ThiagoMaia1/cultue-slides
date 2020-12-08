@@ -104,7 +104,7 @@ const slideFinal = {
   estilo: {
     titulo: {height: '90%'},
     paragrafo: {fontSize: '150%', color: '#ffffff', fontFamily: 'Helvetica', textAlign: 'center', padding: '0%'},
-    fundo: {src:'./Galeria/Fundos/Cor Sólida.jpg'}, 
+    fundo: {}, 
     tampao: {backgroundColor: '#000000', opacity: '1'},
     texto: {},
     imagem: {}

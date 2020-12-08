@@ -1,14 +1,21 @@
 import React, { Component } from 'react';
-import './style.css';
+import './Galeria.css';
 import { connect } from 'react-redux';
 
-export const getPathImagemReduzida = (path, px) => {
+export const getPathImagem = (path, px) => {
+    const pasta = './Fundos/';
     if (px) {
-        path = path.replace('/Fundos/','/Fundos/' + px + 'px/');
+        path = px + 'px/' + path;
         path = path.replace(/.jpg|.png/,'.jpg');
     }
-    return path;
-}
+    return pasta + path;
+  }
+  
+export const lerImagem = (fundo, px = null) => (
+    fundo.src
+        ? fundo.src
+        : require('' + getPathImagem(fundo.path || 'Cor Sólida.jpg', px)) 
+);  
 
 class Img extends Component {
 
@@ -44,11 +51,8 @@ class Img extends Component {
 
     togglePrevia(estiloImagem) {
         var img = {...estiloImagem};
-        var fundo = {...img.fundo};
-        if (fundo.src && fundo.src.substr(0, 4) !== 'blob' && fundo.src.match(/Galeria/) === null) 
-            fundo.src = fundo.src.replace('./','./Galeria/');
-        this.props.dispatch({type: 'editar-slide-temporariamente', objeto: 'fundo', valor: fundo});
-        this.props.dispatch({type: 'editar-slide-temporariamente', objeto: 'tampao', valor: img.tampao});
+        this.props.dispatch({type: 'editar-slide-temporariamente', objeto: 'fundo', valor: {...img.fundo}});
+        this.props.dispatch({type: 'editar-slide-temporariamente', objeto: 'tampao', valor: {...img.tampao}});
         if (img.texto.color) this.props.dispatch({type: 'editar-slide-temporariamente', objeto: 'texto', valor: {color: img.texto.color}});
     }
 
@@ -63,7 +67,7 @@ class Img extends Component {
                 </div>
                 <div className='tampao' style={this.props.imagem.tampao}></div>
                 <img className='imagem-galeria' 
-                     src={this.props.imagem.fundo.src.substr(0, 4) === 'blob' ? this.props.imagem.fundo.src : require('' + getPathImagemReduzida(this.props.imagem.fundo.src, 300))} 
+                     src={lerImagem(this.props.imagem.fundo, 300)} 
                      alt={this.props.imagem.alt}
                 />
             </div>
