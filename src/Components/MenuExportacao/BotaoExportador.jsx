@@ -10,6 +10,10 @@ class BotaoExportacao extends Component {
   } 
 
   conferirClick = () => {
+    if (this.props.mensagemInativo) {
+      this.avisoInativo();
+      return;
+    }
     if (this.props.exportavel) {
         this.props.onClick();
     } else {
@@ -21,11 +25,21 @@ class BotaoExportacao extends Component {
     }
   }
 
+  avisoInativo = () => {
+    ativarPopupConfirmacao(
+      'OK',
+      'Recurso Indisponível',
+      this.props.mensagemInativo
+    )
+  }
+
   render() {
       return (
-        <div className='div-botao-exportar' onClick={this.conferirClick} style={this.props.style}> 
+        <div className={'div-botao-exportar ' + (this.props.mensagemInativo ? 'inativo' : '')} onClick={this.conferirClick} style={this.props.style}> 
           {this.props.arrow ? <div className='arrow-down'></div> : null}
-          <button id={'exportar-' + this.props.formato} className='botao-exportar sombrear-selecao'>{this.props.logo}</button>
+          <button id={'exportar-' + this.props.formato} className='botao-exportar sombrear-selecao'>
+            {this.props.logo}
+          </button>
           <div className='rotulo-botao-exportar'>{this.props.rotulo}</div>
         </div>
       )

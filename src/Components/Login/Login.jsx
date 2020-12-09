@@ -3,12 +3,11 @@ import { connect } from 'react-redux';
 import './Login.css';
 import { firebaseAuth, googleAuth } from "../../firebase";
 import { gerarDocumentoUsuario } from '../../firestore/apiFirestore';
-import { checarLogin } from './ModulosLogin';
 import SelectCargo from './SelectCargo';
 import QuadroNavbar from '../NavBar/QuadroNavbar';
-import { store } from '../../index';
 import { eEmailValido } from '../../FuncoesGerais';
 import SetaVoltar from '../Perfil/SetaVoltar';
+import { CgEye } from 'react-icons/cg';
 
 const msgEmailInvalido = 'Endereço de e-mail inválido.';
 
@@ -31,6 +30,8 @@ function getMensagemErro(error) {
             return 'Defina uma senha mais forte.';
         case 'too-many-requests':
             return 'Pedido bloqueado devido a número elevado de solicitações. Tente novamente mais tarde.'
+        case 'network-request-failed':
+            return 'Verifique sua conexão de internet.'
         default:
             return codigo;
     }
@@ -38,24 +39,11 @@ function getMensagemErro(error) {
 
 class MenuLogado extends React.Component {
     
-    logOut = () => {
-        firebaseAuth.signOut()
-        const tryLoggedOutUser = () => {
-            if (store.getState().usuario.uid) {
-                timeoutLogout();
-            } else {
-                this.props.history.push('/logout')
-            }
-        }
-        const timeoutLogout = () => setTimeout(() => tryLoggedOutUser(), 100);
-        tryLoggedOutUser();
-    }
-
     render() {
         return (
             <>
                 <button className='botao-azul botao' onClick={() => this.props.history.push('/perfil')}>Meu Perfil</button>  
-                <button className='botao limpar-input' onClick={this.logOut}>✕ Sair</button>
+                <button className='botao limpar-input' onClick={() => firebaseAuth.signOut()}>✕ Sair</button>
             </>
         )
     }
@@ -67,11 +55,22 @@ class Login extends React.Component {
         super(props);
         this.refUsername = React.createRef();
         this.refPassword = React.createRef();
-        this.state = {email: '', senha: '', erro: '', nomeCompleto: '', logando: true, cadastrando: false, esqueceuSenha: false, redefinicaoDeSenhaEnviado: false}
+        this.state = {
+            email: '', 
+            senha: '', 
+            erro: '', 
+            nomeCompleto: '', 
+            logando: true, 
+            cadastrando: false, 
+            esqueceuSenha: false, 
+            redefinicaoDeSenhaEnviado: false, 
+            senhaVisivel: false,
+            senhaBolinhas: true,
+            classeSenha: false
+        }
     }
 
-    entrar = e => {
-        e.preventDefault();
+    entrar = () => {
         if(!this.state.email) this.refUsername.current.focus();
         if(!this.state.senha) this.refPassword.current.focus();
         this.setState({erro: ''});
@@ -80,10 +79,11 @@ class Login extends React.Component {
         } else if(!this.state.logando) { 
             gerarDocumentoUsuario(this.props.usuario, {nomeCompleto: this.state.nomeCompleto, cargo: this.state.cargo});
         } else {
-            firebaseAuth.signInWithEmailAndPassword(this.state.email, this.state.senha).catch(error => {
-                this.setState({erro: getMensagemErro(error)});
-                console.error(error);
-            });
+            firebaseAuth.signInWithEmailAndPassword(this.state.email, this.state.senha)
+                .catch(error => {
+                    this.setState({erro: getMensagemErro(error)});
+                    console.error(error);
+                });
         }
     };
 
@@ -118,7 +118,8 @@ class Login extends React.Component {
             });
     }
 
-    onClick = e => {
+    handleSubmit = e => {
+        e.preventDefault();
         if (!eEmailValido(this.state.email)) {
             this.setState({erro: msgEmailInvalido}); 
         } else {
@@ -138,57 +139,76 @@ class Login extends React.Component {
     componentDidMount = async () => {
         if (this.refUsername.current) this.refUsername.current.focus();
         if (this.props.callback) document.addEventListener("click", this.clickFora, false);
-        checarLogin(this.callbackLogin);
     };
 
     componentWillUnmount = () => {
         this.removerEventListener();
     }
 
-    enviarForm = e => {
-        if(!this.state.esqueceuSenha && e.code === 'Enter') this.entrar(e);
+    mostrarSenha = () => {
+        clearTimeout(this.timeoutSenha);
+        var senhaVisivel = !this.state.senhaVisivel;
+        this.setState({ senhaVisivel, classeSenha: true });
+        var tempo = senhaVisivel ? 10 : 180; 
+        this.timeoutSenha = setTimeout(() => this.setState({senhaBolinhas: !senhaVisivel, classeSenha: false}), tempo);
     }
 
     render() {
-        const interiorLogin = (
+        const esqueceu = this.state.esqueceuSenha;
+        const cadastrando = this.state.cadastrando;
+        const senhaVisivel = this.state.senhaVisivel;
+        var tamanhoOlho = window.innerHeight*0.03;
+
+        var interiorLogin = (
             <>
-                {!this.state.esqueceuSenha && !this.state.cadastrando ? null
+                {!esqueceu && !cadastrando ? null
                     : <SetaVoltar title='Voltar' callback={() => this.setState({esqueceuSenha: false, redefinicaoDeSenhaEnviado: false, cadastrando: false, erro: ''})}
                         tamanhoIcone={window.innerHeight*0.025} style={{position: 'absolute', left: '3vh', top: '3vh'}}/> }
-                <div id='quadro-login' className={this.state.cadastrando ? 'cadastrando' : ''}>
-                    {this.state.redefinicaoDeSenhaEnviado 
-                        ? <div id='mensagem-redefinicao-senha'>
-                            Um e-mail foi enviado para <span style={{wordBreak: 'break-all'}}>{this.state.email}</span> com instruções para redefinição da senha.
-                          </div>
-                        : this.props.usuario.uid
-                            ? <MenuLogado history={this.props.history}/>
+                <div id='quadro-login' className={cadastrando ? 'cadastrando' : ''}>
+                    {this.props.usuario.uid
+                        ? <MenuLogado history={this.props.history}/>
+                        : (this.state.redefinicaoDeSenhaEnviado 
+                            ? <div id='mensagem-redefinicao-senha'>
+                                Um e-mail foi enviado para <span style={{wordBreak: 'break-all'}}>{this.state.email}</span> com instruções para redefinição da senha.
+                              </div>
                             : <>
-                                {!this.state.logando ? null
-                                    : <>
-                                        {this.state.cadastrando ? <div style={{marginTop: '4vh'}}></div> : null}
-                                        <input ref={this.refUsername} id='username' className='combo-popup' placeholder='E-mail' type='email' value={this.state.email}
-                                                onChange={e => this.setState({email: e.target.value})} onKeyUp={this.enviarForm}></input>
-                                        {this.state.esqueceuSenha ? null
-                                            : <input ref={this.refPassword} id='password' className='combo-popup' placeholder='Senha' type='password' value={this.state.senha}
-                                                onChange={e => this.setState({senha: e.target.value})} onKeyUp={this.enviarForm}></input>
-                                        }
-                                    </>
-                                }   
-                                {!this.state.cadastrando ? null 
-                                    : <>
-                                        <input id='nome-completo' className='combo-popup' placeholder='Nome Completo' type='text' 
-                                            value={this.state.nomeCompleto} onChange={e => this.setState({nomeCompleto: e.target.value})}></input>
-                                        <SelectCargo value={this.state.cargo} onChange={e => this.setState({cargo: e.target.value})}/>
-                                    </> 
-                                }
+                                <form onSubmit={this.handleSubmit}>
+                                    {!this.state.logando ? null
+                                        : <>
+                                            {cadastrando ? <div style={{marginTop: '4vh'}}></div> : null}
+                                            <input ref={this.refUsername} id='username' className='combo-popup' placeholder='E-mail' type='email' value={this.state.email}
+                                                    onChange={e => this.setState({email: e.target.value})}></input>
+                                            {esqueceu ? null
+                                                : <div className={'container-senha ' + (senhaVisivel ? 'visivel' : '')}>
+                                                    <button type='button' className='botao-olho' 
+                                                            onClick={this.mostrarSenha}>
+                                                        <div className='risco-olho' style={{width: senhaVisivel ? 0 : tamanhoOlho}}></div>
+                                                        <CgEye size={tamanhoOlho}/>
+                                                    </button>
+                                                    <input ref={this.refPassword} id='password' placeholder='Senha'
+                                                           className={'combo-popup ' + (this.state.classeSenha ? 'senha-pequena' : '')}  
+                                                           type={this.state.senhaBolinhas ? 'password' : 'text'} value={this.state.senha}
+                                                           onChange={e => this.setState({senha: e.target.value})}
+                                                           style={this.state.senhaBolinhas ? {transition: 'none'} : null}></input>
+                                                 </div>
+                                            }
+                                        </>
+                                    }   
+                                    {!cadastrando ? null 
+                                        : <>
+                                            <input id='nome-completo' className='combo-popup' placeholder='Nome Completo' type='text' 
+                                                value={this.state.nomeCompleto} onChange={e => this.setState({nomeCompleto: e.target.value})}></input>
+                                            <SelectCargo value={this.state.cargo} onChange={e => this.setState({cargo: e.target.value})}/>
+                                        </> 
+                                    }
                                     <div className='mensagem-erro'>
                                         <div>{this.state.erro}</div>
                                     </div>
-                                    <button className='botao-azul botao' onClick={this.onClick}>
-                                        {this.state.esqueceuSenha ? 'Recuperar Senha' : this.state.cadastrando ? 'Cadastrar' : 'Entrar'}
+                                    <button className='botao-azul botao'>
+                                        {esqueceu ? 'Recuperar Senha' : cadastrando ? 'Cadastrar' : 'Entrar'}
                                     </button>
-                            
-                                {this.state.cadastrando || this.state.esqueceuSenha ? null :
+                                </form>
+                                {cadastrando || esqueceu ? null :
                                     <>
                                         <hr></hr>
                                         <button id='login-google' className='botao limpar-input' 
@@ -200,16 +220,18 @@ class Login extends React.Component {
                                     </>
                                 }
                             </>
+                        )  
                     }
                 </div>
             </>
         )
+        var minHeightQuadro = this.props.usuario.uid ? 0 : '40vh';
         return (
             <>
                 {this.props.callback
-                    ? <QuadroNavbar callback={this.removerEventListener} esquerda={true}>
+                    ? <QuadroNavbar callback={this.removerEventListener} esquerda={true} style={{minHeight: minHeightQuadro}}>
                         {interiorLogin}
-                      </QuadroNavbar>
+                      </QuadroNavbar>                       
                     : interiorLogin
                 }
             </> 

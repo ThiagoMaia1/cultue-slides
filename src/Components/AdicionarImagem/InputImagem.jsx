@@ -11,17 +11,18 @@ const dMaxTracejado = 99;
 const dMinTracejado = 93;
 
 const substituirImagem = (selecionado, url, objeto) => 
-        store.dispatch({type: 'editar-slide', objeto, valor: { src: url }, selecionado});
+    store.dispatch({type: 'editar-slide-temporariamente', objeto, valor: { src: url }, selecionado});
 
 const callbackUpload = (idUpload, urlDownload) => {
     const elementos = store.getState().present.elementos;
     for (var i = 0; i < elementos.length; i++) {
         const slides = elementos[i].slides;
         for (var j = 0; j < slides.length; j++) {
-            var objeto;
-            if (slides[j].estilo.fundo.idUpload === idUpload) objeto = 'fundo';
-            if (slides[j].imagem && slides[j].imagem.idUpload === idUpload) objeto = 'imagem';
-            if (objeto) substituirImagem({elemento: i, slide: j}, urlDownload, objeto);
+            var sel = {elemento: i, slide: j};
+            if (slides[j].estilo.fundo.idUpload === idUpload) 
+                substituirImagem(sel, urlDownload, 'fundo');
+            if (slides[j].imagem && slides[j].imagem.idUpload === idUpload)
+                substituirImagem(sel, urlDownload, 'srcImagem');
         }
     }
 }
@@ -50,6 +51,8 @@ class ImagemInput extends Component {
 
     componentDidMount = () => {
         setTimeout(() => this.setState({maxWidth: '12vw'}), 0);
+        this.props.setFinalCarrossel();
+        setTimeout(() => this.props.setFinalCarrossel(), 300);
     }
 
     apagar = e => {
@@ -73,7 +76,7 @@ class ImagemInput extends Component {
         return (
             <div className='container-imagem-upload' key={alt}>
                 <div className='imagem-invalida previa-imagem-upload' 
-                     style={this.background}>
+                     style={{...this.background, ...this.state}}>
                     {img.width 
                         ? null
                         : <> 
@@ -187,7 +190,10 @@ class InputImagem extends Component {
                                  img={img} 
                                  indice={i} 
                                  callback={this.apagarImagem} 
-                                 nFiles={this.nFiles}/>)}
+                                 nFiles={this.nFiles}
+                                 setFinalCarrossel={() => this.setState({finalCarrossel: new Date().getTime()})}
+                    />)
+                }
             </div>
         )
     }
@@ -226,7 +232,8 @@ class InputImagem extends Component {
                     onDragLeave={this.onDrop} 
                     onMouseOver={this.ativarSetas}>
                     <div className='container-carrossel' style={{pointerEvents: this.state.pointerEvents}} onClick={this.clicarInput} onDragOver={() => this.setState({pointerEvents: 'none'})}>
-                        <Carrossel tamanhoIcone={45} tamanhoMaximo='100%' direcao='vertical' style={{zIndex: '400', width: '100%'}} beiradaFinal={15}>
+                        <Carrossel tamanhoIcone={45} tamanhoMaximo='100%' direcao='vertical' style={{zIndex: '400', width: '100%'}} beiradaFinal={15} 
+                                   final={this.state.finalCarrossel}>
                             <div className='file-input-container' >
                                 <div className='container-texto-input-file'>
                                     <div className='texto-auxiliar' onClick={() => this.refInputFile.current.click()}>Arraste uma imagem, ou clique para selecionar o arquivo.</div>

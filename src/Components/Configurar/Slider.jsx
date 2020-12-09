@@ -75,13 +75,13 @@ class Slider extends Component {
             <div className='container-range' style={this.props.style}>
                 <div className='container-rotulo-range'><div className='rotulo-range'>{this.props.rotulo}</div></div>
                 <div className='frame-range'>
-                    <input type="range"
+                    <input type='range'
                         ref={this.ref} 
                         min={this.min}
                         step={this.props.step} 
                         max={this.max} 
                         defaultValue={this.props.valorAplicado}
-                        className="slider"
+                        className='slider'
                         onInput={this.setValor}
                         onKeyDown={this.dispatchUndoRedo}
                         style={{transform: 'rotate(' + (this.virar*90) + 'deg)'}}

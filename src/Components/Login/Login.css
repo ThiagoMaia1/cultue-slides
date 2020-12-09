@@ -38,13 +38,30 @@
     max-width: 23vw;
 }
 
+#quadro-login, #quadro-login > form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#quadro-login form input {
+    min-width: 17vw;
+    max-width: 17vw;
+    margin-right: 0;
+}
 
 #quadro-login, #quadro-login input, #quadro-login hr, #quadro-login select {
     width: 100%;
 }
 
-#quadro-login button {
-    width: 17vw;
+#quadro-login input {
+    min-height: 5.3vh;
+    max-height: 5.3vh;
+}
+
+#quadro-login button:not(.botao-olho) {
+    width: 16vw;
+    border-radius: var(--round-border-pequeno);
 }
 
 #quadro-login > * {
@@ -72,6 +89,49 @@
 
 .inputs-login button {
     margin-top: 2vh;
+}
+
+.container-senha {
+    position: relative;
+    --cor-olho: rgb(180, 180, 180);
+    --tempo-transition: 180ms;
+}
+
+.container-senha.visivel  {
+    position: relative;
+    --cor-olho: rgb(105, 105, 105);
+}
+
+.container-senha #password {
+    transition: font-size var(--tempo-transition) ease-in-out, font-weight var(--tempo-transition) ease-in-out, letter-spacing var(--tempo-transition) ease-in-out;
+}
+
+.container-senha #password.senha-pequena {
+    font-size: 28%;
+    font-weight: 1000;
+    letter-spacing: 2.3px;
+}
+
+.botao-olho {
+    position: absolute;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    right: 0.8vw;
+    color: var(--cor-olho);
+}
+
+.risco-olho {
+    background-color: var(--cor-olho);
+    position: absolute;
+    height: 0.3vh;
+    transform: rotate(45deg);
+}
+
+.risco-olho, .botao-olho {
+    filter: drop-shadow(0.5px 0.5px 0.5px rgba(0,0,0,0.1));
+    transition: color var(--tempo-transition) ease-in-out, background-color var(--tempo-transition) ease-in-out, width var(--tempo-transition) ease-in-out;
 }
 
 #cadastre-se {

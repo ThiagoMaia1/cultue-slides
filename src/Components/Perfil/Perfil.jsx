@@ -8,6 +8,7 @@ import SetaVoltar from './SetaVoltar';
 import Carrossel from '../Carrossel/Carrossel';
 import sobreporSplash from "../Splash/SobreporSplash";
 import InformacoesPessoais from './InformacoesPessoais';
+import { store } from '../../index';
 
 export const urlPerfil = '/perfil';
 
@@ -28,8 +29,8 @@ class Perfil extends React.Component {
             <Router>
                 <div id='perfil'>
                     <div id='barra-lateral-perfil'>
-                        <SetaVoltar title='Voltar ao App' callback={() => this.props.history.push('/app/#/' + this.props.apresentacao.id)}
-                                    tamanhoIcone={window.innerWidth*0.06}/>
+                        <SetaVoltar title='Voltar ao App' callback={() => this.props.history.push('/app/#/' + store.getState().present.apresentacao.id)}
+                                    tamanhoIcone={window.innerWidth*0.05}/>
                         <div id='menu-perfil'>
                             {paginasPerfil.map(p => 
                                 <Link key={p.nome} to={urlPerfil + '/' + p.nome}>{p.nomeInterface}</Link>
@@ -48,7 +49,7 @@ class Perfil extends React.Component {
                                     <Route exact path={urlPerfil + '/' + p.nome} key={p}>
                                         <div className='pagina-perfil'>
                                             <Carrossel direcao='vertical' tamanhoIcone={50} tamanhoMaximo={'100%'} 
-                                                   percentualBeirada={0.05} style={{zIndex: '900', width: '100%'}}>
+                                                   beiradaFinal={20} style={{zIndex: '900', width: '100%'}}>
                                                 <Pagina history={this.props.history} height='75vh'/>
                                             </Carrossel>
                                         </div>
@@ -65,7 +66,7 @@ class Perfil extends React.Component {
 };
   
 const mapState = state => {
-    return {usuario: state.usuario, apresentacao: state.present.apresentacao};
+    return {usuario: state.usuario};
   }
 
 export default connect(mapState)(Perfil);

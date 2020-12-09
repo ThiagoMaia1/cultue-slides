@@ -2,32 +2,19 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import BotaoExportador from './BotaoExportador';
 import { IoMdMail } from 'react-icons/io';
-import { firebaseFunctions } from '../../firebase';
 import ListaEmails from '../Perfil/ListaEmails';
 import Carrossel from '../Carrossel/Carrossel';
 import sobreporSplash from '../Splash/SobreporSplash';
 import { ativarPopupConfirmacao } from '../Popup/PopupConfirmacao';
-import ReactDOMServer from 'react-dom/server';
-
-const enviarEmail = firebaseFunctions.httpsCallable('enviarEmail');
+import { enviarEmailTemplate } from './ChamadaEnvioEmail';
+import { gerarNovaPermissao, getLinkPermissao } from '../../firestore/apresentacoesBD';
 
 class ExportarEmail extends Component {
 
   constructor (props) {
     super(props);
     this.state = {listaEmails: []};
-    this.cidLogo = 'logo';
-
-    const ListaComLoading = sobreporSplash('listaEmails', ListaEmails);
-
-    this.filhosPopup = (
-      <div style={{maxHeight: '50vh', minHeight:'50vh', width: '100%', marginBottom: '2vh', overflow: 'hidden'}}>
-        <Carrossel direcao='vertical' tamanhoIcone={50} tamanhoMaximo={'50vh'} 
-                  percentualBeirada={0.05} style={{zIndex: '400', width: '50vw'}}>
-          <ListaComLoading selecionarEmail={this.selecionarEmail} height='50vh'/>
-        </Carrossel>
-      </div>
-    )
+    this.meio = 'email';
   }
 
   selecionarEmail = (email, novoStatus) => {
@@ -41,6 +28,18 @@ class ExportarEmail extends Component {
   }
 
   exportarEmail = obj => {
+
+    const ListaComLoading = sobreporSplash('listaEmails', ListaEmails);
+
+    this.filhosPopup = (
+      <div style={{maxHeight: '50vh', minHeight:'50vh', width: '100%', marginBottom: '2vh', overflow: 'hidden'}}>
+        <Carrossel direcao='vertical' tamanhoIcone={50} tamanhoMaximo={'50vh'} 
+                  percentualBeirada={0.05} style={{zIndex: '400', width: '50vw'}}>
+          <ListaComLoading selecionarEmail={this.selecionarEmail} height='50vh'/>
+        </Carrossel>
+      </div>
+    )
+
     ativarPopupConfirmacao(
       'enviarCancelar', 
       'E-mails', 
@@ -53,9 +52,8 @@ class ExportarEmail extends Component {
     )
   }
 
-  enviarArquivoEmail = obj => {
+  enviarArquivoEmail = async obj => {
     var { nomeArquivo, arquivo, formato } = obj;
-    console.log(arquivo);
     switch (formato) {
       case 'pptx':
         arquivo.writeFile(nomeArquivo);
@@ -71,33 +69,29 @@ class ExportarEmail extends Component {
     }
 
     this.partes = this.getPartesEmail();
-    var objEmail = {
-      assunto: 'Apresentação de Slides para o Culto', 
-      destinatarios: this.getDestinatarios(),
-      corpo: this.getCorpoEmail(), 
-      corpoHTML: this.getHTMLEmail(),
-      anexos: [
-        {
-          filename: nomeArquivo,
-          content: arquivo
-        // },
-        // {
-        //   filename: 'LogoCultue.svg',
-        //   path: '/LogoCultue.svg',
-        //   cid: this.cidLogo
-        }  
-    ]}
-    const inserirNotificacao = conteudo => {
-      this.props.dispatch({type: 'inserir-notificacao', conteudo: conteudo});
-      document.body.style.cursor = 'default';
-    }  
-    enviarEmail(objEmail).then(
-      () => inserirNotificacao('E-mail enviado com sucesso'), 
-      error => {
-        inserirNotificacao('Erro ao enviar e-mail');
-        console.log(error);
-      }
+    var link = await this.getLinkDownload('baixar', formato);
+
+    enviarEmailTemplate(
+      'Apresentação de Slides para o Culto', 
+      this.getDestinatarios(), 
+      this.getCorpoEmail(), 
+      this.getHTMLEmail(),
+      [{url: link, rotulo: 'Download Apresentação'}],
+      [{
+        filename: nomeArquivo,
+        content: arquivo
+      }]
+    )
+  }
+
+  getLinkDownload = async (autorizacao, formato) => {
+    var permissao = await gerarNovaPermissao(
+      this.props.idApresentacao,
+      autorizacao,
+      null,
+      formato
     );
+    return getLinkPermissao(permissao.id);
   }
 
   getDestinatarios() { 
@@ -113,6 +107,7 @@ class ExportarEmail extends Component {
     return {
       saudacao: 'Olá' + (lista.length > 1 ? '' : ', ' + primeiroNomeDestinatario) + '!',
       paragrafo1: this.props.usuario.nomeCompleto + ' te enviou uma apresentação de slides criada pelo sistema Cultue.',
+      paragrafo2: 'Faça o download do anexo, ou clique no botão abaixo para fazer o download.'
     }
   }
 
@@ -121,27 +116,32 @@ class ExportarEmail extends Component {
   }
 
   getHTMLEmail() {
-    return ReactDOMServer.renderToStaticMarkup(
-      <div style={{fontFamily: 'Roboto'}}>
-        <div style={{backgroundColor: ' #3757A9', height: '70px', width: '100%'}}></div>
-        <div style={{padding: '25px'}}>
+    return (
+      <div>
           <h3>{this.partes.saudacao}</h3>
           <br></br>
           <p>{this.partes.paragrafo1}</p>
-        </div>
-        <a href={window.location.origin.toString()} target="_blank" rel="noopener noreferrer">
-          <div style={{backgroundColor: ' #3757A9', height: '150px', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-            {/* <img src={'cid:' + this.cidLogo} style={{width: '200px', objectFit: 'cover'}} alt='Logotipo Cultue'></img> */}
-          </div>
-        </a>
+          <br></br>
+          <p>{this.partes.paragrafo2}</p>
       </div>
     )
   }
 
+  verificarLogin = () => {
+    if (!this.props.usuario.uid) {
+      ativarPopupConfirmacao(
+        'OK',
+        'Login Necessário',
+        'Para enviar a apresentação por e-mail, faça login, ou cadastre-se gratuitamente.'
+      );
+    } else {
+      this.props.definirMeioExportacao(this.exportarEmail, this.props.posicao, this.meio);
+    }
+  }
+
   render() {
-      const meio = 'email'
       return (
-        <BotaoExportador formato={meio} onClick={() => this.props.definirMeioExportacao(this.exportarEmail, this.props.posicao, meio)} 
+        <BotaoExportador formato={this.meio} onClick={this.verificarLogin} 
           arrow={this.props.posicaoArrow === this.props.posicao} logo={<IoMdMail size={this.props.tamIcones}/>} rotulo='E-mail'/>
       )
   }
@@ -149,23 +149,7 @@ class ExportarEmail extends Component {
 }
 
 const mapState = state => {
-  return {usuario: state.usuario}
+  return {usuario: state.usuario, idApresentacao: state.present.apresentacao.id}
 }
 
 export default connect(mapState)(ExportarEmail);
-
-// <div style="background-color:#3757a9;height:70px;width:100%"></div><div style="padding:25px; font-family:'Roboto'; text-align: center; font-size: 15px;">
-//           <p><b>Olá!</b> Clique no botão a seguir para redefinir sua senha do aplicativo Cultue.</p>
-// <br>
-// <div><a style="color: white; text-decoration: none; background-color: #3757a9; padding:1.5vh; font-size: 110%; border-radius:0.8vh" href="%LINK%" target="_blank" >Redefinir Senha</a></div>
-// <br>
-// <p>Se você não solicitou uma redefinição de senha, ignore este e-mail.</p>
-// <p><i>Equipe Cultue</i></p>
-//         </div>
-// <a href="https://slidesigreja-ff51f.web.app/login" rel="noopener noreferrer" target="_blank" data-saferedirecturl="https://slidesigreja-ff51f.web.app/login">
-//           <div style="background-color:#3757a9; height: 20px; width:100%"></div>
-// <div style="width:100%;padding: 20px 0;">
-// <img src="https://firebasestorage.googleapis.com/v0/b/slidesigreja-ff51f.appspot.com/o/public%2FLogoCultue.png?alt=media&amp;token=e525c9f9-b0cf-4ffa-a595-77998ceca9b3" alt="Logotipo Cultue" style="object-fit: contain; display: block; margin: auto">
-// </div>
-// <div style="background-color:#3757a9;height:20px;width:100%"></div>
-//  </a>

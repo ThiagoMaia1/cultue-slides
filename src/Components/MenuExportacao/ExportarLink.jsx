@@ -4,7 +4,7 @@ import BotaoExportador from './BotaoExportador';
 import { BsLink45Deg } from 'react-icons/bs';
 import { ativarPopupConfirmacao } from '../Popup/PopupConfirmacao';
 import { BiCopy } from 'react-icons/bi';
-import { gerarNovaPermissao } from '../../firestore/apresentacoesBD';
+import { gerarNovaPermissao, getLinkPermissao } from '../../firestore/apresentacoesBD';
 
 class ExportarLink extends Component {
 
@@ -37,7 +37,7 @@ class ExportarLink extends Component {
           }
         </div>
         <div className='linha-flex'>
-          <input type='text' id='link-copiavel' readOnly value={this.getLinkPermissao(idPermissao)}/>
+          <input type='text' id='link-copiavel' readOnly value={getLinkPermissao(idPermissao)}/>
           <div className='botao-configuracao bool' onClick={() => this.copiarLinkAreaDeTransferencia()}>
             <BiCopy size={this.tamIcones}/>
           </div>
@@ -67,8 +67,6 @@ class ExportarLink extends Component {
     document.execCommand('Copy');
     this.props.dispatch({type: 'inserir-notificacao', conteudo: 'Link copiado para a área de transferência'});
   }
-
-  getLinkPermissao = idPermissao => window.location.origin.toString() + '/#/' + idPermissao;
 
   render() {
     const meio = 'link'

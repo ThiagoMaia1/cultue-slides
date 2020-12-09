@@ -6,7 +6,7 @@ export default function SetaVoltar (props) {
 
     return (
         <div className='container-seta-voltar' title={props.title} style={props.style}>
-            <div id='seta-voltar' onClick={props.callback} style={{padding: props.tamanhoIcone/2}}>
+            <div id='seta-voltar' onClick={props.callback} style={{padding: props.tamanhoIcone/3}}>
                 <BsArrowLeft size={props.tamanhoIcone}/>
             </div>
         </div>

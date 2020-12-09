@@ -17,6 +17,10 @@
     margin: 0.6vh 0 0 1vw;
 }
 
+.previews-slides-elementos:last-child {
+    margin-right: 1vw;
+}
+
 .container-botoes-item-lista-perfil.apresentacoes {
     margin-left: 3vw;
     flex: none;

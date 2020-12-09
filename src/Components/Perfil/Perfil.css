@@ -7,7 +7,7 @@
 }
 
 #cabecalho-perfil {
-    height: 25vh;
+    min-height: 23vh;
     padding: 5vh 2vw;
     display: flex;
     align-items: center;
@@ -25,8 +25,12 @@
 
 #barra-lateral-perfil {
     height: 100%;
-    width: 20%;
     flex: 0 0;
+    min-width: 20%;
+}
+
+#barra-lateral-perfil > .container-seta-voltar {
+    margin-top: 5vh;
 }
 
 #menu-perfil {
@@ -35,9 +39,9 @@
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
-    margin-top: 5vh;
-    padding-top: 5vh;
-    height: 60%;
+    margin-top: 10vh;
+    padding-top: 8vh;
+    height: 55%;
     width: 100%;
 }
 
@@ -48,11 +52,7 @@
     text-align: center;
 }
 
-#menu-perfil a:hover {
-    filter: drop-shadow(1px 1px 0.5px rgba(0,0,0,0.2));
-}
-
-#menu-perfil a:active {
+#menu-perfil a:hover, #menu-perfil a:active {
     filter: drop-shadow(1px 1px 0.5px rgba(0,0,0,0.2));
 }
 

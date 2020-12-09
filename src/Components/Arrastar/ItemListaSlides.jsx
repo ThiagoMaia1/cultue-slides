@@ -3,9 +3,8 @@ import SublistaSlides from './SublistaSlides';
 import { connect } from 'react-redux';
 import { MdKeyboardArrowUp, MdKeyboardArrowDown, MdEdit } from 'react-icons/md';
 import { ativarPopupConfirmacao } from '../Popup/PopupConfirmacao';
-import { getNomeInterfaceTipo, Estilo, getDadosMensagem } from '../../Element';
-
-const estiloVazio = JSON.stringify(new Estilo());
+import { getNomeInterfaceTipo, newEstilo, getDadosMensagem } from '../../Element';
+import { objetosSaoIguais } from '../../FuncoesGerais';
 
 class ItemListaSlides extends Component {
 
@@ -93,7 +92,7 @@ class ItemListaSlides extends Component {
                               </div>
                             : null
                         }
-                        <div className={'texto-lista-slides fade-estilizado ' + (JSON.stringify(elemento.slides[0].estilo) !== estiloVazio ? 'elemento-slide-estilizado' : '')}>
+                        <div className={'texto-lista-slides fade-estilizado ' + (!objetosSaoIguais(elemento.slides[0].estilo, newEstilo()) ? 'elemento-slide-estilizado' : '')}>
                             <b> {i}. {getNomeInterfaceTipo(elemento.tipo)}: </b>{(elemento.tipo === 'Imagem' && !elemento.titulo) ? elemento.imagens[0].alt : elemento.titulo}
                         </div>
                         {this.state.colapsa ? 

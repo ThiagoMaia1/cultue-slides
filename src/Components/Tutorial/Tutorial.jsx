@@ -185,6 +185,7 @@ class EtapaTutorial extends Component {
   render() {
     if(!this.props.itens.length) return null;
     var item = this.state.item;
+    // if (!document.querySelectorAll(item.selectorElemento).length) return null;
     var a = item.arrow;
     var caixa = (
       <div className='caixa-tutorial'>
@@ -219,14 +220,23 @@ class Tutorial extends Component {
     this.state = {indiceEtapa: -1};
   }
 
+  getNovoIndice = (passo, indiceEtapa) => {
+    var novoIndice = indiceEtapa + passo;
+    return novoIndice >= this.props.itensTutorial.length 
+           ? -1 
+           : novoIndice;
+  }
+
   offsetEtapaTutorial = passo => {
-    var novoIndice = this.state.indiceEtapa + passo;
-    if (novoIndice >= this.props.itensTutorial.length) {
-      this.setState({indiceEtapa: -1});
-      this.props.dispatch({type: 'definir-item-tutorial', zerar: true});
-    } else {
-      this.setState({indiceEtapa: novoIndice});
-    }
+    var indice = this.state.indiceEtapa;
+    // do {
+      indice = this.getNovoIndice(passo, indice);
+      if (indice === -1) {
+        this.props.dispatch({type: 'definir-item-tutorial', zerar: true});
+        // break;
+      }
+    // } while(!document.querySelectorAll(this.props.itensTutorial[indice].selectorElemento).length)
+    this.setState({indiceEtapa: indice});
   }
 
   static getDerivedStateFromProps = (props, state) => {

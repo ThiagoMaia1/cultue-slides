@@ -64,18 +64,26 @@
 //   ✔️ Ao abrir app, slide 1 é selecionado.
 //   ✔️ Pular splash para página de login ao fazer logout.
 //   ✔️ Imagem de menor qualidade não carrega se a de maior qualidade não tiver carregado.
+//   ✔️ Slides perdendo o tampão ao prever galeria.
+//   ✔️ Olhinho de ver senha no login.
+//   ✔️ Login clicando enter.
+//   ✔️ Estilo seta voltar perfil.
+//   ✔️ Tela mudando antes do logout.
+//   ✔️ Nova Apresentação usuário está sendo criada a cada login.
+//   ✔️ Bloquear exportação PDF, e botão de dividir em colunas.
+//   ✔️ Edição do tamanho da imagem.
+//   ✔️ Animações input imagem.
+//   ✔️ Ocultar/apagar título de slide de imagens.
 //   ✔️ Carrossel do Input Imagem não vai até o final.*/
 // Errinhos:
-//   Redividir quando o texto de um slide é todo deletado.
-//   Problemas ao dividir texto em duas colunas
-//   Edição do conteúdo do parágrafo dando alguns erros (falha ao perder foco, não exibe cursor).
-//   Slides perdendo o tampão ao prever galeria.
-//   Na exportacao pegar apenas as imagens de qualidade certa.
-//   Nova Apresentação usuário criada a cada login.
-//   Otimizar trocas de dados com BD.
 //   Padding bottom redividir slides um pouco errado.
+//   Redividir quando o texto de um slide é todo deletado.
+//   Edição do conteúdo do parágrafo dando alguns erros (falha ao perder foco, não exibe cursor).
+//   Na exportacao pegar apenas as imagens de qualidade certa.
+//   Otimizar trocas de dados com BD.
+//   Editar slide de imagens ou desabilitar edição.
 
-/*// Features:
+/*// Features essenciais:
 //   ✔️ Envio de imagens.
 //   ✔️ Navegar slides clicando à direita ou esquerda.
 //   ✔️ Enviar imagem para fundo.
@@ -102,33 +110,43 @@
 //   ✔️ Selecionar resolução personalizada.
 //   ✔️ Exportação de slides de imagem
 //   ✔️ Recuperar senha
+//   ✔️ Pedir cadastro ao tentar enviar e-mail
+//   ✔️ Compor html e-mail 
 //   ✔️ Exportar como Power Point.*/
-//   Editar tamanho da imagem direto no preview.
-//   Nomear apresentacao
-//   Tela perfil do usuário: informações básicas, predefinições, assinatura. 
-//   Enviar por e-mail.
-//   E-mails não caírem no spam.
-//   Pedir cadastro ao tentar enviar e-mail.
-//   Shenanigans de segunda tela.
+//   Tela perfil do usuário: informações básicas, predefinições. 
+//   Definir limite de e-mails.
+//   Enviar powerpoint por e-mail.
 //   Persistir redux
 //   Melhorar pesquisa de letra de música usando google.
-//   Incluir fontes como base64.
-//   Olhinho de ver senha no login.
+//   Incluir fontes como base64 (html) ou zip (power point).
+//   Ajuda: rever tutoriais, entrar em contato com o desenvolvedor.
+//   Pagina de Download: visualizar apresentação online.
 
-/*/ Features não necessários:
-//   Exportar como PDF.
+/*/ Features dispensáveis:
+//   Propagandas alternadas na galeria.
+//   Favoritar músicas, fundos...
 //   Incorporar vídeos do youtube.
+//   Editar tamanho da imagem direto no preview.
+//   Exportar como PDF.
 //   Criar slides a partir de lista com separador.
 //   Combo de número de capítulos e versículos da bíblia.
 //   ColorPicker personalizado.
 //   Adicionar logo da igreja (upload ou a partir de lista de logos famosas de denominações).
-//   Favoritar músicas, fundos...
 //   Otimizar mobile
 //   Reutilizar links de compartilhamento.
-//   Indicar que há estilização nos slides/elementos.
-//   Lista de slides no arquivo html.
+//   Indicar que há estilização nos slides/grupos.
 //   Página de redefinição de senha em português.
 //   Gradiente como fundo.
+//   Shenanigans de segunda tela.
+//   Dividir slide em 2 colunas.
+//   Animação excluir item lista perfil.
+//   Nomear apresentacao
+//   Opção de inserir texto bíblico/imagem como grupo ou separado. 
+//   Tela assinaturas/compras. 
+//   Input de sliders por texto.
+//   Fotos de perfil.
+//   Compartilhar layouts.
+//   Lista de slides no arquivo html.
 //   Blend-mode tampão*/
 //
 // Negócio:
@@ -138,7 +156,8 @@
 //   Comprar domínio.
 //   Configurar site para ser encontrado pelo google.
 //   Pedir amigos para compartilharem.
-//   Logos "Apoio"
+//   Logos "Apoio" na tela de descanso
+//   E-mails não caírem no spam
 
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -146,10 +165,10 @@ import './index.css';
 import Home from './Home';
 import { createStore } from 'redux';
 import hotkeys from 'hotkeys-js';
-import { getEstiloPadrao, Estilo, getPadding, tiposElemento, getDadosMensagem } from './Element.js';
+import { getEstiloPadrao, newEstilo, getPadding, tiposElemento, getDadosMensagem, listaPartesEstilo } from './Element.js';
 import { selecionadoOffset, getSlidePreview } from './Components/MenuExportacao/Exportador';
-import { atualizarApresentacao, getApresentacaoPadrao, definirApresentacaoAtiva, zerarApresentacao, autorizacaoEditar, ratioPadrao, autorizacaoPadrao } from './firestore/apresentacoesBD';
-import { atualizarRegistro, slidesPadraoDefault } from './firestore/apiFirestore';
+import { atualizarApresentacao, getApresentacaoPadrao, zerarApresentacao, autorizacaoEditar, ratioPadrao, autorizacaoPadrao, apresentacaoAnonima } from './firestore/apresentacoesBD';
+import { atualizarRegistro } from './firestore/apiFirestore';
 import { keysTutoriais } from './Components/Tutorial/Tutorial';
 
 const tipos = Object.keys(tiposElemento);
@@ -172,7 +191,7 @@ const numeroAcoesPropaganda = 20;
 var defaultList = {...getApresentacaoPadrao(), 
   abaAtiva: 'texto',
   popupAdicionar: {},
-  apresentacao: {id: 0, zerada: true, autorizacao: autorizacaoPadrao},
+  apresentacao: apresentacaoAnonima,
   ratio: {...ratioPadrao}
 };
 
@@ -187,7 +206,7 @@ export const reducerElementos = function (state = defaultList, action, usuario) 
   switch (action.type) {
     case 'definir-apresentacao-ativa':
       var autorizacao = action.apresentacao.autorizacao || autorizacaoPadrao;
-      if (action.apresentacao.idUsuario === usuario.uid && autorizacao !== 'baixar')
+      if ((action.apresentacao.idUsuario === usuario.uid && autorizacao !== 'baixar') || !action.apresentacao.id)
         autorizacao = 'editar';
       action.apresentacao.autorizacao = autorizacao;
       sel = selecionadoOffset(action.elementos, getApresentacaoPadrao().selecionado, 0, !autorizacaoEditar(autorizacao));
@@ -228,8 +247,13 @@ export const reducerElementos = function (state = defaultList, action, usuario) 
       var est = s.estilo;
       if (action.objeto === 'estilo') {
         s.estilo = {...action.valor};
-      } else if(action.objeto === 'imagem') {
-        s.imagem = {...s.imagem, ...action.valor};
+      } else if (action.objeto === 'estiloSemReplace') {
+        var keys = Object.keys(action.estilo).filter(k => listaPartesEstilo.includes(k));
+        for (var k of keys) {
+          s.estilo[k] = {...s.estilo[k], ...action.estilo[k]};
+        }
+      } else if(action.objeto === 'srcImagem') {
+        s.imagem = {...action.valor};
       } else if (action.objeto === 'textoArray') {
         if (action.valor === '') {
           s.textoArray.splice(action.numero, 1);
@@ -244,6 +268,7 @@ export const reducerElementos = function (state = defaultList, action, usuario) 
         }
       } else if(action.objeto === 'textoTitulo') {
         s.titulo = action.valor;
+        if (!sel.slide && e.tipo !== 'Imagem' && e.tipo !== 'Vídeo') e.titulo = action.valor;
       } else if (Object.keys(action.valor)[0] === 'paddingRight') {
         est[action.objeto].paddingRight = action.valor.paddingRight;
         est[action.objeto] = getPadding(est, action.objeto);
@@ -258,7 +283,7 @@ export const reducerElementos = function (state = defaultList, action, usuario) 
     }
     case "limpar-estilo": {
       dadosMensagem = getDadosMensagem(el[sel.elemento]);
-      const limparEstiloSlide = s => s.estilo = JSON.parse(JSON.stringify(new Estilo()));
+      const limparEstiloSlide = s => s.estilo = newEstilo();
       const limparEstiloElemento = e => {
         for (var s of e.slides) {
           limparEstiloSlide(s);
@@ -289,6 +314,8 @@ export const reducerElementos = function (state = defaultList, action, usuario) 
     case "definir-selecao":
       if (!autorizacaoEditar(state.apresentacao.autorizacao)) 
         sel = selecionadoOffset(state.elementos, action.selecionado, 0, true);
+      if(sel.slide > el[sel.elemento].slides.length - 1) sel.slide = 0;
+      if(sel.elemento > el.length -1) sel.elemento = 0;
       return {...state, selecionado: sel};
     case "offset-selecao":  
       sel = {...selecionadoOffset(state.elementos, state.selecionado, action.offset, autorizacaoEditar(state.apresentacao.autorizacao) ? undefined : true)};
@@ -298,7 +325,6 @@ export const reducerElementos = function (state = defaultList, action, usuario) 
   }
 };
 
-const usuarioAnonimo = {uid: 0, slidesPadrao: slidesPadraoDefault};
 function undoable(reducer) {
 
   var presenteInicial = reducer(undefined, {})
@@ -337,8 +363,6 @@ function undoable(reducer) {
         var feitos = action.usuario.tutoriaisFeitos || [];
         novosItensTutorial = itensTutorial.filter(n => !feitos.includes(n))
         return {...state, usuario: action.usuario, tutoriaisFeitos: feitos, itensTutorial: novosItensTutorial};
-      case 'logout':
-        return {...state, usuario: usuarioAnonimo};
       case 'toggle-search':
         return {...state, searchAtivo: !searchAtivo};
       case 'ativar-popup-confirmacao':
@@ -404,11 +428,8 @@ function undoable(reducer) {
         var mudanca = houveMudanca(present, newPresent);
         if (mudanca.length > 0) {
           past = [...past, present];
-          if(mudanca.includes('elementos') || mudanca.includes('ratio')) {
-            newPresent.apresentacao = {...newPresent.apresentacao, zerada: false}
-            if(usuario.uid && !newPresent.apresentacao.id)
-              definirApresentacaoAtiva(usuario, newPresent.apresentacao, newPresent.elementos, newPresent.ratio);
-          }
+          if(mudanca.includes('elementos') || mudanca.includes('ratio'))
+            newPresent.apresentacao.zerada = false
           if (action.type === 'inserir')
           present.popupAdicionar = {...action.popupAdicionar, tipo: action.elemento.tipo};
         } 

@@ -11,7 +11,7 @@ html, body {
 
 *, *:before, *:after {
   box-sizing: inherit;
-  transition: opacity 0.1s ease-in-out, color 0.08s ease-in-out,  box-shadow 0.1s ease-in-out;
+  transition: opacity 0.1s ease-in-out, color 0.08s ease-in-out, background-color 0.1s ease-in-out, box-shadow 0.1s ease-in-out;
 }
 
 body {
@@ -30,7 +30,7 @@ body {
   --platinum-forte: #e5e5e5;
   --vermelho-fraco: #ff3c3c;
   --vermelho-forte: #dd0000;
-  --round-border-muito-pequeno: 0.3vh;
+  --round-border-muito-pequeno: 0.4vh;
   --round-border-pequeno: 0.7vh;
   --round-border-medio: 1vh;
   --round-border-grande: 1.5vh;
@@ -108,4 +108,11 @@ sup {
   transition: none;
   -webkit-transform: scaleX(1) scaleY(1) scaleZ(1);
   transform: scaleX(1) scaleY(1) scaleZ(1); */
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus, 
+input:-webkit-autofill:active  {
+    -webkit-box-shadow: 0 0 0 30px white inset !important;
 }

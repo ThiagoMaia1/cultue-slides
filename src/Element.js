@@ -38,15 +38,14 @@ export function getDadosMensagem(elemento) {
 
 export const textoMestre = 'As configurações do estilo desse slide serão aplicadas aos demais, exceto quando configurações específicas de cada slide se sobrepuserem às deste. \n\nEste slide não será exportado nem exibido no modo de apresentação.'
 
-export class Estilo {
-  constructor () {
-    this.texto = {}; 
-    this.titulo = {}; 
-    this.paragrafo = {}; 
-    this.fundo = {}; 
-    this.tampao = {};
-    this.imagem = {};
+export const listaPartesEstilo = ['texto', 'titulo', 'paragrafo', 'fundo', 'tampao', 'imagem'];
+
+export const newEstilo = () => {
+  var obj = {};
+  for (var i of listaPartesEstilo) {
+    obj[i] = {};
   }
+  return obj;
 }
 
 export const fontePadrao = 'Noto Sans';
@@ -95,7 +94,7 @@ export default class Element {
     this.eMestre = eMestre;
     this.colapsado = false;
     
-    var est = {...new Estilo(), ...estilo};
+    var est = {...newEstilo(), ...estilo};
     est = {...est, paragrafo: getPadding(est, 'paragrafo'), titulo: getPadding(est, 'titulo')};
     if (this.tipo === 'TextoLivre' && texto.filter(t => t !== '').length === 0) est.titulo.height = '1';
     this.slides = [{estilo: {...est}, eMestre: true, textoArray: [textoMestre]}];
@@ -113,7 +112,7 @@ export default class Element {
     }
     if (thisP.slides.length > 1 && !thisP.slides[0].eMestre) {
       thisP.slides.unshift({estilo: {...estiloMestre}, textoArray: [textoMestre], eMestre: true});
-      thisP.slides[1].estilo = {...new Estilo()};
+      thisP.slides[1].estilo = {...newEstilo()};
     } else if (thisP.slides.length === 2 && thisP.slides[0].eMestre) {
       thisP.slides[1].estilo = thisP.slides[0].estilo;
       thisP.slides.shift();
@@ -139,7 +138,7 @@ export default class Element {
       thisP.slides[0].textoArray = [];
     } else {
       for (var img of thisP.imagens) {
-        thisP.slides.push({estilo: {...new Estilo()}, imagem: img, textoArray: []});
+        thisP.slides.push({estilo: {...newEstilo()}, imagem: img, textoArray: []});
       }
     }
   }
@@ -148,7 +147,7 @@ export default class Element {
     
     //Divide o texto a ser incluído em quantos slides forem necessários, mantendo a estilização de cada slide.
     if (nSlide === thisP.slides.length) {
-      thisP.slides.push({estilo: {...new Estilo()}, textoArray: []});
+      thisP.slides.push({estilo: {...newEstilo()}, textoArray: []});
     } else if (nSlide > thisP.slides.length) {
       console.log('Tentativa de criar slide além do limite: ' + nSlide);
       return;

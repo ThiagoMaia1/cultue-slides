@@ -66,7 +66,7 @@ export function getSlidePreview ({elementos, selecionado}) {
   const estiloAplicavel = obj => {
     var estilo = {...global.estilo[obj], ...elemento.estilo[obj], ...slide.estilo[obj]};
     for (var k of Object.keys(estilo)) {    
-      if (k === 'height' || k === 'fontSize' || /padding/.test(k)) {
+      if (k === 'height' || k === 'width' || k === 'fontSize' || /padding/.test(k)) {
         estilo[k] = estilo[k]*100 + '%';
       }
     }
@@ -76,8 +76,12 @@ export function getSlidePreview ({elementos, selecionado}) {
   var estiloTexto = estiloAplicavel('texto');
   var estiloParagrafo = {...estiloTexto, ...estiloAplicavel('paragrafo')};
   var estiloTitulo = {...estiloTexto, ...estiloAplicavel('titulo')};
+  var estiloImagem = {height: '100%', width: '100%', ...estiloAplicavel('imagem')};
   var tipo = elementos[selecionado.elemento].tipo;
-  var titulo = capitalize(elementos[selecionado.elemento].titulo, estiloTitulo.caseTexto);
+  var el = elementos[selecionado.elemento];
+  var tituloSlide = el.slides[selecionado.slide].titulo;
+  var titulo = tituloSlide !== undefined ? tituloSlide : elementos[selecionado.elemento].titulo;
+  titulo = capitalize(titulo, estiloTitulo.caseTexto);
 
   return {...slide,
     tipo: tipo,
@@ -91,7 +95,7 @@ export function getSlidePreview ({elementos, selecionado}) {
       fundo: estiloAplicavel('fundo'), 
       tampao: estiloAplicavel('tampao'),
       texto: estiloTexto,
-      imagem: estiloAplicavel('imagem')
+      imagem: estiloImagem
     }
   };
 }
@@ -174,12 +178,14 @@ class Exportador extends Component {
         }
       }
 
+      var nomeArquivo = getDate() + ' Apresentação.';
+      if(!nClasses) callbackMeio(callbackFormato(copiaDOM, [], previews, nomeArquivo));
+
       for (var j = 0; j < imgsUnique.length; j++) {
         getBase64Image(imgsUnique[j].src, imgsUnique[j].className, imgsUnique.length, ratio,
           (dataURL, classe, total, src) => {
             imagensBase64.push({data: dataURL, classe: classe});
             if (total === imagensBase64.length) {
-              var nomeArquivo = getDate() + ' Apresentação.';
               callbackMeio(callbackFormato(copiaDOM, imagensBase64, previews, nomeArquivo));
             }
           }

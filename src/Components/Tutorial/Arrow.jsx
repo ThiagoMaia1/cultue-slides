@@ -31,6 +31,7 @@ const getAngulo = indiceAngulo => -180 + indiceAngulo*45;
 
 const getEstiloArrow = (selectorElemento, posicaoArrow, distancia = null) => {
     var { indiceAngulo, coordenadas } = posicoesArrow[posicaoArrow];
+    if (!document.querySelectorAll(selectorElemento)[0]) return null;
     var estiloArrow = getCoords(document.querySelectorAll(selectorElemento)[0], coordenadas[1], coordenadas[0]);
     estiloArrow.transform = 'rotate(' + getAngulo(indiceAngulo) + 'deg)';
     if (distancia) {
@@ -67,6 +68,7 @@ const getSizeArrow = (posicaoArrow, tamanho) => {
 function Arrow (props) {
 
     var estiloArrow = getEstiloArrow(props.selectorElemento, props.posicao, props.distancia);
+    if (!estiloArrow) return null;
     var tamanho = props.tamanhoIcone || 150;
     var posicaoChildren = props.posicaoChildren || 'left';
     const estiloChildren = getTopLeftArrow(props.posicao, estiloArrow, tamanho, posicaoChildren, props.distancia);

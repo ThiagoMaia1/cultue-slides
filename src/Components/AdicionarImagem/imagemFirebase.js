@@ -6,8 +6,9 @@ export function uploadImagem (arquivo, callback) {
 
     var idUpload = contador;
     contador++;
-
-    var uploadTask = firebaseStorage.child('images/' + arquivo.name).put(arquivo);
+    
+    var nomeArquivo = arquivo.name + '_' + new Date().getTime(); //Nomes de arquivo no firebase storage precisam ser únicos.
+    var uploadTask = firebaseStorage.child('images/' + nomeArquivo).put(arquivo);
 
     // Listen for state changes, errors, and completion of the upload.
     uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,

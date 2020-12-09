@@ -37,6 +37,7 @@
 .quadrado-logo.azul {
     top: 0;
     right: 0;
+    background-color: var(--azul-forte);
 }
 
 .quadrado-logo.azul-puro {

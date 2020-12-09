@@ -28,10 +28,10 @@ class Img extends Component {
 
     onMouseOver = () => {
         clearTimeout(this.esperaMouseOver);
+        var t = this.mudancaTemporaria;
+        this.mudancaTemporaria = true;
+        if (!t || !this.estiloAnterior) this.estiloAnterior = this.getEstiloAnterior();
         this.esperaMouseOver = setTimeout(() => {
-            var t = this.mudancaTemporaria;
-            this.mudancaTemporaria = true;
-            if (!t || !this.estiloAnterior) this.estiloAnterior = this.getEstiloAnterior();
             this.togglePrevia(this.props.imagem);
         }, 100);
     }
@@ -43,18 +43,21 @@ class Img extends Component {
     }
 
     onClick = () => {
-        this.togglePrevia(this.props.imagem);
-        this.props.dispatch({type: 'confirmar-mudanca'});
+        this.props.dispatch(this.getObjetoDispatch(this.props.imagem));
         this.mudancaTemporaria = false;
         this.estiloAnterior = {...this.props.slideSelecionado.estilo};
     }
 
     togglePrevia(estiloImagem) {
         var img = {...estiloImagem};
-        this.props.dispatch({type: 'editar-slide-temporariamente', objeto: 'fundo', valor: {...img.fundo}});
-        this.props.dispatch({type: 'editar-slide-temporariamente', objeto: 'tampao', valor: {...img.tampao}});
-        if (img.texto.color) this.props.dispatch({type: 'editar-slide-temporariamente', objeto: 'texto', valor: {color: img.texto.color}});
+        this.props.dispatch(this.getObjetoDispatch(img, true));
     }
+
+    getObjetoDispatch = (img, temp = false) => ({
+        type: 'editar-slide' + (temp ? '-temporariamente' : ''), 
+        objeto: 'estiloSemReplace', 
+        estilo: {fundo: {...img.fundo}, tampao: {...img.tampao}, texto: {...img.texto}}
+    })
 
     render () {
         return (

@@ -8,8 +8,18 @@
     min-height: 8vh;
 }
 
+
 .div-botao-exportar {
+    margin: 0.7vw 1.1vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
     transition: max-width 0.2s linear, max-height 0.2s linear;
+}
+
+.inativo .botao-exportar {
+    filter: grayscale(100%);
 }
 
 #rotulo-exportar {
@@ -91,16 +101,12 @@
     color: white;
 }
 
-.logo-exportacao {
-    object-fit: contain;
+.inativo .rotulo-botao-exportar {
+    color: gray;
 }
 
-.div-botao-exportar {
-    margin: 0.7vw 1.1vw;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    position: relative;
+.logo-exportacao {
+    object-fit: contain;
 }
 
 #exportar-link {

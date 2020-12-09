@@ -46,7 +46,10 @@ class ExportadorPDF extends Component {
   render() {
     return (
       <BotaoExportador formato={this.formato} onClick={() => this.props.definirFormatoExportacao(this.exportarPDF, this.formato)} 
-        logo={this.logo} rotulo={this.formato.toUpperCase()}/>
+        logo={this.logo} rotulo={this.formato.toUpperCase()} 
+        mensagemInativo={'A exportação em PDF ainda não está disponível.\n\n' + 
+                         'A exportação em HTML permite a exibição offline da apresentação de maneira leve e sem erros de formatação.'}
+      />
     )
   }
 

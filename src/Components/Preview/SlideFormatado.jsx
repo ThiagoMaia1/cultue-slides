@@ -19,7 +19,7 @@ class SlideFormatado extends Component {
 
     getEstiloImagem = () => {
         var e = this.props.slidePreview.estilo.imagem;
-        return {...this.realcarElemento('imagem'), height: e.height*100 + '%', width: e.width*100 + '%'}
+        return {...this.realcarElemento('imagem'), height: e.height, width: e.width};
     }
     
     editarTexto = e => {
@@ -62,6 +62,7 @@ class SlideFormatado extends Component {
         var slidePreview = this.props.slidePreview;
         var proporcao = this.props.proporcao;
         var proporcaoTela = proporcao*this.props.ratio.width/ratioPadrao.width;
+        var sel = this.props.selecionado;
         return (
                 <div ref={this.props.referencia} 
                      id={this.props.id} 
@@ -74,7 +75,7 @@ class SlideFormatado extends Component {
                     <Img imagem={slidePreview.estilo.fundo} proporcao={proporcaoTela}/>
                     <div className='texto-preview' style={{fontSize: getFonteBase().numero*proporcao + getFonteBase().unidade}}>
                         <div className={'slide-titulo ' + this.getClasseLetraClara('titulo')} style={slidePreview.estilo.titulo}>
-                            <div><span id='textoTitulo' onInput={this.editarTexto} onFocus={() => this.ativarRealce('titulo')} 
+                            <div><span key={sel.elemento + '.' + sel.slide} id='textoTitulo' onInput={this.editarTexto} onFocus={() => this.ativarRealce('titulo')} 
                                 contentEditable={this.props.editavel} suppressContentEditableWarning='true'
                                 style={this.realcarElemento('titulo')}>{slidePreview.titulo}</span></div>
                         </div>
@@ -82,12 +83,12 @@ class SlideFormatado extends Component {
                             <div style={this.realcarElemento('paragrafo')} 
                                  className={'realce-paragrafo ' + (slidePreview.estilo.paragrafo.duasColunas ? 'dividido-colunas' : '')}>
                                 {<Estrofes slidePreview={slidePreview} onInput={this.editarTexto} ativarRealce={this.ativarRealce} editavel={this.props.editavel}
-                                           selecionado={this.props.selecionado}/>}
+                                           selecionado={sel}/>}
                             </div>
                         </div>
                     </div>
                     {slidePreview.imagem ? 
-                        <div className='div-imagem-slide' style={{padding: slidePreview.estilo.imagem.padding*100 + '%'}}>
+                        <div className='div-imagem-slide' style={{padding: slidePreview.estilo.imagem.padding}}>
                             <img className='imagem-slide' src={slidePreview.imagem.src} alt={slidePreview.imagem.alt}
                                  style={this.getEstiloImagem()}/>
                         </div>: 

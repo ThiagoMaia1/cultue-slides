@@ -21,8 +21,8 @@ class AdicionarMusica extends Component {
                       termoPesquisa: null, input2: this.props.input2
                     }
         this.listaCheckboxes = [{label: 'Omitir Repetições', opcao: 'omitirRepeticoes'},
-                                {label: 'Multiplicadores', opcao: 'multiplicadores'},
-                                {label: 'Dividir em Colunas', opcao: 'duasColunas'}
+                                {label: 'Multiplicadores', opcao: 'multiplicadores'}
+                                // {label: 'Dividir em Colunas', opcao: 'duasColunas'}
         ];
     }
 

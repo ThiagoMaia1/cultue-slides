@@ -7,6 +7,7 @@ import { BsTextLeft, BsTextCenter, BsTextRight, BsJustify, BsMusicNoteBeamed} fr
 import { VscCollapseAll } from 'react-icons/vsc';
 import { CompactPicker } from 'react-color';
 import Slider from './Slider';
+import { listaPartesEstilo } from '../../Element';
 
 const casesTexto = [{valor: 'Nenhum', icone: (<span style={{color: '#999'}}>Aa</span>)}, {valor: 'Primeira Maiúscula', icone: 'Aa'}, 
                     {valor: 'Maiúsculas', icone: 'AA'}, {valor: 'Minúsculas', icone: 'aa'}
@@ -23,12 +24,12 @@ const fontesGoogle = ['Montserrat', 'Source Sans Pro', 'Noto Sans', 'Amatic SC',
 
 const listaFontes = [...fontesBasicas, ...fontesGoogle];
 
-const listaBotoesAbas = [{nomeCodigo: 'texto', nomeInterface: 'Texto'},
-                         {nomeCodigo: 'titulo', nomeInterface: 'Título', maxFonte: '7'}, 
-                         {nomeCodigo: 'paragrafo', nomeInterface: 'Parágrafo', maxFonte: '4'}, 
-                         {nomeCodigo: 'imagem', nomeInterface: 'Imagem'},
-                         {nomeCodigo: 'imagem', nomeInterface: 'Vídeo'},
-                         {nomeCodigo: 'tampao', nomeInterface: 'Fundo'}
+const listaBotoesAbas = [{nomeCodigo: listaPartesEstilo[0], nomeInterface: 'Texto'},
+                         {nomeCodigo: listaPartesEstilo[1], nomeInterface: 'Título', maxFonte: '7'}, 
+                         {nomeCodigo: listaPartesEstilo[2], nomeInterface: 'Parágrafo', maxFonte: '4'}, 
+                         {nomeCodigo: listaPartesEstilo[5], nomeInterface: 'Imagem'},
+                         {nomeCodigo: listaPartesEstilo[5], nomeInterface: 'Vídeo'},
+                         {nomeCodigo: listaPartesEstilo[4], nomeInterface: 'Fundo'}
 ];
 
 const listaBotoesAlinhamento = [{direcao: 'left', titulo: 'Alinhado à Esquerda', icone: BsTextLeft}, 
@@ -285,10 +286,10 @@ class ConfigurarSlides extends Component {
                 <button title={casesTexto[this.state.caseTexto].valor} id='botao-case' className='botao-configuracao bool' 
                           onClick={this.mudarCaseTexto}>{casesTexto[this.state.caseTexto].icone}</button>
                 <div id='container-botoes-alinhamento' className='botao-configuracao'>{this.gerarBotoesAlinhamento(aba)}</div>
-                {aba === 'paragrafo'
+                {/* {aba === 'paragrafo' //Todo: melhorar botão de dividir em colunas.
                   ? this.gerarBotoesEstiloTexto(aba, 3, 3)
                   : null
-                }
+                } */}
                 </div>
                 {aba !== 'tampao' 
                     ? <div className='botoes-direita flex'>

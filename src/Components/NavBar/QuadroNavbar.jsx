@@ -30,7 +30,9 @@ class QuadroNavbar extends React.Component {
     render() {
         var estiloLado = this.props.esquerda ? {right: '0'} : {left: '0'}
         return (
-            <div id='quadro-atalhos' className='quadro-navbar' style={{position: 'absolute', top: '6vh', ...estiloLado, ...this.state}} 
+            <div id='quadro-atalhos' 
+                 className='quadro-navbar' 
+                 style={{position: 'absolute', top: '6vh', ...estiloLado, ...this.state, ...this.props.style}} 
                  onKeyUp={() => {if(this.props.onKeyUp) this.fecharQuadro()}}
                  tabIndex='0' ref={this.ref}>
                  {this.props.children}

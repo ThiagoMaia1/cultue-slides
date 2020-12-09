@@ -115,7 +115,7 @@ class Carrossel extends Component {
         this.animacao = setInterval(() => {
             var offsetAtual = this.getOffsetAtual();
             var passo = this.getPasso(sentido, tamanhoPasso);
-            if(this.definirOffset(passo) === offsetAtual) this.pararDeslizar();
+            if(this.definirOffset(passo) === offsetAtual) this.pararDeslizar(sentido);
         }, tempo);
     }
 
@@ -151,13 +151,19 @@ class Carrossel extends Component {
     saltar(sentido) {
         this.deslizar(sentido, 80); 
         this.timeoutSalto = setTimeout(() => {
-            clearInterval(this.animacao)
-            this.deslizar(sentido)
+            clearInterval(this.animacao);
+            if(this.state.mouseOverSeta === sentido) this.deslizar(sentido);
         }, 200);
     }
 
-    pararDeslizar = () => {
-        clearInterval(this.animacao)
+    pararDeslizar = sentido => {
+        clearInterval(this.animacao);
+        var i = 10;
+        this.animacao = setInterval(() => {
+            this.definirOffset(this.getPasso(sentido, i), false);
+            i -= 0.5;
+            if (i <= 1) clearInterval(this.animacao);
+        }, 30)
         this.setTimeoutSetas(5);
     };
 
@@ -169,7 +175,8 @@ class Carrossel extends Component {
     deslizarWheel = e => {
         if (this.props.wheelDesativada) return;
         e.stopPropagation();
-        this.offsetComTransition(-e.deltaY, 600);
+        var passo = -e.deltaY;
+        this.offsetComTransition(passo, 600);
     }
 
     detectarTamanho = () => {
@@ -189,6 +196,8 @@ class Carrossel extends Component {
     }
 
     componentDidUpdate = prevProps => {
+        this.chegarFinal(prevProps.final);
+
         this.rO.observe(this.refCarrossel.current);
         var dimensao = this.getDimensaoCamel('offset');
         if(!this.props.refElemento || (prevProps.selecionado.elemento === this.props.selecionado.elemento && prevProps.selecionado.slide === this.props.selecionado.slide)) return;
@@ -217,6 +226,11 @@ class Carrossel extends Component {
         delete this.rO;
     }
 
+    chegarFinal = final => {
+        if (this.props.final !== final)
+            this.offsetComTransition(-this.state.tamanhoGaleria*2, 2000);
+    }
+    
     render () {
         var setas = [this.setaUm, this.setaDois];
         return (
@@ -226,8 +240,14 @@ class Carrossel extends Component {
                         const Seta = s;
                         return (
                             <div className="seta-galeria" 
-                                onMouseOver={() => this.deslizar(i)} 
-                                onMouseOut={this.pararDeslizar}
+                                onMouseOver={() => {
+                                    this.setState({mouseOverSeta: i});
+                                    this.deslizar(i);
+                                }} 
+                                onMouseOut={() => {
+                                    if (this.state.mouseOverSeta === i) this.setState({mouseOverSeta: null});
+                                    this.pararDeslizar(i);
+                                }}
                                 onClick={e => this.clickSeta(e, i)}
                                 style={{...this.estiloSeta, ...this.state[estilosSeta[i]]}}
                                 key={i}>

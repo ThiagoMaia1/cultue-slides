@@ -143,6 +143,7 @@ ol {
   display: flex;
   width: 100%;
   word-wrap: break-all;
+  max-height: 10.3vh;
 }
 
 .lista-slides:hover {
