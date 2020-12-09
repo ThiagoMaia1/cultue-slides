@@ -113,16 +113,18 @@
 //   ✔️ Pedir cadastro ao tentar enviar e-mail
 //   ✔️ Compor html e-mail 
 //   ✔️ Exportar como Power Point.*/
+//   ✔️ Enviar powerpoint por e-mail.
+//   ✔️ Pagina de Download: visualizar apresentação online.
 //   Tela perfil do usuário: informações básicas, predefinições. 
-//   Definir limite de e-mails.
-//   Enviar powerpoint por e-mail.
 //   Persistir redux
 //   Melhorar pesquisa de letra de música usando google.
 //   Incluir fontes como base64 (html) ou zip (power point).
 //   Ajuda: rever tutoriais, entrar em contato com o desenvolvedor.
-//   Pagina de Download: visualizar apresentação online.
 
 /*/ Features dispensáveis:
+//   Prévia configurar blend-mode e fonte.
+//   Aplicar efeito de sombra no texto.
+//   Definir limite de e-mails.
 //   Propagandas alternadas na galeria.
 //   Favoritar músicas, fundos...
 //   Incorporar vídeos do youtube.
@@ -195,6 +197,13 @@ var defaultList = {...getApresentacaoPadrao(),
   ratio: {...ratioPadrao}
 };
 
+const getAutorizacao = (autorizacao, idUsuario, idUsuarioAtivo) => {
+  autorizacao = autorizacao || autorizacaoPadrao;
+  if ((idUsuarioAtivo === idUsuario || !idUsuario) && autorizacao === 'ver')
+    autorizacao = 'editar';
+  return autorizacao;
+}
+
 export const reducerElementos = function (state = defaultList, action, usuario) {
 
   var el = [...state.elementos];
@@ -202,15 +211,17 @@ export const reducerElementos = function (state = defaultList, action, usuario) 
   var e;
   var notificacao;
   var dadosMensagem;
+  var autorizacao;
   delete state.notificacao;
   switch (action.type) {
     case 'definir-apresentacao-ativa':
-      var autorizacao = action.apresentacao.autorizacao || autorizacaoPadrao;
-      if ((action.apresentacao.idUsuario === usuario.uid && autorizacao !== 'baixar') || !action.apresentacao.id)
-        autorizacao = 'editar';
-      action.apresentacao.autorizacao = autorizacao;
-      sel = selecionadoOffset(action.elementos, getApresentacaoPadrao().selecionado, 0, !autorizacaoEditar(autorizacao));
+      var ap = action.apresentacao;
+      ap.autorizacao = getAutorizacao(ap.autorizacao, ap.idUsuario, usuario.uid);
+      sel = selecionadoOffset(action.elementos, getApresentacaoPadrao().selecionado, 0, !autorizacaoEditar(ap.autorizacao));
       return {...state, apresentacao: action.apresentacao, elementos: action.elementos, ratio: action.ratio, selecionado: sel};
+    case 'alterar-autorizacao':
+      autorizacao = getAutorizacao(action.autorizacao, state.apresentacao.idUsuario, usuario.uid);
+      return {...state, apresentacao: {...state.apresentacao, autorizacao: autorizacao}};
     case 'selecionar-ratio-apresentacao':
       return {...state, elementos: redividirSlides(el, {elemento: 0, slide: 0}, action.ratio), ratio: {...action.ratio}}
     case "inserir":

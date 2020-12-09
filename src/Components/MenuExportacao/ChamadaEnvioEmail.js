@@ -32,7 +32,7 @@ export const enviarEmailTemplate = (assunto, destinatarios, corpo, JSXInterno, l
 
     const corpoHTML = ReactDOMServer.renderToStaticMarkup(
         <>
-            <div style={getEstiloBarraAzul(70)}></div>
+            <div style={getEstiloBarraAzul(50)}></div>
                 <div style={{padding: '25px', fontFamily: 'Roboto', textAlign: 'center', fontSize: '15px'}}>
             {JSXInterno}
             {botoes}
@@ -40,7 +40,7 @@ export const enviarEmailTemplate = (assunto, destinatarios, corpo, JSXInterno, l
             </div>
             <a href={window.location.origin.toString()} target='_blank' rel="noopener noreferrer"> 
                 <div style={getEstiloBarraAzul(20)}></div>
-            <div style={{width: '100%', padding: '20px 0'}}>
+            <div style={{width: '100%', padding: '18px 0'}}>
             <img src="https://firebasestorage.googleapis.com/v0/b/slidesigreja-ff51f.appspot.com/o/public%2FLogoCultue.png?alt=media&amp;token=e525c9f9-b0cf-4ffa-a595-77998ceca9b3" 
                  alt="Logotipo Cultue" style={{objectFit: 'contain', display: 'block', margin: 'auto'}}/>
             </div>

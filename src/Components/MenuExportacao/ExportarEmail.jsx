@@ -54,12 +54,13 @@ class ExportarEmail extends Component {
 
   enviarArquivoEmail = async obj => {
     var { nomeArquivo, arquivo, formato } = obj;
+    var encoding = {};
     switch (formato) {
       case 'pptx':
-        arquivo.writeFile(nomeArquivo);
+        arquivo = await arquivo.write('base64');
+        encoding = {encoding: 'base64'};
         break;
       case 'html':
-        // downloadArquivoTexto(nomeArquivo, arquivo);
         break;
       case 'pdf':
         arquivo.save(nomeArquivo);
@@ -79,7 +80,8 @@ class ExportarEmail extends Component {
       [{url: link, rotulo: 'Download Apresentação'}],
       [{
         filename: nomeArquivo,
-        content: arquivo
+        content: arquivo,
+        ...encoding
       }]
     )
   }
@@ -121,7 +123,6 @@ class ExportarEmail extends Component {
           <h3>{this.partes.saudacao}</h3>
           <br></br>
           <p>{this.partes.paragrafo1}</p>
-          <br></br>
           <p>{this.partes.paragrafo2}</p>
       </div>
     )

@@ -57,7 +57,7 @@ const estiloPadrao = {
   titulo: {fontSize: 3, height: 0.25, paddingRight: 0.08, textAlign: 'center'}, 
   paragrafo: {fontSize: 1.5, paddingRight: 0.08, lineHeight: 1.9}, 
   fundo: {}, 
-  tampao: {backgroundColor: '#ffffff', opacity: 0.2},
+  tampao: {backgroundColor: '#ffffff', opacityFundo: 0.2},
   imagem: {padding: 0.02}
 };
 

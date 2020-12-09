@@ -8,6 +8,7 @@ import { VscCollapseAll } from 'react-icons/vsc';
 import { CompactPicker } from 'react-color';
 import Slider from './Slider';
 import { listaPartesEstilo } from '../../Element';
+import { getBackgroundImageColor } from '../../FuncoesGerais';
 
 const casesTexto = [{valor: 'Nenhum', icone: (<span style={{color: '#999'}}>Aa</span>)}, {valor: 'Primeira Maiúscula', icone: 'Aa'}, 
                     {valor: 'Maiúsculas', icone: 'AA'}, {valor: 'Minúsculas', icone: 'aa'}
@@ -44,10 +45,29 @@ const listaSliders = [{rotulo: 'Fonte', aba: 'paragrafo', atributo: 'fontSize', 
                       {rotulo: 'Fonte', aba: 'titulo', atributo: 'fontSize', min: 1, max: 7, step: 0.01,  redividir: true},
                       {rotulo: 'Margem', aba: 'titulo', atributo: 'paddingRight', min: 0, max: 0.4, step: 0.01,  redividir: true},
                       {rotulo: 'Altura', aba: 'titulo', atributo: 'height', min: 0.1, max: 1, step: 0.01,  redividir: true},
-                      {rotulo: 'Opacidade', aba: 'tampao', atributo: 'opacity', min: 0, max: 1, step: 0.05},
+                      {rotulo: 'Opacidade', aba: 'tampao', atributo: 'opacityFundo', min: 0, max: 1, step: 0.05},
                       {rotulo: 'Margem', aba: 'imagem', atributo: 'padding', min: 0, max: 0.25, step: 0.01},
                       {rotulo: 'Altura', aba: 'imagem', atributo: 'height', min: 0, max: 2, step: 0.01},
                       {rotulo: 'Largura', aba: 'imagem', atributo: 'width', min: 0, max: 2, step: 0.01}
+]
+
+const listaBlendMode = [
+  {rotulo: 'Normal', valor: 'normal'},
+  {rotulo: 'Multiplicar', valor: 'multiply'},
+  {rotulo: 'Tela', valor: 'screen'},
+  {rotulo: 'Sobrepor', valor: 'overlay'},
+  {rotulo: 'Escurecer', valor: 'darken'},
+  {rotulo: 'Iluminar', valor: 'lighten'},
+  {rotulo: 'Desvio de Cor', valor: 'color-dodge'},
+  {rotulo: 'Queima de Cor', valor: 'color-burn'},
+  {rotulo: 'Luz Forte', valor: 'hard-light'},
+  {rotulo: 'Luz Suave', valor: 'soft-light'},
+  {rotulo: 'Diferença', valor: 'difference'},
+  {rotulo: 'Exclusão', valor: 'exclusion'},
+  {rotulo: 'Matiz', valor: 'hue'},
+  {rotulo: 'Saturação', valor: 'saturation'},
+  {rotulo: 'Cor', valor: 'color'},
+  {rotulo: 'Luminosidade', valor: 'luminosity'}
 ]
 
 const BotaoClonarEstilo = (props) => (
@@ -75,6 +95,9 @@ class ConfigurarSlides extends Component {
                   ref: this.ref, selecionado: this.props.selecionado};
     this.listaFontes = listaFontes.sort().map(f => 
         <option key={f} className='opcoes-fonte' value={f} style={{fontFamily: f}}>{f}</option>                  
+    )
+    this.listaBlendMode = listaBlendMode.map(b => 
+      <option key={b.valor} className='opcoes-fonte' value={b.valor}>{b.rotulo}</option>  
     )
     this.listaEstilosTexto = [{apelido:'Negrito', nomeAtributo: 'fontWeight', valorNormal: '500', valorAlterado: '650'}, 
                               {apelido:'Itálico', nomeAtributo: 'fontStyle', valorNormal: 'normal', valorAlterado: 'italic'},
@@ -167,25 +190,35 @@ class ConfigurarSlides extends Component {
   
   ativarPainelCor = callback => {
     this.setState({painelCor: (
-      <div className='container-painel-cor' onMouseLeave={() => this.setState({painelCor: null})}>
+      <div className='container-painel-cor' onMouseLeave={this.desativarPainelCor}>
         <div className='painel-cor'>
-          <CompactPicker onChange={callback}/>
+          <CompactPicker onChange={cor => {
+            callback(cor); 
+            this.desativarPainelCor();
+          }}/>
         </div>
       </div>
     )
     })
   }
 
-  mudarCorFonte = (cor) => {
-    this.atualizarEstilo(this.props.abaAtiva, 'color', cor.hex);
+  desativarPainelCor = () => this.setState({painelCor: null})
+
+  mudarCorFonte = cor => {
+    this.atualizarEstilo(this.props.abaAtiva, 'color', cor.rgb);
+    
   }
 
-  mudarCorFundo = (cor) => {
-    this.atualizarEstilo('tampao', 'backgroundColor', cor.hex);
+  mudarCorFundo = cor => {
+    this.atualizarEstilo('tampao', 'backgroundColor', cor.rgb);
   }
 
-  mudarFonte = (e) => {
+  mudarFonte = e => {
     this.atualizarEstilo(this.props.abaAtiva, 'fontFamily', e.target.value, true)
+  }
+
+  mudarBlendMode = e => {
+    this.atualizarEstilo(this.props.abaAtiva, 'mixBlendMode', e.target.value)
   }
 
   mudarCaseTexto = () => {
@@ -312,18 +345,20 @@ class ConfigurarSlides extends Component {
               }
             </div>
           </div>
-          <button className='botao-configuracao bool' onMouseOver={() => this.ativarPainelCor(this.mudarCorFundo)}
-                  style={{display: (aba === 'tampao' ? '' : 'none')}}>
-              <div className='container-cor-fundo'>
-                <div className='cor-fundo'>
-                  <img id='img-quadriculado' alt='' src={require('./Quadriculado PNG.png')} className='quadriculado-imitando-transparente'/>
-                </div>
-                <div className='cor-fundo' style={{backgroundColor: this.props.slideSelecionado.estilo.tampao.backgroundColor, 
-                                                  opacity: this.props.slideSelecionado.estilo.tampao.opacity}}>
-                </div>
+          <div style={{display: (aba === 'tampao' ? '' : 'none')}}>
+            <button className='botao-configuracao bool' onMouseOver={() => this.ativarPainelCor(this.mudarCorFundo)}>
+              <div className='cor-fundo' style={{backgroundImage: getBackgroundImageColor(this.props.slidePreview.estilo.tampao.backgroundColor) +
+                                                ', url("' + require('./Quadriculado PNG.png') + '")', 
+                                                mixBlendMode: this.props.slidePreview.estilo.tampao.mixBlendMode}}>
               </div>
-          </button>
-          <div className='div-sliders'>
+            </button>
+            <select className='botao-configuracao combo-fonte'
+                          onChange={this.mudarBlendMode} 
+                          defaultValue={slidePreview.estilo.tampao.mixBlendMode}>
+                            {this.listaBlendMode}
+            </select>
+          </div>
+          <div className='div-sliders'> 
             {listaSliders.reduce(this.reducerListaSliders, [])}
           </div>
         </div>

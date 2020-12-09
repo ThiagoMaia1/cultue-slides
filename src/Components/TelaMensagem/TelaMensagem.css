@@ -16,3 +16,11 @@
     font-size: 120%;
     white-space: pre-wrap;
 }
+
+.container-botoes-download {
+    margin-top: 7vh;
+    width: 35%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}

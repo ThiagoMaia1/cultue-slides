@@ -7,7 +7,7 @@ import { getPathImagem } from './Img';
 import { limparHighlights } from '../BarraPesquisa/BarraPesquisa';
 import { markupParaSuperscrito } from '../Preview/TextoPreview';
 import { ratioPadrao } from '../../firestore/apresentacoesBD';
-
+import { getBackgroundImageColor } from '../../FuncoesGerais';
 
 class SlideFormatado extends Component {
     
@@ -46,11 +46,9 @@ class SlideFormatado extends Component {
         var cor = this.props.slidePreview.estilo[nomeObjeto].color;
         if (!cor) return '';
         var eClara = true;
-        var partesCor = cor.length === 7 
-                        ? [cor.slice(1,3), cor.slice(3, 5), cor.slice(5)]
-                        : [cor.slice(1,2), cor.slice(2,3), cor.slice(3,4)].map(c => c.repeat(2));
-        for (var p of partesCor) {
-            if (parseInt('0x' + p) < 210) {
+        var corRGB = cor.replace('rgb(', '').replace(')', '').split(',');
+        for (var i = 0; i < 3; i++) {
+            if (Number(corRGB[i]) < 210) {
                 eClara = false;
                 break;
             }
@@ -71,8 +69,7 @@ class SlideFormatado extends Component {
                              height: this.props.ratio.height*proporcao,
                              ...this.realcarElemento('tampao', 'dentro'),
                              ...this.props.style}}>
-                    <div className='tampao' style={slidePreview.estilo.tampao}></div>
-                    <Img imagem={slidePreview.estilo.fundo} proporcao={proporcaoTela}/>
+                    <Img imagem={slidePreview.estilo.fundo} proporcao={proporcaoTela} tampao={slidePreview.estilo.tampao}/>
                     <div className='texto-preview' style={{fontSize: getFonteBase().numero*proporcao + getFonteBase().unidade}}>
                         <div className={'slide-titulo ' + this.getClasseLetraClara('titulo')} style={slidePreview.estilo.titulo}>
                             <div><span key={sel.elemento + '.' + sel.slide} id='textoTitulo' onInput={this.editarTexto} onFocus={() => this.ativarRealce('titulo')} 
@@ -99,23 +96,28 @@ class SlideFormatado extends Component {
     }
 }
 
-const ImgNormal = ({urlImgs, id}) => (
-    <div id={id} className='imagem-fundo-preview' style={{backgroundImage: urlImgs}} />
+const ImgNormal = ({corTampao, strBackground, mixBlendMode}) => (
+    <div className='imagem-fundo-preview' 
+         style={{
+             backgroundImage: getBackgroundImageColor(corTampao) + ', ' + (strBackground || getBackgroundImageColor('white')), 
+             mixBlendMode
+         }} 
+    />
 )
 
-const Img = ({imagem, proporcao}) => {
-    var urlImgs = '';
+const Img = ({imagem, proporcao, tampao}) => {
+    var strBackground = '';
     if (imagem.src) {
-        urlImgs = 'url("' + imagem.src + '")';
+        strBackground += 'url("' + imagem.src + '")';
     } else if(imagem.path) {
-        var pixeis = [[300, 0], [600, 0.3], [null, 0.65]];
-        urlImgs = pixeis.reverse().reduce((resultado, px, i) => {
+        var pixeis = [[null, 0], [600, 0.3], [300, 0]];
+        strBackground += pixeis.reduce((resultado, px) => {
             if(px[1] < proporcao) 
                 resultado.push('url("' + require('' + getPathImagem(imagem.path, px[0])) + '")');
             return resultado;            
         }, []).join(', ');
     }
-    return <ImgNormal urlImgs={urlImgs}/>
+    return <ImgNormal corTampao={tampao.backgroundColor} strBackground={strBackground} mixBlendMode={tampao.mixBlendMode}/>
 };
 
 const mapState = function (state) {

@@ -60,6 +60,8 @@ class Img extends Component {
     })
 
     render () {
+        var estiloTampao = {...this.props.imagem.tampao};
+        estiloTampao.opacity = estiloTampao.opacityFundo;
         return (
             <div className='div-img' 
                 onClick={this.onClick}
@@ -68,7 +70,7 @@ class Img extends Component {
                 <div className='texto-mini-preview'>
                     <div style={this.props.imagem.texto}>{this.props.imagem.alt}</div>
                 </div>
-                <div className='tampao' style={this.props.imagem.tampao}></div>
+                <div className='tampao' style={estiloTampao}></div>
                 <img className='imagem-galeria' 
                      src={lerImagem(this.props.imagem.fundo, 300)} 
                      alt={this.props.imagem.alt}
