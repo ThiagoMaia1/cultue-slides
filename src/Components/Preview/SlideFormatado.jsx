@@ -97,26 +97,28 @@ class SlideFormatado extends Component {
 }
 
 const ImgNormal = ({corTampao, strBackground, mixBlendMode}) => (
-    <div className='imagem-fundo-preview' 
-         style={{
-             backgroundImage: getBackgroundImageColor(corTampao) + ', ' + (strBackground || getBackgroundImageColor('white')), 
-             mixBlendMode
-         }} 
-    />
+    <div className='imagem-fundo-preview' style={{backgroundImage: strBackground || getBackgroundImageColor('white')}}>
+        <div className='tampao' style={{backgroundColor: corTampao, mixBlendMode}}/>
+    </div>
 )
 
 const Img = ({imagem, proporcao, tampao}) => {
     var strBackground = '';
+    var strPrincipal;
     if (imagem.src) {
         strBackground += 'url("' + imagem.src + '")';
     } else if(imagem.path) {
-        var pixeis = [[null, 0], [600, 0.3], [300, 0]];
+        var pixeis = [[null, 0.65], [600, 0.3], [300, 0]];
         strBackground += pixeis.reduce((resultado, px) => {
-            if(px[1] < proporcao) 
-                resultado.push('url("' + require('' + getPathImagem(imagem.path, px[0])) + '")');
+            if(px[1] < proporcao) {
+                var strUrl = 'url("' + require('' + getPathImagem(imagem.path, px[0])) + '")';
+                if (!strPrincipal) strPrincipal = strUrl;
+                resultado.push(strUrl)
+            }
             return resultado;            
         }, []).join(', ');
     }
+    console.log(strBackground)
     return <ImgNormal corTampao={tampao.backgroundColor} strBackground={strBackground} mixBlendMode={tampao.mixBlendMode}/>
 };
 

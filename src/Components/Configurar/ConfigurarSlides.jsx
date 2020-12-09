@@ -283,9 +283,10 @@ class ConfigurarSlides extends Component {
 	render() {
     var aba = this.props.abaAtiva;
     var slidePreview = this.props.slidePreview;
+    var sel = this.props.selecionado;
     const botoesDireita = (
       <>
-        <BotaoClonarEstilo visivel={this.props.selecionado.elemento || this.props.tutorialAtivo} 
+        <BotaoClonarEstilo visivel={sel.elemento || this.props.tutorialAtivo} 
                       tamIcones={this.state.tamIcones} 
                       aplicarEstiloAoMestre={this.aplicarEstiloAoMestre}/>
         <BotaoLimparEstilo limparEstilo={this.limparEstilo} tamIcones={this.state.tamIcones}/>
@@ -347,15 +348,17 @@ class ConfigurarSlides extends Component {
           </div>
           <div style={{display: (aba === 'tampao' ? '' : 'none')}}>
             <button className='botao-configuracao bool' onMouseOver={() => this.ativarPainelCor(this.mudarCorFundo)}>
-              <div className='cor-fundo' style={{backgroundImage: getBackgroundImageColor(this.props.slidePreview.estilo.tampao.backgroundColor) +
-                                                ', url("' + require('./Quadriculado PNG.png') + '")', 
-                                                mixBlendMode: this.props.slidePreview.estilo.tampao.mixBlendMode}}>
+              <div className='container cor-fundo' style={{backgroundImage: ' url("' + require('./Quadriculado PNG.png') + '")'}}>
+                <div className='quadrado cor-fundo' style={{backgroundColor: this.props.slidePreview.estilo.tampao.backgroundColor, 
+                                                            mixBlendMode: this.props.slidePreview.estilo.tampao.mixBlendMode}}>
+                </div>
               </div>
             </button>
             <select className='botao-configuracao combo-fonte'
-                          onChange={this.mudarBlendMode} 
-                          defaultValue={slidePreview.estilo.tampao.mixBlendMode}>
-                            {this.listaBlendMode}
+                    onChange={this.mudarBlendMode} 
+                    defaultValue={slidePreview.estilo.tampao.mixBlendMode}
+                    key={sel.elemento + '.' + sel.slide}>
+                      {this.listaBlendMode}
             </select>
           </div>
           <div className='div-sliders'> 
