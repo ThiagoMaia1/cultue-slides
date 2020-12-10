@@ -111,8 +111,9 @@ class ExportarHTML extends Component {
     var apresentacao = '<div id="container-apresentacao">' + copiaDOM.body.innerHTML + '</div>'
     copiaDOM.body.innerHTML = botaoTelaCheia + setaMovimento + apresentacao;
     for (var img of imagensBase64) { //Criar o css para as imagens.
-      var { classe, data } = img;
-      this.cssImagens.push('.' + classe + '::before{content: url(' + data + '); position: absolute; z-index: 0;}')
+      var { classe, data, offsetHeight, offsetWidth, offsetTop, offsetLeft} = img;
+      this.cssImagens.push('.' + classe + '::before{content: url(' + data + '); position: absolute; z-index: 0;' + 
+                           'top: ' + offsetTop + '; left: ' + offsetLeft + '; width: ' + offsetWidth + '; height:' + offsetHeight + ';}');
     }
     var imagensDOM = [...copiaDOM.querySelectorAll('img')]; //Substituir Imagens por spans, para que o fundo seja definido pelo css.
     for (var imgDOM of imagensDOM) {
@@ -121,6 +122,13 @@ class ExportarHTML extends Component {
       imgDOM.parentNode.insertBefore(span, imgDOM);
       imgDOM.remove();
     }
+    var fundos = copiaDOM.querySelectorAll('.imagem-fundo-preview');
+    for (var i = 0; i < fundos.length; i++) {
+      var imgFundo = fundos[i];
+      imgFundo.style.removeProperty('background-image');
+      console.log(imgFundo, imgFundo.style, imgFundo.style.backgroundImage);
+      imgFundo.classList.add(imgFundo.className);
+    }
     var css = copiaDOM.createElement("style"); //Inserir arquivo CSS no DOM.
     css.type = 'text/css';
     css.innerHTML = this.cssImagens.join('\n');
@@ -128,6 +136,7 @@ class ExportarHTML extends Component {
     var script = copiaDOM.createElement("script");
     script.innerHTML = toggleFullscreen + this.script + 'scriptHTML();'
     copiaDOM.body.appendChild(script);
+    copiaDOM.body.style.removeProperty('cursor');
     this.stringArquivo = copiaDOM.body.parentElement.innerHTML;
     return {nomeArquivo: nomeArquivo + this.formato, arquivo: this.stringArquivo, formato: this.formato};
   }

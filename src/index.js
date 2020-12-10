@@ -82,6 +82,7 @@
 //   Na exportacao pegar apenas as imagens de qualidade certa.
 //   Otimizar trocas de dados com BD.
 //   Editar slide de imagens ou desabilitar edição.
+//   Click fora tutorial
 
 /*// Features essenciais:
 //   ✔️ Envio de imagens.
@@ -122,7 +123,7 @@
 //   Ajuda: rever tutoriais, entrar em contato com o desenvolvedor.
 
 /*/ Features dispensáveis:
-//   Prévia configurar blend-mode e fonte.
+//   Prévia configurar blend-mode e fonte (preciso criar novo componenente Select).
 //   Aplicar efeito de sombra no texto.
 //   Definir limite de e-mails.
 //   Propagandas alternadas na galeria.
@@ -432,6 +433,9 @@ function undoable(reducer) {
           present: newPresent, 
           previousTemp: previousTemp || deepSpreadPresente(present), 
           slidePreview: getSlidePreview(newPresent)};
+      case 'editar-slide-preview':
+        newPresent = action.reverter ? present : reducer(deepSpreadPresente(present), {...action, type: 'editar-slide'}, usuario)
+        return {...state, slidePreview: getSlidePreview(newPresent)};
       default:
         newPresent = reducer(deepSpreadPresente(present), action, usuario);
         notificacoesAtualizado = getNotificacoes(notificacoesAtualizado, newPresent.notificacao);

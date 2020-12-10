@@ -4,17 +4,17 @@ import { getNomeInterfaceTipo } from '../../Element';
 import { capitalize, getImgBase64, hexToRgb } from '../../FuncoesGerais';
 import SlideFormatado from '../Preview/SlideFormatado'; 
 
-export function getBase64Image(src, classe, total, ratio, callback) {
+export function getBase64Image(imagem, total, ratio, callback) {
   const img = new Image();
   img.crossOrigin = 'Anonymous';
   img.onload = () => {
     getImgBase64(
       img, ratio.width, ratio.height, 
-      dataURL => callback(dataURL, classe, total, src)
+      dataURL => callback(dataURL, imagem, total)
     )
   };
 
-  img.src = src;
+  img.src = imagem.src;
 }
 
 export const getDate = function() {
@@ -169,7 +169,17 @@ class Exportador extends Component {
     var nClasses = 0;
     setTimeout(() => {
       for (var p of previews) {
-        var imgs = copiaDOM.querySelectorAll('#preview-fake' + p.indice + ' img');
+        var imgs = [...copiaDOM.querySelectorAll('#preview-fake' + p.indice + ' img')].map(img => {
+          return img;
+        });
+        var fundo = p.estilo.fundo;
+        if (fundo.src || fundo.path) {
+          imgs = imgs.concat([...copiaDOM.querySelectorAll('#preview-fake' + p.indice + ' .imagem-fundo-preview')].map(f => {
+            f.src = f.style.backgroundImage.replace('url("', '').split('")')[0];
+            f.eFundo = true;
+            return f;
+          }));
+        }
         for(var i = 0; i < imgs.length; i++) {
           if(!uniques[imgs[i].src]) {
             uniques[imgs[i].src] = 'classeImagem' + nClasses;
@@ -178,11 +188,10 @@ class Exportador extends Component {
           }
           var classe = uniques[imgs[i].src];
           imgs[i].className = classe;
-          var classesPai = imgs[i].parentElement.classlist;
-          if (classesPai && classesPai.includes('div-imagem-slide')) {
-            p.classeImagem = classe;
-          } else {
+          if (imgs[i].eFundo) {
             p.classeImagemFundo = classe;
+          } else {
+            p.classeImagem = classe;
           }
         }
       }
@@ -191,9 +200,9 @@ class Exportador extends Component {
       if(!nClasses) callbackMeio(callbackFormato(copiaDOM, [], previews, nomeArquivo));
 
       for (var j = 0; j < imgsUnique.length; j++) {
-        getBase64Image(imgsUnique[j].src, imgsUnique[j].className, imgsUnique.length, ratio,
-          (dataURL, classe, total, src) => {
-            imagensBase64.push({data: dataURL, classe: classe});
+        getBase64Image(imgsUnique[j], imgsUnique.length, ratio,
+          (data, {className, offsetHeight, offsetWidth, offsetTop, offsetLeft}, total) => {
+            imagensBase64.push({data, classe: className, offsetHeight, offsetWidth, offsetTop, offsetLeft});
             if (total === imagensBase64.length) {
               callbackMeio(callbackFormato(copiaDOM, imagensBase64, previews, nomeArquivo));
             }

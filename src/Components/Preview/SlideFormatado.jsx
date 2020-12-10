@@ -7,7 +7,7 @@ import { getPathImagem } from './Img';
 import { limparHighlights } from '../BarraPesquisa/BarraPesquisa';
 import { markupParaSuperscrito } from '../Preview/TextoPreview';
 import { ratioPadrao } from '../../firestore/apresentacoesBD';
-import { getBackgroundImageColor } from '../../FuncoesGerais';
+import ImagemRedimensionavel from './ImagemRedimensionavel';
 
 class SlideFormatado extends Component {
     
@@ -15,11 +15,6 @@ class SlideFormatado extends Component {
         super(props);
         var realcarElemento = () => {};
         this.realcarElemento = props.realcarElemento || realcarElemento;
-    }
-
-    getEstiloImagem = () => {
-        var e = this.props.slidePreview.estilo.imagem;
-        return {...this.realcarElemento('imagem'), height: e.height, width: e.width};
     }
     
     editarTexto = e => {
@@ -84,12 +79,11 @@ class SlideFormatado extends Component {
                             </div>
                         </div>
                     </div>
-                    {slidePreview.imagem ? 
-                        <div className='div-imagem-slide' style={{padding: slidePreview.estilo.imagem.padding}}>
-                            <img className='imagem-slide' src={slidePreview.imagem.src} alt={slidePreview.imagem.alt}
-                                 style={this.getEstiloImagem()}/>
-                        </div>: 
-                        null}
+                    {!slidePreview.imagem ? null 
+                        : <div style={this.realcarElemento('imagem')}>
+                            <ImagemRedimensionavel imagem={slidePreview.imagem} style={slidePreview.estilo.imagem}/>
+                          </div>
+                    }
                     {this.props.children}
                 </div>
         )
@@ -97,12 +91,12 @@ class SlideFormatado extends Component {
 }
 
 const ImgNormal = ({corTampao, strBackground, mixBlendMode}) => (
-    <div className='imagem-fundo-preview' style={{backgroundImage: strBackground || getBackgroundImageColor('white')}}>
+    <div className='imagem-fundo-preview' style={{backgroundImage: strBackground}}>
         <div className='tampao' style={{backgroundColor: corTampao, mixBlendMode}}/>
     </div>
 )
 
-const Img = ({imagem, proporcao, tampao}) => {
+export const Img = ({imagem, proporcao, tampao}) => {
     var strBackground = '';
     var strPrincipal;
     if (imagem.src) {
@@ -118,7 +112,6 @@ const Img = ({imagem, proporcao, tampao}) => {
             return resultado;            
         }, []).join(', ');
     }
-    console.log(strBackground)
     return <ImgNormal corTampao={tampao.backgroundColor} strBackground={strBackground} mixBlendMode={tampao.mixBlendMode}/>
 };
 

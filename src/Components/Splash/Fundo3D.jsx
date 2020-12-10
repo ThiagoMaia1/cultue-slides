@@ -3,7 +3,7 @@ import './Splash.css';
 import { multiplicarArray, inteiroAleatorio } from '../../FuncoesGerais';
 import Background from './QuadradoC.svg';
 
-const coresQuadrados = ['azul-puro', Array(2).fill('azul-claro'), Array(2).fill('cinza')].flat();
+const coresQuadrados = ['azul-forte', Array(2).fill('azul-claro'), Array(2).fill('cinza')].flat();
 const proporcaoWidth = 1.2614;
 const larguraBaseVw = 10;
 const numeroQuadrados = 60;

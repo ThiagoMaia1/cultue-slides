@@ -42,6 +42,7 @@
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
+    background-color: white;
     isolation: isolate;
 }
 
@@ -98,6 +99,7 @@ img {
     height: 100%;
     z-index: 29;
     pointer-events: none;
+    padding: 1vh;
 }
 
 .imagem-slide {

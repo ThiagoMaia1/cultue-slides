@@ -8,7 +8,6 @@ import { VscCollapseAll } from 'react-icons/vsc';
 import { CompactPicker } from 'react-color';
 import Slider from './Slider';
 import { listaPartesEstilo } from '../../Element';
-import { getBackgroundImageColor } from '../../FuncoesGerais';
 
 const casesTexto = [{valor: 'Nenhum', icone: (<span style={{color: '#999'}}>Aa</span>)}, {valor: 'Primeira Maiúscula', icone: 'Aa'}, 
                     {valor: 'Maiúsculas', icone: 'AA'}, {valor: 'Minúsculas', icone: 'aa'}
@@ -90,14 +89,16 @@ const BotaoLimparEstilo = (props) => (
 class ConfigurarSlides extends Component {
   constructor(props) {
     super(props);
-    this.ref = React.createRef();
-    this.state = {painelCor: null, caseTexto: 0, tamIcones: window.innerHeight*0.022 + 'px', 
-                  ref: this.ref, selecionado: this.props.selecionado};
+    this.state = {painelCor: null, caseTexto: 0, tamIcones: window.innerHeight*0.022 + 'px'};
     this.listaFontes = listaFontes.sort().map(f => 
-        <option key={f} className='opcoes-fonte' value={f} style={{fontFamily: f}}>{f}</option>                  
+      <option key={f} className='opcoes-fonte' value={f} style={{fontFamily: f}} 
+        onMouseOver={() => this.mudarFonte(f, true)} onMouseOut={() => this.mudarFonte(f, true, true)}
+        >{f}</option>                  
     )
     this.listaBlendMode = listaBlendMode.map(b => 
-      <option key={b.valor} className='opcoes-fonte' value={b.valor}>{b.rotulo}</option>  
+      <option key={b.valor} className='opcoes-fonte' value={b.valor} 
+        onMouseOver={() => this.mudarBlendMode(b.valor, true)} onMouseOut={() => this.mudarBlendMode(b.valor, true, true)}
+      >{b.rotulo}</option>  
     )
     this.listaEstilosTexto = [{apelido:'Negrito', nomeAtributo: 'fontWeight', valorNormal: '500', valorAlterado: '650'}, 
                               {apelido:'Itálico', nomeAtributo: 'fontStyle', valorNormal: 'normal', valorAlterado: 'italic'},
@@ -206,19 +207,19 @@ class ConfigurarSlides extends Component {
 
   mudarCorFonte = cor => {
     this.atualizarEstilo(this.props.abaAtiva, 'color', cor.rgb);
-    
   }
 
   mudarCorFundo = cor => {
     this.atualizarEstilo('tampao', 'backgroundColor', cor.rgb);
   }
 
-  mudarFonte = e => {
-    this.atualizarEstilo(this.props.abaAtiva, 'fontFamily', e.target.value, true)
+  mudarFonte = (valor, preview = false, reverter = false) => {
+    console.log('mudarFonte')
+    this.atualizarEstilo(this.props.abaAtiva, 'fontFamily', valor, true, false, preview, reverter)
   }
 
-  mudarBlendMode = e => {
-    this.atualizarEstilo(this.props.abaAtiva, 'mixBlendMode', e.target.value)
+  mudarBlendMode = (valor, preview = false, reverter = false) => {
+    this.atualizarEstilo(this.props.abaAtiva, 'mixBlendMode', valor, false, false, preview, reverter)
   }
 
   mudarCaseTexto = () => {
@@ -236,12 +237,12 @@ class ConfigurarSlides extends Component {
     this.atualizarEstilo(obj, opcao.nomeAtributo, v, true)
   }
 
-  atualizarEstilo = (nomeObjeto, nomeAtributo, valor, redividir = false, temp = false) => {
+  atualizarEstilo = (nomeObjeto, nomeAtributo, valor, redividir = false, temp = false, preview = false, reverter = false) => {
     var sel = this.props.selecionado;
     var estiloObjeto = {};
     estiloObjeto[nomeAtributo] = valor
-    var actionType = 'editar-slide' + (temp ? '-temporariamente' : '');
-    this.props.dispatch({type: actionType, objeto: nomeObjeto, valor: estiloObjeto, redividir: redividir, selecionado: sel})
+    var type = 'editar-slide' + (temp ? '-temporariamente' : '') + (preview ? '-preview' : '');
+    this.props.dispatch({type, objeto: nomeObjeto, valor: estiloObjeto, redividir, selecionado: sel, reverter})
   }
 
   limparEstilo = () => {
@@ -271,14 +272,6 @@ class ConfigurarSlides extends Component {
   eObjetoVazio(objeto) {
     return JSON.stringify(objeto) === "{}";
   }
-
-  static getDerivedStateFromProps(props, state) {
-    if (props.selecionado.elemento !== state.selecionado.elemento || props.selecionado.slide !== state.selecionado.slide) {
-        state.ref.current.value = props.slidePreview.estilo[props.abaAtiva].fontFamily;
-        return {selecionado: props.selecionado};
-    }
-    return null;
-  }
   
 	render() {
     var aba = this.props.abaAtiva;
@@ -293,7 +286,7 @@ class ConfigurarSlides extends Component {
       </>
     )
     return (
-      <div id='painel-configuracao'>
+      <div id='painel-configuracao' key={sel.elemento + '.' + sel.slide}>
         <div id='abas'>
           {this.gerarBotoesAbas()}
         </div>
@@ -312,9 +305,10 @@ class ConfigurarSlides extends Component {
                   <span className='a-cor-texto' style={{color: this.props.slideSelecionado.estilo[aba].color}}>A</span>
                   <div className='cor-texto' style={{backgroundColor: this.props.slideSelecionado.estilo[aba].color}}></div>
                 </button>
-                <select className={'botao-configuracao combo-fonte'} onChange={this.mudarFonte} ref={this.ref}
+                <select className={'botao-configuracao combo-fonte'} onChange={e => this.mudarFonte(e.target.value)} 
                         defaultValue={slidePreview.estilo[aba].fontFamily}
-                        style={{fontFamily: slidePreview.estilo[aba].fontFamily}}>
+                        style={{fontFamily: slidePreview.estilo[aba].fontFamily}}
+                        >
                           {this.listaFontes}
                 </select>
                 <button title={casesTexto[this.state.caseTexto].valor} id='botao-case' className='botao-configuracao bool' 
@@ -355,9 +349,8 @@ class ConfigurarSlides extends Component {
               </div>
             </button>
             <select className='botao-configuracao combo-fonte'
-                    onChange={this.mudarBlendMode} 
-                    defaultValue={slidePreview.estilo.tampao.mixBlendMode}
-                    key={sel.elemento + '.' + sel.slide}>
+                    onChange={e => this.mudarBlendMode(e.target.value)} 
+                    defaultValue={slidePreview.estilo.tampao.mixBlendMode}>
                       {this.listaBlendMode}
             </select>
           </div>
