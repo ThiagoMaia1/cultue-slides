@@ -85,7 +85,6 @@ export function getSlidePreview ({elementos, selecionado}) {
   var estiloTexto = estiloAplicavel('texto');
   var estiloParagrafo = {...estiloTexto, ...estiloAplicavel('paragrafo')};
   var estiloTitulo = {...estiloTexto, ...estiloAplicavel('titulo')};
-  var estiloImagem = {height: '100%', width: '100%', ...estiloAplicavel('imagem')};
   var tipo = elementos[selecionado.elemento].tipo;
   var el = elementos[selecionado.elemento];
   var tituloSlide = el.slides[selecionado.slide].titulo;
@@ -104,7 +103,7 @@ export function getSlidePreview ({elementos, selecionado}) {
       fundo: estiloAplicavel('fundo'), 
       tampao: estiloAplicavel('tampao'),
       texto: estiloTexto,
-      imagem: estiloImagem
+      imagem: estiloAplicavel('imagem')
     }
   };
 }

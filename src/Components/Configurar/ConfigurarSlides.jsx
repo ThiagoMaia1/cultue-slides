@@ -44,10 +44,10 @@ const listaSliders = [{rotulo: 'Fonte', aba: 'paragrafo', atributo: 'fontSize', 
                       {rotulo: 'Fonte', aba: 'titulo', atributo: 'fontSize', min: 1, max: 7, step: 0.01,  redividir: true},
                       {rotulo: 'Margem', aba: 'titulo', atributo: 'paddingRight', min: 0, max: 0.4, step: 0.01,  redividir: true},
                       {rotulo: 'Altura', aba: 'titulo', atributo: 'height', min: 0.1, max: 1, step: 0.01,  redividir: true},
-                      {rotulo: 'Opacidade', aba: 'tampao', atributo: 'opacityFundo', min: 0, max: 1, step: 0.05},
-                      {rotulo: 'Margem', aba: 'imagem', atributo: 'padding', min: 0, max: 0.25, step: 0.01},
-                      {rotulo: 'Altura', aba: 'imagem', atributo: 'height', min: 0, max: 2, step: 0.01},
-                      {rotulo: 'Largura', aba: 'imagem', atributo: 'width', min: 0, max: 2, step: 0.01}
+                      {rotulo: 'Opacidade', aba: 'tampao', atributo: 'opacityFundo', min: 0, max: 1, step: 0.05}
+                      // {rotulo: 'Margem', aba: 'imagem', atributo: 'padding', min: 0, max: 0.25, step: 0.01},
+                      // {rotulo: 'Altura', aba: 'imagem', atributo: 'height', min: 0, max: 2, step: 0.01},
+                      // {rotulo: 'Largura', aba: 'imagem', atributo: 'width', min: 0, max: 2, step: 0.01}
 ]
 
 const listaBlendMode = [

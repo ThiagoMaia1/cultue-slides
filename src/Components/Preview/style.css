@@ -93,19 +93,30 @@ img {
     overflow: hidden;
 }
 
-.div-imagem-slide {
+#container-quadro-redimensionar{
     position: absolute;
     width: 100%;
     height: 100%;
     z-index: 29;
-    pointer-events: none;
-    padding: 1vh;
+    overflow: hidden;
 }
 
-.imagem-slide {
-    object-fit: contain;
-    width: 100%;
-    height: 100%;
+#container-quadro-redimensionar > * {
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    transition: all 0ms none;
+    position: absolute;
+    max-height: 100%;
+    max-width: 100%;
+    
+}
+
+#quadro-redimensionar{
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
 }
 
 #ativar-tela-cheia {

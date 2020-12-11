@@ -1,12 +1,8 @@
 import firebase, { firebaseStorage } from '../../firebase.js';
 
-var contador = 0;
-
 export function uploadImagem (arquivo, callback) {
 
-    var idUpload = contador;
-    contador++;
-    
+    var idUpload = new Date().getTime();
     var nomeArquivo = arquivo.name + '_' + new Date().getTime(); //Nomes de arquivo no firebase storage precisam ser únicos.
     var uploadTask = firebaseStorage.child('images/' + nomeArquivo).put(arquivo);
 

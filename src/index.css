@@ -46,7 +46,7 @@ code {
 }
 
 textarea {
-  resize: none;
+  resize: both;
 }
 
 textarea, input, button, select { 

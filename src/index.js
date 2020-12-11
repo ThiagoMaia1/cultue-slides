@@ -83,6 +83,8 @@
 //   Otimizar trocas de dados com BD.
 //   Editar slide de imagens ou desabilitar edição.
 //   Click fora tutorial
+//   Concluir redimensionar imagem e mover. 
+//   Configurar imagem incluir border-radius, fixar proporção e cover/contain.
 
 /*// Features essenciais:
 //   ✔️ Envio de imagens.
@@ -121,6 +123,8 @@
 //   Melhorar pesquisa de letra de música usando google.
 //   Incluir fontes como base64 (html) ou zip (power point).
 //   Ajuda: rever tutoriais, entrar em contato com o desenvolvedor.
+//   Lidar com perda de conexão.
+//   Tentar de novo/Avisar se upload da imagem não pôde ser feito.
 
 /*/ Features dispensáveis:
 //   Prévia configurar blend-mode e fonte (preciso criar novo componenente Select).

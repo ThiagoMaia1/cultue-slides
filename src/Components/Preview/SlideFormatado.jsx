@@ -64,6 +64,9 @@ class SlideFormatado extends Component {
                              height: this.props.ratio.height*proporcao,
                              ...this.realcarElemento('tampao', 'dentro'),
                              ...this.props.style}}>
+                    {!slidePreview.imagem ? null 
+                        : <ImagemRedimensionavel imagem={slidePreview.imagem} estiloImagem={slidePreview.estilo.imagem} estiloRealce={this.realcarElemento('imagem')}/>
+                    }
                     <Img imagem={slidePreview.estilo.fundo} proporcao={proporcaoTela} tampao={slidePreview.estilo.tampao}/>
                     <div className='texto-preview' style={{fontSize: getFonteBase().numero*proporcao + getFonteBase().unidade}}>
                         <div className={'slide-titulo ' + this.getClasseLetraClara('titulo')} style={slidePreview.estilo.titulo}>
@@ -79,11 +82,6 @@ class SlideFormatado extends Component {
                             </div>
                         </div>
                     </div>
-                    {!slidePreview.imagem ? null 
-                        : <div style={this.realcarElemento('imagem')}>
-                            <ImagemRedimensionavel imagem={slidePreview.imagem} style={slidePreview.estilo.imagem}/>
-                          </div>
-                    }
                     {this.props.children}
                 </div>
         )

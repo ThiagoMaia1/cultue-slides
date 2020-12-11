@@ -279,3 +279,9 @@ export function rgbToHex(r, g, b) {
 }
   
 export const getBackgroundImageColor = color => 'linear-gradient(' + color + ', ' + color + ')';
+
+export const getStrPercentual = decimal => Number(decimal).toFixed(2)*100 + '%';
+
+export const numeroEntre = (limiteInferior, num, limiteSuperior) => num >= limiteInferior && num <= limiteSuperior;
+
+export const limitarMinMax = (limiteInferior, num, limiteSuperior) => Math.min(Math.max(num, limiteInferior), limiteSuperior);
