@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import './Tutorial.css';
 import Arrow from './Arrow';
 import { store } from '../../index';
+import hotkeys from 'hotkeys-js';
 
 const cssOpacidade = 'opacity: 0.2';
 const cssCorFundo = 'background-color: #d0d9ec; box-shadow: 2px 2px 6px rgba(0,0,0,0.1)';
@@ -145,24 +146,6 @@ class EtapaTutorial extends Component {
     this.state = {item: {...props.itens[props.indice]}};
   }
 
-  componentDidUpdate = prevProps => {
-    if(JSON.stringify(prevProps) !== JSON.stringify(this.props))
-      this.componentDidMount();
-  }
-
-  componentDidMount = () => {
-    this.listenerResize = window.addEventListener('resize', () => this.forceUpdate());
-    this.removerCss();
-    var item = this.state.item;
-    if (!item.texto) return;
-    var elementos = document.querySelectorAll(item.selectorElemento);
-    if (!elementos.length) return null;
-    this.styleSheet = document.createElement("style");
-    this.styleSheet.innerHTML = getCSSFade(elementos);
-    if (item.callbackAntes) item.callbackAntes();
-    document.head.appendChild(this.styleSheet);
-  }
-
   static getDerivedStateFromProps = (props, state) => {
     var itemProps = props.itens[props.indice] || {};
     if(state.item.texto !== itemProps.texto) {
@@ -180,7 +163,29 @@ class EtapaTutorial extends Component {
     window.removeEventListener('resize', this.listenerResize);
   }
 
-  componentWillUnmount = () => this.removerCss();
+  componentDidUpdate = prevProps => {
+    if(JSON.stringify(prevProps) !== JSON.stringify(this.props))
+      this.componentDidMount();
+  }
+
+  componentDidMount = () => {
+    hotkeys.setScope('tutorial');
+    this.listenerResize = window.addEventListener('resize', () => this.forceUpdate());
+    this.removerCss();
+    var item = this.state.item;
+    if (!item.texto) return;
+    var elementos = document.querySelectorAll(item.selectorElemento);
+    if (!elementos.length) return null;
+    this.styleSheet = document.createElement("style");
+    this.styleSheet.innerHTML = getCSSFade(elementos);
+    if (item.callbackAntes) item.callbackAntes();
+    document.head.appendChild(this.styleSheet);
+  }
+
+  componentWillUnmount = () => {
+    hotkeys.setScope('app');
+    this.removerCss();
+  }
 
   render() {
     if(!this.props.itens.length) return null;
@@ -218,6 +223,28 @@ class Tutorial extends Component {
     super(props);
     this.styleSheet = null;
     this.state = {indiceEtapa: -1};
+
+    hotkeys('backspace,enter,space,esc,left,right', 'tutorial', (e, handler) => {
+      e.preventDefault();    
+      var offset;
+      switch (handler.key) {
+        case 'left':
+        case 'backspace':
+          offset = -1;
+          break;
+        case 'right':
+        case 'enter':
+        case 'space':
+          offset = 1;
+          break;
+        case 'esc':
+          this.finalizar();
+          return;
+        default:
+          return;
+      }
+      this.offsetEtapaTutorial(offset);
+    });
   }
 
   getNovoIndice = (passo, indiceEtapa) => {
@@ -251,32 +278,6 @@ class Tutorial extends Component {
     }
     setTimeout(() => this.props.dispatch({type: 'bloquear-tutoriais'}), 10);
   }
-  componentDidMount = () => {
-    this.listenerAtalhos = e => {
-      if (!this.temTutorialAtivo()) return;
-      var offset;
-      switch (e.code) {
-        case 'ArrowLeft':
-        case 'Backspace':
-          offset = -1;
-          break;
-        case 'ArrowRight':
-        case 'Enter':
-        case 'Space':
-          offset = 1;
-          break;
-        case 'Escape':
-          this.finalizar();
-          return;
-        default:
-          return;
-      }
-      this.offsetEtapaTutorial(offset);
-    }
-    this.listenerKeyup = window.addEventListener('keyup', this.listenerAtalhos);
-  }
-
-  componentWillUnmount = () => window.removeEventListener('keyup', this.listenerAtalhos);
 
   temTutorialAtivo = (props = this.props) => !!props.itensTutorial.length; 
 

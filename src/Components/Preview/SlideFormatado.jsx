@@ -65,7 +65,10 @@ class SlideFormatado extends Component {
                              ...this.realcarElemento('tampao', 'dentro'),
                              ...this.props.style}}>
                     {!slidePreview.imagem ? null 
-                        : <ImagemRedimensionavel imagem={slidePreview.imagem} estiloImagem={slidePreview.estilo.imagem} estiloRealce={this.realcarElemento('imagem')}/>
+                        : <ImagemRedimensionavel key={sel.elemento + '.' + sel.slide} 
+                                                 imagem={slidePreview.imagem} 
+                                                 estiloImagem={slidePreview.estilo.imagem} 
+                                                 estiloRealce={this.realcarElemento('imagem')}/>
                     }
                     <Img imagem={slidePreview.estilo.fundo} proporcao={proporcaoTela} tampao={slidePreview.estilo.tampao}/>
                     <div className='texto-preview' style={{fontSize: getFonteBase().numero*proporcao + getFonteBase().unidade}}>

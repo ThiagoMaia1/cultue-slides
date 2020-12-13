@@ -212,10 +212,10 @@ class InputImagem extends Component {
         var imgsFiltradas = this.state.imagens.filter(i => i.width);
 
         imgsFiltradas = imgsFiltradas.map(i => {
-            i.idUpload = uploadImagem(i.arquivo, (idUpload, urlUpload) => {
-                callbackUpload(idUpload, urlUpload);
-                if(this.props.callbackUpload) this.props.callbackUpload(idUpload, urlUpload);
-            });
+            // i.idUpload = uploadImagem(i.arquivo, (idUpload, urlUpload) => {
+            //     callbackUpload(idUpload, urlUpload);
+            //     if(this.props.callbackUpload) this.props.callbackUpload(idUpload, urlUpload);
+            // });
             return i;
         })
         this.props.callback(imgsFiltradas);

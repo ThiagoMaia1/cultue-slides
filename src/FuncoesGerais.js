@@ -280,8 +280,26 @@ export function rgbToHex(r, g, b) {
   
 export const getBackgroundImageColor = color => 'linear-gradient(' + color + ', ' + color + ')';
 
-export const getStrPercentual = decimal => Number(decimal).toFixed(2)*100 + '%';
+export const getStrPercentual = decimal => {
+    if(typeof decimal === 'string' && /%/.test(decimal)) return decimal;
+    return Number(decimal).toFixed(2)*100 + '%';
+}
 
 export const numeroEntre = (limiteInferior, num, limiteSuperior) => num >= limiteInferior && num <= limiteSuperior;
 
 export const limitarMinMax = (limiteInferior, num, limiteSuperior) => Math.min(Math.max(num, limiteInferior), limiteSuperior);
+
+export function toggleFullscreen (element = null) {        
+    
+    if (document.fullscreenElement || !element) {
+        document.exitFullscreen()
+        .catch(function(error) {
+            console.log(error.message);
+        });
+    } else {
+        element.requestFullscreen()
+        .catch(function(error) {
+            console.log(error.message);
+        });
+    }
+}

@@ -5,21 +5,7 @@ import SlideFormatado from './SlideFormatado';
 import SelecionarRatio from './SelecionarRatio';
 import { objetosSaoIguais } from '../../FuncoesGerais';
 import { ratioPadrao } from '../../firestore/apresentacoesBD';
-
-export function toggleFullscreen (element = null) {        
-    
-    if (document.fullscreenElement || !element) {
-        document.exitFullscreen()
-        .catch(function(error) {
-            console.log(error.message);
-        });
-    } else {
-        element.requestFullscreen()
-        .catch(function(error) {
-            console.log(error.message);
-        });
-    }
-}
+import hotkeys from 'hotkeys-js';
 
 class Preview extends Component {
     
@@ -27,20 +13,53 @@ class Preview extends Component {
         super(props);
         this.full = {icone: <MdFullscreenExit className='icone-botao' size={80}/>, proporcao: 1, opacidadeBotao: '0%'}
         this.small = {icone: <MdFullscreen className='icone-botao' size={50}/>, proporcao: 0.47, opacidadeBotao: '30%'}
-        this.ref = React.createRef();
-        this.state = {transitionAtivo: true, screen: this.props.slidePreviewFake ? 
+        this.state = {transitionAtivo: true, corBloqueador: '', screen: this.props.slidePreviewFake ? 
             {...this.full, icone: <MdFullscreen className='icone-botao' size={80}/>} : 
             {...this.small}};
 
         document.addEventListener('fullscreenchange', () => {
-            if (document.fullscreenElement) {
+            var modoApresentacao = !!document.fullscreenElement;
+            if (modoApresentacao !== this.props.modoApresentacao) 
+                this.props.dispatch({type: 'definir-modo-apresentacao', modoApresentacao})
+            if (modoApresentacao) {
                 if (this.props.eMestre) this.offsetSlide(0);
                 this.setState({screen: {...this.full}});
             } else {
                 this.setState({screen: {...this.small}});
             }
-          });
+        });
+        this.definirAtalhos();
     }
+
+    definirAtalhos = () => {
+        hotkeys('b,w,enter,space,backspace,esc,up,left,down,right', 'apresentacao', (e, handler) => {
+            e.preventDefault();
+            switch (handler.key) {
+                case 'right':
+                case 'down':
+                case 'enter':
+                case 'space':
+                    this.props.dispatch({type: 'offset-selecao', offset: 1});
+                    break;
+                case 'left':
+                case 'up':
+                case 'backspace':
+                    this.props.dispatch({type: 'offset-selecao', offset: -1});
+                    break;
+                case 'esc': 
+                    this.props.dispatch({type: 'definir-modo-apresentacao', modoApresentacao: false})
+                    break;
+                case 'b':
+                    this.setState({corBloqueador: 'black'});
+                    break;
+                case 'w':
+                    this.setState({corBloqueador: 'white'});
+                    break;
+                default:
+                    return;
+            }
+        });
+    }    
 
     offsetSlide = offset => this.props.dispatch({type: 'offset-selecao', offset: offset})
     
@@ -73,14 +92,16 @@ class Preview extends Component {
     }
 
     componentDidUpdate = prevProps => {
-        if (objetosSaoIguais(this.props.selecionado, prevProps.selecionado)) return;
-        this.setState({transitionAtivo: false});
-        setTimeout(() => this.setState({transitionAtivo: true}), 1000);
+        if (!objetosSaoIguais(this.props.selecionado, prevProps.selecionado)) {
+            this.setState({transitionAtivo: false});
+            setTimeout(() => this.setState({transitionAtivo: true}), 1000);
+        }
+        if (this.props.modoApresentacao !== prevProps.modoApresentacao) {
+        }
     }
 
-    getEstiloImagem = () => {
-        var e = this.props.slidePreview.estilo.imagem;
-        return {...this.realcarElemento('imagem'), height: e.height*100 + '%', width: e.width*100 + '%'}
+    definirModoApresentacao = () => {
+        this.props.dispatch({type: 'definir-modo-apresentacao'})
     }
 
     render() {
@@ -91,12 +112,12 @@ class Preview extends Component {
         const eMestre = slidePreview.eMestre;
         return (
             <div id='centralizador-preview'>
-                <div id='borda-slide-mestre' ref={this.ref} 
-                                            style={{height: this.props.ratio.height*proporcao + 0.051*window.innerHeight, 
-                                            visibility: eMestre ? '' : 'hidden',
-                                            padding: telaCheia ? '' : '1vh',
-                                            ...this.realcarElemento('tampao', 'fora')}}>
+                <div id='borda-slide-mestre' style={{height: this.props.ratio.height*proporcao + 0.051*window.innerHeight, 
+                                             visibility: eMestre ? '' : 'hidden',
+                                             padding: telaCheia ? '' : '1vh',
+                                             ...this.realcarElemento('tampao', 'fora')}}>
                     {telaCheia ? null : <SelecionarRatio/>}
+                    <div className='bloqueador-apresentacao' style={{backgroundColor: this.state.corBloqueador}}></div>
                     <div className='container-setas' style={{visibility: 'visible', display: telaCheia ? '' : 'none'}}>
                         <div className='movimentar-slide esquerda' onClick={() => this.offsetSlide(-1)}></div>
                         <div className='movimentar-slide direita' onClick={() => this.offsetSlide(1)}></div>
@@ -109,7 +130,7 @@ class Preview extends Component {
                         editavel={!eMestre && this.props.autorizacao === 'editar' && !telaCheia}
                         slidePreview={slidePreview}
                         style={telaCheia ? {overflow: 'visible'} : null}>
-                        <button id='ativar-tela-cheia' onClick={() => toggleFullscreen(this.ref.current)} 
+                        <button id='ativar-tela-cheia' onClick={this.definirModoApresentacao} 
                             style={{opacity: this.state.screen.opacidadeBotao, color: slidePreview.estilo.texto.color, 
                                     right: '1vh', bottom: '0.5vh'}}
                             onMouseOver={this.tornarBotaoVisivel} onMouseLeave={this.tornarBotaoInvisivel}>
@@ -135,7 +156,8 @@ const mapState = function (state) {
         abaAtiva: sP.abaAtiva, 
         autorizacao: sP.apresentacao.autorizacao,
         ratio: sP.ratio, 
-        selecionado: sP.selecionado
+        selecionado: sP.selecionado,
+        modoApresentacao: sP.modoApresentacao
     }
 }
 

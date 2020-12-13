@@ -11,14 +11,17 @@ import Tutorial from './Components/Tutorial/Tutorial';
 import PopupAdicionar from './Components/Popup/PopupAdicionar';
 import BarraPesquisa from './Components/BarraPesquisa/BarraPesquisa';
 import MensagemBaixar from './Components/TelaMensagem/MensagemBaixar';
+import hotkeys from 'hotkeys-js';
 
 class App extends Component {
   
+  componentDidMount = () => hotkeys.setScope('app');
+
   render() {
     return (
       <div id='App'>
         <BarraPesquisa/>
-        {this.props.apresentacao.autorizacao !== 'editar' ? null : <Tutorial/>}
+        {/* {this.props.apresentacao.autorizacao !== 'editar' ? null : <Tutorial/>} */}
         <PopupAdicionar/>
         <NavBar history={this.props.history}/>
         {this.props.apresentacao.autorizacao === 'baixar' 

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import BotaoExportador from './BotaoExportador';
-import { toggleFullscreen as fullScreen } from '../Preview/Preview';
+import { toggleFullscreen as fullScreen } from '../../FuncoesGerais';
 import TratarDadosHTML from './tratarDadosHTML';
 
 const toggleFullscreen = fullScreen;
