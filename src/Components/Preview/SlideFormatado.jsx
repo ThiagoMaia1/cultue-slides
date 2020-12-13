@@ -2,11 +2,11 @@ import React, { Component } from 'react';
 import './style.css';
 import { connect } from 'react-redux';
 import Estrofes from './Estrofes';
-import { getFonteBase } from '../../Element';
+import { getFonteBase } from '../../principais/Element';
 import { getPathImagem } from './Img';
-import { limparHighlights } from '../BarraPesquisa/BarraPesquisa';
+import { limparHighlights } from '../NavBar/BarraPesquisa/BarraPesquisa';
 import { markupParaSuperscrito } from '../Preview/TextoPreview';
-import { ratioPadrao } from '../../firestore/apresentacoesBD';
+import { ratioPadrao } from '../../principais/firestore/apresentacoesBD';
 import ImagemRedimensionavel from './ImagemRedimensionavel';
 
 class SlideFormatado extends Component {

@@ -3,8 +3,8 @@ import { connect } from 'react-redux';
 import { MdFullscreen, MdFullscreenExit } from 'react-icons/md';
 import SlideFormatado from './SlideFormatado';
 import SelecionarRatio from './SelecionarRatio';
-import { objetosSaoIguais } from '../../FuncoesGerais';
-import { ratioPadrao } from '../../firestore/apresentacoesBD';
+import { objetosSaoIguais } from '../../principais/FuncoesGerais';
+import { ratioPadrao } from '../../principais/firestore/apresentacoesBD';
 import hotkeys from 'hotkeys-js';
 
 class Preview extends Component {

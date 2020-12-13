@@ -5,8 +5,8 @@ import './Perfil.css';
 import ApresentacoesUsuario from './ApresentacoesUsuario';
 import ListaEmails from './ListaEmails';
 import SetaVoltar from './SetaVoltar';
-import Carrossel from '../Carrossel/Carrossel';
-import sobreporSplash from "../Splash/SobreporSplash";
+import Carrossel from '../Basicos/Carrossel/Carrossel';
+import sobreporSplash from "../Basicos/Splash/SobreporSplash";
 import InformacoesPessoais from './InformacoesPessoais';
 import { store } from '../../index';
 

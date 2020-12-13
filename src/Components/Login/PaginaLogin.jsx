@@ -2,7 +2,7 @@ import React from 'react';
 import Login from './Login';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
-import Fundo3D from '../Splash/Fundo3D';
+import Fundo3D from '../Basicos/Splash/Fundo3D';
 
 class PaginaLogin extends React.Component {
 

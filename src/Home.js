@@ -3,15 +3,15 @@ import { store } from './index';
 import { Provider } from 'react-redux';
 import PopupConfirmacao from './Components/Popup/PopupConfirmacao';
 import PaginaLogin from './Components/Login/PaginaLogin';
-import App from './App';
+import App from './Components/App/App';
 import Perfil from './Components/Perfil/Perfil';
 import Notificacoes from './Components/Notificacoes/Notificacoes';
-import sobreporSplash from './Components/Splash/SobreporSplash';
+import sobreporSplash from './Components/Basicos/Splash/SobreporSplash';
 import { Router, Switch, Route, Redirect } from "react-router-dom";
 import { checarLogin } from './Components/Login/ModulosLogin';
-import Splash from './Components/Splash/Splash';
+import Splash from './Components/Basicos/Splash/Splash';
 import Propaganda from './Components/Propaganda/Propaganda';
-import history from './history';
+import history from './principais/history';
 
 const paginas = [{nome: 'app', componente: App},
                  {nome: 'login', componente: PaginaLogin},

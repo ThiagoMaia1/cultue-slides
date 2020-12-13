@@ -1,5 +1,5 @@
 import React from 'react';
-import { firebaseFunctions } from '../../firebase';
+import { firebaseFunctions } from '../../principais/firebase';
 import ReactDOMServer from 'react-dom/server';
 import { store } from '../../index';
 

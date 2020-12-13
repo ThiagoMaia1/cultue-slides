@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect  } from 'react-redux';
 import './InformacoesPessoais.css';
-import { atualizarRegistro, getDocumentoUsuario } from '../../firestore/apiFirestore';
+import { atualizarRegistro, getDocumentoUsuario } from '../../principais/firestore/apiFirestore';
 import SelectCargo from '../Login/SelectCargo';
 
 const campos = {

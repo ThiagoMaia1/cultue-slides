@@ -2,7 +2,7 @@ import React from 'react';
 import './TelaMensagem.css';
 import TelaMensagem from './TelaMensagem';
 import MenuExportacao from '../MenuExportacao/MenuExportacao';
-import { capitalize } from '../../FuncoesGerais';
+import { capitalize } from '../../principais/FuncoesGerais';
 import Preview from '../Preview/Preview';
 import { store } from '../../index';
 

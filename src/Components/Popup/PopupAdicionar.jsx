@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { tiposElemento } from '../../Element';
+import { tiposElemento } from '../../principais/Element';
 import Popup from '../Popup/Popup';
 
 class PopupAdicionar extends Component {

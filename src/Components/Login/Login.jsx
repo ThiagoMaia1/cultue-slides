@@ -1,11 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import './Login.css';
-import { firebaseAuth, googleAuth } from "../../firebase";
-import { gerarDocumentoUsuario } from '../../firestore/apiFirestore';
+import { firebaseAuth, googleAuth } from "../../principais/firebase";
+import { gerarDocumentoUsuario } from '../../principais/firestore/apiFirestore';
 import SelectCargo from './SelectCargo';
 import QuadroNavbar from '../NavBar/QuadroNavbar';
-import { eEmailValido } from '../../FuncoesGerais';
+import { eEmailValido } from '../../principais/FuncoesGerais';
 import SetaVoltar from '../Perfil/SetaVoltar';
 import { CgEye } from 'react-icons/cg';
 

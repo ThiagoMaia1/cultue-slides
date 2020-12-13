@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import ConfigurarSlides from './ConfigurarSlides';
-import { toggleAnimacao } from '../Animacao/animacaoCoordenadas.js';
+import { toggleAnimacao } from '../Basicos/Animacao/animacaoCoordenadas.js';
 
 class Configurar extends Component {
 

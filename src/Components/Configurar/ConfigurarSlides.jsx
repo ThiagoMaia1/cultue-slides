@@ -6,8 +6,8 @@ import { RiMastercardLine } from 'react-icons/ri'
 import { BsTextLeft, BsTextCenter, BsTextRight, BsJustify, BsMusicNoteBeamed} from 'react-icons/bs';
 import { VscCollapseAll } from 'react-icons/vsc';
 import { CompactPicker } from 'react-color';
-import Slider from './Slider';
-import { listaPartesEstilo } from '../../Element';
+import Slider from '../Basicos/Slider/Slider';
+import { listaPartesEstilo } from '../../principais/Element';
 
 const casesTexto = [{valor: 'Nenhum', icone: (<span style={{color: '#999'}}>Aa</span>)}, {valor: 'Primeira Maiúscula', icone: 'Aa'}, 
                     {valor: 'Maiúsculas', icone: 'AA'}, {valor: 'Minúsculas', icone: 'aa'}

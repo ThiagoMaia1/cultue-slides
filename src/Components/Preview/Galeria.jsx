@@ -3,10 +3,10 @@ import './Galeria.css';
 import listaFundos from './Fundos/listaFundos.json';
 import { connect } from 'react-redux';
 import Img from './Img';
-import Carrossel from '../Carrossel/Carrossel';
-import InputImagem from '../AdicionarImagem/InputImagem';
+import Carrossel from '../Basicos/Carrossel/Carrossel';
+import InputImagem from '../Popup/PopupsAdicionar/AdicionarImagem/InputImagem';
 import Popup from '../Popup/Popup';
-import { toggleAnimacao } from '../Animacao/animacaoCoordenadas.js'
+import { toggleAnimacao } from '../Basicos/Animacao/animacaoCoordenadas.js'
 
 class Galeria extends Component {
 

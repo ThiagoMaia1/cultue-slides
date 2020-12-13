@@ -1,7 +1,7 @@
 import React from 'react';
 import './Tutorial.css';
 import { FaLongArrowAltRight } from 'react-icons/fa';
-import { getCoords } from '../../FuncoesGerais';
+import { getCoords } from '../../principais/FuncoesGerais';
 
 const s = Math.SQRT2;
 

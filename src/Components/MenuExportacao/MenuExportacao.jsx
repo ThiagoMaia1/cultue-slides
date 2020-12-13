@@ -2,13 +2,13 @@ import React, { Component } from 'react';
 import './MenuExportacao.css';
 // import { toggleAnimacao } from '../Animacao/animacaoCoordenadas.js';
 import Exportador from './Exportador';
-import ExportarHTML from './ExportarHTML';
-import ExportarPptx from './ExportarPptx';
-import ExportarPDF from './ExportarPDF';
-import ExportarOnline from './ExportarOnline';
-import ExportarEmail from './ExportarEmail';
-import ExportarLink from './ExportarLink';
-import ExportarDownload from './ExportarDownload';
+import ExportarHTML from './Botoes/Formatos/ExportarHTML';
+import ExportarPptx from './Botoes/Formatos/ExportarPptx';
+import ExportarPDF from './Botoes/Formatos/ExportarPDF';
+import ExportarOnline from './Botoes/Formatos/ExportarOnline';
+import ExportarEmail from './Botoes/Meios/ExportarEmail';
+import ExportarLink from './Botoes/Meios/ExportarLink';
+import ExportarDownload from './Botoes/Meios/ExportarDownload';
 
 const getChamada = () => new Date().getTime();
 

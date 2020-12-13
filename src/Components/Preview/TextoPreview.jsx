@@ -1,5 +1,5 @@
 import React from 'react';
-import { RefInvalida } from "../TextoBiblico/referenciaBiblica"
+import { RefInvalida } from "../Popup/PopupsAdicionar/TextoBiblico/referenciaBiblica"
 
 function numSuperscrito(num) {
     var lista = String(num).split('');

@@ -1,6 +1,6 @@
 import React from 'react';
 import './TelaMensagem.css';
-import LogoCultue from '../Splash/LogoCultue';
+import LogoCultue from '../Basicos/Splash/LogoCultue';
 
 class TelaMensagem extends React.Component {
 

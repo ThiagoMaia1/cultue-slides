@@ -4,7 +4,7 @@ import './NavBar.css';
 import Login from '../Login/Login';
 import QuadroAtalhos from './QuadroAtalhos';
 // import QuadroExpress from './QuadroExpress';
-import { definirApresentacaoPadrao, zerarApresentacao } from '../../firestore/apresentacoesBD';
+import { definirApresentacaoPadrao, zerarApresentacao } from '../../principais/firestore/apresentacoesBD';
 
 const listaBotoesQuadros = [
   {nome: 'Atalhos', componente: QuadroAtalhos}

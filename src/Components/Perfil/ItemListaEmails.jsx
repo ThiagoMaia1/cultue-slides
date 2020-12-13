@@ -1,9 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { gerarNovoRegistro, atualizarRegistro, excluirRegistro } from '../../firestore/apiFirestore';
-import Checkbox from '../Checkbox/Checkbox';
+import { gerarNovoRegistro, atualizarRegistro, excluirRegistro } from '../../principais/firestore/apiFirestore';
+import Checkbox from '../Basicos/Checkbox/Checkbox';
 import { ativarPopupConfirmacao } from '../Popup/PopupConfirmacao';
-import { eEmailValido } from '../../FuncoesGerais';
+import { eEmailValido } from '../../principais/FuncoesGerais';
 
 export const colecaoEmails = 'emails';
   

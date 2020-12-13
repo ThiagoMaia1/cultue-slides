@@ -1,9 +1,9 @@
 import { store } from '../../index';
-import { gerarDocumentoUsuario } from '../../firestore/apiFirestore';
-import { firebaseAuth } from "../../firebase";
-import history from '../../history';
-import { getApresentacaoComLocation, definirApresentacaoAtiva, getUltimaApresentacaoUsuario } from '../../firestore/apresentacoesBD';
-import { slidesPadraoDefault } from '../../firestore/apiFirestore';
+import { gerarDocumentoUsuario } from '../../principais/firestore/apiFirestore';
+import { firebaseAuth } from "../../principais/firebase";
+import history from '../../principais/history';
+import { getApresentacaoComLocation, definirApresentacaoAtiva, getUltimaApresentacaoUsuario } from '../../principais/firestore/apresentacoesBD';
+import { slidesPadraoDefault } from '../../principais/firestore/apiFirestore';
 
 const usuarioAnonimo = {uid: 0, slidesPadrao: slidesPadraoDefault};
 

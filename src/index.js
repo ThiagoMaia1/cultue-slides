@@ -4,13 +4,13 @@ import './index.css';
 import Home from './Home';
 import { createStore } from 'redux';
 import hotkeys from 'hotkeys-js';
-import Element, { getEstiloPadrao, newEstilo, getPadding, getDadosMensagem, listaPartesEstilo } from './Element.js';
+import Element, { getEstiloPadrao, newEstilo, getPadding, getDadosMensagem, listaPartesEstilo } from './principais/Element.js';
 import { selecionadoOffset, getSlidePreview } from './Components/MenuExportacao/Exportador';
-import { atualizarApresentacao, getApresentacaoPadrao, autorizacaoEditar, ratioPadrao, autorizacaoPadrao, apresentacaoAnonima } from './firestore/apresentacoesBD';
-import { atualizarRegistro } from './firestore/apiFirestore';
+import { atualizarApresentacao, getApresentacaoPadrao, autorizacaoEditar, ratioPadrao, autorizacaoPadrao, apresentacaoAnonima } from './principais/firestore/apresentacoesBD';
+import { atualizarRegistro } from './principais/firestore/apiFirestore';
 import { keysTutoriais } from './Components/Tutorial/Tutorial';
-import { toggleFullscreen } from './FuncoesGerais';
-import inicializarHotkeys from './atalhos';
+import { toggleFullscreen } from './principais/FuncoesGerais';
+import inicializarHotkeys from './principais/atalhos';
 
 const redividirSlides = (elementos, sel, ratio) => {
   if (elementos.length !== 1) {
