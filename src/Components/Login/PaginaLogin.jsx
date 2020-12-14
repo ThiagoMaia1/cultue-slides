@@ -8,24 +8,39 @@ class PaginaLogin extends React.Component {
 
     constructor(props) {
         super(props);
+        this.deslocamento = [0, 0];
+        this.coordenadasAntesDeSair = [...this.deslocamento];
         this.state = {splashAtivo: true, coordenadas: this.getCenter()};
     }
 
-    onMouseMove = (e) => {
+    onMouseMove = e => {
         var center = this.getCenter();
         var novasCoordenadas = [
-            -(e.nativeEvent.clientX - center[0]), 
-            -(e.nativeEvent.clientY - center[1])
+            -(e.nativeEvent.clientX - center[0] + this.deslocamento[0]), 
+            -(e.nativeEvent.clientY - center[1] + this.deslocamento[1])
         ];
         this.setState({coordenadas: novasCoordenadas});
     }
 
+    onMouseLeave = e => {
+        this.coordenadasAntesDeSair = [e.nativeEvent.clientX, e.nativeEvent.clientY];
+    }
+
+    onMouseEnter = e => {
+        this.deslocamento = [
+            this.coordenadasAntesDeSair[0] - e.nativeEvent.clientX + this.deslocamento[0],
+            this.coordenadasAntesDeSair[1] - e.nativeEvent.clientY + this.deslocamento[1]
+        ];
+    }
+
     getCenter = () => [window.innerWidth/2, window.innerHeight/2];
+
+    getBase = () => [0, 0];
 
     render() {
         if (this.props.idUsuario) return <Redirect to='/app'/>
         return (
-            <div onMouseMove={this.onMouseMove}>
+            <div onMouseMove={this.onMouseMove} onMouseLeave={this.onMouseLeave} onMouseEnter={this.onMouseEnter} onClick={() => this.deslocamento = [0, 0]}>
                 <div id='container-login' className='fundo-login'>
                     <div className='wraper-login' >
                         <div className='quadro-centralizado quadro-navbar'>

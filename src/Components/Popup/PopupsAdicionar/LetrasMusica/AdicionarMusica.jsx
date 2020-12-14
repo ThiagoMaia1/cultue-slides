@@ -6,7 +6,8 @@ import ItemListaMusica from './ItemListaMusica.jsx';
 import Element from '../../../../principais/Element';
 import logoVagalume from './Logo Vagalume.png';
 import Checkbox from '../../../Basicos/Checkbox/Checkbox';
-import Carrossel from '../../../Basicos/Carrossel/Carrossel'
+import Carrossel from '../../../Basicos/Carrossel/Carrossel';
+import PesquisaGoogle from './PesquisaGoogle';
 
 const url = 'https://api.vagalume.com.br/';
 var vagalumeLetra;
@@ -106,6 +107,8 @@ class AdicionarMusica extends Component {
         vagalumeLetra.send();
     }
 
+
+
     getEstiloParagrafo = () => (
         this.listaCheckboxes.reduce((resultado, c) => {
             var obj = {};
@@ -143,6 +146,7 @@ class AdicionarMusica extends Component {
         if (this.props.input1) setTimeout(() => this.pegarMusicas(this.props.input1), 0);
         return (
             <div className='conteudo-popup'>
+                <PesquisaGoogle/>
                 <div className='wraper-popup'>
                     <div>
                         <h4 className='titulo-popup'>Pesquisa de Música</h4>

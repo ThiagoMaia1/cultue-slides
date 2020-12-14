@@ -21,7 +21,7 @@ class App extends Component {
     return (
       <div id='App'>
         <BarraPesquisa/>
-        {/* {this.props.apresentacao.autorizacao !== 'editar' ? null : <Tutorial/>} */}
+        {this.props.apresentacao.autorizacao !== 'editar' ? null : <Tutorial/>}
         <PopupAdicionar/>
         <NavBar history={this.props.history}/>
         {this.props.apresentacao.autorizacao === 'baixar' 

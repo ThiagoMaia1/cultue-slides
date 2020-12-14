@@ -203,7 +203,7 @@ class ImagemRedimensionavel extends Component {
         var [ estiloState, estiloProps ] = [ this.state.estiloImagem, this.props.estiloImagem ]
         for (var l of listaDirecoes) {
             if (estiloState[l] !== estiloProps[l]) {
-                var estiloNum = this.getEstiloNum();
+                // var estiloNum = this.getEstiloNum();
                 // this.proporcao = ((1 - estiloNum.right - estiloNum.left)/(1 - estiloNum.top - estiloNum.bottom));
                 editarEstilo(estiloState);
                 return;

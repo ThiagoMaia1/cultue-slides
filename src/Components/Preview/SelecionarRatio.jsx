@@ -67,7 +67,7 @@ class SelecionarRatio extends React.Component {
 
     render() {
         if (!this.props.eMestre) return null;
-        var estiloFundo = this.props.tutorial ? estiloIntermediario : this.state.estiloFundo
+        var estiloFundo = (this.props.tutorial && this.state.estiloFundo === estiloInvisivel) ? estiloIntermediario : this.state.estiloFundo
         return (
             <>
                 <div id='selecionar-aspect-ratio' onMouseEnter={this.onMouseEnter} onMouseLeave={this.onMouseLeave}></div>

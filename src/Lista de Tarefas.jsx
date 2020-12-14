@@ -84,7 +84,7 @@
 //   Edição do conteúdo do parágrafo dando alguns erros (falha ao perder foco, não exibe cursor).
 //   Na exportacao pegar apenas as imagens de qualidade certa.
 //   Editar slide de imagens ou desabilitar edição.
-//   Click fora tutorial
+//   ✔️ Click fora tutorial
 //   Otimizar trocas de dados com BD.
 //   Atalhos nos inputs.
 
@@ -128,6 +128,8 @@
 //   Lidar com perda de conexão.
 //   Tentar de novo/Avisar se upload da imagem não pôde ser feito.
 //   Ocultar/isolar título.
+//   Duplicar slide.
+//   Duplicar apresentação.
 
 /*/ Features dispensáveis:
 //   Prévia configurar blend-mode e fonte (preciso criar novo componenente Select).
@@ -159,6 +161,8 @@
 //   Lista de slides no arquivo html.
 //   Atalhos B e W no modo de apresentação.
 //   Transições de slides.
+//   Ranking músicas.
+//   Acrescentar músicas BD.
 //   Blend-mode tampão*/
 //
 // Negócio:

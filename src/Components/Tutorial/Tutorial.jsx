@@ -2,25 +2,19 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import './Tutorial.css';
 import Arrow from './Arrow';
-import { store } from '../../index';
 import hotkeys from 'hotkeys-js';
+import listaBoxes from './ListaTutorial';
+import { getObjectByStringPath } from '../../principais/FuncoesGerais';
+import { store } from '../../index';
 
 const cssOpacidade = 'opacity: 0.2';
 const cssCorFundo = 'background-color: #d0d9ec; box-shadow: 2px 2px 6px rgba(0,0,0,0.1)';
-const selectorQuadradinhoCanto = '.itens.lista-slides .quadradinho-canto';
 
-const setOpacidadeQuadradinhoCanto = opacidade => {
-  store.dispatch({type: 'definir-selecao', selecionado: {elemento: opacidade ? 1 : 2, slide: 0}})
-  document.querySelectorAll(selectorQuadradinhoCanto)[0].style.opacity = opacidade || null;
-}
-
-const selecionarSlide = (elemento, slide) => store.dispatch({type: 'definir-selecao', selecionado: {elemento, slide}});
-const selecionarAba = abaAtiva => store.dispatch({ type: 'ativar-realce', abaAtiva });
-
-const getCSSFade = elementos => {
+const getCSSFade = (elementos, selector) => {
   var elemento = elementos[0];
   var pai = elemento.parentElement;
-  var css = '';
+  var primeiroSelector = selector.split(',')[0];
+  var css = '#App * {pointer-events: none;} ' + primeiroSelector + ', ' + primeiroSelector + ' * {pointer-events: all !important;} ';
   while (!(pai.id === 'App')) {
     var excecoes = '';
     var regraCss = (pai.id === '#botoes-flutuantes-app' ? cssCorFundo : cssOpacidade);
@@ -57,88 +51,6 @@ const getSelectors = elemento => {
   return selectors;
 }
 
-const listaBoxes = {
-  painelAdicionar: [{
-    texto: 'Clique para criar um elemento', 
-    arrow: {posicao: 'bottomCenter', posicaoChildren: 'right', selectorElemento: '#div-botoes'},
-    selectorElemento: '#bloco-adicionar'},
-  ],
-  slides: [
-    {texto: 'As configurações do Slide-Mestre se aplicam aos demais slides. Cada grupo de slides também possui seu próprio slide-mestre.', 
-     coordenadas: [15, 25], 
-     arrow: {posicao: 'centerRight', posicaoChildren: 'bottom'},
-     selectorElemento: '#slide-mestre',
-     callbackAntes: () => selecionarSlide(0, 0)
-    },
-    {texto: 'Clique no canto superior esquerdo do slide-mestre para alterar as dimensões da tela/projetor.', 
-     arrow: {posicao: 'centerLeft', posicaoChildren: 'bottom', selectorElemento: '#selecionar-aspect-ratio'},
-     selectorElemento: '#borda-slide-mestre',
-     callbackDepois: () => selecionarSlide(1, 0)
-    },
-    {texto: 'Clique para alterar as configurações e a imagem de fundo do slide selecionado', 
-     coordenadas: [40, 40], 
-     selectorElemento: '#botao-menu-configurar, #botao-mostrar-galeria'
-    },
-    {texto: 'Clique para ver a prévia da apresentação em tela cheia', 
-     arrow: {posicao: 'bottomCenter', posicaoChildren: 'left', selectorElemento: '#ativar-tela-cheia'},
-     selectorElemento: '#borda-slide-mestre',
-    }
-  ],
-  arrastar: [
-    {texto: 'Clique no slide, ou utilize as setas para navegar', 
-     arrow: {posicao: 'centerRight', posicaoChildren: 'bottom'},
-     selectorElemento: '#ordem-elementos'},
-    {texto: 'Arraste os elementos para reordenar a apresentação', 
-     arrow: {posicao: 'centerRight', posicaoChildren: 'bottom'},
-     selectorElemento: '#ordem-elementos'},
-    {texto: 'Clique no canto superior direito de um grupo de slides para exclui-lo, ou clique no lápis para editar o conteúdo do slide', 
-     arrow: {posicao: 'centerRight', posicaoChildren: 'bottom', selectorElemento: '.itens.lista-slides'},
-     selectorElemento: selectorQuadradinhoCanto,
-     callbackAntes: () => setOpacidadeQuadradinhoCanto(1),
-     callbackDepois: () => setOpacidadeQuadradinhoCanto(0)
-    },
-    {texto: 'Ao concluir, clique para exportar a apresentação pronta', 
-     arrow: {posicao: 'centerLeft', posicaoChildren: 'top'},
-     selectorElemento: '#menu-exportacao'},
-  ],
-  galeriaFundos: [
-   {texto: 'Passe o mouse sobre uma imagem para ver o fundo aplicado ao slide selecionado, ou clique para selecionar o fundo', 
-    coordenadas: [45, 45], 
-    selectorElemento: '#botao-mostrar-galeria'}
-  ],
-  configuracoesSlide: [
-   {texto: 'Selecione a aba para aplicar as configurações', 
-    arrow: {posicao: 'centerLeft', posicaoChildren: 'bottom', selectorElemento: '#abas'},
-    selectorElemento: '#botao-menu-configurar',
-  },
-   {texto: 'Ao editar as configurações de texto, os slides são automaticamente redivididos para caber', 
-    coordenadas: [45, 45], 
-    selectorElemento: '#botao-menu-configurar'},
-   {texto: 'Você pode alterar a cor de fundo, e a opacidade da camada que se sobrepõe à imagem de fundo', 
-    arrow: {posicao: 'centerLeft', posicaoChildren: 'bottom'},
-    selectorElemento: '#botao-menu-configurar',
-    callbackAntes: () => selecionarAba('tampao'),
-    callbackDepois: () => selecionarAba('texto')
-   },
-   {texto: 'Clique diretamente no texto do slide para editar seu conteúdo', 
-    coordenadas: [30, 50], 
-    selectorElemento: '#borda-slide-mestre',
-    callbackAntes: () => selecionarAba('paragrafo'),
-    callbackDepois: () => selecionarAba('texto')
-  },
-   {texto: 'Clique para aplicar o estilo do slide selecionado ao slide-mestre do grupo ou da apresentação.',
-    arrow: {posicao: 'centerLeft', posicaoChildren: 'bottom'},
-    selectorElemento: '#botao-clonar-estilo'
-   },
-   {texto: 'Clique para limpar os estilos do slide, grupo ou apresentação selecionados.',
-    arrow: {posicao: 'centerLeft', posicaoChildren: 'bottom'},
-    selectorElemento: '#botao-limpar-estilo'
-   }
-  ]
-}
-
-export const keysTutoriais = Object.keys(listaBoxes);
-
 class EtapaTutorial extends Component {
   
   constructor (props) {
@@ -146,13 +58,49 @@ class EtapaTutorial extends Component {
     this.state = {item: {...props.itens[props.indice]}};
   }
 
-  static getDerivedStateFromProps = (props, state) => {
-    var itemProps = props.itens[props.indice] || {};
-    if(state.item.texto !== itemProps.texto) {
-      if (state.item.callbackDepois) state.item.callbackDepois();
-      return {item: {...itemProps}};
+  funcaoTimeout = tempo  => {
+    clearTimeout(this.timeout);
+    if(!this.timeout) setTimeout(() => {
+      this.props.offset(1);
+      this.timeout = null; 
+    }, tempo || 0);
+  }
+
+  adicionarListener = evento => {
+    this.removerListener();
+    if (!evento || !evento.listener) return;
+    this.tipoListener = evento.listener;
+    if(evento.listener !== 'redux') {
+      this.funcaoListener = e => {
+        let alvo = document.getElementById(evento.alvo);
+        console.log(evento.listener, !document.fullscreenElement)
+        if( (
+              evento.listener === 'click'
+              && (!evento.alvo || e.target.id === evento.alvo || (alvo && alvo.contains(e.target)))
+            ) 
+            || (evento.listener = 'fullscreenchange' && !document.fullscreenElement)) {
+          this.funcaoTimeout(evento.timeout);
+          window.removeEventListener(this.tipoListener, this.funcaoListener);
+        }
+      }
+      window.addEventListener(evento.listener, this.funcaoListener);
+    } else {
+      const getValorAtual = () => JSON.stringify(getObjectByStringPath(store.getState(), evento.alvo));
+      this.valorAtual = getValorAtual();
+      this.unsubscribe = store.subscribe(() => {
+        if (evento.alvo) {
+          var valorAntigo = this.valorAtual;
+          this.valorAtual = getValorAtual();
+        }
+        if(!evento.alvo || valorAntigo !== this.valorAtual) 
+          this.funcaoTimeout(evento.timeout);
+      })
     }
-    return null;
+  }
+
+  removerListener = () => {
+    window.removeEventListener(this.tipoListener, this.funcaoListener);
+    if (this.unsubscribe) this.unsubscribe();
   }
   
   removerCss = () => {
@@ -160,24 +108,23 @@ class EtapaTutorial extends Component {
       this.styleSheet.remove();
       this.styleSheet = null;
     }
-    window.removeEventListener('resize', this.listenerResize);
   }
 
-  componentDidUpdate = prevProps => {
-    if(JSON.stringify(prevProps) !== JSON.stringify(this.props))
-      this.componentDidMount();
-  }
+  funcaoResize = () => this.forceUpdate();
 
   componentDidMount = () => {
     hotkeys.setScope('tutorial');
-    this.listenerResize = window.addEventListener('resize', () => this.forceUpdate());
+    window.addEventListener('resize', this.funcaoResize);
+    window.addEventListener('click', this.funcaoResize);
+    window.addEventListener('keyup', this.funcaoResize);
     this.removerCss();
+    this.adicionarListener(this.state.item.evento);
     var item = this.state.item;
     if (!item.texto) return;
     var elementos = document.querySelectorAll(item.selectorElemento);
     if (!elementos.length) return null;
     this.styleSheet = document.createElement("style");
-    this.styleSheet.innerHTML = getCSSFade(elementos);
+    this.styleSheet.innerHTML = getCSSFade(elementos, item.selectorElemento);
     if (item.callbackAntes) item.callbackAntes();
     document.head.appendChild(this.styleSheet);
   }
@@ -185,12 +132,16 @@ class EtapaTutorial extends Component {
   componentWillUnmount = () => {
     hotkeys.setScope('app');
     this.removerCss();
+    window.removeEventListener('resize', this.funcaoResize);
+    window.removeEventListener('click', this.funcaoResize);
+    window.removeEventListener('keyup', this.funcaoResize);
+    this.removerListener();
+    if (this.state.item.callbackDepois) this.state.item.callbackDepois();
   }
 
   render() {
     if(!this.props.itens.length) return null;
     var item = this.state.item;
-    // if (!document.querySelectorAll(item.selectorElemento).length) return null;
     var a = item.arrow;
     var caixa = (
       <div className='caixa-tutorial'>
@@ -256,13 +207,10 @@ class Tutorial extends Component {
 
   offsetEtapaTutorial = passo => {
     var indice = this.state.indiceEtapa;
-    // do {
-      indice = this.getNovoIndice(passo, indice);
-      if (indice === -1) {
-        this.props.dispatch({type: 'definir-item-tutorial', zerar: true});
-        // break;
-      }
-    // } while(!document.querySelectorAll(this.props.itensTutorial[indice].selectorElemento).length)
+    if (indice + passo === -1) return;
+    indice = this.getNovoIndice(passo, indice);
+    if (indice === -1)
+      this.props.dispatch({type: 'definir-item-tutorial', zerar: true});
     this.setState({indiceEtapa: indice});
   }
 
@@ -285,7 +233,7 @@ class Tutorial extends Component {
     var ativo = this.temTutorialAtivo();
     return (
       <div id='fundo-tutorial' style={ativo ? null : {pointerEvents: 'none'}}>
-        <EtapaTutorial itens={[...this.props.itensTutorial]} indice={this.state.indiceEtapa}/>
+        <EtapaTutorial key={this.props.itensTutorial.join(',') + this.state.indiceEtapa} itens={[...this.props.itensTutorial]} indice={this.state.indiceEtapa} offset={this.offsetEtapaTutorial}/>
         {ativo
           ? <>
               <button id='pular-tutorial' className='botao limpar-input' onClick={this.finalizar}>Não Exibir Tutoriais</button>

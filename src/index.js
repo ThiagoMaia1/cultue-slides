@@ -4,11 +4,11 @@ import './index.css';
 import Home from './Home';
 import { createStore } from 'redux';
 import hotkeys from 'hotkeys-js';
-import Element, { getEstiloPadrao, newEstilo, getPadding, getDadosMensagem, listaPartesEstilo } from './principais/Element.js';
+import { getEstiloPadrao, newEstilo, getPadding, getDadosMensagem, listaPartesEstilo } from './principais/Element.js';
 import { selecionadoOffset, getSlidePreview } from './Components/MenuExportacao/Exportador';
 import { atualizarApresentacao, getApresentacaoPadrao, autorizacaoEditar, ratioPadrao, autorizacaoPadrao, apresentacaoAnonima } from './principais/firestore/apresentacoesBD';
 import { atualizarRegistro } from './principais/firestore/apiFirestore';
-import { keysTutoriais } from './Components/Tutorial/Tutorial';
+import { keysTutoriais } from './Components/Tutorial/ListaTutorial';
 import { toggleFullscreen } from './principais/FuncoesGerais';
 import inicializarHotkeys from './principais/atalhos';
 
@@ -27,7 +27,7 @@ const redividirSlides = (elementos, sel, ratio) => {
 
 const numeroAcoesPropaganda = 20;
 
-var defaultList = {...getApresentacaoPadrao(), selecionado: {elemento: 1, slide: 0}, elementos: [...getApresentacaoPadrao().elementos, new Element('Imagem', 'Imagem', [], [{src: '123'}])], 
+var defaultList = {...getApresentacaoPadrao(), 
   abaAtiva: 'texto',
   popupAdicionar: {},
   apresentacao: apresentacaoAnonima,
@@ -163,8 +163,8 @@ export const reducerElementos = function (state = defaultList, action, usuario) 
     case "definir-selecao":
       if (!autorizacaoEditar(state.apresentacao.autorizacao)) 
         sel = selecionadoOffset(state.elementos, action.selecionado, 0, true);
-      if(sel.slide > el[sel.elemento].slides.length - 1) sel.slide = 0;
       if(sel.elemento > el.length -1) sel.elemento = 0;
+      if(sel.slide > el[sel.elemento].slides.length - 1) sel.slide = 0;
       return {...state, selecionado: sel};
     case "offset-selecao":  
       sel = {...selecionadoOffset(state.elementos, state.selecionado, action.offset, autorizacaoEditar(state.apresentacao.autorizacao) ? undefined : true)};

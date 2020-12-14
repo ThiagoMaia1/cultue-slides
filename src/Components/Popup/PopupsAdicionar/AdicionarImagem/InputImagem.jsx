@@ -4,28 +4,28 @@ import './style.css';
 import { connect } from 'react-redux';
 import Carrossel from '../../../Basicos/Carrossel/Carrossel';
 import { getImgBase64 } from '../../../../principais/FuncoesGerais';
-import { uploadImagem } from './imagemFirebase';
-import { store } from '../../../../index';
+// import { uploadImagem } from './imagemFirebase';
+// import { store } from '../../../../index';
 
 const dMaxTracejado = 99;
 const dMinTracejado = 93;
 
-const substituirImagem = (selecionado, url, objeto) => 
-    store.dispatch({type: 'editar-slide-temporariamente', objeto, valor: { src: url }, selecionado});
+// const substituirImagem = (selecionado, url, objeto) => 
+    // store.dispatch({type: 'editar-slide-temporariamente', objeto, valor: { src: url }, selecionado});
 
-const callbackUpload = (idUpload, urlDownload) => {
-    const elementos = store.getState().present.elementos;
-    for (var i = 0; i < elementos.length; i++) {
-        const slides = elementos[i].slides;
-        for (var j = 0; j < slides.length; j++) {
-            var sel = {elemento: i, slide: j};
-            if (slides[j].estilo.fundo.idUpload === idUpload) 
-                substituirImagem(sel, urlDownload, 'fundo');
-            if (slides[j].imagem && slides[j].imagem.idUpload === idUpload)
-                substituirImagem(sel, urlDownload, 'srcImagem');
-        }
-    }
-}
+// const callbackUpload = (idUpload, urlDownload) => {
+//     const elementos = store.getState().present.elementos;
+//     for (var i = 0; i < elementos.length; i++) {
+//         const slides = elementos[i].slides;
+//         for (var j = 0; j < slides.length; j++) {
+//             var sel = {elemento: i, slide: j};
+//             if (slides[j].estilo.fundo.idUpload === idUpload) 
+//                 substituirImagem(sel, urlDownload, 'fundo');
+//             if (slides[j].imagem && slides[j].imagem.idUpload === idUpload)
+//                 substituirImagem(sel, urlDownload, 'srcImagem');
+//         }
+//     }
+// }
 
 class ImagemInput extends Component {
     

@@ -14,14 +14,12 @@ const inicializarHotkeys = () => {
         e.preventDefault();
         switch(handler.key) {
             case 'ctrl+z':
-                    store.dispatch({type: 'UNDO'});
-                    break;
+                store.dispatch({type: 'UNDO'});
+                break;
             case 'ctrl+y':
             case 'ctrl+shift+z':
                 store.dispatch({type: 'REDO'});
                 break;
-            case 'ctrl+d':
-                console.log(hotkeys.getScope())
             default:
                 return;
         }
@@ -34,6 +32,7 @@ const inicializarHotkeys = () => {
             case 'esc':
                 store.dispatch({type: 'ativar-popup-confirmacao', popupConfirmacao: null});
                 store.dispatch({type: 'ativar-popup-adicionar', popupAdicionar: null});
+                break;
             case 'right':
             case 'down':
                 atalhoOffset(1);

@@ -117,7 +117,9 @@ class Preview extends Component {
                                              padding: telaCheia ? '' : '1vh',
                                              ...this.realcarElemento('tampao', 'fora')}}>
                     {telaCheia ? null : <SelecionarRatio/>}
-                    <div className='bloqueador-apresentacao' style={{backgroundColor: this.state.corBloqueador}}></div>
+                    {!this.state.corBloqueador ? null :
+                        <div className='bloqueador-apresentacao' style={{backgroundColor: this.state.corBloqueador}}></div>
+                    }
                     <div className='container-setas' style={{visibility: 'visible', display: telaCheia ? '' : 'none'}}>
                         <div className='movimentar-slide esquerda' onClick={() => this.offsetSlide(-1)}></div>
                         <div className='movimentar-slide direita' onClick={() => this.offsetSlide(1)}></div>

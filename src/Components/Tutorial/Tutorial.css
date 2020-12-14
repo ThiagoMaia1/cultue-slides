@@ -8,14 +8,11 @@
     flex-direction: column-reverse;
     padding: 4vh;
     z-index: 300;
+    pointer-events: none;
 }
 
 #fundo-tutorial * {
-    pointer-events: all;
-}
-
-.container-caixa-tutorial {
-    position: absolute;
+    pointer-events: all !important;
 }
 
 .caixa-tutorial {
@@ -25,6 +22,7 @@
     min-width: 16vw;
     width: min-content;
     box-shadow: var(--box-shadow);
+    transition: all 0.2s ease-in-out;
 }
 
 #pular-tutorial {
