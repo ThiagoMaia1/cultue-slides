@@ -85,6 +85,12 @@ export const reducerElementos = function (state = defaultList, action, usuario) 
       var novaSelecao = {elemento: state.selecionado.elemento, slide: 0};
       if (state.selecionado.elemento >= el.length) novaSelecao.elemento = state.selecionado.elemento-1 
       return {...state, elementos: el, selecionado: {...novaSelecao}, notificacao: notificacao };
+    case 'duplicar-slide':
+      if(!el[sel.elemento].eMestre) {
+        el.splice(sel.elemento, 0, el[sel.elemento]);
+        sel.elemento++;
+      }
+      return {...state, elementos: el, selecionado: sel};
     case "reordenar":
       return {...state, elementos: action.novaOrdemElementos, selecionado: sel};
     case "toggle-colapsar":

@@ -44,7 +44,6 @@ class Input extends React.Component {
   }
 }
 
-
 class InformacoesPessoais extends React.Component {
   
   constructor (props) {

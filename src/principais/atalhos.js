@@ -4,7 +4,7 @@ import { store } from '../index';
 import { zerarApresentacao } from './firestore/apresentacoesBD';
 
 const tipos = Object.keys(tiposElemento);
-const atalhosAdicionar = {ctrlm: 0, ctrlb: 1, ctrll: 2, ctrli: 3, ctrld: 4};
+const atalhosAdicionar = {ctrlm: 0, ctrlb: 1, ctrll: 2, ctrli: 3, ctrle: 4};
 export const arrowsHotkeys = '';
 
 export const atalhoOffset = offset => store.dispatch({type: 'offset-selecao', offset});
@@ -28,7 +28,7 @@ const inicializarHotkeys = () => {
         }
     })
     
-    hotkeys('esc,ctrl+o,ctrl+m,ctrl+i,ctrl+b,ctrl+l,ctrl+d,ctrl+f,up,left,down,right', 'app', (e, handler)=> {
+    hotkeys('esc,ctrl+o,ctrl+d,ctrl+m,ctrl+i,ctrl+b,ctrl+l,ctrl+e,ctrl+f,up,left,down,right', 'app', (e, handler)=> {
         e.preventDefault();
         const state = store.getState();
         switch (handler.key) {
@@ -48,6 +48,9 @@ const inicializarHotkeys = () => {
                 break;
             case 'ctrl+f':
                 store.dispatch({type: 'toggle-search'});
+                break;
+            case 'ctrl+d':
+                store.dispatch({type: 'duplicar-slide'});
                 break;
             default:
                 var atalho = handler.key.replace('+','');

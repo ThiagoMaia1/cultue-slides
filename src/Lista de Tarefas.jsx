@@ -135,7 +135,6 @@
 //   Tentar de novo/Avisar se upload da imagem não pôde ser feito.
 //   Ocultar/isolar título. 🟨
 //   Duplicar slide. 
-//   Duplicar apresentação.
 //   Otimizar trocas de dados com BD. 🟨
 
 /*/ Features dispensáveis:
@@ -160,6 +159,7 @@
 //   Dividir slide em 2 colunas.
 //   Animação excluir item lista perfil.
 //   Nomear apresentacao
+//   Duplicar apresentação.
 //   Opção de inserir texto bíblico/imagem como grupo ou separado. 
 //   Tela assinaturas/compras. 
 //   Input nos sliders por texto.
@@ -172,6 +172,9 @@
 //   Pesquisa cifra.
 //   Dicas eventuais: B/W, forma de escrita da referência bíblica.
 //   Atalhos e click fora dos menus.
+//   Deletar arrastando.
+//   Manter alt pressionado para duplicar o slide.
+//   Pool de imagens do usuário
 //   Blend-mode tampão*/
 //
 // Negócio:
