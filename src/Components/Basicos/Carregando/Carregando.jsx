@@ -8,7 +8,7 @@ const CarregandoNoCanto = (props) => (
 
 const CirculoCarregando = props => {
    var p = props.propsImagem;
-   return <img src={require('./' + p.imagem)} alt={''} style={{transform: 'rotate(' + p.angulo + 'deg)', height: p.tamanho, width: p.tamanho, ...p.style}}/>
+   return <img src={require('./' + p.imagem)} alt={''} style={{transform: 'rotate(' + p.angulo + 'deg)', height: p.tamanho, width: p.tamanho, zIndex: 20, ...p.style}}/>
 }
 
 class Carregando extends React.Component {

@@ -16,10 +16,9 @@ class AdicionarMusica extends Component {
 
     constructor (props) {
         super(props);
-        this.state = {opcoes: [], listaAtiva: false, letraMusica:{}, botoesVisiveis: false, 
+        this.state = {opcoes: [], listaAtiva: false, letraMusica:{}, botoesVisiveis: false, buscandoLetra: false,
                       carregando: null, idBuscarLetra: this.props.input2, divisivel: false,
-                      duasColunas: false, multiplicadores: true, omitirRepeticoes: true, 
-                      termoPesquisa: null, input2: this.props.input2
+                      duasColunas: false, multiplicadores: true, omitirRepeticoes: true, input2: this.props.input2
                     }
         this.listaCheckboxes = [{label: 'Omitir Repetições', opcao: 'omitirRepeticoes'},
                                 {label: 'Multiplicadores', opcao: 'multiplicadores'}
@@ -29,9 +28,13 @@ class AdicionarMusica extends Component {
 
     onKeyUp(e) {
         clearTimeout(this.timer);
+        let termo = e.target.value;
+        if (!termo || termo === this.termoPesquisa) return;
         this.toggleCarregador(true);
-        var termo = e.target.value;
-        this.timer = setTimeout(() => this.pegarMusicas(termo), 200);
+        this.timer = setTimeout(() => {
+            this.termoPesquisa = termo;
+            this.pegarMusicas(termo)
+        }, 200);
     }
     
     toggleCarregador (estado) {
@@ -39,7 +42,7 @@ class AdicionarMusica extends Component {
     }
 
     pegarMusicas (termo){
-        this.setState({termoPesquisa: termo});
+        this.pegarMusicasGoogle(termo);
         var vagalume = new XMLHttpRequest()
         vagalume.responseType = 'json';
         
@@ -47,7 +50,6 @@ class AdicionarMusica extends Component {
             var opcoes = vagalume.response.response.docs;
             this.setState({opcoes: opcoes});
             this.setState({listaAtiva: opcoes.length > 0});
-            this.toggleCarregador(false);
             if (this.input2) {
                 this.input2 = null;
                 this.buscarLetra(this.state.idBuscarLetra);
@@ -58,12 +60,41 @@ class AdicionarMusica extends Component {
         vagalume.send();
     }    
 
-    buscarLetra = id => {
+    pegarMusicasGoogle = termo => {
+        // var inputGoogle = google.search.cse.element.getElement('pesquisaVagalume');
+        // inputGoogle.execute(termo);
+        // inputGoogle.execute('"' + termo + '"');
+        var inputGoogle = document.querySelectorAll('input.gsc-input')[0];
+        var botaoGoogle = document.querySelectorAll('button.gsc-search-button')[0];        
+        inputGoogle.value = '"' + termo + '"';
+        botaoGoogle.click();
+        inputGoogle.value = termo;
+        botaoGoogle.click();
+    }
+
+    callbackPesquisaGoogle = termo => {
+        var vagalumeDeGoogle = new XMLHttpRequest()
+        vagalumeDeGoogle.responseType = 'json';
+        
+        vagalumeDeGoogle.addEventListener('load', () => {    
+            var opcao = vagalumeDeGoogle.response.response.docs[0];
+            var opcoesFiltrado = this.state.opcoes.filter(o => o.id !== opcao.id);
+            this.setState({opcoes: [opcao, ...opcoesFiltrado]});
+            this.setState({listaAtiva: this.state.opcoes.length > 0});
+            this.toggleCarregador(false);
+        });
+        
+        vagalumeDeGoogle.open('GET', url + 'search.excerpt?q=' + encodeURIComponent(termo) + '&limit=1');
+        vagalumeDeGoogle.send();
+    }
+
+    buscarLetra = (id, tituloArtista) => {
+        if (id === this.state.idBuscarLetra) return;
         if (vagalumeLetra instanceof XMLHttpRequest) {        
             vagalumeLetra.abort();
         }
-        this.setState({idBuscarLetra: id});
-        vagalumeLetra = new XMLHttpRequest()
+        this.setState({idBuscarLetra: id, tituloArtista: tituloArtista, buscandoLetra: true});
+        vagalumeLetra = new XMLHttpRequest();
         vagalumeLetra.responseType = 'json';
             
         vagalumeLetra.addEventListener('load', () => {
@@ -96,7 +127,7 @@ class AdicionarMusica extends Component {
                     </a></i>
                 </div>)
             this.setState({letraMusica: {esquerda: letraEsquerda, direita: letraDireita}, botoesVisiveis: true, 
-                           listaAtiva: false, 
+                           listaAtiva: false, buscandoLetra: false,
                            elemento: new Element('Música', vagalumeLetra.response.mus[0].name, letra, null, 
                                      {paragrafo: {...this.getEstiloParagrafo()}}
                            )
@@ -107,8 +138,6 @@ class AdicionarMusica extends Component {
         vagalumeLetra.send();
     }
 
-
-
     getEstiloParagrafo = () => (
         this.listaCheckboxes.reduce((resultado, c) => {
             var obj = {};
@@ -117,8 +146,8 @@ class AdicionarMusica extends Component {
         }, {})
     )
     
-    onClick(e) {
-        var popupAdicionar = {input1: this.state.termoPesquisa, input2: this.state.idBuscarLetra};                           
+    onClick = () => {
+        var popupAdicionar = {input1: this.termoPesquisa, input2: this.state.idBuscarLetra};                           
         this.props.dispatch({type: 'inserir', 
                              elemento: this.state.elemento,
                              popupAdicionar: popupAdicionar,
@@ -128,7 +157,7 @@ class AdicionarMusica extends Component {
 
     limparInput = () => {
         this.refCombo.value = '';
-        this.setState({letraMusica: {}, botoesVisiveis: false, opcoes: []})
+        this.setState({letraMusica: {}, botoesVisiveis: false, opcoes: [], carregando: null, buscandoLetra: false})
         setTimeout(() => this.refCombo.focus(), 1);
     }
 
@@ -146,7 +175,7 @@ class AdicionarMusica extends Component {
         if (this.props.input1) setTimeout(() => this.pegarMusicas(this.props.input1), 0);
         return (
             <div className='conteudo-popup'>
-                <PesquisaGoogle/>
+                <PesquisaGoogle callback={this.callbackPesquisaGoogle}/>
                 <div className='wraper-popup'>
                     <div>
                         <h4 className='titulo-popup'>Pesquisa de Música</h4>
@@ -160,10 +189,11 @@ class AdicionarMusica extends Component {
                     </div>
                     <div className='container-opcoes-musica container-carrossel' 
                          style={this.state.listaAtiva ? null : {display: 'none'}}>
-                        <Carrossel tamanhoIcone={45} tamanhoMaximo='100%' direcao='vertical' style={{zIndex: '400'}} percentualBeirada={0.08}>
+                        <Carrossel tamanhoIcone={45} tamanhoMaximo='30vh' direcao='vertical' style={{zIndex: '400'}} beiradaFinal={10}>
                             <div className='opcoes-musica'>
                                 {this.state.opcoes.map(mus => 
-                                    <ItemListaMusica musica={mus} buscarLetra={this.buscarLetra} idBuscarLetra={this.state.idBuscarLetra}/>
+                                    <ItemListaMusica musica={mus} buscarLetra={this.buscarLetra} idBuscarLetra={this.state.idBuscarLetra} 
+                                                     buscandoLetra={this.state.buscandoLetra}/>
                                 )}
                             </div>
                         </Carrossel>
@@ -178,8 +208,9 @@ class AdicionarMusica extends Component {
                                 </a>
                             </div>
                         </div>                    
-                        : <Carrossel tamanhoIcone={45} tamanhoMaximo='100%' direcao='vertical' style={{zIndex: '400'}} percentualBeirada={0.08}>
+                        : <Carrossel tamanhoIcone={45} tamanhoMaximo='100%' direcao='vertical' style={{zIndex: '400'}} beiradaFinal={10}>
                             <div>
+                                <div className='titulo-artista'>{this.state.tituloArtista}</div>
                                 <div className='texto-inserir'>
                                     <div className='paragrafos-esquerda'>
                                         {this.state.letraMusica.esquerda}
@@ -234,7 +265,6 @@ export default connect()(AdicionarMusica);
 //         this.toggleCarregador(false);
 //     })
     
-//     console.log(url + encodeURIComponent(vagalume[index].url.split('/')[1]) + '/index.js&apikey=' + apiKey);
 //     generoMusica[generoMusica.length - 1].open('POST', url + encodeURIComponent(vagalume[index].url.split('/')[1]) + '/index.js&apikey=' + apiKey);
 //     generoMusica[generoMusica.length - 1].setRequestHeader('Access-Control-Allow-Origin', '*');
 //     generoMusica[generoMusica.length - 1].setRequestHeader('Access-Control-Allow-Credentials', 'true');

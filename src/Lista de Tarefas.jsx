@@ -82,10 +82,10 @@
 //   Padding bottom redividir slides um pouco errado.
 //   Redividir quando o texto de um slide é todo deletado.
 //   Edição do conteúdo do parágrafo dando alguns erros (falha ao perder foco, não exibe cursor).
-//   Na exportacao pegar apenas as imagens de qualidade certa.
-//   Editar slide de imagens ou desabilitar edição.
+//   Exportação de imagens após mudanças inset.
+//   Editar slide de imagens ou desabilitar edição. 🟨
 //   ✔️ Click fora tutorial
-//   Otimizar trocas de dados com BD.
+//   Otimizar trocas de dados com BD. 🟨
 //   Atalhos nos inputs.
 
 /*// Features essenciais:
@@ -119,26 +119,28 @@
 //   ✔️ Compor html e-mail 
 //   ✔️ Enviar powerpoint por e-mail.
 //   ✔️ Pagina de Download: visualizar apresentação online.
+//   ✔️ Melhorar pesquisa de letra de música usando google.
+//   ✔️ Editar tamanho da imagem direto no preview.
+//   ✔️ Atalhos B e W no modo de apresentação.
 //   ✔️ Exportar como Power Point.*/
-//   Tela perfil do usuário: informações básicas, predefinições. 
-//   Persistir redux
-//   Melhorar pesquisa de letra de música usando google.
-//   Incluir fontes como base64 (html) ou zip (power point).
+//   Tela perfil do usuário: informações básicas, predefinições. 🟥 
+//   Persistir redux 🟨
+//   Incluir fontes como base64 (html) ou zip (power point). 🟥
 //   Ajuda: rever tutoriais, entrar em contato com o desenvolvedor.
 //   Lidar com perda de conexão.
 //   Tentar de novo/Avisar se upload da imagem não pôde ser feito.
-//   Ocultar/isolar título.
-//   Duplicar slide.
+//   Ocultar/isolar título. 🟨
+//   Duplicar slide. 
 //   Duplicar apresentação.
+//   Lista de atalhos do modo apresentação.
 
 /*/ Features dispensáveis:
 //   Prévia configurar blend-mode e fonte (preciso criar novo componenente Select).
-//   Aplicar efeito de sombra no texto.
+//   Outros efeitos no texto: sombra, realce, etc...
 //   Definir limite de e-mails.
 //   Propagandas alternadas na galeria.
 //   Favoritar músicas, fundos...
 //   Incorporar vídeos do youtube.
-//   Editar tamanho da imagem direto no preview.
 //   Exportar como PDF.
 //   Criar slides a partir de lista com separador.
 //   Combo de número de capítulos e versículos da bíblia.
@@ -148,21 +150,21 @@
 //   Reutilizar links de compartilhamento.
 //   Indicar que há estilização nos slides/grupos.
 //   Página de redefinição de senha em português.
-//   Gradiente como fundo.
+//   Fundo em gradiente.
 //   Shenanigans de segunda tela.
 //   Dividir slide em 2 colunas.
 //   Animação excluir item lista perfil.
 //   Nomear apresentacao
 //   Opção de inserir texto bíblico/imagem como grupo ou separado. 
 //   Tela assinaturas/compras. 
-//   Input de sliders por texto.
+//   Input nos sliders por texto.
 //   Fotos de perfil.
 //   Compartilhar layouts.
 //   Lista de slides no arquivo html.
-//   Atalhos B e W no modo de apresentação.
 //   Transições de slides.
 //   Ranking músicas.
 //   Acrescentar músicas BD.
+//   Pesquisa cifra.
 //   Blend-mode tampão*/
 //
 // Negócio:
@@ -174,3 +176,5 @@
 //   Pedir amigos para compartilharem.
 //   Logos "Apoio" na tela de descanso
 //   E-mails não caírem no spam
+//   Criar instagram
+//   Criar canal do youtube

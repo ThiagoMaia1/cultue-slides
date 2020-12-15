@@ -25,16 +25,12 @@
 
 .container-opcoes-musica.container-carrossel {
     position: absolute;
+    max-height: 30vh;
 }
 
 .opcoes-musica {
     position: relative;
     overflow: hidden;
-    max-height: 30vh;
-}
-
-.item-lista-musica {
-    /* width: 99%; */
 }
 
 #div-logo-vagalume {
@@ -72,4 +68,20 @@
 
 #preview-musica {
     min-height: 36vh;
+}
+
+#box-google {
+    display: none;
+}
+
+.titulo-artista {
+    width: 100%;
+    font-size: 120%;
+    font-weight: 600;    
+    margin: 2vh 0 3vh;
+    text-align: center;
+}
+
+.item-lista-musica > .itens:hover {
+    background-color: #d8d8d8;
 }

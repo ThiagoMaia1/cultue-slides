@@ -1,24 +1,41 @@
 import React, { Component } from 'react';
 
+
 class PesquisaGoogle extends Component {
   
+    resultsReadyCallback = (_n, _q, _p, results, resultsDiv) => {
+        for (let r of results) {
+            this.props.callback(r.titleNoFormatting.replace(' - VAGALUME',''));
+        }    
+        resultsDiv = <></>;
+        return false;
+      };
+    
+
     componentDidMount() {
-        (function() {
-          var cx = 'eb73de29ad1eb8479';
-          var gcse = document.createElement('script');
-          gcse.type = 'text/javascript';
-          gcse.async = true;
-          gcse.src = 'https://cse.google.com/cse.js?cx=' + cx;
-          var s = document.getElementsByTagName('script')[0];
-          s.parentNode.insertBefore(gcse, s);
-        })();
-      }
-  render() {
-    return (
-        <div class="gcse-searchbox" data-resultsUrl="http://www.example.com"
-             data-newWindow="true" data-queryParameterName="search"/>
-    );
-  }
+        var cx = 'eb73de29ad1eb8479';
+        var gcse = document.createElement('script');
+        gcse.type = 'text/javascript';
+        gcse.async = true;
+        gcse.src = 'https://cse.google.com/cse.js?cx=' + cx;
+        var s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(gcse, s);
+        window.__gcse || (window.__gcse = {});
+        window.__gcse.searchCallbacks = {
+            web: {
+                ready: this.resultsReadyCallback,
+            },
+        };
+    }
+
+    render() {
+        return (
+            <div id='box-google'>
+                 <div class="gcse-searchbox"></div> 
+                 <div class="gcse-searchresults" data-enableOrderBy={false} data-resultSetSize='3'></div>
+            </div>
+        );
+    }
 };
   
 export default PesquisaGoogle;

@@ -50,16 +50,20 @@ class Preview extends Component {
                     this.props.dispatch({type: 'definir-modo-apresentacao', modoApresentacao: false})
                     break;
                 case 'b':
-                    this.setState({corBloqueador: 'black'});
+                    this.setCorBloqueador('black');
                     break;
-                case 'w':
-                    this.setState({corBloqueador: 'white'});
+                case 'w':                    
+                    this.setCorBloqueador('white');
                     break;
                 default:
                     return;
             }
         });
     }    
+
+    setCorBloqueador = cor => {
+        this.setState({corBloqueador: this.state.corBloqueador === cor ? null : cor});
+    }
 
     offsetSlide = offset => this.props.dispatch({type: 'offset-selecao', offset: offset})
     
@@ -117,7 +121,7 @@ class Preview extends Component {
                                              padding: telaCheia ? '' : '1vh',
                                              ...this.realcarElemento('tampao', 'fora')}}>
                     {telaCheia ? null : <SelecionarRatio/>}
-                    {!this.state.corBloqueador ? null :
+                    {!this.state.corBloqueador || !telaCheia ? null :
                         <div className='bloqueador-apresentacao' style={{backgroundColor: this.state.corBloqueador}}></div>
                     }
                     <div className='container-setas' style={{visibility: 'visible', display: telaCheia ? '' : 'none'}}>
@@ -141,7 +145,8 @@ class Preview extends Component {
                     </SlideFormatado>
                     {telaCheia && !eMestre ? null
                         : <div id="texto-slide-mestre" 
-                               style={{textAlign: 'center', ...(telaCheia ? {padding: '1vh 0', fontSize: '110%'} : {paddingTop: '0.7vh'})}}>
+                               style={{textAlign: 'center', ...(telaCheia ? {padding: '1vh 0', fontSize: '110%'} : {paddingTop: '0.7vh'}), 
+                                       maxWidth: proporcao*this.props.ratio.width}}>
                             Slide-Mestre - {slidePreview.selecionado.elemento === 0 ? 'Global' : slidePreview.nomeLongoElemento}
                         </div>
                     }
