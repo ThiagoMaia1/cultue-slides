@@ -175,7 +175,8 @@ export const reducerElementos = function (state = defaultList, action, usuario) 
       novoModo
         ? hotkeys.setScope('apresentacao')
         : hotkeys.setScope('app')
-      return {...state, modoApresentacao: novoModo};
+      if (novoModo) sel = selecionadoOffset(state.elementos, sel, 0, true);
+      return {...state, modoApresentacao: novoModo, selecionado: sel};
     default:
       return state;
   }

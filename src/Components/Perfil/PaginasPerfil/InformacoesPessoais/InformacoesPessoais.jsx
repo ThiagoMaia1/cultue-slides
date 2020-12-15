@@ -1,13 +1,13 @@
 import React from 'react';
 import { connect  } from 'react-redux';
 import './InformacoesPessoais.css';
-import { atualizarRegistro, getDocumentoUsuario } from '../../principais/firestore/apiFirestore';
-import SelectCargo from '../Login/SelectCargo';
+import { atualizarRegistro, getDocumentoUsuario } from '../../../../principais/firestore/apiFirestore';
+import SelectCargo from '../../../Login/SelectCargo';
 
 const campos = {
   nomeCompleto: {label: 'Nome Completo'},
   email: {label: 'E-mail'}, 
-  cargo: {label: 'Cargo', Componente: SelectCargo}
+  cargo: {label: 'Cargo', Input: SelectCargo}
 }
 
 const keysCampos = Object.keys(campos);
@@ -83,7 +83,7 @@ class InformacoesPessoais extends React.Component {
         <div className='campos-editaveis'>
           {keysCampos.map(k => 
             <Input key={k} callback={novoState => this.setState(novoState)} editaveis={this.getEditaveis()} campo={k} label={campos[k].label}>
-              {campos[k].Componente || null}
+              {campos[k].Input || null}
             </Input>
           )}
         </div>

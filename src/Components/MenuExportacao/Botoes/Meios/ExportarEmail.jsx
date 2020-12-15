@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import BotaoExportador from '../BotaoExportador';
 import { IoMdMail } from 'react-icons/io';
-import ListaEmails from '../../../Perfil/ListaEmails';
+import ListaEmails from '../../../Perfil/PaginasPerfil/ListaEmails/ListaEmails';
 import Carrossel from '../../../Basicos/Carrossel/Carrossel';
 import sobreporSplash from '../../../Basicos/Splash/SobreporSplash';
 import { ativarPopupConfirmacao } from '../../../Popup/PopupConfirmacao';

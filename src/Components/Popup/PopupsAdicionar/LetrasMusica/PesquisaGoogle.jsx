@@ -9,7 +9,7 @@ class PesquisaGoogle extends Component {
         }    
         resultsDiv = <></>;
         return false;
-      };
+    };
     
 
     componentDidMount() {
@@ -31,8 +31,8 @@ class PesquisaGoogle extends Component {
     render() {
         return (
             <div id='box-google'>
-                 <div class="gcse-searchbox"></div> 
-                 <div class="gcse-searchresults" data-enableOrderBy={false} data-resultSetSize='3'></div>
+                 <div data-gname='pesquisa-vagalume' class="gcse-searchbox"></div> 
+                 <div data-gname='pesquisa-vagalume' class="gcse-searchresults" data-enableOrderBy={false} data-resultSetSize='3'></div>
             </div>
         );
     }

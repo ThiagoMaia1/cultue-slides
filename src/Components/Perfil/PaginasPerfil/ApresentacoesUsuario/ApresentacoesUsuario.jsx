@@ -1,11 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { getApresentacoesUsuario, definirApresentacaoAtiva, definirApresentacaoPadrao, excluirApresentacao } from '../../principais/firestore/apresentacoesBD';
-import SlideFormatado from '../Preview/SlideFormatado';
-import { getSlidePreview } from '../MenuExportacao/Exportador';
+import { getApresentacoesUsuario, definirApresentacaoAtiva, definirApresentacaoPadrao, excluirApresentacao } from '../../../../principais/firestore/apresentacoesBD';
+import SlideFormatado from '../../../Preview/SlideFormatado';
+import { getSlidePreview } from '../../../MenuExportacao/Exportador';
 import './ApresentacoesUsuario.css';
-import Carrossel from '../Basicos/Carrossel/Carrossel';
-import { ativarPopupConfirmacao } from '../Popup/PopupConfirmacao';
+import Carrossel from '../../../Basicos/Carrossel/Carrossel';
+import { ativarPopupConfirmacao } from '../../../Popup/PopupConfirmacao';
 
 class ApresentacoesUsuario extends React.Component {
   

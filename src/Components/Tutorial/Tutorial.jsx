@@ -113,7 +113,7 @@ class EtapaTutorial extends Component {
   funcaoResize = () => this.forceUpdate();
 
   componentDidMount = () => {
-    hotkeys.setScope('tutorial');
+    if (this.state.indicehotkeys) hotkeys.setScope('tutorial');
     window.addEventListener('resize', this.funcaoResize);
     window.addEventListener('click', this.funcaoResize);
     window.addEventListener('keyup', this.funcaoResize);
@@ -130,13 +130,13 @@ class EtapaTutorial extends Component {
   }
 
   componentWillUnmount = () => {
+    if (this.state.item.callbackDepois) this.state.item.callbackDepois();
     hotkeys.setScope('app');
     this.removerCss();
     window.removeEventListener('resize', this.funcaoResize);
     window.removeEventListener('click', this.funcaoResize);
     window.removeEventListener('keyup', this.funcaoResize);
     this.removerListener();
-    if (this.state.item.callbackDepois) this.state.item.callbackDepois();
   }
 
   render() {

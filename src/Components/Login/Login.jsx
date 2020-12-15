@@ -6,7 +6,7 @@ import { gerarDocumentoUsuario } from '../../principais/firestore/apiFirestore';
 import SelectCargo from './SelectCargo';
 import QuadroNavbar from '../NavBar/QuadroNavbar';
 import { eEmailValido } from '../../principais/FuncoesGerais';
-import SetaVoltar from '../Perfil/SetaVoltar';
+import SetaVoltar from '../Basicos/SetaVoltar/SetaVoltar';
 import { CgEye } from 'react-icons/cg';
 
 const msgEmailInvalido = 'Endereço de e-mail inválido.';

@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { getRegistrosUsuario } from '../../principais/firestore/apiFirestore';
+import { getRegistrosUsuario } from '../../../../principais/firestore/apiFirestore';
 import ItemListaEmails, { colecaoEmails } from './ItemListaEmails';
 import './ListaEmails.css';
   

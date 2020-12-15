@@ -10,7 +10,7 @@ export const arrowsHotkeys = '';
 export const atalhoOffset = offset => store.dispatch({type: 'offset-selecao', offset});
 
 const inicializarHotkeys = () => {
-    hotkeys('ctrl+d,ctrl+z,ctrl+shift+z,ctrl+y', (e, handler) => {
+    hotkeys('ctrl+d,ctrl+z,ctrl+shift+z,ctrl+y,f5', (e, handler) => {
         e.preventDefault();
         switch(handler.key) {
             case 'ctrl+z':
@@ -20,17 +20,19 @@ const inicializarHotkeys = () => {
             case 'ctrl+shift+z':
                 store.dispatch({type: 'REDO'});
                 break;
+            case 'f5':
+                store.dispatch({type: 'definir-modo-apresentacao'});
+                break;
             default:
                 return;
         }
     })
     
-    hotkeys('esc,f5,ctrl+o,ctrl+m,ctrl+i,ctrl+b,ctrl+l,ctrl+d,ctrl+f,up,left,down,right', 'app', (e, handler)=> {
+    hotkeys('esc,ctrl+o,ctrl+m,ctrl+i,ctrl+b,ctrl+l,ctrl+d,ctrl+f,up,left,down,right', 'app', (e, handler)=> {
         e.preventDefault();
         const state = store.getState();
         switch (handler.key) {
             case 'esc':
-                store.dispatch({type: 'ativar-popup-confirmacao', popupConfirmacao: null});
                 store.dispatch({type: 'ativar-popup-adicionar', popupAdicionar: null});
                 break;
             case 'right':
@@ -40,9 +42,6 @@ const inicializarHotkeys = () => {
             case 'left':
             case 'up':
                 atalhoOffset(-1);
-                break;
-            case 'f5':
-                store.dispatch({type: 'definir-modo-apresentacao'});
                 break;
             case 'ctrl+o':
                 zerarApresentacao(state.usuario, state.apresentacao);

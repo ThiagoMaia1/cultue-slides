@@ -85,8 +85,10 @@
 //   Exportação de imagens após mudanças inset.
 //   Editar slide de imagens ou desabilitar edição. 🟨
 //   ✔️ Click fora tutorial
-//   Otimizar trocas de dados com BD. 🟨
 //   Atalhos nos inputs.
+//   Scope errado quando tem login.
+//   Reduzir imagens que são grandes demais (galáxia...)
+//   Lista de atalhos do modo apresentação.
 
 /*// Features essenciais:
 //   ✔️ Envio de imagens.
@@ -132,7 +134,7 @@
 //   Ocultar/isolar título. 🟨
 //   Duplicar slide. 
 //   Duplicar apresentação.
-//   Lista de atalhos do modo apresentação.
+//   Otimizar trocas de dados com BD. 🟨
 
 /*/ Features dispensáveis:
 //   Prévia configurar blend-mode e fonte (preciso criar novo componenente Select).
@@ -165,6 +167,7 @@
 //   Ranking músicas.
 //   Acrescentar músicas BD.
 //   Pesquisa cifra.
+//   Dicas eventuais: B/W, forma de escrita da referência bíblica.
 //   Blend-mode tampão*/
 //
 // Negócio:

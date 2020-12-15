@@ -2,12 +2,12 @@ import React from "react";
 import { BrowserRouter as Router, Switch, Route, Link, Redirect } from "react-router-dom";
 import { connect } from 'react-redux';
 import './Perfil.css';
-import ApresentacoesUsuario from './ApresentacoesUsuario';
-import ListaEmails from './ListaEmails';
-import SetaVoltar from './SetaVoltar';
+import ApresentacoesUsuario from './PaginasPerfil/ApresentacoesUsuario/ApresentacoesUsuario';
+import ListaEmails from './PaginasPerfil/ListaEmails/ListaEmails';
+import SetaVoltar from '../Basicos/SetaVoltar/SetaVoltar';
 import Carrossel from '../Basicos/Carrossel/Carrossel';
 import sobreporSplash from "../Basicos/Splash/SobreporSplash";
-import InformacoesPessoais from './InformacoesPessoais';
+import InformacoesPessoais from './PaginasPerfil/InformacoesPessoais/InformacoesPessoais';
 import { store } from '../../index';
 
 export const urlPerfil = '/perfil';
