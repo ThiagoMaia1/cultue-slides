@@ -37,7 +37,7 @@ class Home extends Component {
             <Notificacoes/>
             <Switch>
                 {paginas.map(p => (
-                    <Route exact path={'/' + p.nome} key={p.nome}
+                    <Route path={'/' + p.nome} key={p.nome}
                            component={
                              p.semSplash 
                               ? p.componente

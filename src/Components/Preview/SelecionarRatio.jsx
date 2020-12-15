@@ -3,11 +3,13 @@ import { connect } from 'react-redux';
 import './SelecionarRatio.css';
 import { BsAspectRatio } from 'react-icons/bs';
 
-const opcoesRatio = [{width: 1024, height: 768}
-                    ,{width: 1280, height: 800}
-                    ,{width: 1400, height: 1050}
-                    ,{width: 1920, height: 1080}
-                    ,{width: 1920, height: 1200}]
+const opcoesRatio = [
+    {width: 1024, height: 768}
+   ,{width: 1280, height: 800}
+   ,{width: 1400, height: 1050}
+   ,{width: 1920, height: 1080}
+   ,{width: 1920, height: 1200}
+]
 
 const getEstiloAnimacao = (maxHeight = '0', maxWidth = '0', color = 'white', transform = 'none') => (
     {maxHeight: maxHeight + 'vh', maxWidth: maxWidth + 'vw', color: color, transform: transform}

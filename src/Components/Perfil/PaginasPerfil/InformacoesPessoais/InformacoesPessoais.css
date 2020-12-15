@@ -1,11 +1,18 @@
-#info-pessoal input, #info-pessoal select {
+#info-pessoal input:not([type=radio]), #info-pessoal select {
     position: static;
     border-radius: var(--round-border-pequeno);
     padding: 1vh;
     border: 0.2vh solid #999999;
     outline: 0;
-    margin: 1.5vh;
-    width: auto;
+    width: 30vw;
+    margin: 0;
+    margin-left: 1.5vw;
+    max-height: 5vh;
+}
+
+.radio-e-label {
+    display: block;
+    margin-bottom: 1vh;
 }
 
 #info-pessoal label {
@@ -14,6 +21,17 @@
 
 .campos-editaveis {
     display: flex;
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+}
+
+.campos-editaveis > div {
+    margin-bottom: 3vh;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 45vw;
 }
 
 #info-pessoal .linha-flex {

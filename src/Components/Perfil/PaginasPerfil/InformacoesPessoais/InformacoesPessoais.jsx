@@ -2,36 +2,46 @@ import React from 'react';
 import { connect  } from 'react-redux';
 import './InformacoesPessoais.css';
 import { atualizarRegistro, getDocumentoUsuario } from '../../../../principais/firestore/apiFirestore';
+import { objetosSaoIguais } from '../../../../principais/FuncoesGerais';
 import SelectCargo from '../../../Login/SelectCargo';
+import RadioTipoPadrao from './RadioTipoPadrao';
+import SelectNumero from './SelectNumero';
 
 const campos = {
   nomeCompleto: {label: 'Nome Completo'},
   email: {label: 'E-mail'}, 
-  cargo: {label: 'Cargo', Input: SelectCargo}
+  cargo: {label: 'Cargo', Input: SelectCargo},
+  tipoApresentacaoPadrao: {label: 'Apresentação padrão deve utilizar: ', Input: RadioTipoPadrao},
+  frequentadores: {label: 'Qual o número médio aproximado de frequentadores dos cultos em que você utiliza as apresentações?', Input: SelectNumero}
 }
 
 const keysCampos = Object.keys(campos);
 
-const Input = props => {
-  
-  const onChange = e => {
-    if(props.editaveis[props.campo] !== e.target.value) {
+class Input extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.id = 'info-pessoal-' + props.campo;
+    this.ChildBasico = (props) => <input type='text' {...props}></input>;
+  }
+
+  onChange = e => {
+    if(this.props.editaveis[this.props.campo] !== e.target.value) {
       var obj = {};
-      obj[props.campo] = e.target.value;
-      props.callback({...props.editaveis, ...obj});
+      obj[this.props.campo] = e.target.value;
+      this.props.callback({...this.props.editaveis, ...obj});
     }
   }
-  
-  var id = 'info-pessoal-' + props.campo;
-  const ChildBasico = (props) => <input type='text' {...props}></input>;
-  const Child = props.children || ChildBasico;
 
-  return (
-    <div>
-      <label to={id}>{props.label}</label>
-      <Child onChange={onChange} value={props.editaveis[props.campo]} id={id}/>
-    </div>
-  )
+  render () {
+    let Child = this.props.children || this.ChildBasico;
+    return (
+      <div>
+        <label to={this.id}>{this.props.label}</label>
+        <Child onChange={this.onChange} value={this.props.editaveis[this.props.campo]} id={this.id}/>
+      </div>
+    )
+  }
 }
 
 
@@ -52,7 +62,7 @@ class InformacoesPessoais extends React.Component {
   }
 
   componentDidUpdate = (_p, prevState) => {
-    if (JSON.stringify(this.getEditaveis()) === JSON.stringify(this.getEditaveis(prevState))) return;
+    if (objetosSaoIguais(this.getEditaveis(), this.getEditaveis(prevState))) return;
     var editado = false;
     for (var k of keysCampos) {
       if (this.props.usuario[k] !== this.state[k]) {
@@ -71,10 +81,11 @@ class InformacoesPessoais extends React.Component {
     return(editaveis);
   }
   
-  atualizarDadosUsuario = () => {
+  atualizarDadosUsuario = async () => {
     const uid = this.props.usuario.uid;
     atualizarRegistro(this.getEditaveis(), 'usuários', uid);
-    this.props.dispatch({type: 'login', usuario: getDocumentoUsuario(uid)})
+    var usuario = await getDocumentoUsuario(uid);
+    this.props.dispatch({type: 'login', usuario})
   }
 
   render() {

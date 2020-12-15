@@ -47,7 +47,13 @@ export const checarLogin = (callbackLogin) => {
             }
         }
         store.dispatch({type: 'login', usuario: user});
-        var mudarURL = (tipoEvento === 'login'? true : false);
+        var mudarURL = (
+            tipoEvento === 'login'
+            ? /\/perfil/.test(history.location.pathname) 
+                ? false 
+                : true 
+            : false
+        );
         definirApresentacaoAtiva(user, apresentacao, undefined, undefined, mudarURL);
         if (tipoEvento === 'logout') history.push('/logout');
         if (callbackLogin) callbackLogin(user);

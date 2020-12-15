@@ -152,7 +152,7 @@ class Carrossel extends Component {
         this.deslizar(sentido, 80); 
         this.timeoutSalto = setTimeout(() => {
             clearInterval(this.animacao);
-            if(this.state.mouseOverSeta === sentido) this.deslizar(sentido);
+            if(this.state.mouseEnterSeta === sentido) this.deslizar(sentido);
         }, 200);
     }
 
@@ -221,6 +221,7 @@ class Carrossel extends Component {
         clearTimeout(this.timeoutDisplaySetas);
         clearTimeout(this.timeoutLimpar);
         clearTimeout(this.timeoutSalto);
+        clearTimeout(this.timeoutDeslizar);
         clearInterval(this.animacao);
         this.rO.disconnect();
         delete this.rO;
@@ -229,6 +230,11 @@ class Carrossel extends Component {
     chegarFinal = final => {
         if (this.props.final !== final)
             this.offsetComTransition(-this.state.tamanhoGaleria*2, 2000);
+    }
+
+    comecarDeslizar = i => {
+        this.setState({mouseEnterSeta: i});
+        this.deslizar(i);
     }
     
     render () {
@@ -240,13 +246,25 @@ class Carrossel extends Component {
                         const Seta = s;
                         return (
                             <div className="seta-galeria" 
-                                onMouseOver={() => {
-                                    this.setState({mouseOverSeta: i});
-                                    this.deslizar(i);
+                                onMouseEnter={() => {
+                                    if(!this.timeoutDeslizar && this.state.mouseEnterSeta !== i) {
+                                        this.timeoutDeslizar = setTimeout(() => {
+                                            this.comecarDeslizar(i);
+                                            this.timeoutDeslizar = null;
+                                        }, 150);
+                                    } else if(!this.timeoutDeslizar) {
+                                        this.comecarDeslizar(i);
+                                    }
                                 }} 
-                                onMouseOut={() => {
-                                    if (this.state.mouseOverSeta === i) this.setState({mouseOverSeta: null});
-                                    this.pararDeslizar(i);
+                                onMouseLeave={() => {
+                                    if (this.timeoutDeslizar) {
+                                        clearTimeout(this.timeoutDeslizar);
+                                        this.timeoutDeslizar = null;
+                                    } 
+                                    if (this.state.mouseEnterSeta === i) {
+                                        this.setState({mouseEnterSeta: null});
+                                        this.pararDeslizar(i);
+                                    }
                                 }}
                                 onClick={e => this.clickSeta(e, i)}
                                 style={{...this.estiloSeta, ...this.state[estilosSeta[i]]}}

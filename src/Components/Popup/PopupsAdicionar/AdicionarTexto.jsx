@@ -65,7 +65,7 @@ class AdicionarTexto extends Component {
                 <textarea id="input-texto-slide" className='combo-popup' placeholder='Texto do slide' value={this.state.textoSlide}
                     onChange={e => this.setState({textoSlide: e.target.value})}></textarea>
                 <div className='lista-slides-padrao'>
-                    <Carrossel tamanhoIcone={80} tamanhoMaximo='20vh' direcao='vertical' style={{zIndex: '400', width: '100%'}}>
+                    <Carrossel tamanhoIcone={80} tamanhoMaximo='20vh' direcao='vertical' style={{zIndex: '400', width: '100%'}} beiradaFinal={10}>
                         <div className='itens-lista-slides-padrao'>
                             <div className='titulo-secao-popup'>Slides Padrão: </div>
                             {this.gerarListaSlidesPadrao()}

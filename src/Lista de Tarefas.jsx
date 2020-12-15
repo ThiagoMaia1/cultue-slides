@@ -86,7 +86,7 @@
 //   Editar slide de imagens ou desabilitar edição. 🟨
 //   ✔️ Click fora tutorial
 //   Atalhos nos inputs.
-//   Scope errado quando tem login.
+//   ✔️ Scope errado quando tem login.
 //   Reduzir imagens que são grandes demais (galáxia...)
 //   Lista de atalhos do modo apresentação.
 
@@ -124,8 +124,10 @@
 //   ✔️ Melhorar pesquisa de letra de música usando google.
 //   ✔️ Editar tamanho da imagem direto no preview.
 //   ✔️ Atalhos B e W no modo de apresentação.
+//   ✔️ Perguntar número de frequentadores.
+//   ✔️ Tela perfil do usuário: informações básicas
 //   ✔️ Exportar como Power Point.*/
-//   Tela perfil do usuário: informações básicas, predefinições. 🟥 
+//   Salvar/buscar apresentação padrão corretamente.
 //   Persistir redux 🟨
 //   Incluir fontes como base64 (html) ou zip (power point). 🟥
 //   Ajuda: rever tutoriais, entrar em contato com o desenvolvedor.
@@ -137,6 +139,7 @@
 //   Otimizar trocas de dados com BD. 🟨
 
 /*/ Features dispensáveis:
+//   Tela perfil do usuário: predefinições. 🟥 
 //   Prévia configurar blend-mode e fonte (preciso criar novo componenente Select).
 //   Outros efeitos no texto: sombra, realce, etc...
 //   Definir limite de e-mails.
@@ -168,6 +171,7 @@
 //   Acrescentar músicas BD.
 //   Pesquisa cifra.
 //   Dicas eventuais: B/W, forma de escrita da referência bíblica.
+//   Atalhos e click fora dos menus.
 //   Blend-mode tampão*/
 //
 // Negócio:

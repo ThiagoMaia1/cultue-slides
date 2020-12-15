@@ -68,7 +68,8 @@ class SlideFormatado extends Component {
                         : <ImagemRedimensionavel key={sel.elemento + '.' + sel.slide} 
                                                  imagem={slidePreview.imagem} 
                                                  estiloImagem={slidePreview.estilo.imagem} 
-                                                 estiloRealce={this.realcarElemento('imagem')}/>
+                                                 estiloRealce={this.realcarElemento('imagem')}
+                                                 editavel={this.props.editavel}/>
                     }
                     <Img imagem={slidePreview.estilo.fundo} proporcao={proporcaoTela} tampao={slidePreview.estilo.tampao}/>
                     <div className='texto-preview' style={{fontSize: getFonteBase().numero*proporcao + getFonteBase().unidade}}>

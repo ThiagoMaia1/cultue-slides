@@ -49,6 +49,7 @@ class ImagemRedimensionavel extends Component {
     }
 
     onMouseMove = e => {
+        if (!this.props.editavel) return;
         var pos = this.getPosicoesMouse(e);
         
         if (this.clicado) {

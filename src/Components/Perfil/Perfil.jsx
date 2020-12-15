@@ -10,13 +10,11 @@ import sobreporSplash from "../Basicos/Splash/SobreporSplash";
 import InformacoesPessoais from './PaginasPerfil/InformacoesPessoais/InformacoesPessoais';
 import { store } from '../../index';
 
-export const urlPerfil = '/perfil';
-
 const paginasPerfil = [
     {nome: 'info-pessoal', nomeInterface: 'Informações Pessoais', componente: InformacoesPessoais},
     {nome: 'apresentacoes', nomeInterface: 'Apresentações', componente: ApresentacoesUsuario},
-    {nome: 'predefinicoes', nomeInterface: 'Predefinições', componente: ApresentacoesUsuario},
     {nome: 'emails', nomeInterface: 'E-mails', componente: ListaEmails}
+    // {nome: 'predefinicoes', nomeInterface: 'Predefinições', componente: ApresentacoesUsuario},
     //    {nome: 'assinatura', nomeInterface: 'Assinatura', componente: ApresentacoesUsuario},
     //    {nome: 'compartilhamento', nomeInterface: 'Compartilhamento', componente: ApresentacoesUsuario}
 ]
@@ -33,7 +31,7 @@ class Perfil extends React.Component {
                                     tamanhoIcone={window.innerWidth*0.05}/>
                         <div id='menu-perfil'>
                             {paginasPerfil.map(p => 
-                                <Link key={p.nome} to={urlPerfil + '/' + p.nome}>{p.nomeInterface}</Link>
+                                <Link key={p.nome} to={this.props.match.path + '/' + p.nome}>{p.nomeInterface}</Link>
                             )}
                         </div>
                     </div>
@@ -46,7 +44,7 @@ class Perfil extends React.Component {
                             {paginasPerfil.map(p => {
                                 var Pagina = sobreporSplash(p.nome, p.componente);
                                 return (
-                                    <Route exact path={urlPerfil + '/' + p.nome} key={p}>
+                                    <Route exact path={this.props.match.path + '/' + p.nome} key={p}>
                                         <div className='pagina-perfil'>
                                             <Carrossel direcao='vertical' tamanhoIcone={50} tamanhoMaximo={'100%'} 
                                                    beiradaFinal={20} style={{zIndex: '900', width: '100%'}}>
@@ -56,7 +54,7 @@ class Perfil extends React.Component {
                                     </Route>
                                 );    
                             })}
-                            <Route path={urlPerfil} render={() => <Redirect to={urlPerfil + '/' + paginasPerfil[0].nome}/>} />
+                            <Route path={this.props.match.path} render={() => <Redirect to={this.props.match.path + '/' + paginasPerfil[0].nome}/>} />
                         </Switch>
                     </div>
                 </div>

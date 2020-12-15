@@ -52,7 +52,7 @@ class ApresentacoesUsuario extends React.Component {
                                     <div><span>Data de Modificação: </span><span>{a.data}</span></div>
                                 </div>
                                 <div className='container-carrossel-previews'>
-                                    <Carrossel tamanhoIcone={20} tamanhoMaximo={'100%'} beiradaFinal={40} 
+                                    <Carrossel tamanhoIcone={20} tamanhoMaximo={'100%'} beiradaFinal={5} 
                                             style={{zIndex: '650', width: 'fit-content', overflow: 'hidden'}} corGradiente='var(--platinum)'
                                             wheelDesativada={true}>
                                         <div className='previews-slides-elementos' ref={this.ref}>
