@@ -4,7 +4,7 @@ import AdicionarTexto from '../Components/Popup/PopupsAdicionar/AdicionarTexto';
 import AdicionarImagem from '../Components/Popup/PopupsAdicionar/AdicionarImagem/AdicionarImagem';
 // import AdicionarVideo from '../Components/Popup/PopupsAdicionar/AdicionarVideo/AdicionarVideo';
 import { capitalize, canvasTextWidth, retiraAcentos } from './FuncoesGerais';
-import { store } from '../index';
+import store from '../index';
 
 export const tiposElemento = {
     Música: AdicionarMusica

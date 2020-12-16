@@ -170,11 +170,12 @@ class ConfigurarSlides extends Component {
 
   reducerListaSliders = (resultado, s) => {
     if (s.aba !== this.props.abaAtiva) return resultado; 
-    var valorAplicado = this.props.slidePreview.estilo[s.aba][s.atributo];
+    let valorAplicado = this.props.slidePreview.estilo[s.aba][s.atributo];
+    let temPorcentagem = /%/.test(valorAplicado);
     if(typeof valorAplicado === 'string') valorAplicado = Number(valorAplicado.replace(s.unidade || '%',''));
     resultado.push(
       <Slider key={s.atributo + '-' + s.aba} atributo={s.atributo} objeto={s.aba} rotulo={s.rotulo} min={s.min} max={s.max} step={s.step} unidade={s.unidade || '%'}
-              valorAplicado={Number(valorAplicado)/(s.unidade ? 1 : 100)}
+              valorAplicado={Number(valorAplicado)/(temPorcentagem ? 100 : 1)}
               callback={(valor, temp = false) => this.atualizarEstilo(s.aba, s.atributo, valor + (s.unidade || ''), s.redividir, temp)}
               style={{display: (this.props.abaAtiva === s.aba ? '' : 'none')}}/>
     );
@@ -336,7 +337,7 @@ class ConfigurarSlides extends Component {
               }
             </div>
           </div>
-          <div style={{display: (aba === 'tampao' ? '' : 'none')}}>
+          <div className='container-configuracoes-tampao' style={{display: (aba === 'tampao' ? '' : 'none')}}>
             <button className='botao-configuracao bool' onMouseOver={() => this.ativarPainelCor(this.mudarCorFundo)}>
               <div className='container cor-fundo' style={{backgroundImage: ' url("' + require('./Quadriculado PNG.png') + '")'}}>
                 <div className='quadrado cor-fundo' style={{backgroundColor: this.props.slidePreview.estilo.tampao.backgroundColor, 

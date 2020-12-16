@@ -8,7 +8,7 @@ import SetaVoltar from '../Basicos/SetaVoltar/SetaVoltar';
 import Carrossel from '../Basicos/Carrossel/Carrossel';
 import sobreporSplash from "../Basicos/Splash/SobreporSplash";
 import InformacoesPessoais from './PaginasPerfil/InformacoesPessoais/InformacoesPessoais';
-import { store } from '../../index';
+import store from '../../index';
 
 const paginasPerfil = [
     {nome: 'info-pessoal', nomeInterface: 'Informações Pessoais', componente: InformacoesPessoais},

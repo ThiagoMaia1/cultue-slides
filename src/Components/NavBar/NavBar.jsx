@@ -46,7 +46,7 @@ class NavBar extends React.Component {
             <button onClick={() => zerarApresentacao(this.props.usuario, this.props.apresentacao)}>Nova Apresentação</button>
             {eDownload
               ? <>
-                  <button onClick={() => definirApresentacaoPadrao(u.uid, this.props.elementos, this.props.ratio, 'atual')}>Definir Padrão</button>
+                  <button onClick={() => definirApresentacaoPadrao(u.uid, this.props.apresentacao.id, 'atual')}>Definir Padrão</button>
                     {listaBotoesQuadros.map(b => {
                         const ComponenteQuadro = b.componente;
                         return (

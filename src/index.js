@@ -6,11 +6,20 @@ import { createStore } from 'redux';
 import hotkeys from 'hotkeys-js';
 import { getEstiloPadrao, newEstilo, getPadding, getDadosMensagem, listaPartesEstilo } from './principais/Element.js';
 import { selecionadoOffset, getSlidePreview } from './Components/MenuExportacao/Exportador';
-import { atualizarApresentacao, getApresentacaoPadrao, autorizacaoEditar, ratioPadrao, autorizacaoPadrao, apresentacaoAnonima } from './principais/firestore/apresentacoesBD';
+import { atualizarApresentacao, getApresentacaoPadrao, autorizacaoEditar, autorizacaoPadrao, apresentacaoAnonima } from './principais/firestore/apresentacoesBD';
 import { atualizarRegistro } from './principais/firestore/apiFirestore';
 import { keysTutoriais } from './Components/Tutorial/ListaTutorial';
 import { toggleFullscreen } from './principais/FuncoesGerais';
 import inicializarHotkeys from './principais/atalhos';
+import { persistStore, persistReducer } from 'redux-persist'
+import storage from 'redux-persist/lib/storage' // defaults to localStorage for web
+import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2';
+
+const persistConfig = {
+  key: 'root',
+  storage,
+  stateReconciler: autoMergeLevel2
+}
 
 const redividirSlides = (elementos, sel, ratio) => {
   if (elementos.length !== 1) {
@@ -27,11 +36,10 @@ const redividirSlides = (elementos, sel, ratio) => {
 
 const numeroAcoesPropaganda = 20;
 
-var defaultList = {...getApresentacaoPadrao(), 
+const defaultList = {...getApresentacaoPadrao(), 
   abaAtiva: 'texto',
   popupAdicionar: {},
   apresentacao: apresentacaoAnonima,
-  ratio: {...ratioPadrao},
   modoApresentacao: false
 };
 
@@ -55,7 +63,7 @@ export const reducerElementos = function (state = defaultList, action, usuario) 
     case 'definir-apresentacao-ativa':
       var ap = action.apresentacao;
       ap.autorizacao = getAutorizacao(ap.autorizacao, ap.idUsuario, usuario.uid);
-      sel = selecionadoOffset(action.elementos, getApresentacaoPadrao().selecionado, 0, !autorizacaoEditar(ap.autorizacao));
+      sel = selecionadoOffset(action.elementos, {elemento: 0, slide: 0}, 0, !autorizacaoEditar(ap.autorizacao));
       return {...state, apresentacao: action.apresentacao, elementos: action.elementos, ratio: action.ratio, selecionado: sel};
     case 'alterar-autorizacao':
       autorizacao = getAutorizacao(action.autorizacao, state.apresentacao.idUsuario, usuario.uid);
@@ -84,13 +92,15 @@ export const reducerElementos = function (state = defaultList, action, usuario) 
       notificacao = dadosMensagem.elemento + ' Excluíd' + dadosMensagem.genero;
       var novaSelecao = {elemento: state.selecionado.elemento, slide: 0};
       if (state.selecionado.elemento >= el.length) novaSelecao.elemento = state.selecionado.elemento-1 
-      return {...state, elementos: el, selecionado: {...novaSelecao}, notificacao: notificacao };
+      return {...state, elementos: el, selecionado: {...novaSelecao}, notificacao };
     case 'duplicar-slide':
       if(!el[sel.elemento].eMestre) {
         el.splice(sel.elemento, 0, el[sel.elemento]);
         sel.elemento++;
       }
-      return {...state, elementos: el, selecionado: sel};
+      dadosMensagem = getDadosMensagem(el[sel.elemento]);
+      notificacao = dadosMensagem.elemento + ' Duplicad' + dadosMensagem.genero;
+      return {...state, elementos: el, selecionado: sel, notificacao};
     case "reordenar":
       return {...state, elementos: action.novaOrdemElementos, selecionado: sel};
     case "toggle-colapsar":
@@ -188,7 +198,14 @@ export const reducerElementos = function (state = defaultList, action, usuario) 
   }
 };
 
-function undoable(reducer) {
+const estadoInicialNaoRehidratado = {
+  popupConfirmacao: null,
+  notificacoes: [],
+  itensTutorial: [],
+  searchAtivo: false
+}
+
+export function undoable(reducer) {
 
   var presenteInicial = reducer(undefined, {})
   const initialState = {
@@ -197,19 +214,17 @@ function undoable(reducer) {
     future: [],
     slidePreview: getSlidePreview(presenteInicial),
     usuario: {},
-    popupConfirmacao: null,
-    notificacoes: [],
-    itensTutorial: [],
     tutoriaisFeitos: [],
-    searchAtivo: false,
     contadorPropaganda: 0,
-    propagandaAtiva: false
+    propagandaAtiva: false,
+    ...estadoInicialNaoRehidratado
   }
 
   const limiteUndo = 50;
   
   return function (state = initialState, action) {
-    var { past, present, future, previousTemp, usuario, notificacoes, tutoriaisFeitos, itensTutorial, searchAtivo, contadorPropaganda, propagandaAtiva } = state;
+    let { past, present, future, previousTemp, usuario, notificacoes, tutoriaisFeitos, itensTutorial, searchAtivo, contadorPropaganda, propagandaAtiva } = state;
+
     var notificacoesAtualizado = getNotificacoes(notificacoes, getConteudoNotificacao(action));
     var newPresent;
     var novosItensTutorial = [];
@@ -223,7 +238,7 @@ function undoable(reducer) {
     }
     switch (action.type) {
       case 'login':
-        var feitos = action.usuario.tutoriaisFeitos || [];
+        var feitos = [...tutoriaisFeitos, ...(action.usuario.tutoriaisFeitos || [])];
         novosItensTutorial = itensTutorial.filter(n => !feitos.includes(n))
         return {...state, usuario: action.usuario, tutoriaisFeitos: feitos, itensTutorial: novosItensTutorial};
       case 'toggle-search':
@@ -319,6 +334,24 @@ function undoable(reducer) {
   }
 }
 
+const rootReducer = () => (state, action) => {
+  if (/persist\//.test(action.type)) {
+    if (action.type === 'persist/REHYDRATE') 
+      state = {...state, ...estadoInicialNaoRehidratado};
+    return state;
+  }
+  return undoable(reducerElementos)(state, action);
+}
+
+const persistedReducer = persistReducer(persistConfig, rootReducer())
+
+let store = createStore(persistedReducer, /* preloadedState, */
+    window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+);
+
+export let persistor = persistStore(store);
+export default store;
+
 const atualizarDadosUsuario = (idUsuario, dados) => {
   if (idUsuario)
     atualizarRegistro(dados, 'usuários', idUsuario);
@@ -362,10 +395,6 @@ function deepSpreadPresente(present) {
   }
   return {...present, elementos: elementos, selecionado: selecionado, abaAtiva: abaAtiva, popupAdicionar: popupAdicionar, apresentacao: apresentacao, ratio: ratio};
 }
-
-export let store = createStore(undoable(reducerElementos), /* preloadedState, */
-  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
-);
 
 function getNotificacoes(notificacoes, conteudo) {
   var notif = notificacoes;

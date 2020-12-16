@@ -1,5 +1,5 @@
 import hotkeys from 'hotkeys-js';
-import { store } from '../../index';
+import store from '../../index';
 
 const selectorQuadradinhoCanto = '.itens.lista-slides .quadradinho-canto';
 

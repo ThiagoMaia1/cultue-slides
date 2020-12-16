@@ -1,4 +1,4 @@
-import React, {Fragment} from 'react';
+import React from 'react';
 
 const opcoes = [
     {nome: 'Apenas Estilo', valor: 'estilo'},

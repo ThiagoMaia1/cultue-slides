@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { store } from '../../index';
+import store from '../../index';
 import { getStrPercentual, numeroEntre } from '../../principais/FuncoesGerais';
 
 const editarEstilo = valor => store.dispatch({type: 'editar-slide', objeto: 'imagem', valor})

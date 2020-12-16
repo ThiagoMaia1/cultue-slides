@@ -80,7 +80,7 @@ class AdicionarTexto extends Component {
                     : null
                 }
                 <div className='container-botoes-popup' style={(this.state.titulo || this.state.textoSlide) ? null : {visibility: 'hidden'}}>
-                    <button className='botao' onClick={this.onClick.bind(this)}>Inserir Título</button>
+                    <button className='botao' onClick={this.onClick.bind(this)}>Inserir Texto</button>
                     <button className='botao limpar-input' onClick={this.limparInputs}>✕ Limpar</button>
                 </div>
             </div>

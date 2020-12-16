@@ -1,6 +1,6 @@
 import hotkeys from 'hotkeys-js';
 import { tiposElemento } from './Element.js';
-import { store } from '../index';
+import store from '../index';
 import { zerarApresentacao } from './firestore/apresentacoesBD';
 
 const tipos = Object.keys(tiposElemento);

@@ -1,5 +1,5 @@
 import firebase, { firestore } from '../firebase';
-import { store } from '../../index';
+import store from '../../index';
 
 export const slidesPadraoDefault = [{titulo: 'Visitantes', textoSlide: 'Sejam bem-vindos à nossa Igreja!'},
                            {titulo: 'Avisos', textoSlide: ''}, 

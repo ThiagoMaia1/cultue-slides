@@ -1,7 +1,7 @@
 import React from 'react';
 import { firebaseFunctions } from '../../principais/firebase';
 import ReactDOMServer from 'react-dom/server';
-import { store } from '../../index';
+import store from '../../index';
 
 export const enviarEmail = firebaseFunctions.httpsCallable('enviarEmail');
 

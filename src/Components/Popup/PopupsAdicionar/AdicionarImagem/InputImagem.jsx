@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import Carrossel from '../../../Basicos/Carrossel/Carrossel';
 import { getImgBase64 } from '../../../../principais/FuncoesGerais';
 // import { uploadImagem } from './imagemFirebase';
-// import { store } from '../../../../index';
+// import store from '../../../../index';
 
 const dMaxTracejado = 99;
 const dMinTracejado = 93;

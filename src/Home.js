@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { store } from './index';
+import store, { persistor } from './index';
 import { Provider } from 'react-redux';
 import PopupConfirmacao from './Components/Popup/PopupConfirmacao';
 import PaginaLogin from './Components/Login/PaginaLogin';
@@ -12,6 +12,7 @@ import { checarLogin } from './Components/Login/ModulosLogin';
 import Splash from './Components/Basicos/Splash/Splash';
 import Propaganda from './Components/Propaganda/Propaganda';
 import history from './principais/history';
+import { PersistGate } from 'redux-persist/integration/react';
 
 const paginas = [{nome: 'app', componente: App},
                  {nome: 'login', componente: PaginaLogin},
@@ -32,24 +33,26 @@ class Home extends Component {
   render() {
     return (
       <Provider store={store}>
-        <Router history={history}>     
-            <PopupConfirmacao/>
-            <Notificacoes/>
-            <Switch>
-                {paginas.map(p => (
-                    <Route path={'/' + p.nome} key={p.nome}
-                           component={
-                             p.semSplash 
-                              ? p.componente
-                              : sobreporSplash(p.nome, p.componente, p.exigeLogin, checarLogin, true, true, true)
-                            }
-                    />
-                    )    
-                )};
-                <Route render={() => <Redirect to='/login'/>} />
-            </Switch>
-        </Router>
-        <Propaganda/>
+        <PersistGate loading={<Splash/>} persistor={persistor}>
+          <Router history={history}>     
+              <PopupConfirmacao/>
+              <Notificacoes/>
+              <Switch>
+                  {paginas.map(p => (
+                      <Route path={'/' + p.nome} key={p.nome}
+                            component={
+                              p.semSplash 
+                                ? p.componente
+                                : sobreporSplash(p.nome, p.componente, p.exigeLogin, checarLogin, true, true, true)
+                              }
+                      />
+                      )    
+                  )};
+                  <Route render={() => <Redirect to='/login'/>} />
+              </Switch>
+          </Router>
+          <Propaganda/>
+        </PersistGate>
       </Provider>
     );
   }

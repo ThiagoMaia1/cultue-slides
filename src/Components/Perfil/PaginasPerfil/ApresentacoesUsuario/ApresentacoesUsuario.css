@@ -26,8 +26,20 @@
     flex: none;
 }
 
+.container-botoes-item-lista-perfil.apresentacoes > button {
+    transition: opacity 0.2s ease-in-out;
+}
+
 .container-carrossel-previews {
     flex: 1 1;
     height: 100%;
     overflow: hidden;
+}
+
+.rotulo-apresentacao-padrao{
+    flex: 0 1 100vw;
+    text-align: center;
+    padding-bottom: 2vh;
+    font-weight: 510;
+    transition: max-height 0.3s ease-in-out;
 }

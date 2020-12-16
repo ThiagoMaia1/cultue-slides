@@ -5,7 +5,7 @@ import Arrow from './Arrow';
 import hotkeys from 'hotkeys-js';
 import listaBoxes from './ListaTutorial';
 import { getObjectByStringPath } from '../../principais/FuncoesGerais';
-import { store } from '../../index';
+import store from '../../index';
 
 const cssOpacidade = 'opacity: 0.2';
 const cssCorFundo = 'background-color: #d0d9ec; box-shadow: 2px 2px 6px rgba(0,0,0,0.1)';

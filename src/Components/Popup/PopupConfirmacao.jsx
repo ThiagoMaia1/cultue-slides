@@ -2,7 +2,7 @@ import React from 'react';
 import Popup from './Popup';
 import { connect } from 'react-redux';
 import './style.css';
-import { store } from '../../index';
+import store from '../../index';
 
 const botoes = {botaoSim: {texto: 'Sim', parametroCallback: true}, 
                 botaoNao: {texto: '✕ Não', parametroCallback: false, classe: 'limpar-input'}, 

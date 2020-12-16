@@ -1,4 +1,4 @@
-import { store } from '../../index';
+import store from '../../index';
 import { gerarDocumentoUsuario } from '../../principais/firestore/apiFirestore';
 import { firebaseAuth } from "../../principais/firebase";
 import history from '../../principais/history';
@@ -54,7 +54,7 @@ export const checarLogin = (callbackLogin) => {
                 : true 
             : false
         );
-        definirApresentacaoAtiva(user, apresentacao, undefined, undefined, mudarURL);
+        if(tipoEvento !== 'noChange') definirApresentacaoAtiva(user, apresentacao, undefined, undefined, mudarURL);
         if (tipoEvento === 'logout') history.push('/logout');
         if (callbackLogin) callbackLogin(user);
     });

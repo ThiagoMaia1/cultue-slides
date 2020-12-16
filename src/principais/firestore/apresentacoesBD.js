@@ -1,7 +1,7 @@
 import Element, { getEstiloPadrao, textoMestre } from '../../principais/Element.js';
 import { gerarNovoRegistro, atualizarRegistro, getRegistrosUsuario, excluirRegistro, getRegistro, getRegistrosQuery } from './apiFirestore';
 import { firestore } from '../firebase';
-import { store } from '../../index';
+import store from '../../index';
 import { ativarPopupConfirmacao } from '../../Components/Popup/PopupConfirmacao';
 import history, { getIdHash } from '../../principais/history';
 
@@ -16,17 +16,28 @@ const wWidth = window.screen.width;
 const wHeight = window.screen.height;
 export const ratioPadrao = {width: Math.max(wWidth, wHeight), height: Math.min(wWidth, wHeight)};
 
-export const getElementosPadrao = (usuario) => {
-  if (usuario && usuario.apresentacaoPadrao) {
-    return usuario.apresentacaoPadrao;
-  }
-  return [new Element("Slide-Mestre", "Slide-Mestre", [textoMestre], null, {...getEstiloPadrao()}, true)];
+export const getElementosERatioPadrao = async ({idApresentacaoPadrao, tipoApresentacaoPadrao}) => {
+  let { elementos, ratio } = await getApresentacaoComId(idApresentacaoPadrao);
+  if (tipoApresentacaoPadrao === 'estilo') elementos = elementos.slice(0, 1);
+  return {elementos, ratio};
 }
 
-export const getApresentacaoPadrao = (usuario) => ({
-  elementos: getElementosPadrao(usuario),
-  selecionado: {elemento: 0, slide: 0}
-});
+export const getApresentacaoPadrao = (usuario = {}) => {
+  let selecionado = {elemento: 0, slide: 0};  
+  if (!usuario.uid) {
+    return {
+      elementos: [
+        new Element("Slide-Mestre", "Slide-Mestre", [textoMestre], null, {...getEstiloPadrao()}, true)
+      ],
+      ratio: ratioPadrao,
+      selecionado
+    }
+  }
+  return {
+    ...getElementosERatioPadrao(usuario).then(apresentacao => apresentacao),
+    selecionado
+  }
+};
 
 export const gerarNovaApresentacao = async (idUsuario, elementos, ePadrao, ratio) => {
   if (elementos)
@@ -55,7 +66,7 @@ export const definirApresentacaoAtiva = async (usuario, apresentacao = {}, eleme
   }
   if (!elementos) {
     zerada = true;
-    elementos = getElementosPadrao(usuario);
+    elementos = (await getElementosERatioPadrao(usuario)).elementos;
   }
   if (!usuario.uid && !apresentacao.id) {
     novaApresentacao = apresentacaoAnonima;
@@ -100,37 +111,34 @@ export const atualizarApresentacao = async (elementos, ratio, idApresentacao) =>
   );
 }
 
-export const definirApresentacaoPadrao = async (idUsuario, elementosPadrao, ratio, atualSelecionada = 'atual') => {
-  var conteudo;
+export const definirApresentacaoPadrao = async (idUsuario, idApresentacao, atualSelecionada = 'atual', callback = null) => {
+  var conteudoNotificacao;
   if (!idUsuario) {
     ativarPopupConfirmacao(
       'OK',
       'Atenção', 
       'Para definir uma apresentação como padrão, você deve primeiro fazer login.'
     )
+    if (callback) callback(false);
   } else {
     ativarPopupConfirmacao(
       'simNao',
       'Atenção', 
       'Deseja definir a apresentação ' + atualSelecionada + ' como padrão?', 
       async fazer => {
+        if (callback) callback(fazer);
         if(!fazer) return;
         try { 
           await atualizarRegistro(
-            {
-              apresentacaoPadrao: {
-                ...getSlideMestreApresentacao(elementosPadrao),
-                ratio
-              }
-            },
+            {idApresentacaoPadrao: idApresentacao},
             'usuários',
             idUsuario
           );
         } catch (error) {
-          conteudo = 'Erro ao Definir Apresentação Padrão';
+          conteudoNotificacao = 'Erro ao Definir Apresentação Padrão';
         }
-        conteudo = 'Apresentação Definida como Padrão';
-        store.dispatch({type: 'inserir-notificacao', conteudo: conteudo})
+        conteudoNotificacao = 'Apresentação Definida como Padrão';
+        store.dispatch({type: 'inserir-notificacao', conteudo: conteudoNotificacao})
       }
     );
   }
@@ -158,10 +166,6 @@ export const getElementosConvertidos = elementos => {
       el[i] = el[i].conversorFirestore(el[i]);
   }
   return el;
-}
-
-export const getSlideMestreApresentacao = elementos => {
-  return getElementosConvertidos(elementos.filter(e => e.eMestre));
 }
 
 export const zerarApresentacao = (usuario, apresentacao) => {

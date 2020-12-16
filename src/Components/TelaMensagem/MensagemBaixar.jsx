@@ -4,7 +4,7 @@ import TelaMensagem from './TelaMensagem';
 import MenuExportacao from '../MenuExportacao/MenuExportacao';
 import { capitalize } from '../../principais/FuncoesGerais';
 import Preview from '../Preview/Preview';
-import { store } from '../../index';
+import store from '../../index';
 
 class MensagemBaixar extends React.Component {
 

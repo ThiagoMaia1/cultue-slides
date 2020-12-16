@@ -79,6 +79,8 @@
     position: relative;
     margin: 1vh;
     background-color: var(--platinum);
+    flex-wrap: wrap;
+    transition: height 0.2s ease-in-out, background-color 0.2s ease-in-out;
 }
 
 .dados-verticais-item-lista-perfil {
