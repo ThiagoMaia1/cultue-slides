@@ -6,7 +6,7 @@ import { getFonteBase } from '../../principais/Element';
 import { getPathImagem } from './Img';
 import { limparHighlights } from '../NavBar/BarraPesquisa/BarraPesquisa';
 import { markupParaSuperscrito } from '../Preview/TextoPreview';
-import { ratioPadrao } from '../../principais/firestore/apresentacoesBD';
+import { ratioTela } from '../../principais/firestore/apresentacoesBD';
 import ImagemRedimensionavel from './ImagemRedimensionavel';
 
 class SlideFormatado extends Component {
@@ -54,7 +54,7 @@ class SlideFormatado extends Component {
     render() {
         var slidePreview = this.props.slidePreview;
         var proporcao = this.props.proporcao;
-        var proporcaoTela = proporcao*this.props.ratio.width/ratioPadrao.width;
+        var proporcaoTela = proporcao*this.props.ratio.width/ratioTela.width;
         var sel = this.props.selecionado;
         return (
                 <div ref={this.props.referencia} 

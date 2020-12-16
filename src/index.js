@@ -6,7 +6,7 @@ import { createStore } from 'redux';
 import hotkeys from 'hotkeys-js';
 import { getEstiloPadrao, newEstilo, getPadding, getDadosMensagem, listaPartesEstilo } from './principais/Element.js';
 import { selecionadoOffset, getSlidePreview } from './Components/MenuExportacao/Exportador';
-import { atualizarApresentacao, getApresentacaoPadrao, autorizacaoEditar, autorizacaoPadrao, apresentacaoAnonima } from './principais/firestore/apresentacoesBD';
+import { atualizarApresentacao, getApresentacaoPadraoBasica, autorizacaoEditar, autorizacaoPadrao, apresentacaoAnonima } from './principais/firestore/apresentacoesBD';
 import { atualizarRegistro } from './principais/firestore/apiFirestore';
 import { keysTutoriais } from './Components/Tutorial/ListaTutorial';
 import { toggleFullscreen } from './principais/FuncoesGerais';
@@ -36,7 +36,7 @@ const redividirSlides = (elementos, sel, ratio) => {
 
 const numeroAcoesPropaganda = 20;
 
-const defaultList = {...getApresentacaoPadrao(), 
+const defaultList = {...getApresentacaoPadraoBasica(), 
   abaAtiva: 'texto',
   popupAdicionar: {},
   apresentacao: apresentacaoAnonima,
@@ -63,13 +63,13 @@ export const reducerElementos = function (state = defaultList, action, usuario) 
     case 'definir-apresentacao-ativa':
       var ap = action.apresentacao;
       ap.autorizacao = getAutorizacao(ap.autorizacao, ap.idUsuario, usuario.uid);
-      sel = selecionadoOffset(action.elementos, {elemento: 0, slide: 0}, 0, !autorizacaoEditar(ap.autorizacao));
+      sel = selecionadoOffset(action.elementos, getApresentacaoPadraoBasica().selecionado, 0, !autorizacaoEditar(ap.autorizacao));
       return {...state, apresentacao: action.apresentacao, elementos: action.elementos, ratio: action.ratio, selecionado: sel};
     case 'alterar-autorizacao':
       autorizacao = getAutorizacao(action.autorizacao, state.apresentacao.idUsuario, usuario.uid);
       return {...state, apresentacao: {...state.apresentacao, autorizacao: autorizacao}};
     case 'selecionar-ratio-apresentacao':
-      return {...state, elementos: redividirSlides(el, {elemento: 0, slide: 0}, action.ratio), ratio: {...action.ratio}}
+      return {...state, elementos: redividirSlides(el, getApresentacaoPadraoBasica().selecionado, action.ratio), ratio: {...action.ratio}}
     case "inserir":
       var elNovo = action.elemento;
       elNovo.input1 = action.popupAdicionar.input1;
@@ -241,10 +241,10 @@ export function undoable(reducer) {
         var feitos = [...tutoriaisFeitos, ...(action.usuario.tutoriaisFeitos || [])];
         novosItensTutorial = itensTutorial.filter(n => !feitos.includes(n))
         return {...state, usuario: action.usuario, tutoriaisFeitos: feitos, itensTutorial: novosItensTutorial};
-      case 'toggle-search':
-        return {...state, searchAtivo: !searchAtivo};
-      case 'ativar-popup-confirmacao':
-        return {...state, popupConfirmacao: action.popupConfirmacao};
+      case 'definir-apresentacao-padrao':
+        let idApresentacaoPadrao = action.idApresentacao;
+        atualizarDadosUsuario(usuario.uid, {idApresentacaoPadrao});
+        return {...state, usuario: {...usuario, idApresentacaoPadrao}};
       case 'definir-item-tutorial':
         var tutoriais = [...new Set([...tutoriaisFeitos, ...itensTutorial].filter(t => !!t))];
         if (!action.zerar) {
@@ -265,6 +265,10 @@ export function undoable(reducer) {
         slidesPadrao = usuario.slidesPadrao.splice(action.indiceSlide, 1);
         atualizarDadosUsuario(usuario.uid, {slidesPadrao: slidesPadrao});
         return {...state, usuario: {...usuario, slidesPadrao: slidesPadrao}};
+      case 'toggle-search':
+        return {...state, searchAtivo: !searchAtivo};
+      case 'ativar-popup-confirmacao':
+        return {...state, popupConfirmacao: action.popupConfirmacao};
       case 'UNDO':
         if (past.length === 0) return state;
         const previous = past[past.length - 1];

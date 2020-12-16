@@ -4,7 +4,7 @@ import { MdFullscreen, MdFullscreenExit } from 'react-icons/md';
 import SlideFormatado from './SlideFormatado';
 import SelecionarRatio from './SelecionarRatio';
 import { objetosSaoIguais } from '../../principais/FuncoesGerais';
-import { ratioPadrao } from '../../principais/firestore/apresentacoesBD';
+import { ratioTela } from '../../principais/firestore/apresentacoesBD';
 import hotkeys from 'hotkeys-js';
 
 class Preview extends Component {
@@ -110,7 +110,7 @@ class Preview extends Component {
 
     render() {
         var slidePreview = this.props.slidePreview;
-        var proporcao = this.state.screen.proporcao*Math.min(ratioPadrao.height/this.props.ratio.height, ratioPadrao.width/this.props.ratio.width);
+        var proporcao = this.state.screen.proporcao*Math.min(ratioTela.height/this.props.ratio.height, ratioTela.width/this.props.ratio.width);
         const telaCheia = this.state.screen.proporcao === this.full.proporcao;
         const transition = this.state.transitionAtivo && !telaCheia; 
         const eMestre = slidePreview.eMestre;

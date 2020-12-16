@@ -40,6 +40,9 @@ class NavBar extends React.Component {
   render() {
     var u = this.props.usuario;
     var eDownload = this.props.apresentacao.autorizacao !== 'baixar';
+    var ePadrao = this.props.usuario.idApresentacaoPadrao === this.props.apresentacao.id;
+    var eLeitura = this.props.apresentacao.autorizacao === 'ver';
+    var padraoEstilo = this.props.usuario.tipoApresentacaoPadrao === 'estilo';
     return (
       <div id="navbar">
           <div id='botoes-navbar'>
@@ -66,7 +69,9 @@ class NavBar extends React.Component {
               : null
             }
           </div>
-          <div id='mensagem-autorizacao'>{this.props.apresentacao.autorizacao === 'ver' ? 'Somente Leitura' : ''}</div>
+          <div id='mensagem-autorizacao' style={ePadrao ? null : {color: 'red'}}>
+            {eLeitura ? 'Somente Leitura' : ePadrao ? 'Apresentação Padrão' + (padraoEstilo ? ' (Estilo)' : ''): ''}
+          </div>
           <div id='info-usuario' onClick={() => this.toggleQuadroLogin(true)}>
             {u.uid
               ? <img className='foto-usuario pequena' src={u.photoURL || require('./Usuário Padrão.png')} alt='Foto Usuário'></img>

@@ -122,9 +122,10 @@
 }
 
 #mensagem-autorizacao {
-    color: red;
+    color: var(--azul-forte);
     display: flex;
     align-items: center;
+    font-weight: 600;
 }
 
 .inserir-lista-express {

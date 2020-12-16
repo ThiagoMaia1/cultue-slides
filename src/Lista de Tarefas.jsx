@@ -129,7 +129,7 @@
 //   ✔️ Persistir redux 🟨
 //   ✔️ Duplicar slide. 
 //   ✔️ Exportar como Power Point.*/
-//   Salvar/buscar apresentação padrão corretamente.
+//   ✔️ Salvar/buscar apresentação padrão corretamente.
 //   Incluir fontes como base64 (html) ou zip (power point). 🟥
 //   Ajuda: rever tutoriais, entrar em contato com o desenvolvedor.
 //   Lidar com perda de conexão.

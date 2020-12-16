@@ -1,0 +1,24 @@
+.select-personalizado {
+    outline: 0;
+    text-align: left;
+    padding-left: 1vw;
+    line-height: 100%;
+    overflow: hidden;
+}
+
+.bloco-opcoes {
+    position: fixed;
+    width: 100%;
+    transition: max-height 0.3s linear;
+    z-index: 100;
+    border: inherit;
+}
+
+.opcao-select {
+    background-color: white;
+    padding: 1vh;
+}
+
+.opcao-select:hover {
+    background-color: #eeeeee;
+}

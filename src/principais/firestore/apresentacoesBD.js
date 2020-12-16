@@ -14,40 +14,38 @@ export const autorizacaoPadrao = autorizacoesApresentacao[0];
 
 const wWidth = window.screen.width;
 const wHeight = window.screen.height;
-export const ratioPadrao = {width: Math.max(wWidth, wHeight), height: Math.min(wWidth, wHeight)};
+export const ratioTela = {width: Math.max(wWidth, wHeight), height: Math.min(wWidth, wHeight)};
+const selecionadoPadrao = {elemento: 0, slide: 0};
 
-export const getElementosERatioPadrao = async ({idApresentacaoPadrao, tipoApresentacaoPadrao}) => {
+const getAprensentacaoPadraoUsuario = async  ({idApresentacaoPadrao, tipoApresentacaoPadrao}) => {
   let { elementos, ratio } = await getApresentacaoComId(idApresentacaoPadrao);
   if (tipoApresentacaoPadrao === 'estilo') elementos = elementos.slice(0, 1);
-  return {elementos, ratio};
+  elementos = getElementosDesconvertidos(elementos);
+  return {elementos, ratio, selecionado: selecionadoPadrao};
 }
 
-export const getApresentacaoPadrao = (usuario = {}) => {
-  let selecionado = {elemento: 0, slide: 0};  
-  if (!usuario.uid) {
+export const getApresentacaoPadraoBasica = (usuario = {}) => {
+  if (!usuario.uid || !usuario.idApresentacaoPadrao) {
     return {
       elementos: [
         new Element("Slide-Mestre", "Slide-Mestre", [textoMestre], null, {...getEstiloPadrao()}, true)
       ],
-      ratio: ratioPadrao,
-      selecionado
+      ratio: ratioTela,
+      selecionado: selecionadoPadrao
     }
-  }
-  return {
-    ...getElementosERatioPadrao(usuario).then(apresentacao => apresentacao),
-    selecionado
   }
 };
 
-export const gerarNovaApresentacao = async (idUsuario, elementos, ePadrao, ratio) => {
+export const gerarNovaApresentacao = async (idUsuario, elementos, zerada, ratio) => {
   if (elementos)
     elementos = getElementosConvertidos(elementos);
   return await gerarNovoRegistro(
     colecaoApresentacoes,
     {
-      idUsuario: idUsuario,
-      elementos: elementos,
-      ratio: ratio
+      idUsuario,
+      elementos,
+      ratio,
+      zerada
     },
     true
   );
@@ -62,11 +60,12 @@ export const definirApresentacaoAtiva = async (usuario, apresentacao = {}, eleme
   if (apresentacao.ratio) {
     ratio = apresentacao.ratio 
   } else if (!ratio) {
-    ratio = {...ratioPadrao};
+    ratio = {...ratioTela};
   }
   if (!elementos) {
     zerada = true;
-    elementos = (await getElementosERatioPadrao(usuario)).elementos;
+    let apresentacaoPadrao = await getAprensentacaoPadraoUsuario(usuario);
+    elementos = apresentacaoPadrao.elementos;
   }
   if (!usuario.uid && !apresentacao.id) {
     novaApresentacao = apresentacaoAnonima;
@@ -83,9 +82,11 @@ export const definirApresentacaoAtiva = async (usuario, apresentacao = {}, eleme
 
 export const excluirApresentacao = async idApresentacao => {
   var state = store.getState();
-  if (state.present.apresentacao.id === idApresentacao)    
-    await definirApresentacaoAtiva(state.usuario, getUltimaApresentacaoUsuario(state.usuario), undefined, undefined, false);
   await excluirRegistro(idApresentacao, colecaoApresentacoes);
+  if (state.present.apresentacao.id === idApresentacao) {
+    const ultima = await getUltimaApresentacaoUsuario(state.usuario.uid, false);
+    await definirApresentacaoAtiva(state.usuario, ultima, undefined, undefined, false);
+  }    
   var permissoes = await getRegistrosQuery(colecaoPermissoes, 'idApresentacao', idApresentacao);
   for (var p of permissoes) {
     excluirRegistro(p.id, colecaoPermissoes);
@@ -128,17 +129,9 @@ export const definirApresentacaoPadrao = async (idUsuario, idApresentacao, atual
       async fazer => {
         if (callback) callback(fazer);
         if(!fazer) return;
-        try { 
-          await atualizarRegistro(
-            {idApresentacaoPadrao: idApresentacao},
-            'usuários',
-            idUsuario
-          );
-        } catch (error) {
-          conteudoNotificacao = 'Erro ao Definir Apresentação Padrão';
-        }
+        store.dispatch({type: 'definir-apresentacao-padrao', idApresentacao});
         conteudoNotificacao = 'Apresentação Definida como Padrão';
-        store.dispatch({type: 'inserir-notificacao', conteudo: conteudoNotificacao})
+        store.dispatch({type: 'inserir-notificacao', conteudo: conteudoNotificacao});
       }
     );
   }
@@ -208,10 +201,10 @@ const getApresentacaoComPermissao = async idPermissao => {
   }
 }
 
-export const getUltimaApresentacaoUsuario = async idUsuario => {
+export const getUltimaApresentacaoUsuario = async (idUsuario, exigeRecente = true) => {
   var apresentacoes = await getApresentacoesUsuario(idUsuario || 0);
   return (
-    apresentacaoERecente(apresentacoes[0]) 
+    (!exigeRecente || apresentacaoERecente(apresentacoes[0]))
       ? apresentacoes[0] 
       : null
   );
