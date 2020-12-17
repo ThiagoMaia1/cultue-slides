@@ -6,7 +6,7 @@ import { createStore } from 'redux';
 import hotkeys from 'hotkeys-js';
 import { getEstiloPadrao, newEstilo, getPadding, getDadosMensagem, listaPartesEstilo } from './principais/Element.js';
 import { selecionadoOffset, getSlidePreview } from './Components/MenuExportacao/Exportador';
-import { atualizarApresentacao, getApresentacaoPadraoBasica, autorizacaoEditar, autorizacaoPadrao, apresentacaoAnonima } from './principais/firestore/apresentacoesBD';
+import { atualizarApresentacao, getApresentacaoPadraoBasica, autorizacaoEditar, autorizacaoPadrao, apresentacaoAnonima, getElementosDesconvertidos } from './principais/firestore/apresentacoesBD';
 import { atualizarRegistro } from './principais/firestore/apiFirestore';
 import { keysTutoriais } from './Components/Tutorial/ListaTutorial';
 import { toggleFullscreen } from './principais/FuncoesGerais';
@@ -26,6 +26,7 @@ const redividirSlides = (elementos, sel, ratio) => {
       var [ i, slide, repetir ] = (sel.elemento === 0 ? [ 1, 0, 1 ] : [ sel.elemento, sel.slide, 0]);
     do {
       var e = elementos[i];
+      if (!e.getArrayTexto) e = getElementosDesconvertidos([e])[0];
       e.criarSlides(e.getArrayTexto(slide, e), e.slides[0].estilo, slide, elementos[0].slides[0].estilo, ratio, e);
       i++;
     } while (repetir && i < elementos.length)
@@ -304,7 +305,7 @@ export function undoable(reducer) {
           previousTemp: previousTemp || deepSpreadPresente(present), 
           slidePreview: getSlidePreview(newPresent)};
       case 'editar-slide-preview':
-        newPresent = action.reverter ? present : reducer(deepSpreadPresente(present), {...action, type: 'editar-slide'}, usuario)
+        newPresent = action.reverter ? present : reducer(deepSpreadPresente(present), {...action, type: 'editar-slide'}, usuario);
         return {...state, slidePreview: getSlidePreview(newPresent)};
       default:
         newPresent = reducer(deepSpreadPresente(present), action, usuario);

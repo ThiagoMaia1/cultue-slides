@@ -36,7 +36,7 @@ class LogoCultue extends React.Component {
       <div id='logo-splash' style={{transform: 'scale(' + this.state.scale + ')'}}>
         <div className='quadrado-logo cinza' style={{transform: 'rotate(' + this.state.rotate*2 + 'deg)'}}></div>
         <div className='quadrado-logo azul-claro' style={{transform: 'rotate(' + this.state.rotate + 'deg)'}}></div>
-        <img className='quadrado-logo azul' src={require('./QuadradoC.svg')} alt='Logo Cultue'/>
+        <img className='quadrado-logo azul-forte' src={require('./QuadradoC.svg')} alt='Logo Cultue'/>
       </div>
     );
   }

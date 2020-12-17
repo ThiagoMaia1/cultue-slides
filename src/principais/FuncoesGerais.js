@@ -277,6 +277,19 @@ export function componentToHex(c) {
 export function rgbToHex(r, g, b) {
     return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
 }
+
+export function rgbStrToObject(str) {
+    let array = str.replace(/[^0-9,]/g, '').split(',');
+    let keys = ['r', 'g', 'b', 'a'];
+    let rgbObj = array.reduce((obj, a, i) => {
+        let k = keys[i];
+        obj[k] = Number(a);
+        if (isNaN(obj[k])) obj[k] = 0; 
+        return obj;
+    }, {});
+    if (rgbObj.a === undefined) rgbObj.a = 1;
+    return rgbObj;
+}
   
 export const getBackgroundImageColor = color => 'linear-gradient(' + color + ', ' + color + ')';
 

@@ -85,10 +85,10 @@
 //   Redividir quando o texto de um slide é todo deletado.
 //   Edição do conteúdo do parágrafo dando alguns erros (falha ao perder foco, não exibe cursor).
 //   Exportação de imagens após mudanças inset.
-//   Editar slide de imagens ou desabilitar edição. 🟨
 //   Atalhos nos inputs.
 //   Reduzir imagens que são grandes demais (galáxia...)
-//   Lista de atalhos do modo apresentação.
+//   Valor inicial sliders opacidade e borda imagem.
+//   Problemas nos dados ao persistir redux.
 
 /*// Features essenciais:
 //   ✔️ Envio de imagens.
@@ -126,6 +126,7 @@
 //   ✔️ Atalhos B e W no modo de apresentação.
 //   ✔️ Perguntar número de frequentadores.
 //   ✔️ Tela perfil do usuário: informações básicas
+//   ✔️ Blend-mode tampão
 //   ✔️ Persistir redux 🟨
 //   ✔️ Duplicar slide. 
 //   ✔️ Exportar como Power Point.*/
@@ -136,6 +137,10 @@
 //   Tentar de novo/Avisar se upload da imagem não pôde ser feito.
 //   Ocultar/isolar título. 🟨
 //   Otimizar trocas de dados com BD. 🟨
+//   Lista de atalhos do modo apresentação.
+//   Editar slide de imagens ou desabilitar edição. 🟨
+//   Botões centralizar nas configurações de imagem.
+//   Exportação em PowerPoint.
 
 /*/ Features dispensáveis:
 //   Tela perfil do usuário: predefinições. 🟥 
@@ -172,11 +177,11 @@
 //   Pesquisa cifra.
 //   Dicas eventuais: B/W, forma de escrita da referência bíblica.
 //   Atalhos e click fora dos menus.
-//   Deletar/duplicar slide arrastando.
+//   Deletar/duplicar slide arrastando/clicando com botão direito.
 //   Duplicar slide através de botão.
 //   Manter alt pressionado para duplicar o slide.
 //   Pool de imagens do usuário
-//   Blend-mode tampão*/
+//   Slide-mestre de cada tipo */
 //
 // Negócio:
 //   ✔️ Criar logo.

@@ -9,8 +9,9 @@ import { CompactPicker } from 'react-color';
 import Slider from '../Basicos/Slider/Slider';
 import Select from '../Basicos/Select/Select';
 import { listaPartesEstilo } from '../../principais/Element';
+import { lerImagem } from '../Preview/Img';
 
-const estiloBloco = {borderRadius: 'var(--round-border-pequeno)'};
+const estiloBloco = {borderRadius: 'var(--round-border-pequeno)', maxWidth: '15vw', backgroundColor: '#efefef', marginTop: '0.8vh', zIndex: 29};
 
 const casesTexto = [{valor: 'Nenhum', icone: (<span style={{color: '#999'}}>Aa</span>)}, {valor: 'Primeira Maiúscula', icone: 'Aa'}, 
                     {valor: 'Maiúsculas', icone: 'AA'}, {valor: 'Minúsculas', icone: 'aa'}
@@ -168,7 +169,7 @@ class ConfigurarSlides extends Component {
 
   reducerListaSliders = (resultado, s) => {
     if (s.aba !== this.props.abaAtiva) return resultado; 
-    let valorAplicado = this.props.slidePreview.estilo[s.aba][s.atributo];
+    let valorAplicado = this.props.slidePreview.estilo[s.aba][s.atributo] || 0;
     let temPorcentagem = /%/.test(valorAplicado);
     if(typeof valorAplicado === 'string') valorAplicado = Number(valorAplicado.replace(s.unidade || '%',''));
     resultado.push(
@@ -209,12 +210,12 @@ class ConfigurarSlides extends Component {
     this.atualizarEstilo('tampao', 'backgroundColor', cor.rgb);
   }
 
-  mudarFonte = (valor, preview = false, reverter = false) => {
-    this.atualizarEstilo(this.props.abaAtiva, 'fontFamily', valor, true, false, preview, reverter)
+  mudarFonte = (valor) => {
+    this.atualizarEstilo(this.props.abaAtiva, 'fontFamily', valor, true, false)
   }
 
-  mudarBlendMode = (valor, preview = false, reverter = false) => {
-    this.atualizarEstilo(this.props.abaAtiva, 'mixBlendMode', valor, false, false, preview, reverter)
+  mudarBlendMode = (valor) => {
+    this.atualizarEstilo(this.props.abaAtiva, 'mixBlendMode', valor, false, false)
   }
 
   mudarCaseTexto = () => {
@@ -240,8 +241,8 @@ class ConfigurarSlides extends Component {
     this.props.dispatch({type, objeto: nomeObjeto, valor: estiloObjeto, redividir, selecionado: sel})
   }
 
-  atualizarEstiloPreview = (valor, reverter = false) => {
-    this.props.dispatch({type: 'editar-slide-preview', valor, reverter})
+  atualizarEstiloPreview = (objeto, valor, reverter = false) => {
+    this.props.dispatch({type: 'editar-slide-preview', objeto, valor, reverter})
   }
 
   limparEstilo = () => {
@@ -272,6 +273,8 @@ class ConfigurarSlides extends Component {
     return JSON.stringify(objeto) === "{}";
   }
   
+  getBackgroundImage = () => 'url("' + lerImagem(this.props.slidePreview.estilo.fundo, 600) + '")';
+
 	render() {
     var aba = this.props.abaAtiva;
     var slidePreview = this.props.slidePreview;
@@ -285,7 +288,8 @@ class ConfigurarSlides extends Component {
       </>
     )
     const opcoesListaBlendMode = listaBlendMode.map(b => (
-      {valor: b, style: {mixBlendMode: b, backgroundColor: slidePreview.estilo.tampao.backgroundColor}}
+      {rotulo: '', textoSpan: b.rotulo, valor: b.valor, 
+       style: {mixBlendMode: b.valor, backgroundColor: slidePreview.estilo.tampao.backgroundColor}}
     ));
     return (
       <div id='painel-configuracao' key={sel.elemento + '.' + sel.slide}>
@@ -307,10 +311,11 @@ class ConfigurarSlides extends Component {
                   <span className='a-cor-texto' style={{color: this.props.slideSelecionado.estilo[aba].color}}>A</span>
                   <div className='cor-texto' style={{backgroundColor: this.props.slideSelecionado.estilo[aba].color}}></div>
                 </button>
-                <Select className='botao-configuracao combo-fonte' opcoes={opcoesListaFontes} defaultValue={slidePreview.estilo[aba].fontFamily}
+                <Select key={sel.elemento + '.' + sel.slide + '.' + aba}
+                        className='botao-configuracao combo-fonte' opcoes={opcoesListaFontes} defaultValue={slidePreview.estilo[aba].fontFamily}
                         style={{fontFamily: slidePreview.estilo[aba].fontFamily}} onChange={({valor}) => this.mudarFonte(valor)} 
-                        onMouseOverOpcao={o => this.atualizarEstiloPreview(o.style)}
-                        onMouseOutOpcao={() => this.atualizarEstiloPreview(undefined, true)}
+                        onMouseEnterOpcao={o => this.atualizarEstiloPreview(aba, o.style)}
+                        onMouseLeaveOpcao={() => this.atualizarEstiloPreview(undefined, undefined, true)}
                         estiloBloco={estiloBloco}/>
                 <button title={casesTexto[this.state.caseTexto].valor} id='botao-case' className='botao-configuracao bool' 
                           onClick={this.mudarCaseTexto}>{casesTexto[this.state.caseTexto].icone}</button>
@@ -344,19 +349,23 @@ class ConfigurarSlides extends Component {
           <div className='container-configuracoes-tampao' style={{display: (aba === 'tampao' ? '' : 'none')}}>
             <button className='botao-configuracao bool' onMouseOver={() => this.ativarPainelCor(this.mudarCorFundo)}>
               <div className='container cor-fundo' style={{backgroundImage: ' url("' + require('./Quadriculado PNG.png') + '")'}}>
-                <div className='quadrado cor-fundo' style={{backgroundColor: this.props.slidePreview.estilo.tampao.backgroundColor, 
-                                                            mixBlendMode: this.props.slidePreview.estilo.tampao.mixBlendMode}}>
+                <div className='quadrado cor-fundo' style={{backgroundColor: this.props.slidePreview.estilo.tampao.backgroundColor
+                                                          // , mixBlendMode: this.props.slidePreview.estilo.tampao.mixBlendMode
+                                                            }}>
                 </div>
               </div>
             </button>
-            <Select className='botao-configuracao combo-fonte'
+            <Select key={sel.elemento + '.' + sel.slide + '.' + aba}
+                    className='botao-configuracao combo-fonte isolar-spans-filhos'
                     onChange={o => this.mudarBlendMode(o.valor)} 
-                    defaultValue={slidePreview.estilo.tampao.mixBlendMode}
+                    defaultValue={slidePreview.estilo.fundo.mixBlendMode || 'normal'}
                     opcoes={opcoesListaBlendMode}
-                    onMouseOverOpcao={o => this.atualizarEstiloPreview(o.style)}
-                    onMouseOutOpcao={() => this.atualizarEstiloPreview(undefined, true)}
-                    estiloBloco={{...estiloBloco, backgroundImage: ' url("' + require('./Quadriculado PNG.png') + '")'}}>
-            </Select>
+                    onMouseEnterOpcao={o => this.atualizarEstiloPreview(aba, o.style)}
+                    onMouseLeaveOpcao={() => this.atualizarEstiloPreview(undefined, true)}
+                    style={{fontSize: '90%'}}
+                    estiloBloco={{...estiloBloco, fontSize: '90%', backgroundImage: this.getBackgroundImage(), 
+                                  backgroundSize: 'auto 100%', backgroundPosition: 'center', backgroundRepeat: 'no-repeat',
+                                  boxShadow: 'var(--box-shadow)', color: slidePreview.estilo.paragrafo.color}}/>
           </div>
           <div className='div-sliders'> 
             {listaSliders.reduce(this.reducerListaSliders, [])}

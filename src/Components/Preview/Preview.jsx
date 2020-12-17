@@ -22,7 +22,7 @@ class Preview extends Component {
             if (modoApresentacao !== this.props.modoApresentacao) 
                 this.props.dispatch({type: 'definir-modo-apresentacao', modoApresentacao})
             if (modoApresentacao) {
-                if (this.props.eMestre) this.offsetSlide(0);
+                if (this.props.slidePreview.eMestre) this.offsetSlide(0);
                 this.setState({screen: {...this.full}});
             } else {
                 this.setState({screen: {...this.small}});
@@ -82,9 +82,9 @@ class Preview extends Component {
     realcarElemento = (aba, foraOuDentro = null) => {
         if (document.fullscreenElement) return;
         if (foraOuDentro) {
-            if (foraOuDentro === 'fora' && !this.props.eMestre) {
+            if (foraOuDentro === 'fora' && !this.props.slidePreview.eMestre) {
                 return;
-            } else if(foraOuDentro === 'dentro' && this.props.eMestre) {
+            } else if(foraOuDentro === 'dentro' && this.props.slidePreview.eMestre) {
                 return;
             }
         }

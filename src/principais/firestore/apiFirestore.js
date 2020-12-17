@@ -1,9 +1,11 @@
 import firebase, { firestore } from '../firebase';
 import store from '../../index';
 
-export const slidesPadraoDefault = [{titulo: 'Visitantes', textoSlide: 'Sejam bem-vindos à nossa Igreja!'},
-                           {titulo: 'Avisos', textoSlide: ''}, 
-                           {titulo: 'Mensagem', textoSlide: ''}
+export const slidesPadraoDefault = [
+  {titulo: 'Visitantes', textoSlide: 'Sejam bem-vindos à nossa Igreja!'},
+  {titulo: 'Avisos', textoSlide: ''}, 
+  {titulo: 'Mensagem', textoSlide: ''},
+  {titulo: 'Dízimos e Ofertas', textoSlide: ''}
 ]
 
 export const gerarDocumentoUsuario = async (usuario, dadosAdicionais) => {

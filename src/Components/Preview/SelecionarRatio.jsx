@@ -2,14 +2,19 @@ import React from 'react';
 import { connect } from 'react-redux';
 import './SelecionarRatio.css';
 import { BsAspectRatio } from 'react-icons/bs';
+import { ratioTela } from '../../principais/firestore/apresentacoesBD';
 
-const opcoesRatio = [
+let opcoesRatioDesordenadas = [
     {width: 1024, height: 768}
    ,{width: 1280, height: 800}
    ,{width: 1400, height: 1050}
    ,{width: 1920, height: 1080}
    ,{width: 1920, height: 1200}
-]
+];
+
+opcoesRatioDesordenadas = opcoesRatioDesordenadas.filter(o => o.width !== ratioTela.width || o.height !== ratioTela.height);
+
+const opcoesRatio = [...opcoesRatioDesordenadas, ratioTela].sort((a, b) => a.height - b.height || a.width - b.width);
 
 const getEstiloAnimacao = (maxHeight = '0', maxWidth = '0', color = 'white', transform = 'none') => (
     {maxHeight: maxHeight + 'vh', maxWidth: maxWidth + 'vw', color: color, transform: transform}
@@ -50,7 +55,7 @@ class SelecionarRatio extends React.Component {
     }
 
     selecionarRatio = ratio => {
-        this.props.dispatch({type: 'selecionar-ratio-apresentacao', ratio: ratio})
+        this.props.dispatch({type: 'selecionar-ratio-apresentacao', ratio})
         this.sair();
     }
 
@@ -69,7 +74,8 @@ class SelecionarRatio extends React.Component {
 
     render() {
         if (!this.props.eMestre) return null;
-        var estiloFundo = (this.props.tutorial && this.state.estiloFundo === estiloInvisivel) ? estiloIntermediario : this.state.estiloFundo
+        var estiloFundo = (this.props.tutorial && this.state.estiloFundo === estiloInvisivel) ? estiloIntermediario : this.state.estiloFundo;
+        var ratio = this.props.ratio;
         return (
             <>
                 <div id='selecionar-aspect-ratio' onMouseEnter={this.onMouseEnter} onMouseLeave={this.onMouseLeave}></div>
@@ -77,7 +83,8 @@ class SelecionarRatio extends React.Component {
                         {this.state.opcoesVisiveis 
                             ? opcoesRatio.map((o, i) => 
                                     <div className='opcao-ratio' onClick={() => this.selecionarRatio(o)} key={i} 
-                                        style={i === 0 ? {borderRadius: '1vh 0 0 0'} : null}>
+                                        style={{borderRadius: (i === 0 ? '1vh 0 0 0' : ''),
+                                        backgroundColor: (o.width === ratio.width && o.height === ratio.height ? 'var(--preto-fraco)' : '' )}}>
                                         {o.width + 'x' + o.height}
                                     </div>
                                 )
@@ -94,9 +101,16 @@ class SelecionarRatio extends React.Component {
     }
 };
 
-const mapState = state => (
-    {elementos: state.present.elementos, searchAtivo: state.searchAtivo, eMestre: state.present.selecionado.elemento === 0, tutorial: state.itensTutorial.includes('slides')}
-)
+const mapState = state => {
+    var sel = state.present.selecionado;
+    return {
+        elementos: state.present.elementos, 
+        eMestre: state.present.elementos[sel.elemento].slides[sel.slide].eMestre,
+        searchAtivo: state.searchAtivo, 
+        tutorial: state.itensTutorial.includes('slides'), 
+        ratio: state.present.ratio
+    }
+}
   
 export default connect(mapState)(SelecionarRatio);
   

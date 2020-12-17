@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import SublistaSlides from './SublistaSlides';
 import { connect } from 'react-redux';
-import { MdKeyboardArrowUp, MdKeyboardArrowDown, MdEdit } from 'react-icons/md';
 import { ativarPopupConfirmacao } from '../Popup/PopupConfirmacao';
+import { MdEdit } from 'react-icons/md';
 import { getNomeInterfaceTipo, newEstilo, getDadosMensagem } from '../../principais/Element';
 import { objetosSaoIguais } from '../../principais/FuncoesGerais';
+import ArrowColapsar from '../Basicos/ArrowColapsar/ArrowColapsar';
 
 class ItemListaSlides extends Component {
 
@@ -95,14 +96,8 @@ class ItemListaSlides extends Component {
                         <div className={'texto-lista-slides fade-estilizado ' + (!objetosSaoIguais(elemento.slides[0].estilo, newEstilo()) ? 'elemento-slide-estilizado' : '')}>
                             <b> {i}. {getNomeInterfaceTipo(elemento.tipo)}: </b>{(elemento.tipo === 'Imagem' && !elemento.titulo) ? elemento.imagens[0].alt : elemento.titulo}
                         </div>
-                        {this.state.colapsa ? 
-                            (<div className='container-icone-colapsar'>
-                                <div className='icone-colapsar' onClick={this.toggleColapsar}>
-                                    {this.props.elemento.colapsado ? 
-                                        <MdKeyboardArrowDown size={this.state.tamanhoIcone}/> :
-                                        <MdKeyboardArrowUp size={this.state.tamanhoIcone}/> }
-                                </div>
-                            </div>) : null
+                        {!this.state.colapsa ? null :
+                            <ArrowColapsar tamanhoIcone={this.state.tamanhoIcone} colapsado={this.props.elemento.colapsado} onClick={this.toggleColapsar}/>
                         }
                     </div>
                     {elemento.slides.length > 1 ? 

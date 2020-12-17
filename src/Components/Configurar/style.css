@@ -3,6 +3,7 @@
     justify-content: flex-start;
     overflow: hidden;
     min-height: 8vh;
+    z-index: 110;
 }
 
 .div-titulo-botao {
@@ -174,6 +175,7 @@
     flex: 1 1;
     padding-left: 0.6vh;
     max-width: 78%;
+    min-width: 78%;
     outline: 0;
 }
 
@@ -345,4 +347,17 @@
     flex-wrap: wrap;
     max-width: 85%;
     margin-bottom: 2vh;
+}
+
+.isolar-spans-filhos span{
+    isolation: isolate;
+    mix-blend-mode: normal;
+    position: absolute;
+    z-index: 1;
+    margin-left: 0.5vw;
+    line-height: 4vh;
+}
+
+.isolar-spans-filhos > div > div:hover > span {
+    font-weight: 600;
 }

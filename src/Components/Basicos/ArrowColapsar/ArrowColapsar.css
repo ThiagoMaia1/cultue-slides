@@ -1,0 +1,14 @@
+
+.container-icone-colapsar {
+    display: inline;
+    color: inherit;
+    flex: 1;
+  }
+  
+  .icone-colapsar {
+    height: 0px;
+    cursor: pointer;
+    color: inherit;
+    float: right;
+    margin-right: 0.5vw;
+  }

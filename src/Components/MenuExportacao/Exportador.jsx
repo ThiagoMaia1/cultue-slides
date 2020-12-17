@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { getNomeInterfaceTipo } from '../../principais/Element';
-import { capitalize, getImgBase64, hexToRgb } from '../../principais/FuncoesGerais';
+import { capitalize, getImgBase64, hexToRgb, rgbStrToObject } from '../../principais/FuncoesGerais';
 import SlideFormatado from '../Preview/SlideFormatado'; 
 
 export function getBase64Image(imagem, total, ratio, callback) {
@@ -70,9 +70,13 @@ export function getSlidePreview ({elementos, selecionado}) {
         estilo[k] = estilo[k]*100 + '%';
       }
       if (/[Cc]olor/.test(k)) {
-        var cor = estilo[k];
+        var cor = estilo[k] || '#fff';
         if(typeof cor === 'string') {
-          cor = hexToRgb(cor);
+          if(/rgb/.test(cor)) {
+            cor = rgbStrToObject(cor);
+          } else {
+            cor = hexToRgb(cor);
+          }
         }
         if (estilo.opacityFundo) cor.a = Number(estilo.opacityFundo);
         if (cor.a === undefined) cor.a = 1;

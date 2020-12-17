@@ -1,24 +1,60 @@
 .select-personalizado {
-    outline: 0;
+    padding-left: 0.8vw;
     text-align: left;
-    padding-left: 1vw;
-    line-height: 100%;
+    white-space: nowrap;
+}
+
+.base-select {
+    height: 100%;
+    width: 100%;
     overflow: hidden;
+    outline: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.container-opcao-marcada{
+    line-height: 100%;
 }
 
 .bloco-opcoes {
     position: fixed;
     width: 100%;
-    transition: max-height 0.3s linear;
+    transition: max-height 0.08s linear;
     z-index: 100;
     border: inherit;
+    overflow-x: auto;
+    background-color: white;
 }
 
 .opcao-select {
-    background-color: white;
     padding: 1vh;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
 }
 
 .opcao-select:hover {
-    background-color: #eeeeee;
+    background-color: var(--platinum-forte);
+}
+
+.bloco-opcoes::-webkit-scrollbar {
+    width: 0.5vw;
+    left: -0.5vw;
+    height: 95%;
+}
+   
+.bloco-opcoes::-webkit-scrollbar-track {
+    background: inherit;
+}
+   
+.bloco-opcoes::-webkit-scrollbar-thumb {
+    background-color: lightgray;
+}
+
+.bloco-opcoes::-webkit-scrollbar-button {
+    width: 0;
+    height: 0;
+    display: none;
 }
