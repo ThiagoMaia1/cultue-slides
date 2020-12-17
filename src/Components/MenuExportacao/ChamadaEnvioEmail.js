@@ -3,6 +3,7 @@ import { firebaseFunctions } from '../../principais/firebase';
 import ReactDOMServer from 'react-dom/server';
 import store from '../../index';
 
+const enderecoEmailThiago = 'tthiagopmaia@gmail.com';
 export const enviarEmail = firebaseFunctions.httpsCallable('enviarEmail');
 
 const azulForte = '#3757a9';
@@ -11,8 +12,11 @@ const getEstiloBarraAzul = altura => (
     {backgroundColor: azulForte, height: altura + 'px', width: '100%'}
 )
 
-export const enviarEmailTemplate = (assunto, destinatarios, corpo, JSXInterno, linksBotoes = null, anexos = null) => {
+export const enviarEmailTemplate = (assunto, destinatarios = enderecoEmailThiago, corpo, JSXInterno, linksBotoes = null, anexos = null, callback = null) => {
     
+    document.body.style.cursor = 'progress';
+    destinatarios = [destinatarios].flat();
+    anexos = [anexos].flat();
     var botoes = [];
     if (linksBotoes) {
         for (var l of linksBotoes) {
@@ -58,12 +62,17 @@ export const enviarEmailTemplate = (assunto, destinatarios, corpo, JSXInterno, l
     }
       
     enviarEmail(objEmail).then(
-    () => inserirNotificacao('E-mail enviado com sucesso'), 
-    error => {
+        () => {
+            inserirNotificacao('E-mail enviado com sucesso')
+            if(callback) callback(true);
+        }, 
+        error => {
             inserirNotificacao('Erro ao enviar e-mail');
             console.log(error);
-        }
-    );
+            if(callback) callback(false);
+    }).finally(() => {
+        document.body.style.cursor = 'default';;
+    })
 }
 
 const inserirNotificacao = conteudo => {

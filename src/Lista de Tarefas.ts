@@ -78,6 +78,7 @@
 //   ✔️ Configurar imagem incluir border-radius, fixar proporção.
 //   ✔️ Atalho F5 modo de apresentação.
 //   ✔️ Scope errado quando tem login.
+//   ✔️ Valor inicial sliders opacidade e borda imagem.
 //   ✔️ Carrossel do Input Imagem não vai até o final.*/
 // Errinhos:
 //   ✔️ Click fora tutorial
@@ -87,7 +88,6 @@
 //   Exportação de imagens após mudanças inset.
 //   Atalhos nos inputs.
 //   Reduzir imagens que são grandes demais (galáxia...)
-//   Valor inicial sliders opacidade e borda imagem.
 //   Problemas nos dados ao persistir redux.
 
 /*// Features essenciais:
@@ -129,15 +129,14 @@
 //   ✔️ Blend-mode tampão
 //   ✔️ Persistir redux 🟨
 //   ✔️ Duplicar slide. 
-//   ✔️ Exportar como Power Point.*/
 //   ✔️ Salvar/buscar apresentação padrão corretamente.
+//   ✔️ Ajuda: rever tutoriais, entrar em contato com o desenvolvedor.
+//   ✔️ Lista de atalhos do modo apresentação.*/
 //   Incluir fontes como base64 (html) ou zip (power point). 🟥
-//   Ajuda: rever tutoriais, entrar em contato com o desenvolvedor.
 //   Lidar com perda de conexão.
 //   Tentar de novo/Avisar se upload da imagem não pôde ser feito.
 //   Ocultar/isolar título. 🟨
 //   Otimizar trocas de dados com BD. 🟨
-//   Lista de atalhos do modo apresentação.
 //   Editar slide de imagens ou desabilitar edição. 🟨
 //   Botões centralizar nas configurações de imagem.
 //   Exportação em PowerPoint.
@@ -181,6 +180,8 @@
 //   Duplicar slide através de botão.
 //   Manter alt pressionado para duplicar o slide.
 //   Pool de imagens do usuário
+//   Criar PDF de documentação.
+//   Atalho F1 para ajuda.
 //   Slide-mestre de cada tipo */
 //
 // Negócio:

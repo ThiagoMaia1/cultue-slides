@@ -29,10 +29,6 @@
     background-color: var(--platinum-forte);
 }
 
-.div-botao-navbar > div {
-    width: 70vh;
-}
-
 #nome-usuario {
     font-size: 90%;
     padding-left: 1vw;
@@ -92,7 +88,7 @@
 }
 
 .tecla-atalho {
-    background-color: darkgray;
+    background-color: black;
     color: white;
     padding: 0.5vw 0.8vw 0.5vw 0.5vw;
     box-shadow: var(--box-shadow);
@@ -131,4 +127,16 @@
 .inserir-lista-express {
     height: 20vh;
     margin: 2vh 0;
+}
+
+.quadro-enviar button {
+    min-width: 13vw;
+}
+
+.quadro-enviar .linha-flex {
+    margin: 1vh 0 0 0;
+}
+
+.quadro-enviar textarea {
+    min-height: 30vh;
 }

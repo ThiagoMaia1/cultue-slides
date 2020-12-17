@@ -26,7 +26,7 @@ class MensagemBaixar extends React.Component {
         return (
             <TelaMensagem mensagem={'Seu download será efetuado automaticamente. \n\n Se isso não acontecer, clique no botão abaixo.'}>
                 <div className='container-botoes-download'>
-                    <button className='botao botao-azul'  onClick={this.baixar}>
+                    <button className='botao'  onClick={this.baixar}>
                         {'Baixar Arquivo ' + capitalize(this.props.formatoExportacao, 'Primeira Maiúscula')}
                     </button>
                     <button className='botao neutro' onClick={this.visualizarOnline}>

@@ -3,18 +3,9 @@ import './MenuBotaoDireito.css';
 import QuadroMenu from '../QuadroMenu/QuadroMenu';
 // import { objetosSaoIguais } from '../../../principais/FuncoesGerais';
 
-const getPosicaoSubmenu = ref => {
-    if (ref.current) {
-        let {top, right} = ref.current.getBoundingClientRect();
-        return {top: top + 'px', left: right + 'px'};
-    }
-    return {};
-}
-
 const estiloQuadro = {
-    position: 'fixed',
     padding: 0,
-    zIndex: 800,
+    zIndex: 800
 }
 
 class MenuBotaoDireito extends Component {
@@ -32,30 +23,23 @@ class MenuBotaoDireito extends Component {
         this.abrir();
     }
 
-    capturarPosicaoMouse = e => {
-        switch (e.button) {
-            case 0:
-                if (this.state.aberto) setTimeout(this.fechar, 10);
-                break;
-            case 2: 
-                e = e.nativeEvent;
-                if(this.state.aberto) {
-                    this.fechar();
-                    setTimeout(this.abrir, 5);
-                }
-                this.setState({posicao: {left: e.clientX + 'px', top: e.clientY + 'px'}})
-                break;
-            default:
-                return;
+    capturarCoordenadasMouse = e => {
+        if (e.button === 2) {
+            e = e.nativeEvent;
+            if(this.state.aberto) {
+                this.fechar();
+                setTimeout(this.abrir, 5);
+            }
+            this.setState({posicao: {left: e.clientX + 'px', top: e.clientY + 'px'}});
         }
     }
 
     render() {
         return (
-            <div onContextMenu={this.ativarMenu} onMouseUp={this.capturarPosicaoMouse} >
+            <div onContextMenu={this.ativarMenu} onMouseUp={this.capturarCoordenadasMouse} >
                 {this.props.children}
                 {!this.state.aberto ? null
-                    : <QuadroOpcoes opcoes={this.props.opcoes} callback={this.fechar} style={{...estiloQuadro, ...this.state.posicao, ...this.props.style}}/>
+                    : <QuadroOpcoes opcoes={this.props.opcoes} callback={this.fechar} fecharPai={this.fechar} style={{...this.state.posicao, ...this.props.style}}/>
                 }
             </div>
         )
@@ -64,16 +48,23 @@ class MenuBotaoDireito extends Component {
 
 export class QuadroOpcoes extends Component {
 
+    render () {
+        return (
+            <QuadroMenu callback={this.props.callback} style={{position: 'fixed', ...estiloQuadro, ...this.props.style}}>
+                {this.props.opcoes.map(o => 
+                    <OpcaoMenu opcao={o} key={o.rotulo} fecharPai={this.props.fecharPai}/>  
+                )}
+            </QuadroMenu>
+        )
+    }
+}
+
+class OpcaoMenu extends Component {
+
     constructor (props) {
         super(props);
-        this.state = {submenu: null};
-    }
-
-    clickOpcao = o => {
-        if(o.submenu)
-            this.setState({submenu: o.submenu});
-        if(o.callback) 
-            o.callback();
+        this.ref = React.createRef();
+        this.state = {submenu: null}
     }
 
     stopMenu = e => {
@@ -83,32 +74,42 @@ export class QuadroOpcoes extends Component {
         }
     }
 
+    clickOpcao = () => {
+        let { submenu, callback } = this.props.opcao;
+        if(submenu)
+            this.setState({submenu: submenu});
+        if(callback) {
+            callback();
+           if(this.props.fecharPai) this.props.fecharPai();
+        }    
+    }
+    
+    getPosicaoSubmenu = ref => {
+        let {top, right} = ref.current.getBoundingClientRect();
+        return {top: top + 'px', left: right + 6 + 'px'};
+    }
+
     render () {
         let submenu = this.state.submenu;
         if (submenu) var ComponenteQuadro = submenu.opcoes 
-                                        ? QuadroOpcoes
-                                        : QuadroMenu
+                                            ? QuadroOpcoes
+                                            : QuadroMenu
         return (
-            <QuadroMenu style={this.props.style} callback={this.props.callback}>
-                {this.props.opcoes.map(o => {
-                    let ref = React.createRef();
-                    return (
-                    <div className='opcao-menu-botao-direito' 
-                         onClick={() => this.clickOpcao(o)}
-                         ref={ref}
-                         key={o.rotulo}
-                         onMouseUp={this.stopMenu}>
-                        {o.rotulo}
-                        {!submenu ? null :
-                            <ComponenteQuadro opcoes={submenu.opcoes} 
-                                               callback={() => this.setState({opcoesSubmenu: null})} 
-                                               style={{...estiloQuadro, ...getPosicaoSubmenu(ref)}}>
-                                {o.submenu}
-                            </ComponenteQuadro>
-                        }
-                    </div>
-                )})}
-            </QuadroMenu>
+            <div className='opcao-menu-botao-direito' 
+                 onClick={this.clickOpcao}
+                 ref={this.ref}
+                 onMouseUp={this.stopMenu}>
+                 {this.props.opcao.rotulo}
+                {!submenu ? null :
+                    <ComponenteQuadro opcoes={submenu.opcoes} 
+                                      callback={() => this.setState({submenu: null})} 
+                                      fecharPai={this.props.fecharPai}
+                                      style={{position: 'fixed', ...(submenu.opcoes ? estiloQuadro : {}), ...this.getPosicaoSubmenu(this.ref),
+                                              ...submenu.style}}>
+                        {submenu.children}
+                    </ComponenteQuadro>
+                }
+            </div>
         )
     }
 }

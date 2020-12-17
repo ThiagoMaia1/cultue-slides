@@ -5,7 +5,7 @@ import { IoMdMail } from 'react-icons/io';
 import ListaEmails from '../../../Perfil/PaginasPerfil/ListaEmails/ListaEmails';
 import Carrossel from '../../../Basicos/Carrossel/Carrossel';
 import sobreporSplash from '../../../Basicos/Splash/SobreporSplash';
-import { ativarPopupConfirmacao } from '../../../Popup/PopupConfirmacao';
+import { ativarPopupConfirmacao, ativarPopupLoginNecessario } from '../../../Popup/PopupConfirmacao';
 import { enviarEmailTemplate } from '../../ChamadaEnvioEmail';
 import { gerarNovaPermissao, getLinkPermissao } from '../../../../principais/firestore/apresentacoesBD';
 
@@ -78,11 +78,11 @@ class ExportarEmail extends Component {
       this.getCorpoEmail(), 
       this.getHTMLEmail(),
       [{url: link, rotulo: 'Download Apresentação'}],
-      [{
+      {
         filename: nomeArquivo,
         content: arquivo,
         ...encoding
-      }]
+      }
     )
   }
 
@@ -130,11 +130,7 @@ class ExportarEmail extends Component {
 
   verificarLogin = () => {
     if (!this.props.usuario.uid) {
-      ativarPopupConfirmacao(
-        'OK',
-        'Login Necessário',
-        'Para enviar a apresentação por e-mail, faça login, ou cadastre-se gratuitamente.'
-      );
+      ativarPopupLoginNecessario('enviar a apresentação por e-mail');
     } else {
       this.props.definirMeioExportacao(this.exportarEmail, this.props.posicao, this.meio);
     }

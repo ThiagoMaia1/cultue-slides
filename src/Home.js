@@ -11,6 +11,7 @@ import { Router, Switch, Route, Redirect } from "react-router-dom";
 import { checarLogin } from './Components/Login/ModulosLogin';
 import Splash from './Components/Basicos/Splash/Splash';
 import Propaganda from './Components/Propaganda/Propaganda';
+// import BarraInferior from './Components/BarraInferior/BarraInferior';
 import history from './principais/history';
 import { PersistGate } from 'redux-persist/integration/react';
 
@@ -52,6 +53,7 @@ class Home extends Component {
               </Switch>
           </Router>
           <Propaganda/>
+          {/* <BarraInferior/> */}
         </PersistGate>
       </Provider>
     );

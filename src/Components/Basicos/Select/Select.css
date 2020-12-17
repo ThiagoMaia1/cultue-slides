@@ -39,21 +39,21 @@
     background-color: var(--platinum-forte);
 }
 
-.bloco-opcoes::-webkit-scrollbar {
+body *::-webkit-scrollbar {
     width: 0.5vw;
     left: -0.5vw;
     height: 95%;
 }
    
-.bloco-opcoes::-webkit-scrollbar-track {
+body *::-webkit-scrollbar-track {
     background: inherit;
 }
    
-.bloco-opcoes::-webkit-scrollbar-thumb {
+body *::-webkit-scrollbar-thumb {
     background-color: lightgray;
 }
 
-.bloco-opcoes::-webkit-scrollbar-button {
+body *::-webkit-scrollbar-button {
     width: 0;
     height: 0;
     display: none;

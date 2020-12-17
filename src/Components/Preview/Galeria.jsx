@@ -68,6 +68,12 @@ class Galeria extends Component {
         this.setState({imagens: [...imgs, ...this.state.imagens]})
     }
 
+    componentDidUpdate = prevProps => {
+        if(!this.state.galeriaVisivel && prevProps.tutorialAtivo !== this.props.tutorialAtivo) {
+            this.mostrarGaleria();
+        }
+    }
+
     render () {
         if (this.props.autorizacao !== 'editar') return null;
         return (
@@ -105,7 +111,10 @@ class Galeria extends Component {
 }
  
 const mapState = state => (
-    {autorizacao: state.present.apresentacao.autorizacao}
+    {
+        autorizacao: state.present.apresentacao.autorizacao, 
+        tutorialAtivo: state.itensTutorial.includes('galeriaFundos')
+    }
 )
 
 export default connect(mapState)(Galeria);

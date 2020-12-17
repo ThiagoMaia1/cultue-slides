@@ -203,7 +203,8 @@ const estadoInicialNaoRehidratado = {
   popupConfirmacao: null,
   notificacoes: [],
   itensTutorial: [],
-  searchAtivo: false
+  searchAtivo: false,
+  erros: []
 }
 
 export function undoable(reducer) {
@@ -224,7 +225,8 @@ export function undoable(reducer) {
   const limiteUndo = 50;
   
   return function (state = initialState, action) {
-    let { past, present, future, previousTemp, usuario, notificacoes, tutoriaisFeitos, itensTutorial, searchAtivo, contadorPropaganda, propagandaAtiva } = state;
+    let { past, present, future, previousTemp, usuario, notificacoes, tutoriaisFeitos, 
+          itensTutorial, searchAtivo, contadorPropaganda, propagandaAtiva, erros } = state;
 
     var notificacoesAtualizado = getNotificacoes(notificacoes, getConteudoNotificacao(action));
     var newPresent;
@@ -247,14 +249,18 @@ export function undoable(reducer) {
         atualizarDadosUsuario(usuario.uid, {idApresentacaoPadrao});
         return {...state, usuario: {...usuario, idApresentacaoPadrao}};
       case 'definir-item-tutorial':
-        var tutoriais = [...new Set([...tutoriaisFeitos, ...itensTutorial].filter(t => !!t))];
+        let tutoriaisAction = [action.itemTutorial].flat();
+        var feitosNovo = action.refazer
+                         ? tutoriaisFeitos.filter(t => !tutoriaisAction.includes(t))
+                         : [...new Set([...tutoriaisFeitos, ...itensTutorial].filter(t => !!t))];
         if (!action.zerar) {
           novosItensTutorial = [...itensTutorial];
-          var tutorialNovo = tutoriais.includes(action.itemTutorial) ? null : action.itemTutorial;
-          if (tutorialNovo) novosItensTutorial.push(tutorialNovo);
+          for(let t of tutoriaisAction) {
+            if (!feitosNovo.includes(t)) novosItensTutorial.push(t);
+          }
         }
-        atualizarDadosUsuario(usuario.uid, {tutoriaisFeitos: tutoriais});
-        return {...state, itensTutorial: novosItensTutorial, tutoriaisFeitos: tutoriais}
+        atualizarDadosUsuario(usuario.uid, {tutoriaisFeitos: feitosNovo});
+        return {...state, itensTutorial: novosItensTutorial, tutoriaisFeitos: feitosNovo}
       case 'bloquear-tutoriais':
         atualizarDadosUsuario(usuario.uid, { tutoriaisFeitos: keysTutoriais });
         return {...state, itensTutorial: [], tutoriaisFeitos: [...keysTutoriais]}
@@ -307,6 +313,8 @@ export function undoable(reducer) {
       case 'editar-slide-preview':
         newPresent = action.reverter ? present : reducer(deepSpreadPresente(present), {...action, type: 'editar-slide'}, usuario);
         return {...state, slidePreview: getSlidePreview(newPresent)};
+      case 'registrar-erro':
+        return {...state, erros: [...erros, action.erro]};
       default:
         newPresent = reducer(deepSpreadPresente(present), action, usuario);
         notificacoesAtualizado = getNotificacoes(notificacoesAtualizado, newPresent.notificacao);
@@ -356,6 +364,11 @@ let store = createStore(persistedReducer, /* preloadedState, */
 
 export let persistor = persistStore(store);
 export default store;
+
+window.onerror = (message, source, lineno, colno, error) => {
+  console.log(error.stack, error)
+  store.dispatch({type: 'registrar-erro', erro: error})
+}
 
 const atualizarDadosUsuario = (idUsuario, dados) => {
   if (idUsuario)

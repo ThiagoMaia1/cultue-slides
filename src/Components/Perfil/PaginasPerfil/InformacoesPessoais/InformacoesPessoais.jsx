@@ -98,7 +98,7 @@ class InformacoesPessoais extends React.Component {
           )}
         </div>
         <div className='linha-flex'>
-          <button className='botao botao-azul' 
+          <button className='botao' 
                   style={this.state.editado ? null : {visibility: 'hidden'}}
                   onClick={this.atualizarDadosUsuario}>Salvar Alterações</button>
         </div>

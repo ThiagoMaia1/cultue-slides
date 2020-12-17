@@ -126,7 +126,7 @@ class Arrastar extends React.Component {
             ? <div id='bloco-adicionar'>
                 <div id="adicionar-slide" onClick={() => this.setState({painelAdicionar: !this.state.painelAdicionar})} 
                       className='botao-azul itens lista-slides'>Adicionar Slide</div>
-                {(this.state.painelAdicionar) 
+                {this.state.painelAdicionar || this.props.tutorialAtivo
                   ? <div className='container-adicionar'
                       style={this.state.adicionarAcima ? {top: '-20vh'} : null}>
                         <Adicionar onClick={() => this.setState({painelAdicionar: false})}/>
@@ -148,7 +148,8 @@ const mapState = function (state) {
     selecionado: state.present.selecionado, 
     popupAdicionar: state.present.popupAdicionar,
     apresentacao: state.present.apresentacao,
-    usuario: state.usuario
+    usuario: state.usuario,
+    tutorialAtivo: state.itensTutorial.includes('painelAdicionar')
   }
 }
 

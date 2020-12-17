@@ -29,7 +29,13 @@ class Configurar extends Component {
         },
         c => c[3] < 85
     )
-}
+  }
+
+  componentDidUpdate = prevProps => {
+    if(!this.state.menuVisivel && prevProps.tutorialAtivo !== this.props.tutorialAtivo) {
+        this.abrirMenu();
+    }
+  }
 
 	render() {
     if (this.props.autorizacao !== 'editar') return null;
@@ -60,7 +66,11 @@ class Configurar extends Component {
 
 const mapState = function (state) {
   var sP = state.present;
-  return {elementos: sP.elementos, autorizacao: sP.apresentacao.autorizacao};
+  return {
+    elementos: sP.elementos,
+    autorizacao: sP.apresentacao.autorizacao,
+    tutorialAtivo: state.itensTutorial.includes('configuracoesSlide')
+  };
 }
 
 export default connect(mapState)(Configurar);

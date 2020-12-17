@@ -257,7 +257,7 @@ class Tutorial extends Component {
 const mapState = state => {
   var arrayTutorial = [];
   for (var i of state.itensTutorial) {
-    arrayTutorial.push(listaBoxes[i]);
+    arrayTutorial.push(listaBoxes[i].listaEtapas);
   }
   return {itensTutorial: arrayTutorial.flat()}
 }

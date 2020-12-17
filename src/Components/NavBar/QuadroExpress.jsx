@@ -21,7 +21,7 @@ class QuadroExpress extends React.Component {
                           placeholder={'Ex:\nLucas 2:1-5;\nJesus em tua presença;\nVisitantes: Sejam bem-vindos'}
                           value={this.state.listaTxt} 
                           onChange={e => this.setState({listaTxt: e.target.value})}/>
-                <button className='botao botao-azul' onClick={this.enviarLista}>Enviar</button>
+                <button className='botao' onClick={this.enviarLista}>Enviar</button>
             </QuadroMenu>
         );
     }

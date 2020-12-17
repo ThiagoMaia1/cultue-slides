@@ -19,6 +19,14 @@ const gruposDeBotoes = {simNao: ['botaoSim', 'botaoNao'],
                         nenhum: []
 }
 
+export const ativarPopupLoginNecessario = strFinalidade => {
+  ativarPopupConfirmacao(
+    'OK',
+    'Login Necessário',
+    `Para ${strFinalidade} você deve primeiro cadastrar-se ou fazer login.`
+  )
+}
+
 export const ativarPopupConfirmacao = (botoes, titulo, texto, callback, filhos) => {
   store.dispatch({type: 'ativar-popup-confirmacao', 
     popupConfirmacao: {

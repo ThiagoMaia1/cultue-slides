@@ -268,10 +268,6 @@ class ConfigurarSlides extends Component {
       }
     );
   }
-
-  eObjetoVazio(objeto) {
-    return JSON.stringify(objeto) === "{}";
-  }
   
   getBackgroundImage = () => 'url("' + lerImagem(this.props.slidePreview.estilo.fundo, 600) + '")';
 

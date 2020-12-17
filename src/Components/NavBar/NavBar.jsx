@@ -2,14 +2,12 @@ import React from 'react';
 import { connect } from 'react-redux';
 import './NavBar.css';
 import Login from '../Login/Login';
-import QuadroAtalhos from './QuadroAtalhos';
-// import QuadroAjuda from './QuadroAjuda';
+import QuadroAjuda from './QuadroAjuda';
 // import QuadroExpress from './QuadroExpress';
 import { definirApresentacaoPadrao, zerarApresentacao } from '../../principais/firestore/apresentacoesBD';
 
 const listaBotoesQuadros = [
-  // {nome: 'Ajuda', componente: QuadroAjuda},
-  {nome: 'Atalhos', componente: QuadroAtalhos}
+  {nome: 'Ajuda', componente: QuadroAjuda}
   // {nome: 'Express', componente: QuadroExpress}
 ]
 

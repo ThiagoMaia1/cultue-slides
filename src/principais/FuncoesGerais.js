@@ -103,6 +103,10 @@ export function objetosSaoIguais(objeto, ...objetos) {
     return true;
 }
 
+export function eObjetoVazio(objeto) {
+  return JSON.stringify(objeto) === "{}";
+}
+
 export const getImgBase64 = (img, frameW = null, frameH = null, callback = null) => {
     if (!frameW) frameW = img.width;
     if (!frameH) frameH = img.width;
