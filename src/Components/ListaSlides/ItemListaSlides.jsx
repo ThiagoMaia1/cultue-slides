@@ -6,6 +6,7 @@ import { MdEdit } from 'react-icons/md';
 import { getNomeInterfaceTipo, newEstilo, getDadosMensagem } from '../../principais/Element';
 import { objetosSaoIguais } from '../../principais/FuncoesGerais';
 import ArrowColapsar from '../Basicos/ArrowColapsar/ArrowColapsar';
+import MenuBotaoDireito from '../Basicos/MenuBotaoDireito/MenuBotaoDireito';
 
 class ItemListaSlides extends Component {
 
@@ -23,8 +24,12 @@ class ItemListaSlides extends Component {
         this.props.dispatch({type: 'toggle-colapsar', selecionado: {elemento: this.props.ordem, slide: 0}});
     }
 
-    excluirElemento = (e) => {
+    botaoExcluirElemento = e => {
         e.stopPropagation();
+        this.excluirElemento();
+    }
+
+    excluirElemento = () => {
         var elemento = this.props.elemento;
         var dadosMensagem = getDadosMensagem(elemento); 
         var pergunta = "Deseja excluir " + dadosMensagem.genero + ' ' + dadosMensagem.elemento + '?';
@@ -35,8 +40,12 @@ class ItemListaSlides extends Component {
         ativarPopupConfirmacao('simNao', 'Atenção', pergunta, callback);         
     }
 
-    editarElemento = (e) => {
+    botaoEditarElemento = e => {
         e.stopPropagation();
+        this.editarElemento();
+    }
+
+    editarElemento = (e) => {
         var elemento = this.props.elemento;
         this.props.dispatch({type: 'ativar-popup-adicionar',
                              popupAdicionar: {
@@ -64,12 +73,25 @@ class ItemListaSlides extends Component {
         return base + proporcao*(elemento.slides.length-1)/slidesPorLinha
     }
 
+    getOpcoesMenu = () => {
+        let strTipo = ' ' + (this.state.colapsa ? 'Grupo' : 'Elemento')
+        let opcoes = [
+            {rotulo: 'Excluir' + strTipo, callback: this.excluirElemento},
+            {rotulo: 'Duplicar' + strTipo, callback: () => this.props.dispatch({type: 'duplicar-slide', selecionado: {elemento: this.props.ordem, slide: 0}})},
+            {rotulo: 'Editar' + strTipo, callback: this.editarElemento}
+        ]
+        if(this.state.colapsa) opcoes.push(
+            {rotulo: this.props.elemento.colapsado ? 'Exibir Sublista' : 'Esconder Sublista', callback: this.toggleColapsar}
+        )
+        return opcoes;
+    }
+
     render () {
         var elemento = this.props.elemento;
         var i = this.props.ordem;
         var editavel = this.props.autorizacao === 'editar';
         return (            
-            <>
+            <MenuBotaoDireito opcoes={this.getOpcoesMenu()}>
                 <li 
                     data-id={i}
                     key={i}
@@ -86,8 +108,8 @@ class ItemListaSlides extends Component {
                     <div data-id={i} className='itens lista-slides' onClick={() => this.props.marcarSelecionado(i, (editavel ? 0 : 0 + (elemento.slides.length > 1)))} ref={this.props.selecionado.slide ? null : this.props.objRef.slide}>
                         {editavel
                             ? <div className='quadradinho-canto'>
-                                  <div data-id={i} className='botao-quadradinho' onClick={e => this.excluirElemento(e)}>✕</div>
-                                  <div data-id={i} className='botao-quadradinho' onClick={e => this.editarElemento(e)}>
+                                  <div data-id={i} className='botao-quadradinho' onClick={e => this.botaoExcluirElemento(e)}>✕</div>
+                                  <div data-id={i} className='botao-quadradinho' onClick={e => this.botaoEditarElemento(e)}>
                                       <MdEdit size={this.state.tamanhoIcone*0.5}/>
                                   </div>
                               </div>
@@ -104,7 +126,7 @@ class ItemListaSlides extends Component {
                         <SublistaSlides elemento={this.props.elemento} ordem={i} marcarSelecionado={this.props.marcarSelecionado} refSlide={this.props.objRef.slide}/> 
                     : null}
                 </li>
-            </>
+            </MenuBotaoDireito>
         )
     }
 }

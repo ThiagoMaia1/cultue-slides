@@ -4,7 +4,7 @@ import './Login.css';
 import { firebaseAuth, googleAuth } from "../../principais/firebase";
 import { gerarDocumentoUsuario } from '../../principais/firestore/apiFirestore';
 import SelectCargo from './SelectCargo';
-import QuadroNavbar from '../NavBar/QuadroNavbar';
+import QuadroMenu from '../Basicos/QuadroMenu/QuadroMenu';
 import { eEmailValido } from '../../principais/FuncoesGerais';
 import SetaVoltar from '../Basicos/SetaVoltar/SetaVoltar';
 import { CgEye } from 'react-icons/cg';
@@ -229,9 +229,9 @@ class Login extends React.Component {
         return (
             <>
                 {this.props.callback
-                    ? <QuadroNavbar callback={this.removerEventListener} esquerda={true} style={{minHeight: minHeightQuadro}}>
+                    ? <QuadroMenu callback={this.removerEventListener} esquerda={true} style={{minHeight: minHeightQuadro}}>
                         {interiorLogin}
-                      </QuadroNavbar>                       
+                      </QuadroMenu>                       
                     : interiorLogin
                 }
             </> 

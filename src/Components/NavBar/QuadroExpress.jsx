@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import QuadroNavbar from './QuadroNavbar';
+import QuadroMenu from './QuadroMenu';
 
 class QuadroExpress extends React.Component {
 
@@ -15,14 +15,14 @@ class QuadroExpress extends React.Component {
 
     render() {
         return (
-            <QuadroNavbar callback={this.props.callback}>
+            <QuadroMenu callback={this.props.callback}>
                 <div>Insira a lista de conteúdos da apresentação separada por ponto e vírgula e/ou quebra de linha:</div>
                 <textarea className='combo-popup inserir-lista-express' 
                           placeholder={'Ex:\nLucas 2:1-5;\nJesus em tua presença;\nVisitantes: Sejam bem-vindos'}
                           value={this.state.listaTxt} 
                           onChange={e => this.setState({listaTxt: e.target.value})}/>
                 <button className='botao botao-azul' onClick={this.enviarLista}>Enviar</button>
-            </QuadroNavbar>
+            </QuadroMenu>
         );
     }
 };

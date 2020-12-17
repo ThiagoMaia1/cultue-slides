@@ -141,7 +141,8 @@ class BlocoOpcoes extends Component {
                 {this.props.opcoes.map(o => 
                     <div onClick={() => this.onClick(o)} 
                          onMouseEnter={() => this.onMouseEnter(o)}
-                         onMouseLeave={() => this.onMouseLeave(o)}>
+                         onMouseLeave={() => this.onMouseLeave(o)}
+                         key={o.valor}>
                         <span>{o.textoSpan}</span>
                         <div key={o.valor} 
                             className={'opcao-select ' + o.className || ''} 

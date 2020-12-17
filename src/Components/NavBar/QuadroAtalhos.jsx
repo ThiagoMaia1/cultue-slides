@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
-import QuadroNavbar from './QuadroNavbar';
+import QuadroMenu from '../Basicos/QuadroMenu/QuadroMenu';
 
 const listaAtalhos = [{teclas: [['←'], ['↑']], acao: 'Slide anterior'},
                       {teclas: [['↑'], ['→']], acao: 'Próximo Slide'},
@@ -31,7 +31,7 @@ class QuadroAtalhos extends React.Component {
 
     render() {
         return (
-            <QuadroNavbar callback={this.props.callback} onKeyUp={true} onBlur={true}>
+            <QuadroMenu callback={this.props.callback} onKeyUp={true} onBlur={true}>
                 {listaAtalhos.map((a, i) => {
                     if (a.autorizacao && a.autorizacao !== this.props.autorizacao) return null;
                     return (
@@ -52,7 +52,7 @@ class QuadroAtalhos extends React.Component {
                         </div>
                     )
                 })}
-            </QuadroNavbar>
+            </QuadroMenu>
         );
     }
 };
