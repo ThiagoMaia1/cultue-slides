@@ -233,8 +233,10 @@ class AdicionarTextoBiblico extends Component {
                 </div>
                 {/* Seleção por capítulo e versículo tem funções salvas no módulo ComboCapVers.jsx */}
                 <div className='container-versiculos container-carrossel combo-popup' style={this.state.botoesVisiveis ? null : {visibility: 'hidden'}}>
-                    <Carrossel tamanhoIcone={45} tamanhoMaximo='100%' direcao='vertical' style={{zIndex: '400'}} percentualBeirada={0.12}>
-                        {formatarVersiculos(this.state.versiculosPronto)}
+                    <Carrossel tamanhoIcone={45} tamanhoMaximo='100%' direcao='vertical' style={{zIndex: '400'}} beiradaFinal={20}>
+                        <div style={{paddingTop: '2.8vh'}}>
+                            {formatarVersiculos(this.state.versiculosPronto)}
+                        </div>
                     </Carrossel>
                 </div>
                 <div className='container-botoes-popup' style={this.state.botoesVisiveis ? null : {visibility: 'hidden'}}>

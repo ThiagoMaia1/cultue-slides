@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { getNomeInterfaceTipo } from '../../principais/Element';
-import { capitalize, getImgBase64, hexToRgb, rgbStrToObject } from '../../principais/FuncoesGerais';
+import { capitalize, getImgBase64, parseCorToRgb, rgbObjToStr } from '../../principais/FuncoesGerais';
 import SlideFormatado from '../Preview/SlideFormatado'; 
 
 export function getBase64Image(imagem, total, ratio, callback) {
@@ -70,17 +70,11 @@ export function getSlidePreview ({elementos, selecionado}) {
         estilo[k] = estilo[k]*100 + '%';
       }
       if (/[Cc]olor/.test(k)) {
-        var cor = estilo[k] || '#fff';
-        if(typeof cor === 'string') {
-          if(/rgb/.test(cor)) {
-            cor = rgbStrToObject(cor);
-          } else {
-            cor = hexToRgb(cor);
-          }
-        }
-        if (estilo.opacityFundo) cor.a = Number(estilo.opacityFundo);
-        if (cor.a === undefined) cor.a = 1;
-        estilo[k] = 'rgba(' + [cor.r, cor.g, cor.b, cor.a].join(', ') + ')';
+        var cor = estilo[k] || '#ffffff';
+        let {r, g, b, a} = parseCorToRgb(cor);
+        if (estilo.opacityFundo) a = Number(estilo.opacityFundo);
+        if (a === undefined) a = 1;
+        estilo[k] = rgbObjToStr({r, g, b, a});
       }
     }
     return estilo;
@@ -96,11 +90,11 @@ export function getSlidePreview ({elementos, selecionado}) {
   titulo = capitalize(titulo, estiloTitulo.caseTexto);
 
   return {...slide,
-    tipo: tipo,
+    tipo,
+    titulo,
     nomeLongoElemento: getNomeInterfaceTipo(tipo) + ': ' + ((tipo === 'Imagem' && !titulo) ? elementos[selecionado.elemento].imagens[0].alt : titulo),
     selecionado: {...selecionado},
     textoArray: slide.textoArray.map(t => capitalize(t, estiloParagrafo.caseTexto)),
-    titulo: titulo,
     estilo: {
       titulo: {...estiloTitulo},
       paragrafo: {...estiloParagrafo},

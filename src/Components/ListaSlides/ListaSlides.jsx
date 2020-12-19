@@ -124,8 +124,11 @@ class Arrastar extends React.Component {
         <div id='tampao-do-overflow'>
           { editavel
             ? <div id='bloco-adicionar'>
-                <div id="adicionar-slide" onClick={() => this.setState({painelAdicionar: !this.state.painelAdicionar})} 
-                      className='botao-azul itens lista-slides'>Adicionar Slide</div>
+                <div id="adicionar-slide" 
+                  onClick={() => {
+                    if(!this.state.painelAdicionar) this.setState({painelAdicionar: true})
+                  }}
+                  className='botao-azul itens lista-slides'>Adicionar Slide</div>
                 {this.state.painelAdicionar || this.props.tutorialAtivo
                   ? <div className='container-adicionar'
                       style={this.state.adicionarAcima ? {top: '-20vh'} : null}>

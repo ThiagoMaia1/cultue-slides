@@ -4,6 +4,50 @@
     border-radius: var(--round-border-pequeno);
     box-shadow: var(--box-shadow);
     z-index: 30;
-    padding: 1vh;
-    width: 40vh;
+    padding: 1vh 0.7vw 1vh 0.4vw;
+    display: flex;
+    overflow: auto;
+    width: min-content;
+    max-height: 100%;
+    max-width: 100%;
+}
+
+.bloco-cores {
+    display: flex;
+    height: min-content;
+    flex: 0 0;
+}
+
+.bloco-cores.hue {
+    border-right: 1px solid lightgray;
+    flex-direction: row;
+    flex-wrap: wrap;
+    min-width: 4.3vw;
+}
+
+.bloco-cores.lightness-saturation {
+    flex-wrap: wrap;
+    padding-left: 0.4vw;
+    min-width: 10.8vw;
+}
+
+.quadradinho-cor {
+    min-width: 1.3vw;
+    min-height: 1.9vh;
+    margin: 0.7vh 0 0 0.4vw;
+    border-radius: var(--round-border-muito-pequeno);
+    box-shadow: 0.5px 0.5px 1px rgba(0, 0, 0, 0.3);
+    transition: background-color 0.3s ease-in-out, transform 0.1s ease-in;
+}
+
+.quadradinho-cor:hover, .quadradinho-cor.cor-selecionada {
+    transform: scale(1.2);
+}
+
+.quadradinho-cor.hue.cor-selecionada, .quadradinho-cor:hover {
+    transition: transform 0.1s ease-in;
+}
+
+.quadradinho-cor.cor.cor-selecionada {
+    pointer-events: none;
 }

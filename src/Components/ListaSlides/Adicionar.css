@@ -1,68 +1,47 @@
 #div-botoes {
-    display: flex;
-    flex-wrap: wrap;
-    width: 100%;
-    padding: 0.5vh;
-    z-index: 100;
-    height: auto;
-    position: relative;
-    justify-content: center;
-  }
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  padding: 0.5vh;
+  z-index: 100;
+  height: auto;
+  position: relative;
+  justify-content: center;
+  width: 100%;
+  z-index: 100;
+  height: auto;
+  overflow: hidden;
+  transition: height 0.25s ease-in-out;
+}
 
 #div-botoes .itens {
-    position: absolute;
-    min-width: 5.2vw;
-    max-width: 5.2vw;
-    min-height: 4.2vw;
-    margin: 1vh 1vh 0 0;
-    text-align: center;
-    color: var(--platinum-forte);
-    background: var(--azul-fraco);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    box-shadow: 3px 6px 7px rgba(0,0,0,0.7);
-    padding: 0.5vh;
-    overflow: hidden;
-    word-break: break-word;
-    /* animation: botaoAdicionar 3s; */
-    animation-fill-mode: forwards;
-    animation-direction: alternate;
-    transform: translateX(-50%) translateY(-200%);
-    --linha1: 16.5vh;
-    --coluna1: 5.5vw;
-    --linha2: calc(var(--linha1) + 10vh);
-    --coluna2: calc(var(--coluna1) + 6vw);
-  }
-  
-  #div-botoes .itens:hover {
-    background-color: var(--azul-forte);
-  }
-
-#div-botoes .itens:nth-of-type(1) {
-    --top-botao: var(--linha1);
-    --left-botao: var(--coluna1);
+  min-width: 5.2vw;
+  max-width: 5.2vw;
+  min-height: 4.2vw;
+  margin: 1vh 1vh 0 0;
+  text-align: center;
+  color: var(--platinum-forte);
+  background: var(--azul-fraco);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 3px 6px 7px rgba(0,0,0,0.7);
+  padding: 0.5vh;
+  overflow: hidden;
+  word-break: break-word;
+}
+ 
+#container-botoes-adicionar {
+  padding: 0.5vh 0.5vh 2vh;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  bottom: 0;
+  overflow: hidden;
+  position: absolute;
 }
 
-#div-botoes .itens:nth-of-type(2) {
-    --top-botao: var(--linha1);
-    --left-botao: var(--coluna2);
+#div-botoes .itens:hover {
+  background-color: var(--azul-forte);
 }
-
-#div-botoes .itens:nth-of-type(3) {
-    --top-botao: var(--linha2);
-    --left-botao: var(--coluna1);
-}
-
-#div-botoes .itens:nth-of-type(4) {
-    --top-botao: var(--linha2);
-    --left-botao: var(--coluna2);
-}
-
-
-  @keyframes botaoAdicionar {
-    from {max-height: 4vh; top: 0; left: 50%; max-height: 2vh; min-height: 0vw; display: block;}
-    80% {max-height: none; top: calc(var(--top-botao)*15/16); left: calc((50% - var(--left-botao))*0.2 + var(--left-botao)); max-height: none; min-height: 4.2vw; display: block}
-    to {max-height: none; top: var(--top-botao); left: var(--left-botao);}
-  }

@@ -105,6 +105,20 @@ export default class Element {
     
     if (thisP.eMestre) return;
     if (thisP.slides[nSlide].eMestre) nSlide++;
+    let isolarTitulo = ((estGlobal || {}).titulo || {}).isolar || estiloMestre.titulo.isolar;
+    if (isolarTitulo) { 
+      nSlide = Math.max(2, nSlide);
+      if (thisP.slides.length === 1 || !thisP.slides[1].eTitulo) 
+        thisP.slides.splice(1, 0, this.getSlideTitulo(estiloMestre));
+    } else {
+      for (let i = 0; i < thisP.slides.length; i++) {
+        if (thisP.slides[i].eTitulo) {
+          thisP.slides.splice(i, 1);
+          nSlide = 1;
+          break;
+        }
+      }
+    }
     if (thisP.tipo === 'Imagem') {
       thisP.dividirImagens();
     } else {
@@ -120,6 +134,13 @@ export default class Element {
     return thisP;
   }
 
+  getSlideTitulo = (estiloMestre) => {
+    return {
+      textoArray: [],
+      estilo: {...estiloMestre, titulo: {...estiloMestre.titulo, height: 1, display: null}},
+      eTitulo: true
+    }
+  }
   
   getArrayTexto = (nSlide = 0, thisP = this) => {
     if (thisP.slides[nSlide].eMestre) nSlide++;
@@ -166,7 +187,10 @@ export default class Element {
     var padH = Number(estP.paddingRight) + Number(estP.paddingLeft);
     var larguraLinha = ratio.width*(1-padH);
     var alturaLinha = estP.lineHeight*estP.fontSize*fonteBase.numero;
-    var alturaSecaoTitulo = estTitulo.height*ratio.height;
+    var alturaTitulo = estTitulo.display === 'none'
+                        ? 0 
+                        : estTitulo.height;
+    var alturaSecaoTitulo = ratio.height*alturaTitulo;
     var alturaSecaoParagrafo = ratio.height-alturaSecaoTitulo;
     var alturaParagrafo = alturaSecaoParagrafo*(1-padV);
     var nLinhas = alturaParagrafo/alturaLinha;

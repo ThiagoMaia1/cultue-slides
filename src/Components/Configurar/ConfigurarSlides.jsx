@@ -3,11 +3,14 @@ import './style.css';
 import { connect } from 'react-redux';
 import { CgErase } from 'react-icons/cg';
 import { RiMastercardLine } from 'react-icons/ri'
-import { BsTextLeft, BsTextCenter, BsTextRight, BsJustify, BsMusicNoteBeamed} from 'react-icons/bs';
+import { BsTextLeft, BsTextCenter, BsTextRight, BsJustify, BsMusicNoteBeamed, BsFileBreak} from 'react-icons/bs';
 import { VscCollapseAll } from 'react-icons/vsc';
-import { CompactPicker } from 'react-color';
+import { AiOutlineRotateLeft } from 'react-icons/ai';
+import { CgEye } from 'react-icons/cg';
 import Slider from '../Basicos/Slider/Slider';
 import Select from '../Basicos/Select/Select';
+import ColorPicker from '../Basicos/ColorPicker/ColorPicker';
+import { rgbObjToStr, parseCorToRgb } from '../../principais/FuncoesGerais';
 import { listaPartesEstilo } from '../../principais/Element';
 import { lerImagem } from '../Preview/Img';
 
@@ -101,9 +104,32 @@ class ConfigurarSlides extends Component {
                               {apelido:'Itálico', nomeAtributo: 'fontStyle', valorNormal: 'normal', valorAlterado: 'italic'},
                               {apelido:'Sublinhado', nomeAtributo: 'textDecorationLine', valorNormal: 'none', valorAlterado: 'underline'},
                               {apelido: 'Duas Colunas', nomeAtributo: 'duasColunas', valorNormal: false, valorAlterado: true, 
-                                simbolo: <div className='icone-duas-colunas'><BsJustify size={this.state.tamIcones}/><BsJustify size={this.state.tamIcones}/></div>, objeto: 'paragrafo'}, 
-                              {apelido: 'Multiplicadores', nomeAtributo: 'multiplicadores', valorNormal: false, valorAlterado: true, simbolo: 'x2', tipo: 'Música', objeto: 'paragrafo'},
-                              {apelido: 'Juntar Estrofes Repetidas', nomeAtributo: 'omitirRepeticoes', valorNormal: false, valorAlterado: true, simbolo: <VscCollapseAll size={1.2*this.state.tamIcones}/>, tipo: 'Música', objeto: 'paragrafo'}
+                                simbolo: <div className='icone-duas-colunas'>
+                                           <BsJustify size={this.state.tamIcones}/><BsJustify size={this.state.tamIcones}/>
+                                         </div>, objeto: 'paragrafo'}, 
+                              {apelido: 'Multiplicadores', nomeAtributo: 'multiplicadores', valorNormal: false, valorAlterado: true, 
+                                simbolo: 'x2', tipo: 'Música', objeto: 'paragrafo'},
+                              {apelido: 'Juntar Estrofes Repetidas', nomeAtributo: 'omitirRepeticoes', valorNormal: false, valorAlterado: true, 
+                                simbolo: <VscCollapseAll size={1.2*this.state.tamIcones}/>, tipo: 'Música', objeto: 'paragrafo'},
+                              {apelido: 'Slide de Título', nomeAtributo: 'isolar', valorNormal: false, valorAlterado: true, 
+                                simbolo: <AiOutlineRotateLeft size={this.state.tamIcones}/>, objeto: 'titulo', exigeMestre: true,
+                                callback: () => {
+                                  let t = this.props.slidePreview.estilo.titulo;
+                                  if(!t.isolar && !t.display) this.toggleEstiloTexto(this.listaEstilosTexto[8]);
+                                }},
+                              {apelido: 'Posição Título', nomeAtributo: 'abaixo', valorNormal: false, valorAlterado: true, 
+                                simbolo: <div className='icone-posicao-titulo'><BsFileBreak size={this.state.tamIcones}/></div>, 
+                                objeto: 'titulo', exigeNaoTitulo: true, callback: () => {
+                                  let t = this.props.slidePreview.estilo.titulo;
+                                  if(t.display === 'none') this.toggleEstiloTexto(this.listaEstilosTexto[8]);
+                                }},
+                              {apelido: 'Ocultar Título', nomeAtributo: 'display', valorNormal: null, valorAlterado: 'none', 
+                                exigeNaoTitulo: true, naoAplicarEstilo: true, objeto: 'titulo', simbolo: 
+                                                                                                  <>
+                                                                                                    <div className='risco-olho'/>
+                                                                                                    <CgEye size={this.state.tamIcones}/>
+                                                                                                  </>
+                              }
     ]; 
   }
 
@@ -130,21 +156,28 @@ class ConfigurarSlides extends Component {
     });
   }
 
-  gerarBotoesEstiloTexto = (aba, iIni = 0, iFin = 99) => {
-    var lista = this.listaEstilosTexto.filter((e, i) => i >= iIni && i <= iFin);
+  gerarBotoesEstiloTexto = (aba, iIni = 0, iFin = 20) => {
+    var lista = this.listaEstilosTexto.filter((_e, i) => i >= iIni && i <= iFin);
     return lista.map((e, i) => {
-      if (e.tipo && e.tipo !== this.props.slidePreview.tipo) return null;
+      const slidePreview = this.props.slidePreview;
+      if (   (e.tipo && e.tipo !== slidePreview.tipo) 
+          || (e.objeto && e.objeto !== this.props.abaAtiva)
+          || (e.exigeNaoTitulo && slidePreview.eTitulo))
+        return null;
       var objEstilo = {};
       objEstilo[e.nomeAtributo] = e.valorAlterado;
+      if (e.exigeMestre && !slidePreview.eMestre) objEstilo.visibility = 'hidden';
       return (
         <button key={i} title={e.apelido}
-        className={'botao-configuracao bool ' + (this.props.slideSelecionado.estilo[aba][e.nomeAtributo] === e.valorAlterado ? ' clicado' : '')} 
-        onClick={() => this.toggleEstiloTexto(e)} 
-        style={objEstilo}>{e.simbolo ? e.simbolo : e.apelido[0]}</button>
+        className={e.nomeAtributo + ' botao-configuracao bool ' + (this.props.slideSelecionado.estilo[aba][e.nomeAtributo] === e.valorAlterado ? ' clicado' : '')} 
+        onClick={() => {
+          if(e.callback) e.callback();
+          this.toggleEstiloTexto(e)
+        }}
+        style={e.naoAplicarEstilo ? null : objEstilo}>{e.simbolo ? e.simbolo : e.apelido[0]}</button>
       )
     })
   }
-
 
   gerarBotoesAlinhamento = aba => {
     return listaBotoesAlinhamento.map((b, i) => {
@@ -186,11 +219,11 @@ class ConfigurarSlides extends Component {
     this.props.dispatch({type: 'ativar-realce', abaAtiva: aba});
   }
   
-  ativarPainelCor = callback => {
+  ativarPainelCor = (callback, corAtual) => {
     this.setState({painelCor: (
       <div className='container-painel-cor' onMouseLeave={this.desativarPainelCor}>
         <div className='painel-cor'>
-          <CompactPicker onChange={cor => {
+          <ColorPicker corAtual={corAtual} callback={cor => {
             callback(cor); 
             this.desativarPainelCor();
           }}/>
@@ -275,6 +308,8 @@ class ConfigurarSlides extends Component {
     var aba = this.props.abaAtiva;
     var slidePreview = this.props.slidePreview;
     var sel = this.props.selecionado;
+    var slideSelecionado = this.props.slideSelecionado;
+    const corFonte = rgbObjToStr(parseCorToRgb(slideSelecionado.estilo[aba].color || '#000000'));
     const botoesDireita = (
       <>
         <BotaoClonarEstilo visivel={sel.elemento || this.props.tutorialAtivo} 
@@ -287,6 +322,7 @@ class ConfigurarSlides extends Component {
       {rotulo: '', textoSpan: b.rotulo, valor: b.valor, 
        style: {mixBlendMode: b.valor, backgroundColor: slidePreview.estilo.tampao.backgroundColor}}
     ));
+
     return (
       <div id='painel-configuracao' key={sel.elemento + '.' + sel.slide}>
         <div id='abas'>
@@ -303,9 +339,9 @@ class ConfigurarSlides extends Component {
                 style={{display: (aba === 'tampao' || aba === 'imagem' ? 'none' : '')}}>  
             <div className='bloco-configuracoes-texto-botoes-direita'>
               <div className='linha-configuracoes-texto'>
-                <button id={'cor-texto'} className='botao-configuracao bool' onMouseOver={() => this.ativarPainelCor(this.mudarCorFonte)}>
-                  <span className='a-cor-texto' style={{color: this.props.slideSelecionado.estilo[aba].color}}>A</span>
-                  <div className='cor-texto' style={{backgroundColor: this.props.slideSelecionado.estilo[aba].color}}></div>
+                <button id={'cor-texto'} className='botao-configuracao bool' onMouseOver={() => this.ativarPainelCor(this.mudarCorFonte, slidePreview.estilo[aba].color || {r: 0, g: 0, b: 0})}>
+                  <span className='a-cor-texto' style={{color: corFonte}}>A</span>
+                  <div className='cor-texto' style={{backgroundColor: corFonte}}></div>
                 </button>
                 <Select key={sel.elemento + '.' + sel.slide + '.' + aba}
                         className='botao-configuracao combo-fonte' opcoes={opcoesListaFontes} defaultValue={slidePreview.estilo[aba].fontFamily}
@@ -336,18 +372,21 @@ class ConfigurarSlides extends Component {
                     <div id='rotulo-configuracoes-musica' style={slidePreview.tipo === 'Música' ? null : {display: 'none'}}>
                       <BsMusicNoteBeamed size={this.state.tamIcones}/>
                     </div>
-                  {this.gerarBotoesEstiloTexto(aba, 4)}
+                  {this.gerarBotoesEstiloTexto(aba, 4, 5)}
                 </div>
                 : null
               }
             </div>
+            {aba !== 'titulo' ? null 
+              : <div className='linha-configuracoes-texto'>
+                  {this.gerarBotoesEstiloTexto(aba, 6)}
+                </div>
+              }
           </div>
           <div className='container-configuracoes-tampao' style={{display: (aba === 'tampao' ? '' : 'none')}}>
-            <button className='botao-configuracao bool' onMouseOver={() => this.ativarPainelCor(this.mudarCorFundo)}>
+            <button className='botao-configuracao bool' onMouseOver={() => this.ativarPainelCor(this.mudarCorFundo, slidePreview.estilo.tampao.backgroundColor || {r: 255, g: 255, b: 255})}>
               <div className='container cor-fundo' style={{backgroundImage: ' url("' + require('./Quadriculado PNG.png') + '")'}}>
-                <div className='quadrado cor-fundo' style={{backgroundColor: this.props.slidePreview.estilo.tampao.backgroundColor
-                                                          // , mixBlendMode: this.props.slidePreview.estilo.tampao.mixBlendMode
-                                                            }}>
+                <div className='quadrado cor-fundo' style={{backgroundColor: slidePreview.estilo.tampao.backgroundColor}}>
                 </div>
               </div>
             </button>
@@ -356,7 +395,7 @@ class ConfigurarSlides extends Component {
                     onChange={o => this.mudarBlendMode(o.valor)} 
                     defaultValue={slidePreview.estilo.fundo.mixBlendMode || 'normal'}
                     opcoes={opcoesListaBlendMode}
-                    onMouseEnterOpcao={o => this.atualizarEstiloPreview(aba, o.style)}
+                    onMouseEnterOpcao={o => this.atualizarEstiloPreview(aba, {mixBlendMode: o.style.mixBlendMode})}
                     onMouseLeaveOpcao={() => this.atualizarEstiloPreview(undefined, true)}
                     style={{fontSize: '90%'}}
                     estiloBloco={{...estiloBloco, fontSize: '90%', backgroundImage: this.getBackgroundImage(), 

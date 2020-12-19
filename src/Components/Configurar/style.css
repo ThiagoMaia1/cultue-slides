@@ -81,6 +81,10 @@
     justify-content: flex-end;
 }
 
+.botao-configuracao.bool.isolar {
+    padding-top: 0.8vh;
+}
+
 .linha-configuracoes-texto.abaixo {
     justify-content: space-between;
 }
@@ -148,6 +152,21 @@
 .botao-configuracao.bool {
     width: 4vh;
     flex: none;
+}
+
+.botao-configuracao.bool.display {
+    padding-top: 0.8vh;
+}
+
+.botao-configuracao.bool.display .risco-olho {
+    top: 1.9vh;
+    left: 0.9vh;
+    width: 0;
+    background-color: black;
+}
+
+.clicado .risco-olho {
+    width: 2.2vh !important;
 }
 
 .botao-configuracao.bool:hover, .botao-alinhamento:hover {
@@ -229,6 +248,7 @@
 }
 
 .cor-fundo {
+    border-radius: var(--round-border-pequeno);
     background-position: center;
     background-size: cover;
     background-repeat: no-repeat;
@@ -281,6 +301,19 @@
 
 .clicado {
     box-shadow: inset 0px 2px 7px #a3a3a3;
+}
+
+.clicado.abaixo {
+    box-shadow: none;
+}
+
+.icone-posicao-titulo {
+    transform: rotate(180deg)
+}
+
+.clicado .icone-posicao-titulo {
+    transform: rotate(0deg);
+    padding-top: 0.9vh;
 }
 
 .lista-slides-padrao {

@@ -1,14 +1,17 @@
 import React from 'react';
 
+const estiloNaoClique = {userSelect: 'none', clickEvents: 'none'}
+
 const CarregandoNoCanto = (props) => (
-    <div style={{width:'100%', padding: '1.8vh 0.9vw', position: 'absolute', display: 'flex', justifyContent: 'flex-end'}}>
+    <div style={{width:'100%', padding: '1.8vh 0.9vw', position: 'absolute', display: 'flex', justifyContent: 'flex-end', ...estiloNaoClique}}>
         {props.children}
     </div>
 )
 
 const CirculoCarregando = props => {
    var p = props.propsImagem;
-   return <img src={require('./' + p.imagem)} alt={''} style={{transform: 'rotate(' + p.angulo + 'deg)', height: p.tamanho, width: p.tamanho, zIndex: 20, ...p.style}}/>
+   return <img src={require('./' + p.imagem)} alt={''} 
+               style={{transform: 'rotate(' + p.angulo + 'deg)', height: p.tamanho, width: p.tamanho, zIndex: 20, ...estiloNaoClique, ...p.style}}/>
 }
 
 class Carregando extends React.Component {

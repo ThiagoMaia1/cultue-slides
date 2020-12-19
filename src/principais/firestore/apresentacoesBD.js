@@ -18,7 +18,9 @@ export const ratioTela = {width: Math.max(wWidth, wHeight), height: Math.min(wWi
 const selecionadoPadrao = {elemento: 0, slide: 0};
 
 const getAprensentacaoPadraoUsuario = async  ({idApresentacaoPadrao, tipoApresentacaoPadrao}) => {
-  let { elementos, ratio } = await getApresentacaoComId(idApresentacaoPadrao);
+  let apresentacaoPadrao = await getApresentacaoComId(idApresentacaoPadrao);
+  if(!apresentacaoPadrao) return getApresentacaoPadraoBasica();
+  let { elementos, ratio } = apresentacaoPadrao;
   if (tipoApresentacaoPadrao === 'estilo') elementos = elementos.slice(0, 1);
   elementos = getElementosDesconvertidos(elementos);
   return {elementos, ratio, selecionado: selecionadoPadrao};
@@ -51,6 +53,12 @@ export const gerarNovaApresentacao = async (idUsuario, elementos, zerada, ratio)
   );
 };
 
+const getAprensentacaoPadrao = async (usuario = {}) => {
+  if(usuario.uid)
+    return await getAprensentacaoPadraoUsuario(usuario);
+  return getApresentacaoPadraoBasica(); 
+}
+
 export const definirApresentacaoAtiva = async (usuario, apresentacao = {}, elementos = null, ratio = null, mudarURL = true) => {
   if (!apresentacao) apresentacao = {};
   var novaApresentacao = apresentacao;
@@ -64,7 +72,7 @@ export const definirApresentacaoAtiva = async (usuario, apresentacao = {}, eleme
   }
   if (!elementos) {
     zerada = true;
-    let apresentacaoPadrao = await getAprensentacaoPadraoUsuario(usuario);
+    let apresentacaoPadrao = await getAprensentacaoPadrao(usuario);
     elementos = apresentacaoPadrao.elementos;
   }
   if (!usuario.uid && !apresentacao.id) {

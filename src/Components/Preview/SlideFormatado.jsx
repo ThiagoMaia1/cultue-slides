@@ -50,6 +50,14 @@ class SlideFormatado extends Component {
         }
         return eClara ? 'letra-clara' : '';   
     }
+    
+    getBlocoTitulo(slidePreview, sel) {
+        return <div className={'slide-titulo ' + this.getClasseLetraClara('titulo')} style={slidePreview.estilo.titulo}>
+            <div><span key={sel.elemento + '.' + sel.slide} id='textoTitulo' onInput={this.editarTexto} onFocus={() => this.ativarRealce('titulo')}
+                contentEditable={this.props.editavel} suppressContentEditableWarning='true'
+                style={this.realcarElemento('titulo')}>{slidePreview.titulo}</span></div>
+        </div>;
+    }
 
     render() {
         var slidePreview = this.props.slidePreview;
@@ -73,11 +81,7 @@ class SlideFormatado extends Component {
                     }
                     <Img imagem={slidePreview.estilo.fundo} proporcao={proporcaoTela} tampao={slidePreview.estilo.tampao}/>
                     <div className='texto-preview' style={{fontSize: getFonteBase().numero*proporcao + getFonteBase().unidade}}>
-                        <div className={'slide-titulo ' + this.getClasseLetraClara('titulo')} style={slidePreview.estilo.titulo}>
-                            <div><span key={sel.elemento + '.' + sel.slide} id='textoTitulo' onInput={this.editarTexto} onFocus={() => this.ativarRealce('titulo')} 
-                                contentEditable={this.props.editavel} suppressContentEditableWarning='true'
-                                style={this.realcarElemento('titulo')}>{slidePreview.titulo}</span></div>
-                        </div>
+                        {slidePreview.estilo.titulo.abaixo ? null : this.getBlocoTitulo(slidePreview, sel)}
                         <div id='paragrafo-slide' className={'slide-paragrafo ' + this.getClasseLetraClara('paragrafo')} style={slidePreview.estilo.paragrafo}>
                             <div style={this.realcarElemento('paragrafo')} 
                                  className={'realce-paragrafo ' + (slidePreview.estilo.paragrafo.duasColunas ? 'dividido-colunas' : '')}>
@@ -85,6 +89,7 @@ class SlideFormatado extends Component {
                                            selecionado={sel}/>}
                             </div>
                         </div>
+                        {slidePreview.estilo.titulo.abaixo ? this.getBlocoTitulo(slidePreview, sel) : null}
                     </div>
                     {this.props.children}
                 </div>

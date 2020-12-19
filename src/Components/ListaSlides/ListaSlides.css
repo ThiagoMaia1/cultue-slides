@@ -205,16 +205,7 @@ ol {
   width: 18vw;
   margin: 0 6%;
   position: absolute;
-}
-
-#div-botoes {
-  display: flex;
-  flex-wrap: wrap;
-  width: 100%;
-  padding: 0.5vh;
-  z-index: 100;
-  height: auto;
-  justify-content: center;
+  overflow: hidden;
 }
 
 .linha-flex-adicionar {
@@ -222,30 +213,8 @@ ol {
   width: 100%;
 }
 
-#div-botoes .itens {
-  min-width: 5.2vw;
-  max-width: 5.2vw;
-  min-height: 4.2vw;
-  margin: 1vh 1vh 0 0;
-  text-align: center;
-  color: var(--platinum-forte);
-  background: var(--azul-fraco);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  box-shadow: 3px 6px 7px rgba(0,0,0,0.7);
-  padding: 0.5vh;
-  overflow: hidden;
-  word-break: break-word;
-}
-
-#div-botoes .itens:hover {
-  background-color: var(--azul-forte);
-}
-
 #tampao-do-overflow {
-  background: white;
+  background: inherit;
   height: 100%;
   width: 100%;
   position: relative;

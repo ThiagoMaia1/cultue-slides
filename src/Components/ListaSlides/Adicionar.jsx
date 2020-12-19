@@ -1,39 +1,63 @@
 import React, { Component } from 'react';
-// import './Adicionar.css';
+import './Adicionar.css';
 import { connect } from 'react-redux';
 import { tiposElemento, getNomeInterfaceTipo } from '../../principais/Element';
 
 const tipos = Object.keys(tiposElemento);
+const idPai = 'div-botoes';
 
 class Adicionar extends Component {
     
     constructor(props) {
         super(props);
-        this.state = {...props};
-        this.listaBotoes = [];
-        for (var i = 0; i < tipos.length; i++) {
-            this.listaBotoes.push(
-                <button key={i} data-id={i} className="botao-azul itens" onClick={e => this.abrirPopup(e)}>
-                    {getNomeInterfaceTipo(tipos[i])}
-                </button>
-            ) 
-        }
+        this.estadoInicial = {height: 0};
+        this.state = this.estadoInicial;
     }
 
-    abrirPopup = e => {
-        var i = e.target.dataset.id;
-        var tipo = tipos[i];
-        this.props.onClick();
+    abrirPopup = tipo => {
         this.props.dispatch({
             type: 'ativar-popup-adicionar', 
-            popupAdicionar: {tipo: tipo}
+            popupAdicionar: {tipo}
         });
+        this.fechar();
+    }
+
+    clickFora = e => {
+        let elem = document.getElementById(idPai);
+        if(!elem) return;
+        if(!(e.target.id === idPai || elem.contains(e.target)))
+            this.fechar();
+    }
+
+    fechar = () => {
+        this.setState(this.estadoInicial)
+        setTimeout(this.props.onClick, 255);
+    }
+
+    componentDidMount = () => {
+        setTimeout(() => {
+            this.setState({height: '20vh'});
+            window.addEventListener('click', this.clickFora);
+        }, 10);
+    }
+
+    componentWillUnmount = () => {
+        window.removeEventListener('click', this.clickFora);
     }
     
     render() {
+        let { height } = this.state;
         return (
-            <div id="div-botoes">
-                {this.listaBotoes}
+            <div id={idPai} style={{height}}>
+                <div id='container-botoes-adicionar'>
+                    {tipos.map(t =>
+                        <button key={t} 
+                                className="botao-azul itens" 
+                                onClick={() => this.abrirPopup(t)}>
+                            {getNomeInterfaceTipo(t)}
+                        </button>
+                    )}
+                </div>
             </div>
         )
     }

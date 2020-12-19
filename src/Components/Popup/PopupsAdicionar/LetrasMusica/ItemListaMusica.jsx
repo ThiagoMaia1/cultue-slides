@@ -28,34 +28,14 @@ class ItemListaMusica extends React.Component {
                     ? <Carregando tamanho={3} noCanto={true}/> 
                     : null
                 }
-                <button key={this.props.musica.id} className='itens' 
+                <div key={this.props.musica.id} className='itens' 
                         onClick={this.onClick} style={(eEssa && !carregando) ? {backgroundColor: 'var(--azul-fraco)'} : null}>
                     <b>{this.props.musica.title} - </b>{this.props.musica.band}
-                </button>
+                    <div className='trecho-previa-musica' dangerouslySetInnerHTML={{ __html: this.props.musica.trecho}}/>
+                </div>
             </div>
         )
     }
 };
   
 export default ItemListaMusica;
-
-// const ItemListaMusica = props => {
-
-//     // componentDidUpdate(prevProps) {
-//     //     if (this.props.idBuscarLetra !== prevProps.idBuscarLetra) {
-//     //         this.setState({idBuscarLetra: this.props.idBuscarLetra})
-//     //     }
-//     //   }
-
-//     return (
-//         <div>
-//             {props.idBuscarLetra === props.musica.id ? <Carregando tamanho={3} noCanto={true}/> : null}
-//             <div key={props.musica.id} className='itens sombrear-selecao' onClick={() => props.buscarLetra(props.musica.id)}>
-//                 <span className='titulo-musica'>{props.musica.title} - </span>
-//                 <span className='banda-musica'>{props.musica.band}</span>
-//             </div>
-//         </div>
-//     )
-
-// };
-  

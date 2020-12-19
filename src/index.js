@@ -9,8 +9,10 @@ import { selecionadoOffset, getSlidePreview } from './Components/MenuExportacao/
 import { atualizarApresentacao, getApresentacaoPadraoBasica, autorizacaoEditar, autorizacaoPadrao, apresentacaoAnonima, getElementosDesconvertidos } from './principais/firestore/apresentacoesBD';
 import { atualizarRegistro } from './principais/firestore/apiFirestore';
 import { keysTutoriais } from './Components/Tutorial/ListaTutorial';
-import { toggleFullscreen } from './principais/FuncoesGerais';
+import { toggleFullscreen, objetosSaoIguais } from './principais/FuncoesGerais';
+import getPopupConfirmacao from './Components/Popup/PopupConfirmacao';
 import inicializarHotkeys from './principais/atalhos';
+import modoOffline from './principais/ModoOffline';
 import { persistStore, persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage' // defaults to localStorage for web
 import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2';
@@ -204,6 +206,7 @@ const estadoInicialNaoRehidratado = {
   notificacoes: [],
   itensTutorial: [],
   searchAtivo: false,
+  estaOnline: window.navigator.onLine,
   erros: []
 }
 
@@ -226,12 +229,20 @@ export function undoable(reducer) {
   
   return function (state = initialState, action) {
     let { past, present, future, previousTemp, usuario, notificacoes, tutoriaisFeitos, 
-          itensTutorial, searchAtivo, contadorPropaganda, propagandaAtiva, erros } = state;
+          itensTutorial, searchAtivo, contadorPropaganda, propagandaAtiva, erros, estaOnline } = state;
 
     var notificacoesAtualizado = getNotificacoes(notificacoes, getConteudoNotificacao(action));
     var newPresent;
     var novosItensTutorial = [];
     var slidesPadrao = [];
+    if(!estaOnline) {
+      if(action.type !== 'ativar-popup-confirmacao' && action.type !== 'alterar-status-conexao')
+        return {...state, ...getPopupConfirmacao(
+          'OK',
+          'Sem Conexão com a Internet',
+          'Você não possui uma conexão ativa. Verifique sua conexão para continuar.'
+        )}
+    }
     if(propagandaAtiva) {
       if(action.type === 'desativar-propaganda') {        
         return {...state, propagandaAtiva: false};
@@ -280,7 +291,7 @@ export function undoable(reducer) {
         if (past.length === 0) return state;
         const previous = past[past.length - 1];
         const newPast = past.slice(Math.max(0, past.length-limiteUndo), past.length - 1);
-        atualizarApresentacaoBD (present, previous, action.type);
+        atualizarApresentacaoBD (present, previous);
         return {
           ...state,
           past: newPast,
@@ -294,7 +305,7 @@ export function undoable(reducer) {
         if (future.length === 0) return state;
         const next = future[0];
         const newFuture = future.slice(1);
-        atualizarApresentacaoBD (present, next, action.type);
+        atualizarApresentacaoBD (present, next);
         return {
           ...state,
           past: [...past, present],
@@ -315,6 +326,10 @@ export function undoable(reducer) {
         return {...state, slidePreview: getSlidePreview(newPresent)};
       case 'registrar-erro':
         return {...state, erros: [...erros, action.erro]};
+      case 'alterar-status-conexao':
+        let { estaOnline } = action;
+        modoOffline(estaOnline);
+        return {...state, estaOnline};
       default:
         newPresent = reducer(deepSpreadPresente(present), action, usuario);
         notificacoesAtualizado = getNotificacoes(notificacoesAtualizado, newPresent.notificacao);
@@ -327,7 +342,7 @@ export function undoable(reducer) {
           if (action.type === 'inserir')
           present.popupAdicionar = {...action.popupAdicionar, tipo: action.elemento.tipo};
         } 
-        atualizarApresentacaoBD (present, newPresent, action.type, mudanca);
+        atualizarApresentacaoBD (present, newPresent, mudanca);
         if (past.length - contadorPropaganda*numeroAcoesPropaganda >= numeroAcoesPropaganda) {
           contadorPropaganda++;
           propagandaAtiva = true;
@@ -365,17 +380,19 @@ let store = createStore(persistedReducer, /* preloadedState, */
 export let persistor = persistStore(store);
 export default store;
 
-window.onerror = (message, source, lineno, colno, error) => {
-  console.log(error.stack, error)
+window.onerror = (_message, _source, _lineno, _colno, error) => {
   store.dispatch({type: 'registrar-erro', erro: error})
 }
+
+window.addEventListener('online', () => store.dispatch({type: 'alterar-status-conexao', estaOnline: true}));
+window.addEventListener('offline', () => store.dispatch({type: 'alterar-status-conexao', estaOnline: false}));
 
 const atualizarDadosUsuario = (idUsuario, dados) => {
   if (idUsuario)
     atualizarRegistro(dados, 'usuários', idUsuario);
 }
 
-function atualizarApresentacaoBD (present, newPresent, acao, mudanca = null) {
+function atualizarApresentacaoBD (present, newPresent, mudanca = null) {
   if (!mudanca) mudanca = houveMudanca(present, newPresent);
   if ((mudanca.includes('elementos') || mudanca.includes('ratio')) && !mudanca.includes('apresentacao') && newPresent.apresentacao.id) {
     atualizarApresentacao(newPresent.elementos, newPresent.ratio, newPresent.apresentacao.id);
@@ -386,7 +403,7 @@ function houveMudanca(estado1, estado2) {
   const keysRelevantes = ['elementos', 'popupAdicionar', 'apresentacao', 'ratio'];
   var retorno = [];
   for (var k of keysRelevantes) {
-    if (JSON.stringify(estado1[k]) !== JSON.stringify(estado2[k]))
+    if (!objetosSaoIguais(estado1[k], estado2[k]))
       retorno.push(k);  
   }
   return retorno; 

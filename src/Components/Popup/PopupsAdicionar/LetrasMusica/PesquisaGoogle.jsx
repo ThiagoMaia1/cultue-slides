@@ -5,7 +5,7 @@ class PesquisaGoogle extends Component {
   
     resultsReadyCallback = (_n, _q, _p, results, resultsDiv) => {
         for (let r of results) {
-            this.props.callback(r.titleNoFormatting.replace(' - VAGALUME',''));
+            this.props.callback(r.titleNoFormatting.replace(' - VAGALUME',''), r.content);
         }    
         resultsDiv = <></>;
         return false;

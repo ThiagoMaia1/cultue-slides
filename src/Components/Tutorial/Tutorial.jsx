@@ -122,7 +122,7 @@ class EtapaTutorial extends Component {
     var item = this.state.item;
     if (!item.texto) return;
     var elementos = document.querySelectorAll(item.selectorElemento);
-    if (!elementos.length) return null;
+    if (!elementos.length || this.props.display) return null;
     this.styleSheet = document.createElement("style");
     this.styleSheet.innerHTML = getCSSFade(elementos, item.selectorElemento);
     if (item.callbackAntes) item.callbackAntes();
@@ -173,7 +173,7 @@ class Tutorial extends Component {
   constructor (props) {
     super(props);
     this.styleSheet = null;
-    this.state = {indiceEtapa: -1};
+    this.state = {indiceEtapa: -1, display: ''};
 
     hotkeys('backspace,enter,space,esc,left,right', 'tutorial', (e, handler) => {
       e.preventDefault();    
@@ -216,11 +216,12 @@ class Tutorial extends Component {
 
   static getDerivedStateFromProps = (props, state) => {
     if(props.itensTutorial.length > 0 && state.indiceEtapa === -1)
-      return {indiceEtapa: 0}
+      return {indiceEtapa: 0, display: ''};
     return null;
   }
 
   finalizar = () => {
+    this.setState({display: 'none'});
     for (var i = this.state.indiceEtapa; i < this.props.itensTutorial.length; i++) {
       setTimeout(() => this.offsetEtapaTutorial(1), 1)
     }
@@ -232,8 +233,11 @@ class Tutorial extends Component {
   render() {
     var ativo = this.temTutorialAtivo();
     return (
-      <div id='fundo-tutorial' style={ativo ? null : {pointerEvents: 'none'}}>
-        <EtapaTutorial key={this.props.itensTutorial.join(',') + this.state.indiceEtapa} itens={[...this.props.itensTutorial]} indice={this.state.indiceEtapa} offset={this.offsetEtapaTutorial}/>
+      <div id='fundo-tutorial' style={ativo ? {display: this.state.display} : {pointerEvents: 'none'}}>
+        <EtapaTutorial key={this.props.itensTutorial.join(',') + this.state.indiceEtapa} 
+                       itens={[...this.props.itensTutorial]} 
+                       indice={this.state.indiceEtapa} offset={this.offsetEtapaTutorial} 
+                       display={this.state.display}/>
         {ativo
           ? <>
               <button id='pular-tutorial' className='botao limpar-input' onClick={this.finalizar}>Não Exibir Tutoriais</button>

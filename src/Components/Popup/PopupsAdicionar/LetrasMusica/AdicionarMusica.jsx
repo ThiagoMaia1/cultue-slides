@@ -72,12 +72,12 @@ class AdicionarMusica extends Component {
         botaoGoogle.click();
     }
 
-    callbackPesquisaGoogle = termo => {
+    callbackPesquisaGoogle = (termo, trecho) => {
         var vagalumeDeGoogle = new XMLHttpRequest()
         vagalumeDeGoogle.responseType = 'json';
         
         vagalumeDeGoogle.addEventListener('load', () => {    
-            var opcao = vagalumeDeGoogle.response.response.docs[0];
+            var opcao = {...vagalumeDeGoogle.response.response.docs[0], trecho};
             var opcoesFiltrado = this.state.opcoes.filter(o => o.id !== opcao.id);
             this.setState({opcoes: [opcao, ...opcoesFiltrado]});
             this.setState({listaAtiva: this.state.opcoes.length > 0});
@@ -93,7 +93,7 @@ class AdicionarMusica extends Component {
         if (vagalumeLetra instanceof XMLHttpRequest) {        
             vagalumeLetra.abort();
         }
-        this.setState({idBuscarLetra: id, tituloArtista: tituloArtista, buscandoLetra: true});
+        this.setState({idBuscarLetra: id, tituloArtista, buscandoLetra: true});
         vagalumeLetra = new XMLHttpRequest();
         vagalumeLetra.responseType = 'json';
             
