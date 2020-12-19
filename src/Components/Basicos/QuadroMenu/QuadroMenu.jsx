@@ -1,19 +1,13 @@
-import React, { useState } from 'react';
-import useOutsideClick from '../../../principais/Hooks/useOutsideClick';
-import useClosingAnimation from '../../../principais/Hooks/useClosingAnimation';
+import React from 'react';
+import useAnimationOutsideClick from '../../../principais/Hooks/useAnimationOutsideClick';
 
 const QuadroMenu = props => {
     
-    const [ativo, setAtivo] = useState(true);
-    const fecharQuadro = () => setAtivo(false);
-    
-    const estilo = useClosingAnimation(
-        ativo, 
+    const [ref, estilo, fecharQuadro] = useAnimationOutsideClick(
         () => props.callback(false), 
         {maxWidth: 0, maxHeight: 0},
         {maxWidth: '100vw', maxHeight: '100vh'}
-    );
-    let ref = useOutsideClick(fecharQuadro);    
+    )
 
     let estiloLado = props.esquerda ? {right: '0'} : {left: '0'}
     return (
