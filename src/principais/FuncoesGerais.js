@@ -71,9 +71,20 @@ export function retiraAcentos(str) {
 
 export const multiplicarArray = (array, rate) => array.map(c => c*rate); 
 
-// const getNomeId = nome => getNomeInterfaceTipo(nome).toLowerCase().replace(' ', '-');
+export function separarCamelCase(nome) {
+    nome = nome.split('');
+    for (var i = 1; i < nome.length; i++) {
+      if(/[A-Z]/.test(nome[i])) {
+        nome.splice(i, 0, [' ']);
+        i++;
+      }
+    }
+    return nome.join('');
+}
 
-// const getNomeCamel = nome => nome.toLowerCase().replace(/-[a-z]/g, c => c.replace('-', '').toUpperCase());
+export const getNomeCss = nome => separarCamelCase(nome).toLowerCase().replace(' ', '-');
+
+export const getNomeCamel = nome => nome.toLowerCase().replace(/-[a-z]/g, c => c.replace('-', '').toUpperCase());
 
 export function inteiroAleatorio(min, max) {
     min = Math.ceil(min);

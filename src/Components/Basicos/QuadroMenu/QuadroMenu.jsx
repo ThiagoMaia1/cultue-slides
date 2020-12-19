@@ -1,44 +1,30 @@
-import React from 'react';
+import React, { useState } from 'react';
+import useOutsideClick from '../../../principais/Hooks/useOutsideClick';
+import useClosingAnimation from '../../../principais/Hooks/useClosingAnimation';
 
-class QuadroMenu extends React.Component {
+const QuadroMenu = props => {
+    
+    const [ativo, setAtivo] = useState(true);
+    const fecharQuadro = () => setAtivo(false);
+    
+    const estilo = useClosingAnimation(
+        ativo, 
+        () => props.callback(false), 
+        {maxWidth: 0, maxHeight: 0},
+        {maxWidth: '100vw', maxHeight: '100vh'}
+    );
+    let ref = useOutsideClick(fecharQuadro);    
 
-    constructor (props) {
-        super(props);
-        this.ref = React.createRef();
-        this.state = {maxHeight: 0, maxWidth: 0}
-    }
-
-    fecharQuadro = () => {
-        this.setState({maxHeight: 0, maxWidth: 0})
-        setTimeout(() => this.props.callback(false), 100);
-        document.removeEventListener('mouseup', this.clickFora, false);
-    }
-
-    componentDidMount = () => {
-        if (this.ref.current) this.ref.current.focus();
-        this.setState({maxHeight: '100vh', maxWidth: '100vh'})
-        document.addEventListener('mouseup', this.clickFora, false);
-    }
-
-    clickFora = e => {
-        if (!this.ref.current) return;
-        if (!this.ref.current.contains(e.target)) {
-            this.fecharQuadro();
-        }
-    }
-
-    render() {
-        var estiloLado = this.props.esquerda ? {right: '0'} : {left: '0'}
-        return (
-            <div id='quadro-menu' 
-                 className='quadro-navbar' 
-                 style={{position: 'absolute', top: '6vh', ...estiloLado, ...this.state, ...this.props.style}} 
-                 onKeyUp={() => {if(this.props.onKeyUp) this.fecharQuadro()}}
-                 tabIndex='0' ref={this.ref}>
-                 {this.props.children}
-            </div>
-        );
-    }
+    let estiloLado = props.esquerda ? {right: '0'} : {left: '0'}
+    return (
+        <div id='quadro-menu' 
+                className='quadro-navbar' 
+                style={{position: 'absolute', top: '6vh', ...estiloLado, ...estilo, ...props.style}} 
+                onKeyUp={() => {if(props.onKeyUp) fecharQuadro()}}
+                tabIndex='0' ref={ref}>
+                {props.children}
+        </div>
+    );
 };
 
 export default QuadroMenu;
