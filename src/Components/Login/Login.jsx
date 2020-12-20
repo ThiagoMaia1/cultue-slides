@@ -61,12 +61,7 @@ class Login extends React.Component {
             erro: '', 
             nomeCompleto: '', 
             logando: true, 
-            cadastrando: false, 
-            esqueceuSenha: false, 
-            redefinicaoDeSenhaEnviado: false, 
-            senhaVisivel: false,
-            senhaBolinhas: true,
-            classeSenha: false
+            senhaBolinhas: true
         }
     }
 

@@ -18,8 +18,8 @@ const selecionarAba = abaAtiva => store.dispatch({ type: 'ativar-realce', abaAti
 const listaBoxes = {
     painelAdicionar: {rotulo: 'Adicionar um Slide', listaEtapas: [{
       texto: 'Clique para criar um elemento', 
-      arrow: {posicao: 'bottomCenter', posicaoChildren: 'right', selectorElemento: '#div-botoes'},
-      selectorElemento: '#div-botoes',
+      arrow: {posicao: 'bottomCenter', posicaoChildren: 'right', selectorElemento: '#container-botoes-adicionar'},
+      selectorElemento: '#container-botoes-adicionar',
       evento: {listener: 'redux', alvo: '.present.popupAdicionar'}
     }]},
     slides: {rotulo: 'Lista de Slides', listaEtapas: [
@@ -88,16 +88,23 @@ const listaBoxes = {
      {texto: 'Ao editar as configurações de texto, os slides são automaticamente redivididos para caber', 
       coordenadas: [45, 45], 
       selectorElemento: '#botao-menu-configurar, #borda-slide-mestre',
-      evento: {listener: 'redux', alvo: '.present.elementos', timeout: 1000}},
-     {texto: 'Você pode alterar a cor de fundo, e a opacidade da camada que se sobrepõe à imagem de fundo, bem como o estilo da sobreposição', 
-      arrow: {posicao: 'centerLeft', posicaoChildren: 'bottom'},
+      evento: {listener: 'redux', alvo: '.present.elementos', timeout: 1000},
+      callbackAntes: () => selecionarAba('paragrafo')},
+     {texto: 'Você pode alterar a cor de fundo, e a opacidade da camada que se sobrepõe à imagem de fundo', 
+      arrow: {posicao: 'centerLeft', posicaoChildren: 'bottom', selectorElemento: '#configuracoes'},
+      selectorElemento: '#botao-menu-configurar, #borda-slide-mestre',
+      callbackAntes: () => selecionarAba('tampao'),
+      evento: {listener: 'redux', alvo: '.present.elementos', timeout: 1000}
+     },
+     {texto: 'E também pode aplicar filtros', 
+      arrow: {posicao: 'bottomCenter', posicaoChildren: 'left', selectorElemento: '#selecionar-filtro-fundo'},
       selectorElemento: '#botao-menu-configurar, #borda-slide-mestre',
       callbackAntes: () => selecionarAba('tampao'),
       callbackDepois: () => selecionarAba('texto'),
-      evento: {listener: 'redux', alvo: '.present.elementos', timeout: 1000}
+      evento: {listener: 'click', alvo: 'selecionar-filtro-fundo', timeout: 1000}
      },
      {texto: 'Clique diretamente no texto do slide para editar seu conteúdo', 
-      coordenadas: [30, 50], 
+      coordenadas: [45, 60], 
       selectorElemento: '#borda-slide-mestre, #botao-menu-configurar',
       callbackAntes: () => selecionarAba('paragrafo'),
       callbackDepois: () => selecionarAba('texto'),

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import './Tutorial.css';
 import Arrow from './Arrow';
@@ -113,7 +113,7 @@ class EtapaTutorial extends Component {
   funcaoResize = () => this.forceUpdate();
 
   componentDidMount = () => {
-    if (this.state.indicehotkeys) hotkeys.setScope('tutorial');
+    hotkeys.setScope('tutorial');
     window.addEventListener('resize', this.funcaoResize);
     window.addEventListener('click', this.funcaoResize);
     window.addEventListener('keyup', this.funcaoResize);
@@ -149,7 +149,7 @@ class EtapaTutorial extends Component {
       </div>
     )
     return (
-      <>
+      <Fragment key={item.texto}>
         {a
           ? <Arrow posicao={a.posicao} 
                    selectorElemento={a.selectorElemento || item.selectorElemento} 
@@ -163,7 +163,7 @@ class EtapaTutorial extends Component {
               {caixa}
             </div>
         }
-      </>
+      </Fragment>
     )
   }
 }

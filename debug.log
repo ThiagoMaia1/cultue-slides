@@ -1038,3 +1038,6 @@
 [1219/093443.846:ERROR:process_memory_win.cc(73)] ReadMemory at 0x7fffae213438 of 512 bytes failed: Somente uma parte de um pedido ReadProcessMemory ou WriteProcessMemory foi concluída. (0x12B)
 [1219/093443.846:ERROR:scoped_process_suspend.cc(40)] NtResumeProcess: Tentou-se acessar um processo de saída. (0xc000010a)
 [1219/114606.664:ERROR:directory_reader_win.cc(43)] FindFirstFile: O sistema não pode encontrar o caminho especificado. (0x3)
+[1219/213358.388:ERROR:directory_reader_win.cc(43)] FindFirstFile: O sistema não pode encontrar o caminho especificado. (0x3)
+[1220/003324.490:ERROR:directory_reader_win.cc(43)] FindFirstFile: O sistema não pode encontrar o caminho especificado. (0x3)
+[1220/073535.894:ERROR:directory_reader_win.cc(43)] FindFirstFile: O sistema não pode encontrar o caminho especificado. (0x3)

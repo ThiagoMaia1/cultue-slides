@@ -329,7 +329,7 @@ class ConfigurarSlides extends Component {
           {this.gerarBotoesAbas()}
         </div>
         {this.state.painelCor}
-        <div className='configuracoes'>
+        <div id='configuracoes'>
           {aba === 'tampao' 
             ? <div className='botoes-direita float'>
                 {botoesDireita}
@@ -383,14 +383,16 @@ class ConfigurarSlides extends Component {
                 </div>
               }
           </div>
-          <div className='container-configuracoes-tampao' style={{display: (aba === 'tampao' ? '' : 'none')}}>
+          <div id='container-configuracoes-tampao' style={{display: (aba === 'tampao' ? '' : 'none')}}>
             <button className='botao-configuracao bool' onMouseOver={() => this.ativarPainelCor(this.mudarCorFundo, slidePreview.estilo.tampao.backgroundColor || {r: 255, g: 255, b: 255})}>
               <div className='container cor-fundo' style={{backgroundImage: ' url("' + require('./Quadriculado PNG.png') + '")'}}>
                 <div className='quadrado cor-fundo' style={{backgroundColor: slidePreview.estilo.tampao.backgroundColor}}>
                 </div>
               </div>
             </button>
-            <Select key={sel.elemento + '.' + sel.slide + '.' + aba}
+            <Select id='selecionar-filtro-fundo'
+                    iniciaAberto={this.props.tutorialAtivo}
+                    key={sel.elemento + '.' + sel.slide + '.' + aba}
                     className='botao-configuracao combo-fonte isolar-spans-filhos'
                     onChange={o => this.mudarBlendMode(o.valor)} 
                     defaultValue={slidePreview.estilo.fundo.mixBlendMode || 'normal'}

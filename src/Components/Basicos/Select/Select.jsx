@@ -15,7 +15,8 @@ class Select extends Component {
             let listaValor = opcoes.map(o => o.valor);
             defaultValue = opcoes[listaValor.indexOf(props.defaultValue)];
         }
-        this.state = {aberto: false, opcoes, opcao: defaultValue || {}};
+        // console.log(props.iniciaAberto)
+        this.state = {aberto: props.iniciaAberto, opcoes, opcao: defaultValue || {}};
     }
 
     abrir = () => this.setState({aberto: true});
@@ -43,6 +44,8 @@ class Select extends Component {
     componentDidUpdate = (prevProps) => {
         if(!objetosSaoIguais(prevProps.opcoes, this.props.opcoes))
             this.setState({opcoes: this.transformarOpcoesStringEmObjetos(this.props.opcoes)});
+        if(prevProps.iniciaAberto !== this.props.iniciaAberto)
+            this.setState({aberto: this.props.iniciaAberto});
     }
 
     transformarOpcoesStringEmObjetos = opcoes => {
@@ -61,8 +64,9 @@ class Select extends Component {
     }
 
     render() {
+        // console.log(this.props.id)
         return (
-            <div className={'select-personalizado ' + (this.props.className || '')} ref={this.refPai}>
+            <div id={this.props.id} className={'select-personalizado ' + (this.props.className || '')} ref={this.refPai}>
                 <div className='base-select'
                      onFocusOut={this.fechar}
                      onClick={this.onClick}

@@ -134,6 +134,8 @@ export const reducerElementos = function (state = defaultList, action, usuario) 
             s.textoArray[action.numero] = action.valor;
           }
         }
+      } else if(action.objeto === 'input2') {
+        e.input2 = action.valor;
       } else if(action.objeto === 'textoTitulo') {
         s.titulo = action.valor;
         if (!sel.slide && e.tipo !== 'Imagem' && e.tipo !== 'Vídeo') e.titulo = action.valor;
@@ -281,8 +283,12 @@ export function undoable(reducer) {
         return {...state, usuario: {...usuario, slidesPadrao: slidesPadrao}};
       case 'excluir-slide-padrao':
         slidesPadrao = usuario.slidesPadrao.splice(action.indiceSlide, 1);
-        atualizarDadosUsuario(usuario.uid, {slidesPadrao: slidesPadrao});
-        return {...state, usuario: {...usuario, slidesPadrao: slidesPadrao}};
+        atualizarDadosUsuario(usuario.uid, {slidesPadrao});
+        return {...state, usuario: {...usuario, slidesPadrao}};
+      case 'atualizar-colecao-imagens-usuario':
+        let { imagens } = action;
+        atualizarDadosUsuario(usuario.uid, {imagens});
+        return {...state, usuario: {...usuario, imagens }};
       case 'toggle-search':
         return {...state, searchAtivo: !searchAtivo};
       case 'ativar-popup-confirmacao':
@@ -426,9 +432,18 @@ function deepSpreadPresente(present) {
       }
       slides.push({...s, estilo: estilo, textoArray: [...s.textoArray]});
     }
-    elementos.push({...e, slides: slides});
+    let input2;
+    if((e.input2 || []).length) {
+      input2 = [];
+      for (let i of e.input2) {
+        input2.push({...i});
+      }
+    } else {
+      input2 = e.input2;
+    }
+    elementos.push({...e, slides, input2});
   }
-  return {...present, elementos: elementos, selecionado: selecionado, abaAtiva: abaAtiva, popupAdicionar: popupAdicionar, apresentacao: apresentacao, ratio: ratio};
+  return {...present, elementos, selecionado, abaAtiva, popupAdicionar, apresentacao, ratio};
 }
 
 function getNotificacoes(notificacoes, conteudo) {

@@ -163,8 +163,12 @@ export const getElementosDesconvertidos = elementos => {
 export const getElementosConvertidos = elementos => {
   var el = [...elementos];
   for (var i = 0; i < el.length; i++) {
-    if(el[i].conversorFirestore)
+    if(el[i].conversorFirestore) {
       el[i] = el[i].conversorFirestore(el[i]);
+    } else {
+      el[i].input1 = el[i].input1 || null;
+      el[i].input2 = el[i].input2 || null;
+    }
   }
   return el;
 }

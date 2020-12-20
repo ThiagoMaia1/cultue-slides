@@ -56,7 +56,7 @@ const estiloPadrao = {
   texto: {fontFamily: fontePadrao}, 
   titulo: {fontSize: 3, height: 0.25, paddingRight: 0.08, textAlign: 'center'}, 
   paragrafo: {fontSize: 1.5, paddingRight: 0.08, lineHeight: 1.9}, 
-  fundo: {}, 
+  fundo: {path: 'Triângulos Laranja.png'}, 
   tampao: {backgroundColor: '#ffffff', opacityFundo: 0.2},
   imagem: {left: '10%', right: '10%', top: '10%', bottom: '10%', borderRadius: '0px'}
 };
@@ -239,6 +239,7 @@ export default class Element {
   }
 
   conversorFirestore = thisP => {
+    console.log(thisP.input2 || null);
     var elementoSimplificado = {
       tipo: thisP.tipo,
       titulo: thisP.titulo,

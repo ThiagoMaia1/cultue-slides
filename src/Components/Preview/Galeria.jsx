@@ -45,7 +45,7 @@ class Galeria extends Component {
         this.setState({popupCompleto: (
             <Popup ocultarPopup={() => this.setState({popupCompleto: null})}>
                 <h4>Enviar Fundo Personalizado</h4>
-                <InputImagem callback={this.enviarImagensFundo} callbackUpload={this.callbackUpload}/>
+                <InputImagem callback={this.enviarImagensFundo} callbackUpload={this.callbackUpload} eFundo={true}/>
             </Popup>
         ), painelAdicionar: false});
     }

@@ -4,41 +4,63 @@ import './style.css';
 import { connect } from 'react-redux';
 import Carrossel from '../../../Basicos/Carrossel/Carrossel';
 import { getImgBase64 } from '../../../../principais/FuncoesGerais';
-// import { uploadImagem } from './imagemFirebase';
-// import store from '../../../../index';
+import { uploadImagem } from './imagemFirebase';
+import store from '../../../../index';
 
 const dMaxTracejado = 99;
 const dMinTracejado = 93;
 
-// const substituirImagem = (selecionado, url, objeto) => 
-    // store.dispatch({type: 'editar-slide-temporariamente', objeto, valor: { src: url }, selecionado});
+const substituirImagem = (selecionado, url, objeto) => 
+    store.dispatch({type: 'editar-slide-temporariamente', objeto, valor: { src: url }, selecionado});
 
-// const callbackUpload = (idUpload, urlDownload) => {
-//     const elementos = store.getState().present.elementos;
-//     for (var i = 0; i < elementos.length; i++) {
-//         const slides = elementos[i].slides;
-//         for (var j = 0; j < slides.length; j++) {
-//             var sel = {elemento: i, slide: j};
-//             if (slides[j].estilo.fundo.idUpload === idUpload) 
-//                 substituirImagem(sel, urlDownload, 'fundo');
-//             if (slides[j].imagem && slides[j].imagem.idUpload === idUpload)
-//                 substituirImagem(sel, urlDownload, 'srcImagem');
-//         }
-//     }
-// }
+const callbackUpload = (idUpload, urlDownload, eFundo = false) => {
+    atualizarImagensUsuario(eFundo ? 'fundos' : 'gerais', urlDownload);
+    const elementos = store.getState().present.elementos;
+    for (var i = 0; i < elementos.length; i++) {
+        const slides = elementos[i].slides;
+        for (var j = 0; j < slides.length; j++) {
+            var sel = {elemento: i, slide: j};
+            if (slides[j].estilo.fundo.idUpload === idUpload) 
+                substituirImagem(sel, urlDownload, 'fundo');
+            if (slides[j].imagem && slides[j].imagem.idUpload === idUpload)
+                substituirImagem(sel, urlDownload, 'srcImagem');
+        }
+        atualizarArrayInput2(elementos[i], i, idUpload, urlDownload);
+    }
+}
+
+function atualizarArrayInput2(elemento, i, idUpload, src) {
+    const input2 = elemento.input2;
+    if (input2 && input2.length) {
+        let inputAtualizado = [];
+        for (var p of input2) {
+            let novoInput = {
+                ...(p.idUpload === idUpload ? {src, eLinkFirebase: true} : {})
+            }
+            inputAtualizado.push(novoInput);
+        }
+        store.dispatch({ type: 'editar-slide-temporariamente', objeto: 'input2', valor: inputAtualizado, selecionado: { elemento: i, slide: 0 } });
+    }
+}
+
+const atualizarImagensUsuario = (subconjunto, url) => {
+    let imagens = {...store.getState().usuario.imagens} || {};
+    imagens[subconjunto] = [...(imagens[subconjunto] || []), url];
+    store.dispatch({type: 'atualizar-colecao-imagens-usuario', imagens});
+}
 
 class ImagemInput extends Component {
     
     constructor (props) {
         super(props);
         this.background = this.getBackground(props.img, props.indice + 1 === props.nFiles);
-        this.state = {maxWidth: '0'};
+        this.state = {maxWidth: '0', xVisivel: true};
     }
 
     getBackground = (img, finalizar) => {
         var bG = {};
-        if (img) {
-            bG.backgroundImage = 'url(' + getImgBase64(img, window.innerWidth*0.13, window.innerWidth*0.10) + ')';
+        if (img.width) {
+            bG.backgroundImage = 'url(' + getImgBase64(img, 300, 200) + ')';
             bG.backgroundPosition = 'center';
             bG.backgroundRepeat = 'no-repeat';
             bG.backgroundSize = 'cover';
@@ -57,22 +79,13 @@ class ImagemInput extends Component {
 
     apagar = e => {
         e.stopPropagation();
-        this.setState({maxWidth: 0});
+        this.setState({maxWidth: 0, xVisivel: false});
         setTimeout(() => this.props.callback(this.props.indice), 300);
     }
 
     render() {
-        var {img} = this.props;
-        var alt = img.alt + (img.contador ? '-' + img.contador : '');
-        // <div className='container-imagem-upload' key={alt}>
-        //         {img.width ?
-        //         <img className='previa-imagem-upload' src={img.src} alt={alt}/> :
-        //         <div className='imagem-invalida previa-imagem-upload'>
-        //             <div style={{textAlign: 'center'}}>Arquivo Inválido:<br></br>"{img.nomeComExtensao}"<br></br></div>
-        //             <div style={{fontSize: '120%'}}>✕</div>
-        //         </div>}
-        //     </div>
-        // )
+        let {img} = this.props;
+        let alt = img.alt + (img.contador ? '-' + img.contador : '');
         return (
             <div className='container-imagem-upload' key={alt}>
                 <div className='imagem-invalida previa-imagem-upload' 
@@ -82,10 +95,11 @@ class ImagemInput extends Component {
                         : <> 
                             <div style={{textAlign: 'center'}}>Arquivo Inválido:<br></br>"{img.nomeComExtensao}"<br></br></div>
                             <div style={{fontSize: '120%'}}>✕</div>
-                            </>
+                          </>
                     }
                 </div>
-                <button className='x-apagar-imagem' onClick={this.apagar}>✕</button>
+                <button className='x-apagar-imagem' style={{display: this.state.xVisivel ? '' : 'none'}} 
+                        onClick={this.apagar}>✕</button>
             </div>
         )
     }
@@ -98,8 +112,6 @@ class InputImagem extends Component {
         this.refInputFile = React.createRef();
         this.aumentando = true;
         this.state = {
-            nArquivosValidos: 0, 
-            nArquivosInvalidos: 0, 
             imagens: [], 
             estiloCaixa: {opacity: '0', ...this.getTamanhoTracejado()}, 
             pointerEvents: 'none'
@@ -132,30 +144,28 @@ class InputImagem extends Component {
     }
 
     adicionarImagem = e => {
-        var nValidos = this.state.nArquivosValidos;
-        var nInvalidos = this.state.nArquivosInvalidos;
-        if (e.target.width) {
-            nValidos++;
-        } else {
-            nInvalidos++;
-        }
-        this.setState({imagens: [...this.state.imagens, e.target], nArquivosInvalidos: nInvalidos, nArquivosValidos: nValidos});
-        
+        let img = e.target;
+        this.setState({imagens: [...this.state.imagens, img]});
+        // img.onload = null;
+        // img.onerror = null;
     }
 
-    validarImagem(input){
+    validarImagens(inputImagens){
+        if(this.state.imagens.length === 1 && !this.state.imagens[0].width) this.limparInputs();
         document.body.style.cursor = 'progress';
         var url = window.URL || window.webkitURL;
-        this.nFiles = input.files.length;
+        this.nFiles = inputImagens.length;
     
         const getReduce = (n) => (contador, i) => {
             if(i.alt === n) contador = Math.max(contador, i.contador);
             return contador;
         }
 
-        for (var arquivo of input.files) {
-            var imagem = new Image();
-            imagem.nomeComExtensao = arquivo.name;
+        for (var img of inputImagens) {
+            var imagem = new Image();   
+            imagem.crossOrigin = 'Anonymous';
+            imagem.onload = this.adicionarImagem;
+            imagem.nomeComExtensao = img.name;
             var n = imagem.nomeComExtensao;
 
             for (var i = n.length-1; i >= 0; i--) {
@@ -165,13 +175,14 @@ class InputImagem extends Component {
                 }
             }
             
+            let eReedicao = img.eLinkFirebase || img.idUpload;
             imagem.contador = this.state.imagens.reduce(getReduce(n), -1) + 1;
             imagem.alt = n;
-            imagem.arquivo = arquivo;
-            imagem.src = url.createObjectURL(arquivo);
-            [ imagem.onload, imagem.onerror ] = [ this.adicionarImagem, this.adicionarImagem ];
+            imagem.arquivo = img;
+            imagem.eLinkFirebase = eReedicao;
+            imagem.src = eReedicao ? img.src : url.createObjectURL(img);
         }
-        this.refInputFile.current.value = '';       
+        this.refInputFile.current.value = '';        
     }
     
     apagarImagem = indice => {
@@ -185,7 +196,7 @@ class InputImagem extends Component {
             return (<div className='texto-arquivo-invalido'>Arquivo Inválido: "{imgs[0].alt}"</div>);
         return (
             <div className='container-imagens-previa-upload'>
-                {this.state.imagens.map((img, i) => 
+                {imgs.map((img, i) => 
                     <ImagemInput key={img.alt + '-' + img.contador} 
                                  img={img} 
                                  indice={i} 
@@ -199,7 +210,7 @@ class InputImagem extends Component {
     }
 
     limparInputs = () => {
-        this.setState({nArquivosValidos: 0, nArquivosInvalidos: 0, imagens: []});
+        this.setState({imagens: []});
     }
     
     ativarSetas = () => this.setState({pointerEvents: 'all'}); 
@@ -212,18 +223,30 @@ class InputImagem extends Component {
         var imgsFiltradas = this.state.imagens.filter(i => i.width);
 
         imgsFiltradas = imgsFiltradas.map(i => {
-            // i.idUpload = uploadImagem(i.arquivo, (idUpload, urlUpload) => {
-            //     callbackUpload(idUpload, urlUpload);
-            //     if(this.props.callbackUpload) this.props.callbackUpload(idUpload, urlUpload);
-            // });
+            if (!i.eLinkFirebase) {
+                i.idUpload = uploadImagem(i.arquivo, (idUpload, urlUpload) => {
+                    callbackUpload(idUpload, urlUpload, this.props.eFundo);
+                    if(this.props.callbackUpload) this.props.callbackUpload(idUpload, urlUpload);
+                });
+            }
             return i;
         })
         this.props.callback(imgsFiltradas);
     }
 
+    componentDidMount = () => {
+        if(this.props.imagens) {
+            this.validarImagens(this.props.imagens.map(i => ({
+                ...i, 
+                name: this.props.titulo || '',
+                eLinkFirebase: true
+            })));
+        }
+    }
+
     render () {
-        var nValidos = this.state.nArquivosValidos;
-        var nInvalidos = this.state.nArquivosInvalidos;
+        let nValidos = this.state.imagens.filter(i => !!i.width).length;
+        let nInvalidos = this.state.imagens.length - nValidos;
         return (
             <>
                 <div className='combo-popup caixa-input-imagem' 
@@ -243,7 +266,7 @@ class InputImagem extends Component {
                         </Carrossel>
                     </div>
                     <input ref={this.refInputFile} id="adicionar-imagem" className='combo-popup' type='file' multiple="multiple" accept="image/*" 
-                            onChange={e => this.validarImagem(e.target)} placeholder='Arraste uma imagem para fazer o upload' />
+                            onChange={e => this.validarImagens(e.target.files)}/>
                     <div className='animacao-drag-over'>
                         <div className='tracejado-animacao rotating-border' style={this.state.estiloCaixa}></div>
                     </div>

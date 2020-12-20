@@ -97,6 +97,8 @@
 //   Menu contexto está sendo tampado pelo tampao
 //   Padding dando NaN
 //   Link de download não faz nada
+//   Não aplicar configurações do tampão quando o slide já tiver configurações especiais
+//   Contagem de imagens válidas/inválidas no input
 
 /*// Features essenciais:
 //   ✔️ Envio de imagens//   ✔️ Navegar slides clicando à direita ou esquerda

@@ -1,4 +1,5 @@
 import firebase, { firebaseStorage } from '../../../../principais/firebase.js';
+// import { atualizarRegistro } from '../../../../principais/firestore/apiFirestore';
 
 export function uploadImagem (arquivo, callback) {
 
@@ -42,11 +43,25 @@ export function uploadImagem (arquivo, callback) {
         }, function() {
             // Upload completed successfully, now we can get the download URL
             uploadTask.snapshot.ref.getDownloadURL()
-                .then(downloadURL => callback(idUpload, downloadURL));
+                .then(downloadURL => {
+                    callback(idUpload, downloadURL);
+                });
         }
     );
     return idUpload;
 }
+
+// export const getHashImagem = async imgBase64 => {
+//     const msgUint8 = new TextEncoder().encode(imgBase64);                         // encode as (utf-8) Uint8Array
+//     const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8);           // hash the message
+//     const hashArray = Array.from(new Uint8Array(hashBuffer));                     // convert buffer to byte array
+//     const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join(''); // convert bytes to hex string
+//     return hashHex;
+// }
+
+// export const criarImagemBD = async url => {
+//     return await gerarNovoRegistro('imagens', {url});
+// }
 
 // Obter url pública de imagem no storage.
 // var gsReference = firebase.storage().refFromURL('gs://slidesigreja-ff51f.appspot.com/public/LogoCultue.png');
@@ -54,7 +69,3 @@ export function uploadImagem (arquivo, callback) {
 
 //https://firebasestorage.googleapis.com/v0/b/slidesigreja-ff51f.appspot.com/o/public%2FLogoCultue.png?alt=media&token=e525c9f9-b0cf-4ffa-a595-77998ceca9b3
 //https://firebasestorage.googleapis.com/v0/b/slidesigreja-ff51f.appspot.com/o/public%2FLogoCultue%402x.png?alt=media&token=af56d77b-9627-4608-9b1d-23ef180bc25c @2x
-
-export function getImagemStorage (path) {
-
-}
