@@ -69,11 +69,6 @@ class Arrastar extends React.Component {
   }
 
   componentDidUpdate = (prevProps) => {
-    if(this.ref.current) {
-      var aA = this.ref.current.offsetHeight >= 0.5*window.innerHeight;
-      if (aA !== this.state.adicionarAcima)
-        this.setState({adicionarAcima: aA})
-    }
     if(this.state.painelAdicionar && prevProps.elementos.length <= 1 && this.props.elementos.length > 1)
       this.setState({painelAdicionar: false});
   }
@@ -95,8 +90,9 @@ class Arrastar extends React.Component {
       <div className='coluna-lista-slides'>
         <div className='gradiente-coluna emcima'></div>
         <div className='gradiente-coluna embaixo'></div>
-        <Carrossel direcao='vertical' tamanhoIcone={50} tamanhoMaximo={'60vh'} style={{zIndex: '50', width: '21vw', height: 'auto'}} 
-                   refElemento={this.refElemento} refSlide={this.refSlide}>
+        <Carrossel direcao='vertical' tamanhoIcone={50} tamanhoMaximo={'60vh'} 
+                   style={{zIndex: '50', width: '21vw', overflow: 'hidden', ...(this.props.elementos.length < 2 ? {height: '3vh'} : {})}} 
+                   refElemento={this.refElemento} refSlide={this.refSlide} beiradaFinal={8}>
             <ol ref={this.ref} id="ordem-elementos">
               { editavel 
                 ? <div id="slide-mestre" className={'itens ' + (sel.elemento === 0 ? 'selecionado' : '')} data-id={0}
@@ -121,25 +117,10 @@ class Arrastar extends React.Component {
               })}
             </ol>
         </Carrossel>
-        <div id='tampao-do-overflow'>
-          { editavel
-            ? <div id='bloco-adicionar'>
-                <div id="adicionar-slide" 
-                  onClick={() => {
-                    if(!this.state.painelAdicionar) this.setState({painelAdicionar: true})
-                  }}
-                  className='botao-azul itens lista-slides'>Adicionar Slide</div>
-                {this.state.painelAdicionar || this.props.tutorialAtivo
-                  ? <div className='container-adicionar'
-                      style={this.state.adicionarAcima ? {top: '-20vh'} : null}>
-                        <Adicionar onClick={() => this.setState({painelAdicionar: false})}/>
-                    </div> 
-                  : null
-                }
-              </div>
-            : null
-          }
-        </div>
+        { editavel
+          ? <Adicionar/>
+          : null
+        }
       </div>
     )
   }
@@ -152,7 +133,6 @@ const mapState = function (state) {
     popupAdicionar: state.present.popupAdicionar,
     apresentacao: state.present.apresentacao,
     usuario: state.usuario,
-    tutorialAtivo: state.itensTutorial.includes('painelAdicionar')
   }
 }
 

@@ -239,7 +239,6 @@ export default class Element {
   }
 
   conversorFirestore = thisP => {
-    console.log(thisP.input2 || null);
     var elementoSimplificado = {
       tipo: thisP.tipo,
       titulo: thisP.titulo,

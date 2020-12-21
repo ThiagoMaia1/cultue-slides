@@ -4,7 +4,7 @@ import useOutsideClick from './useOutsideClick';
 
 const useAnimationOutsideClick = (callbackFechar, estiloInicial, estiloFinal, tempo = 200) => {
     const [ativo, setAtivo] = useState(true);
-    const fecharQuadro = () => setAtivo(false);
+    const toggleQuadro = (bool = false) => setAtivo(bool);
     
     const estilo = useClosingAnimation(
         ativo, 
@@ -13,8 +13,8 @@ const useAnimationOutsideClick = (callbackFechar, estiloInicial, estiloFinal, te
         estiloFinal,
         tempo
     );
-    let ref = useOutsideClick(fecharQuadro);
-    return [ref, estilo, fecharQuadro];
+    let ref = useOutsideClick(toggleQuadro);
+    return [ref, estilo, toggleQuadro];
 }
 
 export default useAnimationOutsideClick;

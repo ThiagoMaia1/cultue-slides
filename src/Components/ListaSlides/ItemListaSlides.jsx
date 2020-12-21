@@ -18,10 +18,14 @@ class ItemListaSlides extends Component {
         };
     }
 
-    toggleColapsar = e => {
+    toggleColapsar = () => {
+        this.props.dispatch({type: 'toggle-colapsar', selecionado: {elemento: this.props.ordem, slide: 0}});
+    }
+
+    clickColapsar = e => {
         if (this.props.selecionado.elemento === this.props.ordem && !this.props.selecionado.slide) 
             e.stopPropagation();
-        this.props.dispatch({type: 'toggle-colapsar', selecionado: {elemento: this.props.ordem, slide: 0}});
+        this.toggleColapsar();
     }
 
     botaoExcluirElemento = e => {
@@ -119,7 +123,7 @@ class ItemListaSlides extends Component {
                             <b> {i}. {getNomeInterfaceTipo(elemento.tipo)}: </b>{(elemento.tipo === 'Imagem' && !elemento.titulo) ? elemento.imagens[0].alt : elemento.titulo}
                         </div>
                         {!this.state.colapsa ? null :
-                            <ArrowColapsar tamanhoIcone={this.state.tamanhoIcone} colapsado={this.props.elemento.colapsado} onClick={this.toggleColapsar}/>
+                            <ArrowColapsar tamanhoIcone={this.state.tamanhoIcone} colapsado={this.props.elemento.colapsado} onClick={this.clickColapsar}/>
                         }
                     </div>
                     {elemento.slides.length > 1 ? 

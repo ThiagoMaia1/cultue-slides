@@ -9,6 +9,11 @@ html, body, #app {
   width: 100%;
   height: 100vh;
 }
+
+body {
+  background-color: white;
+}
+
 #fundo-popup {
   position: fixed;
   height: 110%;
@@ -67,7 +72,7 @@ html, body, #app {
   padding: 1.1vh 1.5vh;
   background: var(--azul-forte);
   border-radius: var(--round-border-pequeno);
-  cursor: default;
+  cursor: initial;
   text-align: center;
   display: block;
   -webkit-user-select: none;

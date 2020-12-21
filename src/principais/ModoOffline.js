@@ -9,7 +9,7 @@ const css =
         'pointer-events: none !important;' +   
     '}' +
     '.gradiente-coluna {' +
-        'background-image: none !important;' + 
+        'display: none;' + 
     '}' +
     '#borda-slide-mestre, .coluna-lista-slides {' +
         'opacity: 0.4;' + 

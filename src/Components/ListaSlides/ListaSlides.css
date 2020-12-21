@@ -1,6 +1,5 @@
 .coluna-lista-slides {
   width: 23vw;
-  height: 60vh;
   position: relative;
   margin-top: -3vh;
 }
@@ -113,17 +112,6 @@ ol {
   background-color: var(--preto-fraco);
 }
 
-#adicionar-slide {
-  position: relative;
-  width: 18vw;
-  margin: 0 5%;
-  background-color: var(--azul-forte);
-}
-
-#adicionar-slide:hover {
-  background-color: var(--azul-oxford);
-}
-
 .lista-slides {
   background: var(--platinum);
   display: flex;
@@ -199,26 +187,6 @@ ol {
   -moz-user-select: none;
   -o-user-select: none;
   user-select: none;
-}
-
-.container-adicionar {
-  width: 18vw;
-  margin: 0 6%;
-  position: absolute;
-  overflow: hidden;
-}
-
-.linha-flex-adicionar {
-  display: flex;
-  width: 100%;
-}
-
-#tampao-do-overflow {
-  background: inherit;
-  height: 100%;
-  width: 100%;
-  position: relative;
-  z-index: 70;
 }
 
 .texto-lista-slides {

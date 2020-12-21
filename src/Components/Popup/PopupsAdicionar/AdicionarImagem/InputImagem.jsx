@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
+import store from '../../../../index';
 import '../LetrasMusica/style.css';
 import './style.css';
-import { connect } from 'react-redux';
 import Carrossel from '../../../Basicos/Carrossel/Carrossel';
-import { getImgBase64 } from '../../../../principais/FuncoesGerais';
 import { uploadImagem } from './imagemFirebase';
-import store from '../../../../index';
+import ImagemGaleriaInput from './ImagemGaleriaInput';
 
 const dMaxTracejado = 99;
 const dMinTracejado = 93;
@@ -49,62 +48,6 @@ const atualizarImagensUsuario = (subconjunto, url) => {
     store.dispatch({type: 'atualizar-colecao-imagens-usuario', imagens});
 }
 
-class ImagemInput extends Component {
-    
-    constructor (props) {
-        super(props);
-        this.background = this.getBackground(props.img, props.indice + 1 === props.nFiles);
-        this.state = {maxWidth: '0', xVisivel: true};
-    }
-
-    getBackground = (img, finalizar) => {
-        var bG = {};
-        if (img.width) {
-            bG.backgroundImage = 'url(' + getImgBase64(img, 300, 200) + ')';
-            bG.backgroundPosition = 'center';
-            bG.backgroundRepeat = 'no-repeat';
-            bG.backgroundSize = 'cover';
-        } else {
-            bG.backgroundColor = 'var(--vermelho-fraco)';
-        }
-        if (finalizar) document.body.style.cursor = 'default';
-        return bG;
-    }
-
-    componentDidMount = () => {
-        setTimeout(() => this.setState({maxWidth: '12vw'}), 0);
-        this.props.setFinalCarrossel();
-        setTimeout(() => this.props.setFinalCarrossel(), 300);
-    }
-
-    apagar = e => {
-        e.stopPropagation();
-        this.setState({maxWidth: 0, xVisivel: false});
-        setTimeout(() => this.props.callback(this.props.indice), 300);
-    }
-
-    render() {
-        let {img} = this.props;
-        let alt = img.alt + (img.contador ? '-' + img.contador : '');
-        return (
-            <div className='container-imagem-upload' key={alt}>
-                <div className='imagem-invalida previa-imagem-upload' 
-                     style={{...this.background, ...this.state}}>
-                    {img.width 
-                        ? null
-                        : <> 
-                            <div style={{textAlign: 'center'}}>Arquivo Inválido:<br></br>"{img.nomeComExtensao}"<br></br></div>
-                            <div style={{fontSize: '120%'}}>✕</div>
-                          </>
-                    }
-                </div>
-                <button className='x-apagar-imagem' style={{display: this.state.xVisivel ? '' : 'none'}} 
-                        onClick={this.apagar}>✕</button>
-            </div>
-        )
-    }
-}
-
 class InputImagem extends Component {
     
     constructor (props) {
@@ -146,13 +89,10 @@ class InputImagem extends Component {
     adicionarImagem = e => {
         let img = e.target;
         this.setState({imagens: [...this.state.imagens, img]});
-        // img.onload = null;
-        // img.onerror = null;
     }
 
     validarImagens(inputImagens){
         if(this.state.imagens.length === 1 && !this.state.imagens[0].width) this.limparInputs();
-        document.body.style.cursor = 'progress';
         var url = window.URL || window.webkitURL;
         this.nFiles = inputImagens.length;
     
@@ -197,10 +137,10 @@ class InputImagem extends Component {
         return (
             <div className='container-imagens-previa-upload'>
                 {imgs.map((img, i) => 
-                    <ImagemInput key={img.alt + '-' + img.contador} 
+                    <ImagemGaleriaInput key={img.alt + '-' + img.contador} 
                                  img={img} 
                                  indice={i} 
-                                 callback={this.apagarImagem} 
+                                 apagar={this.apagarImagem} 
                                  nFiles={this.nFiles}
                                  setFinalCarrossel={() => this.setState({finalCarrossel: new Date().getTime()})}
                     />)
@@ -285,8 +225,4 @@ class InputImagem extends Component {
     }
 }
 
-const mapState = state => {
-    return {elementos: state.present.elementos}
-}
-
-export default connect(mapState)(InputImagem);
+export default InputImagem;

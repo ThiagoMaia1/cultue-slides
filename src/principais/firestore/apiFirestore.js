@@ -71,7 +71,6 @@ export const atualizarRegistro = async (dados, colecao, idRegistro) => {
   // var strDados = JSON.stringify(dados);
   var refRegistro = firestore.doc(colecao + '/' + idRegistro)
   dados.timestamp = firebase.firestore.FieldValue.serverTimestamp();
-  console.log(colecao, dados);
   try {
     await refRegistro.update(dados);
   } catch (error) {

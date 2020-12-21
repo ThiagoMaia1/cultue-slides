@@ -15,7 +15,7 @@
 }
 
 .caixa-input-imagem [type=file] {
-    cursor: inherit;
+    cursor: auto;
     display: flex;
     font-size: 999px;
     filter: alpha(opacity=0);

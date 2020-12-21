@@ -1,41 +1,34 @@
-import React from 'react';
-import './Adicionar.css';
+import React, { useState, useRef } from 'react';
 import { connect } from 'react-redux';
-import { tiposElemento, getNomeInterfaceTipo } from '../../principais/Element';
-import useAnimationOutsideClick from '../../principais/Hooks/useAnimationOutsideClick'; 
-
-const tipos = Object.keys(tiposElemento);
+import BotoesAdicionar from './BotoesAdicionar';
 
 const Adicionar = props => {
 
-    const [ref, estilo, fecharQuadro] = useAnimationOutsideClick(
-        props.onClick,
-        {height: 0},
-        {height: '20vh'},
-        255
-    );
+    let [ativo, setAtivo] = useState(false);
+    let ref = useRef();
+    let acima;
+    if(ref.current) acima = ref.current.getBoundingClientRect().y >= 0.5*window.innerHeight;
 
-    const abrirPopup = tipo => {
-        props.dispatch({
-            type: 'ativar-popup-adicionar', 
-            popupAdicionar: {tipo}
-        });
-        fecharQuadro();
-    }
+    const BotaoGrande = () =>
+        <div id="adicionar-slide" 
+            className='botao-azul itens lista-slides'
+            onClick={() => {if(!ativo) setAtivo(true)}}>
+            Adicionar Slide
+        </div>
+
+    const DivBotoes = () => (ativo || props.tutorialAtivo) ? <BotoesAdicionar onClick={() => setAtivo(false)}/> : null;
 
     return (
-        <div id='div-botoes' style={estilo} ref={ref}>
-            <div id='container-botoes-adicionar'>
-                {tipos.map(t =>
-                    <button key={t} 
-                            className="botao-azul itens" 
-                            onClick={() => abrirPopup(t)}>
-                        {getNomeInterfaceTipo(t)}
-                    </button>
-                )}
-            </div>
+        <div className={'container-adicionar ' + (acima ? 'acima' : '')} ref={ref}>
+            {acima ? <DivBotoes/> : null}
+            <BotaoGrande/>
+            {!acima ? <DivBotoes/> : null}
         </div>
     )
 }
 
-export default connect()(Adicionar);
+const mapState = state => (
+    {tutorialAtivo: state.itensTutorial.includes('painelAdicionar')}
+)
+
+export default connect(mapState)(Adicionar);

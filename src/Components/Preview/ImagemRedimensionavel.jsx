@@ -26,10 +26,13 @@ class ImagemRedimensionavel extends Component {
     constructor (props) {
         super(props);
         let img = new Image();
-        img.onload = e => this.setProporcaoNatural(e.target)
-        img.src = props.imagem.src;
         this.relativoAoRatio = {width: 1, height: 1};
         this.state = {cursor: 'initial', estiloImagem: getInset(props.estiloImagem)};
+        img.onload = e => {
+            this.setProporcaoNatural(e.target);
+            this.corrigirEstilo(this.state.estiloImagem);
+        }
+        img.src = props.imagem.src;
     }
 
     setProporcaoNatural = img => {
@@ -221,7 +224,6 @@ class ImagemRedimensionavel extends Component {
     }
 
     componentDidMount = () => {
-        setTimeout(() => this.corrigirEstilo(this.state.estiloImagem), 100);
         window.addEventListener('mousedown', this.setClicadoTrue);
         window.addEventListener('mouseup', this.setClicadoFalse);
         window.addEventListener('keydown', this.setProporcaoLivreTrue);

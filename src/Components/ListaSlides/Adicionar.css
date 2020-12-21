@@ -2,16 +2,10 @@
   display: flex;
   flex-wrap: wrap;
   width: 100%;
-  padding: 0.5vh;
   z-index: 100;
   height: auto;
   position: relative;
   justify-content: center;
-  width: 100%;
-  z-index: 100;
-  height: auto;
-  overflow: hidden;
-  transition: height 0.25s ease-in-out;
 }
 
 #div-botoes .itens {
@@ -31,17 +25,61 @@
   overflow: hidden;
   word-break: break-word;
 }
+
+.container-adicionar {
+  width: 18vw;
+  margin: 0 6%;
+  position: relative;
+}
+
+.container-adicionar.acima #div-botoes {
+  bottom: 0;
+}
+
+.container-adicionar.acima #movedor-botoes-adicionar {
+  bottom: 0;
+  top: initial;
+}
+
+.container-adicionar.acima #container-botoes-adicionar {
+  top: 0;
+  bottom: initial;
+
+}
  
+#movedor-botoes-adicionar {
+  overflow: hidden;
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
+
 #container-botoes-adicionar {
-  padding: 0.5vh 0.5vh 2vh;
+  padding: 0.5vh 0.5vh 1.5vh;
+  position: absolute;
+  bottom: 0;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  bottom: 0;
-  overflow: hidden;
-  position: absolute;
+
 }
 
 #div-botoes .itens:hover {
   background-color: var(--azul-forte);
+}
+
+.linha-flex-adicionar {
+  display: flex;
+  width: 100%;
+}
+
+#adicionar-slide {
+  position: relative;
+  width: 18vw;
+  background-color: var(--azul-forte);
+  margin: 0;
+}
+
+#adicionar-slide:hover {
+  background-color: var(--azul-oxford);
 }

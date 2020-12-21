@@ -81,6 +81,8 @@
 //   ✔️ Valor inicial sliders opacidade e borda imagem
 //   ✔️ Borda branca no preview do texto bíblico (sl 1)
 //   ✔️ Conversão hsl/rgb do color picker não está boa
+//   ✔️ Contagem de imagens válidas/inválidas no input
+//   ✔️ Menu contexto está sendo tampado pelo tampao
 //   ✔️ Carrossel do Input Imagem não vai até o final.*/
 // Errinhos:
 //   ✔️ Click fora tutorial
@@ -94,11 +96,11 @@
 //   Problemas nos dados ao persistir redux
 //   Clicar através do 'carregando' no input de música
 //   Clonar estilo está uma bosta
-//   Menu contexto está sendo tampado pelo tampao
 //   Padding dando NaN
 //   Link de download não faz nada
-//   Não aplicar configurações do tampão quando o slide já tiver configurações especiais
-//   Contagem de imagens válidas/inválidas no input
+//   Não aplicar configurações do tampão de um fundo quando o slide já tiver configurações especiais
+//   Redimensionar imagem ao inseri-la
+//   Word break nome de arquivos longos no popupConfirmação
 
 /*// Features essenciais:
 //   ✔️ Envio de imagens//   ✔️ Navegar slides clicando à direita ou esquerda
@@ -148,10 +150,10 @@
 //   ✔️ Título embaixo do slide
 //   ✔️ Animação e clickFora, menu Adicionar
 //   ✔️ Lidar com perda de conexão
+//   ✔️ Editar slide de imagens ou desabilitar edição 🟨
 //   ✔️ Lista de atalhos do modo apresentação.*/
 //   Tentar de novo/Avisar se upload da imagem não pôde ser feito
-//   Pool de images com comparação Hash
-//   Editar slide de imagens ou desabilitar edição 🟨
+//   Pool de images
 //   Botões centralizar nas configurações de imagem
 //   Incluir fontes como base64 (html) ou zip (power point) 🟥
 //   Exportação em PowerPoint
@@ -195,6 +197,7 @@
 //   Deletar/duplicar slide arrastando
 //   Manter alt pressionado para duplicar o slide
 //   Criar PDF de documentação
+//   Verificar se imagem já existe no BD antes de upar
 //   Atalho F1 para ajuda
 //   Slide-mestre de cada tipo */
 //

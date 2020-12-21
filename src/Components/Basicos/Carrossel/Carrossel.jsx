@@ -31,7 +31,7 @@ class Carrossel extends Component {
             this.estiloSeta = {flexDirection: 'row'}
         }
         
-        this.style = {...this.props.style};
+        this.style = {};
         this.style['max' + capitalize(this.dimensoes.principal, 'Primeira Maiúscula')] = this.props.tamanhoMaximo
         this.estiloSeta[this.dimensoes.principal] = '10%';
         this.estiloSeta[this.dimensoes.secundaria] = '100%';
@@ -45,7 +45,12 @@ class Carrossel extends Component {
     }
 
     getLimiteInicial = () => Math.round(this.state.tamanhoCarrossel*this.percentualBeirada);
-    getLimiteFinal = () => Math.round(this.state.tamanhoCarrossel*(1-this.percentualBeirada) - this.state.tamanhoGaleria) - (this.props.beiradaFinal || 0);
+    getLimiteFinal = () => {
+        let {tamanhoCarrossel, tamanhoGaleria} = this.state;
+        if (tamanhoCarrossel >=
+             tamanhoGaleria) return 10;
+        return Math.round(tamanhoCarrossel*(1-this.percentualBeirada) - tamanhoGaleria) - (this.props.beiradaFinal || 0);
+    }
     getOffsetAtual = () => Number(this.state.estiloGaleria[this.direcao[0]]);
     getPasso = (sentido, tamanhoPasso) => - (sentido ? 1 : -1)*tamanhoPasso;
     eSetaInvisivel = iSeta => this.state[estilosSeta[iSeta]].opacity === '0';
@@ -240,7 +245,7 @@ class Carrossel extends Component {
     render () {
         var setas = [this.setaUm, this.setaDois];
         return (
-            <div ref={this.refCarrossel} className='carrossel' onWheel={this.deslizarWheel} style={this.style}>
+            <div ref={this.refCarrossel} className='carrossel' onWheel={this.deslizarWheel} style={{...this.props.style, ...this.style}}>
                 {this.state.tamanhoGaleria > this.state.tamanhoCarrossel 
                     ? setas.map((s, i) => {
                         const Seta = s;
