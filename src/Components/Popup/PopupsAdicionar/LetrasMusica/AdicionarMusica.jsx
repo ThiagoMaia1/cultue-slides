@@ -181,10 +181,14 @@ class AdicionarMusica extends Component {
                         <h4 className='titulo-popup'>Pesquisa de Música</h4>
                         <div className='wraper-popup'>
                             {this.state.carregando}
-                            <input ref={el => this.refCombo = el} className='combo-popup' type='text' autoComplete='off'
+                            <input ref={el => this.refCombo = el} 
+                                   className={'combo-popup' + (this.state.carregando ? ' input-com-carregando' : '')} 
+                                   type='text' 
+                                   autoComplete='off'
                                    onKeyUp={e => this.onKeyUp(e)}
                                    onFocus={() => this.setState({listaAtiva: this.state.opcoes.length > 0})}
-                                   defaultValue={this.props.input1} placeholder='Pesquise por nome, artista ou trecho'/>
+                                   defaultValue={this.props.input1} 
+                                   placeholder='Pesquise por nome, artista ou trecho'/>
                         </div>
                     </div>
                     <div className='container-opcoes-musica container-carrossel' 

@@ -9,7 +9,7 @@ import { eEmailValido } from '../../principais/FuncoesGerais';
 import SetaVoltar from '../Basicos/SetaVoltar/SetaVoltar';
 import { CgEye } from 'react-icons/cg';
 
-const msgEmailInvalido = 'Endereço de e-mail inválido.';
+export const msgEmailInvalido = 'Endereço de e-mail inválido.';
 
 function getMensagemErro(error) {
     var codigo = error.code.replace('auth/', '');
@@ -172,7 +172,7 @@ class Login extends React.Component {
                                         : <>
                                             {cadastrando ? <div style={{marginTop: '4vh'}}></div> : null}
                                             <input ref={this.refUsername} id='username' className='combo-popup' placeholder='E-mail' type='email' value={this.state.email}
-                                                    onChange={e => this.setState({email: e.target.value})}></input>
+                                                   onChange={e => this.setState({email: e.target.value})}></input>
                                             {esqueceu ? null
                                                 : <div className={'container-senha ' + (senhaVisivel ? 'visivel' : '')}>
                                                     <button type='button' className='botao-olho' 

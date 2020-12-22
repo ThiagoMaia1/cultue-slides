@@ -56,7 +56,7 @@ const listaSliders = [{rotulo: 'Fonte', aba: 'paragrafo', atributo: 'fontSize', 
                       {rotulo: 'Margem', aba: 'titulo', atributo: 'paddingRight', min: 0, max: 0.4, step: 0.01,  redividir: true},
                       {rotulo: 'Altura', aba: 'titulo', atributo: 'height', min: 0.1, max: 1, step: 0.01,  redividir: true},
                       {rotulo: 'Opacidade', aba: 'tampao', atributo: 'opacityFundo', min: 0, max: 1, step: 0.05},
-                      {rotulo: 'Curvatura\nda Borda', aba: 'imagem', atributo: 'borderRadius', min: 0, max: 100, step: 1, unidade: 'px'}
+                      {rotulo: 'Curvatura\nda Borda', aba: 'imagem', atributo: 'borderRadius', min: 0, max: 300, step: 1, unidade: 'px'}
 ]
 
 const listaBlendMode = [

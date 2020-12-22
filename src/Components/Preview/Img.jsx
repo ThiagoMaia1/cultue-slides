@@ -53,28 +53,47 @@ class Img extends Component {
         this.props.dispatch(this.getObjetoDispatch(img, true));
     }
 
-    getObjetoDispatch = (img, temp = false) => ({
-        type: 'editar-slide' + (temp ? '-temporariamente' : ''), 
-        objeto: 'estiloSemReplace', 
-        estilo: {fundo: {...img.fundo}, tampao: {...img.tampao}, texto: {...img.texto}}
-    })
+    getObjetoDispatch = (img, temp = false) => {
+        let keys = ['tampao', 'texto'];
+        let objetos = {};
+        for (let k of keys) {
+            if (this.props.slidePreview.estilo[k].eBasico)
+                objetos[k] = {...img[k]};
+        }
+        return {
+            type: 'editar-slide' + (temp ? '-temporariamente' : ''), 
+            objeto: 'estiloSemReplace', 
+            estilo: {
+                fundo: {...img.fundo}, 
+                ...objetos
+            }
+        }
+    }
+
+    clickApagar = () => {
+        
+    }
 
     render () {
         var estiloTampao = {...this.props.imagem.tampao};
         estiloTampao.opacity = estiloTampao.opacityFundo;
+        const img = this.props.imagem;
         return (
             <div className='div-img' 
                 onClick={this.onClick}
                 onMouseOver={this.onMouseOver}
                 onMouseLeave={this.onMouseLeave}>
                 <div className='texto-mini-preview'>
-                    <div style={this.props.imagem.texto}>{this.props.imagem.alt}</div>
+                    <div style={img.texto}>{img.alt}</div>
                 </div>
                 <div className='tampao' style={estiloTampao}></div>
                 <img className='imagem-galeria' 
-                     src={lerImagem(this.props.imagem.fundo, 300)} 
-                     alt={this.props.imagem.alt}
+                     src={lerImagem(img.fundo, 300)} 
+                     alt={img.alt}
                 />
+                {!img.excluivel ? null : 
+                    <button className='x-apagar-imagem' onClick={this.clickApagar}>✕</button>
+                }
             </div>
         )
     }

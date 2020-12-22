@@ -32,23 +32,17 @@ class AdicionarTextoBiblico extends Component {
         var str = e.target.value;
         this.setState({termoPesquisa: str});
         if (e.key === 'Enter' && !(!str || /^\s*$/.test(str))) { 
-            this.identificarReferencia();
+            this.identificarReferencia(str);
         }
     }
 
     identificarReferencia = str => {
         if (!str) str = this.ref.current.value;
         var refer = [...extrairReferencias(str)];
-        if (refer != null) {
-            if (refer.length === 1 && refer[0].cap === null && refer[0].strInicial.substr(1).match(/[0-9]/g) === null) {
-                if (refer[0].livro !== null) {
-                    //alterar opções no input seguinte
-                    // this.setState({comboCaps: refer[0].livro.chapters});
-                }
-            } else if (refer != null){
-                this.requestVersos(refer);
-            }
-        }
+        if (refer.length === 1 && !refer[0].cap) 
+            this.setState({versiculosPronto: [new RefInvalida(str)], botoesVisiveis: false});
+        else 
+            this.requestVersos(refer);
     }
 
     requestVersos(ref) {
@@ -112,36 +106,38 @@ class AdicionarTextoBiblico extends Component {
                     cap || ref.cap,
                     ref.inicial === 0 && ref.vers !== null ? ref.vers : null,
                     ].join('/')
-            this.getVersiculos(this.query, filtro, ordem)
+            this.getVersiculos(this.query, filtro, ordem, ref.strInicial)
         }
     }
     
-    getVersiculos(query, filtro, ordem) {
+    getVersiculos(query, filtro, ordem, strInicial) {
         var bibleApi = new XMLHttpRequest()
         bibleApi.filtro = filtro;
         bibleApi.responseType = 'json';
         bibleApi.addEventListener('load', () => {
+            let lastVersiculos;
             var resp = bibleApi.response;
             var filtro = bibleApi.filtro;
-            if (resp.hasOwnProperty('verses')) {
-                var lastVersiculos = resp.verses.map(v => ({vers: v.number, texto: v.text}))
-                for (var x of lastVersiculos) {
-                    x.cap = resp.chapter.number ;
-                    x.livro = resp.book.name;
-                }
-                if (filtro !== null) {
-                    lastVersiculos = lastVersiculos.filter(
-                        v => (((v.cap > filtro[0] || v.vers >= filtro[1]) || (v.cap >= filtro[0] && filtro[1] == null)) &&
-                        ((v.cap < filtro[2] || v.vers <= filtro[3]) || (v.cap <= filtro[2] && filtro[3] == null)))
-                    )
-                }
-            } else {
-                lastVersiculos = {cap: resp.chapter, livro: resp.book.name, vers: resp.number, texto: resp.text};
+            if(!resp.book) lastVersiculos = new RefInvalida(strInicial);
+            else {
+                if (resp.hasOwnProperty('verses')) {
+                    lastVersiculos = resp.verses.map(v => ({vers: v.number, texto: v.text}))
+                    for (var x of lastVersiculos) {
+                        x.cap = resp.chapter.number ;
+                        x.livro = resp.book.name;
+                    }
+                    if (filtro !== null) {
+                        lastVersiculos = lastVersiculos.filter(
+                            v => (((v.cap > filtro[0] || v.vers >= filtro[1]) || (v.cap >= filtro[0] && filtro[1] == null)) &&
+                            ((v.cap < filtro[2] || v.vers <= filtro[3]) || (v.cap <= filtro[2] && filtro[3] == null)))
+                        )
+                    }
+                } else  
+                    lastVersiculos = {cap: resp.chapter, livro: resp.book.name, vers: resp.number, texto: resp.text};
             }
-            
-            this.versiculos.push({versos: lastVersiculos, ordem: ordem});
-            this.tratarVersiculos()
-        })
+            this.versiculos.push({versos: lastVersiculos, ordem});
+            this.tratarVersiculos();
+        });
         
         bibleApi.open('GET', query);
         bibleApi.setRequestHeader("Authorization", "Bearer " + token)
@@ -224,26 +220,30 @@ class AdicionarTextoBiblico extends Component {
                             {versoes.map(v => (<option key={v.version} value={v.nome}>{v.nome}</option>))}
                         </select>
                         {this.state.carregando}
-                        <input ref={this.ref} className='combo-popup' type='text' onKeyDown={e => this.buscarReferencia(e)} 
-                            defaultValue={this.props.input2} placeholder='Digite uma ou mais referências separadas por vírgula. (Ex: "Jo3:16, mc10")' />
+                        <input ref={this.ref} 
+                               className={'combo-popup' + (this.state.carregando ? ' input-com-carregando' : '')} 
+                               type='text' 
+                               onKeyDown={e => this.buscarReferencia(e)} 
+                               defaultValue={this.props.input2} 
+                               placeholder='Digite uma ou mais referências separadas por vírgula. (Ex: "Jo3:16, mc10")' />
                         {/* <datalist id="livros">
                             {livros.map(l => (<option key={l.abbrevPt} value={l.name}></option>))}
                         </datalist> */}
                     </div>
                 </div>
                 {/* Seleção por capítulo e versículo tem funções salvas no módulo ComboCapVers.jsx */}
-                <div className='container-versiculos container-carrossel combo-popup' style={this.state.botoesVisiveis ? null : {visibility: 'hidden'}}>
+                <div className={'container-versiculos container-carrossel' + (this.state.botoesVisiveis ? ' combo-popup' : '')}>
                     <Carrossel tamanhoIcone={45} tamanhoMaximo='100%' direcao='vertical' style={{zIndex: '400'}} beiradaFinal={20}>
-                        <div style={{paddingTop: '2.8vh'}}>
+                        <div style={{paddingTop: this.state.botoesVisiveis ? '2.8vh' : ''}}>
                             {formatarVersiculos(this.state.versiculosPronto)}
                         </div>
                     </Carrossel>
                 </div>
-                <div className='container-botoes-popup' style={this.state.botoesVisiveis ? null : {visibility: 'hidden'}}>
-                    <button className='botao' style={{visibility: this.state.botoesVisiveis}} onClick={() => this.onClick()}>
+                <div className='container-botoes-popup'>
+                    <button className='botao' onClick={() => this.onClick()} style={this.state.botoesVisiveis ? null : {visibility: 'hidden'}}>
                         Inserir Texto Bíblico
                     </button>
-                    <button className='botao limpar-input' onClick={this.limparInput}>
+                    <button className='botao limpar-input' onClick={this.limparInput} style={this.state.versiculosPronto.length ? null : {visibility: 'hidden'}}>
                         ✕ Limpar
                     </button>
                 </div>

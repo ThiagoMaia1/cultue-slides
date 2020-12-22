@@ -35,7 +35,6 @@ class Home extends Component {
       <Provider store={store}>
         <PersistGate loading={<Splash/>} persistor={persistor}>
           <Router history={history}>     
-              <PopupConfirmacao/>
               <Notificacoes/>
               <Switch>
                   {paginas.map(p => (
@@ -51,6 +50,7 @@ class Home extends Component {
                   <Route render={() => <Redirect to='/login'/>} />
               </Switch>
           </Router>
+          <PopupConfirmacao/>
           <Propaganda/>
         </PersistGate>
       </Provider>

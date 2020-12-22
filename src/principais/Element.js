@@ -52,12 +52,12 @@ export const fontePadrao = 'Noto Sans';
 
 export const getFonteBase = (ratio = {}) => ({numero: 0.025*(ratio.height || store.getState().present.ratio.height), unidade: 'px', fontFamily: fontePadrao});
   
-const estiloPadrao = {
-  texto: {fontFamily: fontePadrao}, 
+export const estiloPadrao = {
+  texto: {fontFamily: fontePadrao, eBasico: true}, 
   titulo: {fontSize: 3, height: 0.25, paddingRight: 0.08, textAlign: 'center'}, 
   paragrafo: {fontSize: 1.5, paddingRight: 0.08, lineHeight: 1.9}, 
-  fundo: {path: 'Triângulos Laranja.png'}, 
-  tampao: {backgroundColor: '#ffffff', opacityFundo: 0.2},
+  fundo: {path: ''}, 
+  tampao: {backgroundColor: '#ffffff', opacityFundo: 0.2, eBasico: true},
   imagem: {left: '10%', right: '10%', top: '10%', bottom: '10%', borderRadius: '0px'}
 };
 

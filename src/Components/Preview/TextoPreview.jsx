@@ -68,7 +68,14 @@ export function formatarVersiculosSlide(versiculos) {
 export function formatarVersiculos(versiculos) {
     return versiculos.map((v, i) => {
         if (v instanceof RefInvalida) {
-            return (<><br></br><br></br><div className="itens versiculos" style={{backgroundColor:'#ffcccc', color:'red'}}><b>{v.texto}</b></div></>)
+            return (
+                <div>
+                    <br></br><br></br>
+                    <div className="itens versiculos referencia-invalida">
+                        <b>{v.texto}</b>
+                    </div>
+                </div>
+            )
         }
         var r = [];
         var l = (<><b>{v.livro} </b></>);
@@ -83,6 +90,6 @@ export function formatarVersiculos(versiculos) {
             }
         } 
         r.push(<><b>{superscritoPrevia(v.vers)}</b> {v.texto} </>);
-        return r;
+        return <div>{r}</div>;
     })
 }

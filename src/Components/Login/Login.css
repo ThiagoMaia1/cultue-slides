@@ -159,14 +159,14 @@
 .mensagem-erro{
     text-align: right;
     width: 100%;
+    color: var(--vermelho-fraco);
+    font-size: 90%;
+    line-height: 2.5vh;
 }
 
 .mensagem-erro div {
-    color: var(--vermelho-fraco);
-    font-size: 90%;
-    margin-top: 1vh;
-    line-height: 2.5vh;
     min-height: 2.5vh;
+    margin-top: 1vh;
 }
 
 .quadro-centralizado {

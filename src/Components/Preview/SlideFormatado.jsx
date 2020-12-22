@@ -59,6 +59,11 @@ class SlideFormatado extends Component {
         </div>;
     }
 
+    getEstiloImagem = (estImagem, proporcao) => ({
+        ...estImagem, 
+        borderRadius: Number((estImagem.borderRadius || '').replace('px', ''))*proporcao + 'px'
+    })
+
     render() {
         var slidePreview = this.props.slidePreview;
         var proporcao = this.props.proporcao;
@@ -75,7 +80,7 @@ class SlideFormatado extends Component {
                     {!slidePreview.imagem ? null 
                         : <ImagemRedimensionavel key={sel.elemento + '.' + sel.slide} 
                                                  imagem={slidePreview.imagem} 
-                                                 estiloImagem={slidePreview.estilo.imagem} 
+                                                 estiloImagem={this.getEstiloImagem(slidePreview.estilo.imagem, proporcao)} 
                                                  estiloRealce={this.realcarElemento('imagem')}
                                                  editavel={this.props.editavel}/>
                     }

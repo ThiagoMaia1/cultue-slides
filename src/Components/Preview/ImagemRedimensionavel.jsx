@@ -103,7 +103,7 @@ class ImagemRedimensionavel extends Component {
     }
 
     setCursor = (cursor = null) => {
-        this.setState({cursor: cursor});
+        this.setState({cursor});
     }
 
     resize = pos => {
@@ -245,12 +245,14 @@ class ImagemRedimensionavel extends Component {
                                 : this.state.espelhadoVertical 
                                     ? 'vertical'
                                     : ''; 
+        let { cursor } = this.state;
+        let { imagem, editavel, estiloRealce, estiloImagem } = this.props;
         return (
-            <div id='container-quadro-redimensionar' onMouseMove={this.onMouseMove} style={{cursor: this.state.cursor}}>
+            <div id='container-quadro-redimensionar' onMouseMove={this.onMouseMove} style={{cursor}}>
                 <div id='quadro-redimensionar' 
                     className={'div-imagem-slide ' + classEspelhado}
-                    style={{...this.props.estiloRealce, ...this.props.estiloImagem, ...this.state.estiloImagem,
-                            backgroundImage: 'url(' + this.props.imagem.src + ')', outline: this.state.cursor ? 'solid gray 1px' : ''}} 
+                    style={{...estiloRealce, ...estiloImagem, ...this.state.estiloImagem,
+                            backgroundImage: 'url(' + imagem.src + ')', outline: (cursor && editavel) ? 'solid gray 1px' : ''}} 
                     onDragStart={this.onDragStart}>
                 </div>
             </div>

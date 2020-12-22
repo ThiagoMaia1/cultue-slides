@@ -8,7 +8,7 @@
             "type": "chrome",
             "request": "launch",
             "name": "Debug no Chrome",
-            "url": "http://localhost:3000/#/rC8k1eIFzF0iaJoOGYkB",
+            "url": "http://localhost:3000",
             "webRoot": "${workspaceFolder}"
         }
     ]

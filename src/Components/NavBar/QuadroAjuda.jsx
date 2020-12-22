@@ -4,7 +4,6 @@ import QuadroAtalhos from './QuadroAtalhos';
 import QuadroEnviar from './QuadroEnviar';
 import { QuadroOpcoes } from '../Basicos/MenuBotaoDireito/MenuBotaoDireito';
 import { listaTutoriais, keysTutoriais } from '../Tutorial/ListaTutorial';
-// import { objetosSaoIguais } from '../../../principais/FuncoesGerais';
 
 const refazerTutorial = itemTutorial => store.dispatch({type: 'definir-item-tutorial', refazer: true, itemTutorial})
 

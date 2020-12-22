@@ -6,8 +6,14 @@
     text-justify: inter-word;
     display: block;
     padding: 0 2.6vh;
+    width: 100%;
 }
 
+.versiculos.referencia-invalida {
+    background-color: #ffcccc;
+    color: red;
+    width: 100%;
+}
 
 .versiculos {
     padding: 1vh;

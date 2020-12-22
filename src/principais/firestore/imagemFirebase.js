@@ -1,11 +1,11 @@
-import firebase, { firebaseStorage } from '../../../../principais/firebase.js';
+import firebase, { firebaseStorage } from '../firebase.js';
 // import { atualizarRegistro } from '../../../../principais/firestore/apiFirestore';
 
-export function uploadImagem (arquivo, callback) {
+export function uploadImagem (arquivo, metadata, callback) {
 
     var idUpload = new Date().getTime();
     var nomeArquivo = arquivo.name + '_' + new Date().getTime(); //Nomes de arquivo no firebase storage precisam ser únicos.
-    var uploadTask = firebaseStorage.child('images/' + nomeArquivo).put(arquivo);
+    var uploadTask = firebaseStorage.child('images/' + nomeArquivo).put(arquivo, metadata);
 
     // Listen for state changes, errors, and completion of the upload.
     uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
@@ -49,6 +49,11 @@ export function uploadImagem (arquivo, callback) {
         }
     );
     return idUpload;
+}
+
+export const getMetadata = async url => {
+    var httpsReference = firebase.storage().refFromURL(url);
+    return await httpsReference.getMetadata();
 }
 
 // export const getHashImagem = async imgBase64 => {

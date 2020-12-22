@@ -7,6 +7,15 @@ import Carrossel from '../Basicos/Carrossel/Carrossel';
 import InputImagem from '../Popup/PopupsAdicionar/AdicionarImagem/InputImagem';
 import Popup from '../Popup/Popup';
 import { toggleAnimacao } from '../Basicos/Animacao/animacaoCoordenadas.js'
+import { getMetadata } from '../../principais/firestore/imagemFirebase';
+import { mudancasArrays } from '../../principais/FuncoesGerais';
+
+const fundosFixos = listaFundos.imagens.map(i => ({
+    fundo: {path: i.path, src: null}, 
+    alt: i.path ? i.path.split('.')[0] : 'Cor Sólida', 
+    tampao: {...i.tampao, eBasico: true}, 
+    texto: {color: i.color, eBasico: true}
+}));
 
 class Galeria extends Component {
 
@@ -14,7 +23,7 @@ class Galeria extends Component {
         super(props);
         this.coordenadasBotao = [ 80, 89, 12, 3];
         this.coordenadasGaleria = [ 70, 2, 6, 2];
-        this.state = {popupCompleto: null, imagens: this.getImagens(), coordenadas: [...this.coordenadasBotao], galeriaVisivel: false};
+        this.state = {popupCompleto: null, imagens: [], coordenadas: [...this.coordenadasBotao], galeriaVisivel: false};
     }
 
     mostrarGaleria = () => {
@@ -33,44 +42,51 @@ class Galeria extends Component {
         )
     }
 
-    getImagens() {
-        var imagens = [];
-        for (var i of listaFundos.imagens) {
-            imagens.push({fundo: {path: i.path}, alt: i.path ? i.path.split('.')[0] : 'Cor Sólida', tampao: i.tampao, texto: {color: i.color}})
-        }
-        return imagens;
+    getImagens = () => {
+        return this.state.imagens.concat(fundosFixos);
     }
 
     abrirPopup = () => {
-        this.setState({popupCompleto: (
+        this.setState({popupCompleto:
             <Popup ocultarPopup={() => this.setState({popupCompleto: null})}>
                 <h4>Enviar Fundo Personalizado</h4>
-                <InputImagem callback={this.enviarImagensFundo} callbackUpload={this.callbackUpload} eFundo={true}/>
+                <InputImagem eFundo={true}/>
             </Popup>
-        ), painelAdicionar: false});
-    }
-
-    callbackUpload = (idUpload, urlUpload) => {
-        var imgs = [...this.state.imagens];
-        this.setState({
-            imagens: imgs.map(i => {
-                if(i.fundo.idUpload === idUpload) 
-                    i.fundo.src = urlUpload;
-                return i;
-            })
         });
     }
 
-    enviarImagensFundo = imagens => {
-        var imgs = imagens.map(i => (
-            {imagem: i, fundo: {src: i.src, idUpload: i.idUpload}, alt: i.alt, height: i.height, width: i.width, texto: {color: '#000'}, tampao: {opacity: 0}}
-        ))
-        this.setState({imagens: [...imgs, ...this.state.imagens]})
+    inserirFundos = async arrayFundos => {
+        this.inserindoFundos = true;
+        await arrayFundos.forEach(async url => {
+            let name = await getMetadata(url).name || '';
+            this.setState({imagens: [
+                ...this.state.imagens, 
+                {
+                    fundo: {src: url, path: null},
+                    alt: name.substr(0, name.length - 18),
+                    tampao: {},
+                    texto: {},
+                    excluivel: true
+                }
+            ]})
+        });
+        this.inserindoFundos = false;
+    }
+
+    componentDidMount = () => {
+        this.inserirFundos(this.props.fundos);
     }
 
     componentDidUpdate = prevProps => {
         if(!this.state.galeriaVisivel && prevProps.tutorialAtivo !== this.props.tutorialAtivo) {
             this.mostrarGaleria();
+        }
+        if (!this.inserindoFundos) {
+            let fundos = this.state.imagens.map(i => i.fundo.src);
+            let { acrescentar, remover } = mudancasArrays(this.props.fundos, fundos); 
+            if(remover.length) 
+                this.setState({imagens: this.state.imagens.filter(i => !remover.includes(i.fundo.src))});
+            this.inserirFundos(acrescentar);
         }
     }
 
@@ -95,10 +111,9 @@ class Galeria extends Component {
                                 <div className='div-img' onClick={this.abrirPopup}>
                                     <div id='botao-enviar-fundo' className='imagem-galeria'>Enviar Fundo Personalizado</div>
                                 </div>
-                                {this.state.imagens.map(img => (
-                                    <Img key={img.path || img.src} imagem={img} />
-                                    ))
-                                }
+                                {this.getImagens().map(img => (
+                                    <Img key={img.path || img.src} imagem={img}/>
+                                ))}
                                 <div className='pseudo-margem-galeria'></div>
                             </div>
                         </Carrossel>
@@ -112,6 +127,7 @@ class Galeria extends Component {
  
 const mapState = state => (
     {
+        fundos: (state.usuario.imagens || {}).fundos || [],
         autorizacao: state.present.apresentacao.autorizacao, 
         tutorialAtivo: state.itensTutorial.includes('galeriaFundos')
     }

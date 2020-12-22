@@ -1042,3 +1042,9 @@
 [1220/003324.490:ERROR:directory_reader_win.cc(43)] FindFirstFile: O sistema não pode encontrar o caminho especificado. (0x3)
 [1220/073535.894:ERROR:directory_reader_win.cc(43)] FindFirstFile: O sistema não pode encontrar o caminho especificado. (0x3)
 [1221/080247.396:ERROR:directory_reader_win.cc(43)] FindFirstFile: O sistema não pode encontrar o caminho especificado. (0x3)
+[1221/183603.471:ERROR:directory_reader_win.cc(43)] FindFirstFile: O sistema não pode encontrar o caminho especificado. (0x3)
+[1222/080620.513:ERROR:crash_report_database_win.cc(496)] failed to stat report
+[1222/081620.580:ERROR:crash_report_database_win.cc(496)] failed to stat report
+[1222/081620.584:ERROR:filesystem_win.cc(116)] GetFileAttributes C:\Users\adassa\AppData\Local\Google\Chrome\User Data\Crashpad\reports\55c40019-60d9-4439-8135-32d96237adaa.dmp: O sistema não pode encontrar o arquivo especificado. (0x2)
+[1222/081620.602:ERROR:directory_reader_win.cc(43)] FindFirstFile: O sistema não pode encontrar o caminho especificado. (0x3)
+[1222/095928.558:ERROR:directory_reader_win.cc(43)] FindFirstFile: O sistema não pode encontrar o caminho especificado. (0x3)

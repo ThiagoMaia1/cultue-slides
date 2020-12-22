@@ -83,27 +83,33 @@
 //   ✔️ Conversão hsl/rgb do color picker não está boa
 //   ✔️ Contagem de imagens válidas/inválidas no input
 //   ✔️ Menu contexto está sendo tampado pelo tampao
+//   ✔️ Clicar através do 'carregando' no input de música
+//   ✔️ Não aplicar configurações do tampão de um fundo quando o slide já tiver configurações especiais
+//   ✔️ Word break nome de arquivos longos no popupConfirmação
+//   ✔️ Border-radius da imagem proporcional
+//   ✔️ Fale conosco sem login
+//   ✔️ Indicar referência inválida no combo texto bíblico
 //   ✔️ Carrossel do Input Imagem não vai até o final.*/
 // Errinhos:
 //   ✔️ Click fora tutorial
+//   Problemas nos dados ao persistir redux (?)
 //   Padding bottom redividir slides um pouco errado
-//   Redividir quando o texto de um slide é todo deletado
-//   Edição do conteúdo do parágrafo dando alguns erros (falha ao perder foco, não exibe cursor)
 //   Redividir slides às vezes não deleta os últimos (não consegui reproduzir)
+//   Redividir quando o texto de um slide é todo deletado
+//   Edição do conteúdo do parágrafo dando alguns erros (falha ao perder foco, não exibe cursor, markup aparecendo)
 //   Exportação de imagens após mudanças inset
-//   Atalhos nos inputs
-//   Reduzir imagens que são grandes demais (galáxia...)
-//   Problemas nos dados ao persistir redux
-//   Clicar através do 'carregando' no input de música
 //   Clonar estilo está uma bosta
-//   Padding dando NaN
+//   Atalhos funcionarem mesmo com foco nos inputs
 //   Link de download não faz nada
-//   Não aplicar configurações do tampão de um fundo quando o slide já tiver configurações especiais
 //   Redimensionar imagem ao inseri-la
-//   Word break nome de arquivos longos no popupConfirmação
+//   Drag do Input Imagem
+//   Nomes dos fundos personalizados
+//   Padding dando NaN
+//   Reduzir imagens que são grandes demais (galáxia...)
 
 /*// Features essenciais:
-//   ✔️ Envio de imagens//   ✔️ Navegar slides clicando à direita ou esquerda
+//   ✔️ Envio de imagens
+//   ✔️ Navegar slides clicando à direita ou esquerda
 //   ✔️ Enviar imagem para fundo
 //   ✔️ Editar texto direto no slide
 //   ✔️ Permitir desfazer ações da store (Ctrl + Z)
@@ -151,24 +157,25 @@
 //   ✔️ Animação e clickFora, menu Adicionar
 //   ✔️ Lidar com perda de conexão
 //   ✔️ Editar slide de imagens ou desabilitar edição 🟨
+//   ✔️ Pool de images
 //   ✔️ Lista de atalhos do modo apresentação.*/
 //   Tentar de novo/Avisar se upload da imagem não pôde ser feito
-//   Pool de images
 //   Botões centralizar nas configurações de imagem
 //   Incluir fontes como base64 (html) ou zip (power point) 🟥
 //   Exportação em PowerPoint
 //   Otimizar trocas de dados com BD 🟨
-//   Border-radius da imagem proporcional
-//   Fale conosco sem login
+//   Excluir/editar slide padrão
+//   Diferentes tipos de "Nova apresentação"
 
 /*/ Features dispensáveis:
+//   Slide-mestre de cada tipo 🟥
 //   Tela perfil do usuário: predefinições. 🟥 
 //   Outros efeitos no texto: sombra, realce, etc..
+//   Incorporar vídeos do youtube
 //   Definir limite de e-mails
 //   Propagandas alternadas na galeria
-//   Favoritar músicas, fundos..
-//   Incorporar vídeos do youtube
-//   Exportar como PDF
+//   Favoritar músicas, fundos...
+//   Exportar como PDF 🟥
 //   Criar slides a partir de lista com separador
 //   Combo de número de capítulos e versículos da bíblia
 //   Adicionar logo da igreja (upload ou a partir de lista de logos famosas de denominações)
@@ -181,7 +188,6 @@
 //   Dividir slide em 2 colunas
 //   Animação excluir item lista perfil
 //   Nomear apresentacao
-//   Duplicar apresentação
 //   Opção de inserir texto bíblico/imagem como grupo ou separado. 
 //   Tela assinaturas/compras. 
 //   Input por texto nos sliders
@@ -194,12 +200,11 @@
 //   Pesquisa cifra
 //   Dicas eventuais: B/W, forma de escrita da referência bíblica
 //   Atalhos e clickFora dos menus
-//   Deletar/duplicar slide arrastando
-//   Manter alt pressionado para duplicar o slide
-//   Criar PDF de documentação
+//   Deletar/duplicar slide arrastando (Manter alt pressionado)
+//   Criar manual de uso
 //   Verificar se imagem já existe no BD antes de upar
 //   Atalho F1 para ajuda
-//   Slide-mestre de cada tipo */
+//   Logo no e-mail de forma que possa ser lida offline*/
 //
 // Negócio:
 //   ✔️ Criar logo
@@ -212,3 +217,4 @@
 //   E-mails não caírem no spam
 //   Criar instagram
 //   Criar canal do youtube
+//   Gravar tutoriais em vídeo

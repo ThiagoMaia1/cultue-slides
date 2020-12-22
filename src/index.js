@@ -146,6 +146,8 @@ export const reducerElementos = function (state = defaultList, action, usuario) 
         est.fundo = {...action.valor};
       } else {
         est[action.objeto] = {...est[action.objeto], ...action.valor};
+        if (['paragrafo', 'texto', 'titulo'].includes(action.objeto) && Object.keys(action.valor).includes('color')) est.texto.eBasico = false;
+        if (action.objeto === 'tampao') est.tampao.eBasico = false; 
       }
       el[sel.elemento] = e;
       if (action.redividir) el = redividirSlides(el, sel, state.ratio);
@@ -285,8 +287,12 @@ export function undoable(reducer) {
         slidesPadrao = usuario.slidesPadrao.splice(action.indiceSlide, 1);
         atualizarDadosUsuario(usuario.uid, {slidesPadrao});
         return {...state, usuario: {...usuario, slidesPadrao}};
-      case 'atualizar-colecao-imagens-usuario':
-        let { imagens } = action;
+      case 'alterar-imagem-colecao-usuario':
+        let { url, indice, subconjunto } = action;
+        let imagens = {...usuario.imagens} || {};
+        let conjunto = imagens[subconjunto] || [];
+        if(indice) imagens[subconjunto] = (conjunto).filter((_img, i) => i !== indice);
+        else if(url) imagens[subconjunto] = [...conjunto, url];
         atualizarDadosUsuario(usuario.uid, {imagens});
         return {...state, usuario: {...usuario, imagens }};
       case 'toggle-search':

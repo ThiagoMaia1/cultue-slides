@@ -19,7 +19,7 @@ exports.enviarEmail = functions.https.onCall(data => {
 
   let email = {
       from: remetente,
-      to: destinatarios,
+      to: destinatarios || [enderecoEmail],
       subject: assunto,
       text: corpo,
       html: corpoHTML,

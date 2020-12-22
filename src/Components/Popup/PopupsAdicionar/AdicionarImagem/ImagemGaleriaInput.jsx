@@ -1,67 +1,105 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import useClosingAnimation from '../../../../principais/Hooks/useClosingAnimation';
+import { ativarPopupConfirmacao } from '../../PopupConfirmacao';
 import '../LetrasMusica/style.css';
 import './style.css';
 import { getImgBase64 } from '../../../../principais/FuncoesGerais';
 
-const ImagemGaleriaInput = ({img, indice, apagar, nFiles, setFinalCarrossel = null}) => {
-    
-    let [image] = useState(img);
+const ImagemGaleriaInput = ({img, indice, apagar, nFiles, setFinalCarrossel = null, onClick = null, mensagemConfirmarExclusao = ''}) => {
+
+    let imgRef = useRef(img);
+    let [image, setImage] = useState({});
     let [background, setBackground] = useState({});
-    let [ativo, setAtivo] = useState(true);
+    let [ativo, setAtivo] = useState(false);
     let {maxWidth, opacity, transition} = useClosingAnimation(
         ativo,
         () => apagar(indice),
         {maxWidth: '0', opacity: 0},
         {maxWidth: '12vw', opacity: 1}
     )
-    let [callbackCarrossel] = useState(setFinalCarrossel);
+    let callbackCarrossel = useRef(setFinalCarrossel);
+
+    useEffect(() => {
+        let cImg = imgRef.current;
+        if(ativo) return;
+        const onLoad = ({target}) => {
+            setImage({
+                src: getImgBase64(target, 300, 200),
+                alt: cImg.eLinkFirebase ? cImg.src : cImg.altContador,
+                invalida: !cImg.eLinkFirebase && !cImg.width
+            })
+            setAtivo(true);
+        }
+        if(cImg.eLinkFirebase) {
+            let imagem = new Image();
+            imagem.crossOrigin = 'Anonymous';
+            imagem.onload = onLoad;
+            imagem.src = cImg.src;
+        } else {
+            onLoad({target: cImg});
+        }
+    }, [imgRef, ativo])
 
     useEffect(() => {
         let bG = {};
-        if (image.width) {
-            bG.backgroundImage = 'url(' + getImgBase64(image, 300, 200) + ')';
+        if (image.invalida)
+            bG.backgroundColor = 'var(--vermelho-fraco)';
+        else {
+            bG.backgroundImage = 'url(' + image.src + ')';
             bG.backgroundPosition = 'center';
             bG.backgroundRepeat = 'no-repeat';
             bG.backgroundSize = 'cover';
-        } else {
-            bG.backgroundColor = 'var(--vermelho-fraco)';
         }
         setBackground(bG);
     }, [image])
 
     useEffect(() => {
-        if (callbackCarrossel){
-            callbackCarrossel();
-            setTimeout(() => callbackCarrossel(), 300);
+        let funcao = callbackCarrossel.current;
+        if (funcao){
+            funcao();
+            setTimeout(() => funcao(), 300);
         }
     }, [callbackCarrossel]);
 
     useEffect(() => {
         document.body.style.cursor = 'progress';
-        if (indice + 1 === nFiles) document.body.style.cursor = 'default';
+        if (indice + 1 >= nFiles) document.body.style.cursor = 'default';
     }, [indice, nFiles])
 
-    const onClick = e => {
-        e.stopPropagation();
-        setAtivo(false);
+    const confirmarExclusao = () => {
+        if (mensagemConfirmarExclusao) 
+            ativarPopupConfirmacao(
+                'OKCancelar',
+                'Confirmar Exclusão',
+                mensagemConfirmarExclusao,
+                fazer => {
+                    if(fazer) setAtivo(false);
+                },
+                <ImagemGaleriaInput img={img} indice={0} nFiles={1}/>
+            );
+        else setAtivo(false);
     }
 
-    let alt = img.alt + (img.contador ? '-' + img.contador : '');
+    const clickApagar = e => {
+        e.stopPropagation();
+        confirmarExclusao();
+    }
+
     return (
-        <div className='container-imagem-upload' key={alt}>
+        <div className='container-imagem-upload' style={{cursor: onClick ? 'pointer' : ''}} key={image.alt} onClick={() => {if(onClick) onClick(img)}}>
             <div className='imagem-invalida previa-imagem-upload' 
-                    style={{...background, maxWidth, transition}}>
-                {img.width 
-                    ? null
+                 style={{...background, maxWidth, transition}}>
+                {!image.invalida ? null
                     : <> 
-                        <div style={{textAlign: 'center'}}>Arquivo Inválido:<br></br>"{img.nomeComExtensao}"<br></br></div>
+                        <div style={{textAlign: 'center'}}>Arquivo Inválido:<br></br>"{image.alt}"<br></br></div>
                         <div style={{fontSize: '120%'}}>✕</div>
                       </>
                 }
             </div>
-            <button className='x-apagar-imagem' style={{opacity, transition}} 
-                    onClick={onClick}>✕</button>
+            {!apagar ? null : 
+                <button className='x-apagar-imagem' style={{opacity, transition}} 
+                    onClick={clickApagar}>✕</button>
+            }
         </div>
     )
 }

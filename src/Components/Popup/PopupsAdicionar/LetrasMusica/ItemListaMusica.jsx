@@ -29,7 +29,7 @@ class ItemListaMusica extends React.Component {
                     : null
                 }
                 <div key={this.props.musica.id} className='itens' 
-                        onClick={this.onClick} style={(eEssa && !carregando) ? {backgroundColor: 'var(--azul-fraco)'} : null}>
+                        onClick={this.onClick} style={(eEssa && !carregando) ? {backgroundColor: 'var(--platinum-forte)'} : null}>
                     <b>{this.props.musica.title} - </b>{this.props.musica.band}
                     <div className='trecho-previa-musica' dangerouslySetInnerHTML={{ __html: this.props.musica.trecho}}/>
                 </div>

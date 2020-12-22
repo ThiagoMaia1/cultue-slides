@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { getNomeCss } from '../FuncoesGerais';
 
 const useClosingAnimation = (ativo, callbackFechar, estiloInicial, estiloFinal, tempo = 200) => {
@@ -10,18 +10,20 @@ const useClosingAnimation = (ativo, callbackFechar, estiloInicial, estiloFinal, 
         }
     )
 
-    const [estInicial] = useState(getEstiloTransition(estiloInicial));
-    const [estFinal] = useState(getEstiloTransition(estiloFinal));
+    const jaAtivou = useRef(false);
+    const estInicial = useRef(getEstiloTransition(estiloInicial));
+    const estFinal = useRef(getEstiloTransition(estiloFinal));
     const [estilo, setEstilo] = useState(estiloInicial);
 
     useEffect(() => {
         if(ativo) {
-            setTimeout(() => setEstilo(estFinal), 0);
-        } else {
-            setEstilo(estInicial);
+            setTimeout(() => setEstilo(estFinal.current), 0);
+            jaAtivou.current = true;
+        } else if(jaAtivou.current) {
+            setEstilo(estInicial.current);
             setTimeout(callbackFechar, tempo);
         }
-    }, [ativo, callbackFechar, estInicial, estFinal, tempo]);
+    }, [ativo, callbackFechar, estInicial, estFinal, tempo, jaAtivou]);
 
     return estilo;
 };

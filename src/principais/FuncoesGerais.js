@@ -463,3 +463,10 @@ export const getObjectByStringPath = (object, path) => {
     }
     return object;
 }
+
+export const diferencaArrays = (arrayMaior, arrayMenor) => arrayMaior.filter(a => !arrayMenor.includes(a));
+
+export const mudancasArrays = (arrayNovo, arrayAntigo) => ({
+    acrescentar: diferencaArrays(arrayNovo, arrayAntigo),
+    remover: diferencaArrays(arrayAntigo, arrayNovo)
+})
