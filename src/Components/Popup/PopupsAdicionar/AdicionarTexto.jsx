@@ -1,8 +1,46 @@
-import React, { Component } from 'react';
+import React, { Component, useState } from 'react';
 import './LetrasMusica/style.css';
+import store from '../../../index';
 import Element from '../../../principais/Element'
+import useClosingAnimation from '../../../principais/Hooks/useClosingAnimation';
 import { connect } from 'react-redux';
 import Carrossel from '../../Basicos/Carrossel/Carrossel';
+import { ativarPopupConfirmacao } from '../PopupConfirmacao';
+
+const ItemListaSlidesPadrao = ({callback, slide}) => {
+
+    let {titulo} = slide;
+    const [ativo, setAtivo] = useState(true);
+    const {maxWidth, display, padding, margin, transition} = useClosingAnimation(
+        ativo,
+        () => store.dispatch({type: 'excluir-slide-padrao', titulo}),
+        {maxWidth: 0, display: 'none', padding: 0, margin: 0},
+        {maxWidth: '100vw'}
+    );
+
+    const onClick = e => {
+        e.stopPropagation();
+        let txt = slide.textoSlide;
+        ativarPopupConfirmacao(
+            'simNao',
+            'Confirmar Exclusão',
+            <div >{'Tem certeza de que deseja excluir o texto: \n\n"'}
+                <b>{titulo + (txt.length ? ': ' + (txt.length > 100 ? txt.substr(0, 98) + '...' : txt) : '') + '"'}</b>
+                {'?\n\n(Essa ação não poderá ser desfeita.)'}
+            </div>,
+            fazer => {if(fazer) setAtivo(false)}
+        )
+    }
+
+    return (
+        <button className='botao' tabIndex='-1' style={{maxWidth, padding, margin, transition}} onClick={() => callback(slide)}>
+            <div style={{display}}>
+                {titulo}   
+                <button className='x-apagar-tag' onClick={onClick}>✕</button>
+            </div>
+        </button>
+    )
+}
 
 class AdicionarTexto extends Component {
     
@@ -11,14 +49,6 @@ class AdicionarTexto extends Component {
         this.refTitulo = React.createRef();
         this.state = {botoesVisiveis: false, titulo: this.props.input1 || '', textoSlide: this.props.input2 || '', mensagemErro: ''};
     }
-
-    gerarListaSlidesPadrao = () => 
-        this.props.usuario.slidesPadrao.map((s, i) => (
-            <button className='botao' key={i + s.titulo} tabIndex='-1' 
-                    onClick={() => this.setState({titulo: s.titulo, textoSlide: s.textoSlide})}>
-                        {s.titulo}
-            </button>
-    ));
 
     onClick () {
         var popupAdicionar = {input1: this.state.titulo, input2: this.state.textoSlide};
@@ -29,7 +59,9 @@ class AdicionarTexto extends Component {
                             });
     }
 
-    focarTitulo = () => this.refTitulo.current.focus();
+    focarTitulo = () => {
+        if(this.refTitulo.current) this.refTitulo.current.focus();
+    }
 
     limparInputs = () => {
         this.setState({titulo: '', textoSlide: ''});
@@ -68,7 +100,9 @@ class AdicionarTexto extends Component {
                     <Carrossel tamanhoIcone={80} tamanhoMaximo='20vh' direcao='vertical' style={{zIndex: '400', width: '100%'}} beiradaFinal={10}>
                         <div className='itens-lista-slides-padrao'>
                             <div className='titulo-secao-popup'>Slides Padrão: </div>
-                            {this.gerarListaSlidesPadrao()}
+                            {this.props.usuario.slidesPadrao.map(s => 
+                                <ItemListaSlidesPadrao key={s.titulo} slide={s} callback={({titulo, textoSlide}) => this.setState({titulo, textoSlide})}/>
+                            )}
                             <button id='botao-adicionar-slide-padrao' onClick={this.criarSlidePadrao}>+</button>
                         </div>
                     </Carrossel>
@@ -89,9 +123,9 @@ class AdicionarTexto extends Component {
 }
 
 const mapState = state => {
-    var usuario = state.usuario;
-    if (!usuario.slidesPadrao) usuario.slidesPadrao = [];
-    return {usuario: usuario}
+    var { usuario } = state;
+    usuario.slidesPadrao = usuario.slidesPadrao || [];
+    return {usuario}
 }
 
 export default connect(mapState)(AdicionarTexto);

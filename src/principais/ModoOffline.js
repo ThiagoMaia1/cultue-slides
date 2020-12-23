@@ -10,18 +10,16 @@ const css =
     '}' +
     '.gradiente-coluna {' +
         'display: none;' + 
-    '}' +
-    '#borda-slide-mestre, .coluna-lista-slides {' +
-        'opacity: 0.4;' + 
     '}'
 
 var styleSheet;
 
-export default status =>
+export default status =>{
+    console.log(status, styleSheet)
     status
         ? !styleSheet || removerStyleSheet()
         : incluirStyleSheet()
-
+}
 const incluirStyleSheet = () => {
     styleSheet = document.createElement('style');
     styleSheet.innerHTML = css;

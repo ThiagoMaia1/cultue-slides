@@ -99,11 +99,11 @@ class MenuExportacao extends Component {
     }
 
     render() {
-        var tamIcones = window.innerWidth*0.027 + 'px';
+        var tamIcones = window.innerWidth*0.024 + 'px';
         var maxTamanho = {maxWidth: this.state.maxTamanho.maxWidth + 'vw', maxHeight: this.state.maxTamanho.maxHeight + 'vh'}
         return (
             <div id='menu-exportacao' className='botao-azul' onClick={() => this.abrirMenu(true)}
-                style={{right: '3vw', bottom: '12vh',
+                style={{right: '3vw', bottom: '6vh',
                         ...maxTamanho,
                         pointerEvents: this.state.menuVisivel ? 'none' : 'all', background: this.state.menuVisivel ? 'var(--azul-forte)' : ''}}>
                 <div className='colapsar-menu exportacao' style={{display: this.state.menuVisivel ? '' : 'none'}}
@@ -131,7 +131,7 @@ class MenuExportacao extends Component {
                     meio={this.state.meio}
                     formato={this.state.formato}
                 />
-                <div id='rotulo-exportar' style={this.state.menuVisivel ? {maxWidth: 0, maxHeight: 0} : {maxWidth: '8vw', maxHeight: '8vh'}}>Exportar Slides</div>
+                <div id='rotulo-exportar' style={this.state.menuVisivel ? {maxWidth: 0, maxHeight: 0} : {maxWidth: '7vw', maxHeight: '8vh'}}>Exportar Slides</div>
             </div>
         )
     }

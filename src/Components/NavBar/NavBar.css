@@ -8,14 +8,19 @@
     box-shadow: 2px 2px 8px rgba(0,0,0,0.3);
     position: relative;
     z-index: 900;
+    /* color: white;
+    background-color: black; */
 }
 
 #botoes-navbar, .div-botao-navbar{
-    margin-left: 1vw;
     height: 100%;
     display: flex;
     align-items: center;
     position: relative;
+}
+
+#botoes-navbar {
+    margin-left: 1.5vw;
 }
 
 #botoes-navbar > button, .div-botao-navbar > button {
@@ -27,6 +32,7 @@
 
 #botoes-navbar > button:hover, .div-botao-navbar:hover {
     background-color: var(--platinum-forte);
+    /* background-color: var(--preto-fraco); */
 }
 
 #nome-usuario {

@@ -2,14 +2,10 @@
   display: block;
 }
 
-#root, #App, #organizador, .coluna-lista-slides {
-  background-color: inherit;
-}
-
 #organizador {
   display: flex;
   align-items: top;
-  width: 82%;
+  width: 75%;
   margin: 2vw;
 }
 

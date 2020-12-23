@@ -8,7 +8,7 @@ import InputImagem from '../Popup/PopupsAdicionar/AdicionarImagem/InputImagem';
 import Popup from '../Popup/Popup';
 import { toggleAnimacao } from '../Basicos/Animacao/animacaoCoordenadas.js'
 import { getMetadata } from '../../principais/firestore/imagemFirebase';
-import { mudancasArrays } from '../../principais/FuncoesGerais';
+import { mudancasArrays, objetosSaoIguais } from '../../principais/FuncoesGerais';
 
 const fundosFixos = listaFundos.imagens.map(i => ({
     fundo: {path: i.path, src: null}, 
@@ -21,8 +21,8 @@ class Galeria extends Component {
 
     constructor (props) {
         super(props);
-        this.coordenadasBotao = [ 80, 89, 12, 3];
-        this.coordenadasGaleria = [ 70, 2, 6, 2];
+        this.coordenadasBotao = [ 86, 89, 6, 3];
+        this.coordenadasGaleria = [ 73, 2, 3, 2];
         this.state = {popupCompleto: null, imagens: [], coordenadas: [...this.coordenadasBotao], galeriaVisivel: false};
     }
 
@@ -57,19 +57,18 @@ class Galeria extends Component {
 
     inserirFundos = async arrayFundos => {
         this.inserindoFundos = true;
-        await arrayFundos.forEach(async url => {
-            let name = await getMetadata(url).name || '';
-            this.setState({imagens: [
-                ...this.state.imagens, 
-                {
+        let imagens = [...this.state.imagens];
+        for (let url of arrayFundos) {
+            let name = (await getMetadata(url)).name || '';
+            imagens.unshift({
                     fundo: {src: url, path: null},
                     alt: name.substr(0, name.length - 18),
                     tampao: {},
                     texto: {},
                     excluivel: true
-                }
-            ]})
-        });
+            })
+        };
+        this.setState({imagens});
         this.inserindoFundos = false;
     }
 
@@ -81,7 +80,7 @@ class Galeria extends Component {
         if(!this.state.galeriaVisivel && prevProps.tutorialAtivo !== this.props.tutorialAtivo) {
             this.mostrarGaleria();
         }
-        if (!this.inserindoFundos) {
+        if (!objetosSaoIguais(prevProps.fundos, this.props.fundos)) {
             let fundos = this.state.imagens.map(i => i.fundo.src);
             let { acrescentar, remover } = mudancasArrays(this.props.fundos, fundos); 
             if(remover.length) 
@@ -112,7 +111,7 @@ class Galeria extends Component {
                                     <div id='botao-enviar-fundo' className='imagem-galeria'>Enviar Fundo Personalizado</div>
                                 </div>
                                 {this.getImagens().map(img => (
-                                    <Img key={img.path || img.src} imagem={img}/>
+                                    <Img key={img.fundo.path || img.fundo.src} imagem={img}/>
                                 ))}
                                 <div className='pseudo-margem-galeria'></div>
                             </div>

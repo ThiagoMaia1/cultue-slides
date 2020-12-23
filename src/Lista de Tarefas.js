@@ -89,12 +89,16 @@
 //   ✔️ Border-radius da imagem proporcional
 //   ✔️ Fale conosco sem login
 //   ✔️ Indicar referência inválida no combo texto bíblico
+//   ✔️ Reduzir imagens que são grandes demais (galáxia...)
+//   ✔️ Nomes dos fundos personalizados
 //   ✔️ Carrossel do Input Imagem não vai até o final.*/
 // Errinhos:
 //   ✔️ Click fora tutorial
 //   Problemas nos dados ao persistir redux (?)
+//   Padding dando NaN (?)
+//   Redividir slides às vezes não deleta os últimos (?)
+//   Drag do Input Imagem (?)
 //   Padding bottom redividir slides um pouco errado
-//   Redividir slides às vezes não deleta os últimos (não consegui reproduzir)
 //   Redividir quando o texto de um slide é todo deletado
 //   Edição do conteúdo do parágrafo dando alguns erros (falha ao perder foco, não exibe cursor, markup aparecendo)
 //   Exportação de imagens após mudanças inset
@@ -102,10 +106,8 @@
 //   Atalhos funcionarem mesmo com foco nos inputs
 //   Link de download não faz nada
 //   Redimensionar imagem ao inseri-la
-//   Drag do Input Imagem
-//   Nomes dos fundos personalizados
-//   Padding dando NaN
-//   Reduzir imagens que são grandes demais (galáxia...)
+//   clickFora Select
+//   Ordem fundos personalizados/cor sólida
 
 /*// Features essenciais:
 //   ✔️ Envio de imagens
@@ -158,13 +160,13 @@
 //   ✔️ Lidar com perda de conexão
 //   ✔️ Editar slide de imagens ou desabilitar edição 🟨
 //   ✔️ Pool de images
+//   ✔️ Excluir/editar slide padrão
 //   ✔️ Lista de atalhos do modo apresentação.*/
 //   Tentar de novo/Avisar se upload da imagem não pôde ser feito
 //   Botões centralizar nas configurações de imagem
 //   Incluir fontes como base64 (html) ou zip (power point) 🟥
 //   Exportação em PowerPoint
 //   Otimizar trocas de dados com BD 🟨
-//   Excluir/editar slide padrão
 //   Diferentes tipos de "Nova apresentação"
 
 /*/ Features dispensáveis:

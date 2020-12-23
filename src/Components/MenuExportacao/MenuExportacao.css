@@ -3,7 +3,7 @@
     overflow: hidden;
     justify-content: center;
     flex-wrap: wrap;
-    --diametro-bolinha: 3.7vw;
+    --diametro-bolinha: 3.3vw;
     min-width: 8vw;
     min-height: 8vh;
 }

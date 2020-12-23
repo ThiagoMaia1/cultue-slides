@@ -85,6 +85,7 @@
     line-height: 100%;
     padding: 0.5vh;
     border-radius: var(--round-border-muito-pequeno);
+    z-index: 50;
 }
 
 .x-apagar-imagem:hover {

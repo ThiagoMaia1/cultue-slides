@@ -16,7 +16,7 @@
 .rotulo-range {
   word-wrap: unset;
   width: 100%;
-  font-size: 85%;
+  font-size: 90%;
 }
 
 .frame-range {
@@ -36,7 +36,7 @@ input[type=range] {
   background: transparent; /* Otherwise white in Chrome */
   position: absolute;
   top: 5vh;
-  left: -2.9vh;
+  left: -2.4vh;
   width: var(--width-barrinha);
   height: var(--height-barrinha);
   z-index: 0;
@@ -103,9 +103,9 @@ input[type=range]::-ms-track {
 }
 
 .valor-flutuante {
-  font-size: 80%;
+  font-size: 83%;
   position: absolute;
-  left: 3.5vh;
+  left: 4vh;
   box-shadow: var(--box-shadow);
   border-radius: var(--round-border-pequeno);
   background-color: white;

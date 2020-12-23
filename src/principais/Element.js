@@ -64,7 +64,7 @@ export const estiloPadrao = {
 const proporcaoPadTop = 0;
 
 export const getEstiloPadrao = () => {
-  var estilo = estiloPadrao;
+  var estilo = {...estiloPadrao};
   estilo.paragrafo = getPadding(estilo, 'paragrafo');
   estilo.titulo = getPadding(estilo, 'titulo');  
   return estilo;

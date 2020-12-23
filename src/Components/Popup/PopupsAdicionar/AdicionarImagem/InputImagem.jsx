@@ -83,7 +83,8 @@ class InputImagem extends Component {
         this.animacao = setInterval(this.inverterTracejado, 801);
     }
 
-    onDrop = () => {
+    onDrop = e => {
+        console.log(e.target);
         clearInterval(this.animacao);
         this.animacao = null;
         this.setState({estiloCaixa: {...this.getTamanhoTracejado(), opacity: '0'}});
@@ -123,7 +124,7 @@ class InputImagem extends Component {
             
             imagem.contador = this.state.imagens.reduce(getReduce(n), -1) + 1;
             imagem.alt = n;
-            imagem.altContador = img.alt + (img.contador ? '-' + img.contador : '');
+            imagem.altContador = imagem.alt + (imagem.contador ? '-' + imagem.contador : '');
             imagem.arquivo = img;
             imagem.src = url.createObjectURL(img);
         }

@@ -116,7 +116,7 @@ class Preview extends Component {
         const eMestre = slidePreview.eMestre;
         return (
             <div id='centralizador-preview'>
-                <div id='borda-slide-mestre' style={{height: this.props.ratio.height*proporcao + 0.051*window.innerHeight, 
+                <div id='borda-slide-mestre' style={{height: this.props.ratio.height*proporcao + 0.045*window.innerHeight, 
                                              visibility: eMestre ? '' : 'hidden',
                                              padding: telaCheia ? '' : '1vh',
                                              ...this.realcarElemento('tampao', 'fora')}}>

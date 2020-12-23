@@ -10,7 +10,9 @@ class Configurar extends Component {
     this.state = {};
     this.coordenadasBotao = [ 8, 3, 84, 89];
     this.coordenadasMenu = [ 8, 3, 84, 78];
-    this.state = {aberto: 'hidden', coordenadas: [...this.coordenadasBotao], menuVisivel: false, tamIcones: window.innerWidth*0.027 + 'px'};
+    let coordenadas = [...this.coordenadasMenu];
+    coordenadas[2] = 'auto';
+    this.state = {aberto: 'hidden', coordenadas, menuVisivel: true, tamIcones: window.innerWidth*0.027 + 'px'};
   }
 
   abrirMenu = () => {
@@ -27,7 +29,7 @@ class Configurar extends Component {
               this.setState({menuVisivel: bool})
               setTimeout(() => this.props.dispatch({type: 'definir-item-tutorial', itemTutorial: 'configuracoesSlide'}), 10)
         },
-        c => c[3] < 85
+        c => c[3] < 81
     )
   }
 

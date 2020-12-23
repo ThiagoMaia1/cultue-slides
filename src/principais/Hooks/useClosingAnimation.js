@@ -10,6 +10,7 @@ const useClosingAnimation = (ativo, callbackFechar, estiloInicial, estiloFinal, 
         }
     )
 
+    const callback = useRef(callbackFechar)
     const jaAtivou = useRef(false);
     const estInicial = useRef(getEstiloTransition(estiloInicial));
     const estFinal = useRef(getEstiloTransition(estiloFinal));
@@ -21,9 +22,9 @@ const useClosingAnimation = (ativo, callbackFechar, estiloInicial, estiloFinal, 
             jaAtivou.current = true;
         } else if(jaAtivou.current) {
             setEstilo(estInicial.current);
-            setTimeout(callbackFechar, tempo);
+            setTimeout(callback.current, tempo);
         }
-    }, [ativo, callbackFechar, estInicial, estFinal, tempo, jaAtivou]);
+    }, [ativo, callback, estInicial, estFinal, tempo, jaAtivou]);
 
     return estilo;
 };

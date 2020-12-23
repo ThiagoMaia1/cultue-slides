@@ -43,7 +43,6 @@ class NavBar extends React.Component {
     var ePadrao = this.props.usuario.idApresentacaoPadrao === this.props.apresentacao.id;
     var eLeitura = this.props.apresentacao.autorizacao === 'ver';
     var padraoEstilo = this.props.usuario.tipoApresentacaoPadrao === 'estilo';
-    var estaOnline = this.props.estaOnline;
     return (
       <div id="navbar">
           <div id='botoes-navbar'>
@@ -71,7 +70,7 @@ class NavBar extends React.Component {
             }
           </div>
           <div id='mensagem-autorizacao' style={ePadrao ? {color: 'var(--azul-forte)'} : null}>
-            {!estaOnline 
+            {!window.navigator.onLine 
               ? 'Sem Conexão com a Internet'
               : eLeitura 
                 ? 'Somente Leitura' 
@@ -103,8 +102,7 @@ const mapState = state => {
     usuario: state.usuario, 
     elementos: state.present.elementos, 
     apresentacao: state.present.apresentacao, 
-    ratio: state.present.ratio,
-    estaOnline: state.estaOnline
+    ratio: state.present.ratio
   };
 }
 

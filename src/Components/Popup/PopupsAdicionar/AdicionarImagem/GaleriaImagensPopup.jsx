@@ -11,7 +11,7 @@ const ListaImagens = ({imagens, apagar, irFinalCarrossel, onClick, mensagemConfi
     return (
         <div className='container-imagens-previa-upload'>
             {imagens.map((img, i) => 
-                <ImagemGaleriaInput key={img.alt} 
+                <ImagemGaleriaInput key={img.altContador || img.alt} 
                                     img={img} 
                                     indice={i} 
                                     apagar={apagar} 

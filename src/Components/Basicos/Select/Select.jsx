@@ -64,11 +64,10 @@ class Select extends Component {
     }
 
     render() {
-        // console.log(this.props.id)
         return (
             <div id={this.props.id} className={'select-personalizado ' + (this.props.className || '')} ref={this.refPai}>
                 <div className='base-select'
-                     onFocusOut={this.fechar}
+                    //  onBlur={() => setTimeout(this.fechar, 200)}
                      onClick={this.onClick}
                      tabIndex='0'
                      ref={this.ref}

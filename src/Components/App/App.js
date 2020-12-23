@@ -14,7 +14,7 @@ import MensagemBaixar from '../TelaMensagem/MensagemBaixar';
 import hotkeys from 'hotkeys-js';
 
 class App extends Component {
-  
+
   componentDidMount = () => hotkeys.setScope('app');
 
   render() {

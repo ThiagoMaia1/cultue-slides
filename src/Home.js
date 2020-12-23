@@ -30,28 +30,42 @@ const paginas = [{nome: 'app', componente: App},
 
 class Home extends Component {
 
+  componentDidMount = () => {
+    window.addEventListener('online', this.forceUpdate);
+    window.addEventListener('offline', this.forceUpdate);
+  }
+
+  componentWillUnmount = () => {
+    window.removeEventListener('online', this.forceUpdate);
+    window.removeEventListener('offline', this.forceUpdate);
+  }  
+
   render() {
+    let online = true; //window.navigator.onLine;
     return (
       <Provider store={store}>
         <PersistGate loading={<Splash/>} persistor={persistor}>
-          <Router history={history}>     
-              <Notificacoes/>
-              <Switch>
-                  {paginas.map(p => (
-                      <Route path={'/' + p.nome} key={p.nome}
-                            component={
-                              p.semSplash 
-                                ? p.componente
-                                : sobreporSplash(p.nome, p.componente, p.exigeLogin, checarLogin, true, true, true)
-                              }
-                      />
-                      )    
-                  )};
-                  <Route render={() => <Redirect to='/login'/>} />
-              </Switch>
-          </Router>
-          <PopupConfirmacao/>
-          <Propaganda/>
+          <div className={online ? '' : 'offline'}>
+            <div id='tampao-offline'></div>
+            <Router history={history}>     
+                <Notificacoes/>
+                <Switch>
+                    {paginas.map(p => (
+                        <Route path={'/' + p.nome} key={p.nome}
+                              component={
+                                p.semSplash 
+                                  ? p.componente
+                                  : sobreporSplash(p.nome, p.componente, p.exigeLogin, checarLogin, true, true, true)
+                                }
+                        />
+                        )    
+                    )};
+                    <Route render={() => <Redirect to='/login'/>} />
+                </Switch>
+            </Router>
+            <PopupConfirmacao/>
+            <Propaganda/>
+          </div>
         </PersistGate>
       </Provider>
     );

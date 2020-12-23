@@ -4,6 +4,7 @@
     overflow: hidden;
     min-height: 8vh;
     z-index: 110;
+    transition: height 0.2s ease-in-out;
 }
 
 .div-titulo-botao {
@@ -328,13 +329,27 @@
     --altura-botao: 4.5vh;
 }
 
-.itens-lista-slides-padrao button {
+.itens-lista-slides-padrao > button {
     margin: 1vh 0 0 1vh;
     min-height: var(--altura-botao);
     max-height: var(--altura-botao);
     white-space: nowrap;
     flex: 1 1;
     line-height: 0;
+}
+
+.itens-lista-slides-padrao > .botao {
+    padding-right: 4vh;
+    position: relative;
+}
+
+.x-apagar-tag {
+    position: absolute;
+    right: 1vh;
+}
+
+.x-apagar-tag:hover {
+    color: var(--platinum-forte)
 }
 
 .titulo-secao-popup {
@@ -369,6 +384,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    z-index: 1;
 }
 
 #botao-adicionar-slide-padrao:hover {

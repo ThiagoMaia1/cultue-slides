@@ -23,7 +23,8 @@ const GaleriaUsuario = ({callback, imagensUsuario = [], soFundos = false, fechar
             <GaleriaImagensPopup imagens={imagens}
                                  onClickImagem={callback}
                                  apagar={apagar}
-                                 mensagemConfirmarExclusao={'Tem certeza que deseja excluir essa imagem do banco de dados?\n\n(Essa ação não pode ser desfeita)'}                                
+                                 mensagemConfirmarExclusao={'Tem certeza que deseja excluir essa imagem do banco de dados?\n\n' +
+                                                            '(Essa ação não pode ser desfeita)'}                                
             />
         </Popup>
     )

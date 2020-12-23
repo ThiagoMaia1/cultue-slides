@@ -20,16 +20,17 @@ const casesTexto = [{valor: 'Nenhum', icone: (<span style={{color: '#999'}}>Aa</
                     {valor: 'Maiúsculas', icone: 'AA'}, {valor: 'Minúsculas', icone: 'aa'}
 ];
 
-const fontesBasicas = ['Roboto', 'Helvetica', 'Arial', 'Times New Roman', 'Courier', 'Courier New', 'Verdana', 
-                       'Tahoma', 'Arial Black', 'Georgia', 'Impact'
-];
+export const fontes = {
+  basicas: ['Roboto', 'Helvetica', 'Arial', 'Times New Roman', 'Courier', 'Courier New', 'Verdana', 
+            'Tahoma', 'Arial Black', 'Georgia', 'Impact'
+  ], 
+  google: ['Montserrat', 'Source Sans Pro', 'Noto Sans', 'Amatic SC', 'Big Shoulders Stencil Display', 'Bree Serif', 'Cinzel', 
+                        'Comfortaa', 'Dosis', 'Indie Flower', 'Kanit', 'Lato', 'Libre Baskerville', 'Lobster', 'Major Mono Display',
+                        'Nunito', 'Oswald', 'Pacifico', 'Poppins', 'PT Sans', 'Texturina'
+  ]
+}
 
-const fontesGoogle = ['Montserrat', 'Source Sans Pro', 'Noto Sans', 'Amatic SC', 'Big Shoulders Stencil Display', 'Bree Serif', 'Cinzel', 
-                      'Comfortaa', 'Dosis', 'Indie Flower', 'Kanit', 'Lato', 'Libre Baskerville', 'Lobster', 'Major Mono Display',
-                      'Nunito', 'Oswald', 'Pacifico', 'Poppins', 'PT Sans', 'Texturina'
-];
-
-const listaFontes = [...fontesBasicas, ...fontesGoogle];
+const listaFontes = [...fontes.basicas, ...fontes.google];
 
 const opcoesListaFontes = listaFontes.map(f => (
   {valor: f, style: {fontFamily: f}}

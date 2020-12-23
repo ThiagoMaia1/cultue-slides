@@ -27,17 +27,15 @@ export const ativarPopupLoginNecessario = strFinalidade => {
   )
 }
 
-export function getPopupConfirmacao (botoes, titulo, texto, callback, filhos) {
-  return {
-    popupConfirmacao: {
-      botoes, 
-      titulo, 
-      texto,
-      callback,
-      filhos
-    } 
+export const getPopupConfirmacao = (botoes, titulo, texto, callback, filhos) => ({
+  popupConfirmacao: {
+    botoes, 
+    titulo, 
+    texto,
+    callback,
+    filhos
   }
-}
+})
 
 export const ativarPopupConfirmacao = (botoes, titulo, texto, callback, filhos) => {
   store.dispatch({type: 'ativar-popup-confirmacao', 

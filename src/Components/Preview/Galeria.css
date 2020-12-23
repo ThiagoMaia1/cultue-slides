@@ -40,6 +40,16 @@
     margin: 0 1.1vw;
 }
 
+.img-popup-confirmacao {
+    display: flex;
+    justify-content: center;
+    margin: 4vh 0;
+}
+
+.img-popup-confirmacao .imagem-galeria{
+    transform: scale(1.1);
+}
+
 .galeria-fundos .pseudo-margem-galeria {
     transform: scale(1.08);
     margin-left: 1.1vw;
@@ -74,6 +84,7 @@
     overflow: hidden;
     word-break: break-word;
     padding: 0 1vw;
+    color: black;
 }
 
 #botao-enviar-fundo {

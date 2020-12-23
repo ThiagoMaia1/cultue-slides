@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { getNomeInterfaceTipo } from '../../principais/Element';
 import { capitalize, getImgBase64, parseCorToRgb, rgbObjToStr } from '../../principais/FuncoesGerais';
 import SlideFormatado from '../Preview/SlideFormatado'; 
+// import getCssFontesBase64 from './ModulosFontes';
 
 export function getBase64Image(imagem, total, ratio, callback) {
   const img = new Image();
