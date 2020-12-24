@@ -36,7 +36,7 @@ export const enviarEmailTemplate = (assunto, destinatarios, corpo, JSXInterno, l
     const corpoHTML = ReactDOMServer.renderToStaticMarkup(
         <>
             <div style={getEstiloBarraAzul(50)}></div>
-                <div style={{padding: '25px', fontFamily: 'Roboto', textAlign: 'center', fontSize: '15px'}}>
+                <div style={{padding: '25px', fontFamily: 'Trebuchet MS', textAlign: 'center', fontSize: '15px'}}>
             {JSXInterno}
             {botoes}
             <p><i>Equipe Cultue</i></p>
@@ -81,7 +81,7 @@ const inserirNotificacao = conteudo => {
 }  
 
 // Template e-mail de recuperação de senha:
-/* <div style="background-color:#3757a9;height:70px;width:100%"></div><div style="padding:25px; font-family:'Roboto'; text-align: center; font-size: 15px;">
+/* <div style="background-color:#3757a9;height:70px;width:100%"></div><div style="padding:25px; font-family:'Trebuchet MS'; text-align: center; font-size: 15px;">
           <p><b>Olá!</b> Clique no botão a seguir para redefinir sua senha do aplicativo Cultue.</p>
 <br>
 <div><a style="color: white; text-decoration: none; background-color: #3757a9; padding:1.5vh; font-size: 110%; border-radius:0.8vh" href="%LINK%" target="_blank" >Redefinir Senha</a></div>

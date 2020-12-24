@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import BotaoExportador from '../BotaoExportador';
 import { toggleFullscreen as fullScreen } from '../../../../principais/FuncoesGerais';
 import TratarDadosHTML from '../../tratarDadosHTML';
-import getCssFontesBase64 from '../../ModulosFontes';
+import { getCssFontesBase64 } from '../../ModulosFontes';
 
 const toggleFullscreen = fullScreen;
 

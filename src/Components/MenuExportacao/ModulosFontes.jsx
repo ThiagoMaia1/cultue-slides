@@ -1,4 +1,33 @@
-import { fontes } from '../Configurar/ConfigurarSlides'; 
+export const googleComSubstitutas = {
+  Montserrat: 'Trebuchet MS',
+  Source_Sans_Pro: 'Helvetica',
+  Noto_Sans: 'Verdana',
+  Amatic_SC: 'Garamond',
+  Big_Shoulders_Stencil_Display: 'Trebuchet MS',
+  Bree_Serif: 'Trebuchet MS',
+  Cinzel: 'Times New Roman',
+  Comfortaa: 'Helvetica',
+  Dosis: 'Tahoma',
+  Indie_Flower: 'Comic Sans MS',
+  Kanit: 'Tahoma',
+  Lato: 'Tahoma',
+  Libre_Baskerville: 'Times New Roman',
+  Lobster: 'Comic Sans MS',
+  Major_Mono_Display: 'Lucida Console',
+  Nunito: 'Trebuchet MS',
+  Oswald: 'Impact',
+  Pacifico: 'Comic Sans MS',
+  Poppins: 'Tahoma',
+  PT_Sans: 'Tahoma',
+  Texturina: 'Garamond'
+}
+
+export const fontes = {
+  basicas: ['Helvetica', 'Arial', 'Times New Roman', 'Courier', 'Trebuchet MS', 'Verdana', 
+            'Tahoma', 'Arial Black', 'Georgia', 'Impact', 'Comic Sans MS', 'Garamond', 'Lucida Console'
+  ], 
+  google: Object.keys(googleComSubstitutas).map(f => f.replace(/_/g, ' '))
+}
 
 const keysFontes = Object.keys(fontes);
 
@@ -30,7 +59,7 @@ const getResultadoInicial = () => {
   }, {})
 }
 
-export default function getCssFontesBase64 (copiaDOM, previews) {
+export const getCssFontesBase64 = (copiaDOM, previews) => {
   let usadas = getFontesUsadas(previews);
   usadas.google.forEach(f => {
     let css = copiaDOM.createElement('style');

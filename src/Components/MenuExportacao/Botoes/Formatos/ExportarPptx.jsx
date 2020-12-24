@@ -4,8 +4,9 @@ import BotaoExportador from '../BotaoExportador';
 import { getPreviews } from '../../Exportador';
 import pptxgen from "pptxgenjs";
 import { getFonteBase } from '../../../../principais/Element';
-import { getFontesUsadas } from '../../ModulosFontes';
+import { getFontesUsadas, googleComSubstitutas } from '../../ModulosFontes';
 import { ativarPopupConfirmacao } from '../../../Popup/PopupConfirmacao';
+// import JSZip from 'jszip';
 
 class ExportarPptx extends Component {
     
@@ -22,9 +23,12 @@ class ExportarPptx extends Component {
 
   exportarPptx = (_copiaDOM, imagensBase64, previews, nomeArquivo) => {
     
-    if(getFontesUsadas(previews).google.length) {
-      
-    }
+    // let fontesEspeciais = getFontesUsadas(previews).google;
+    // if(fontesEspeciais.length) {
+    //   for (let f of fontesEspeciais) {
+
+    //   }
+    // }
     var imagens = imagensBase64.reduce((resultado, img) => {
       resultado[img.classe] = img.data.replace('data:','');
       return resultado;
@@ -111,7 +115,26 @@ class ExportarPptx extends Component {
   }
 
   substituirFontesGoogle = () => {
-    alert('todo');
+    let { elementos } = this.props;
+    let keys = ['texto', 'paragrafo', 'titulo'];
+    for (let i = 0; i < elementos.length; i++) {
+      let { slides } = elementos[i];
+      for (let j = 0; j < slides.length; j++) {
+        for (let k of keys) {
+          let font = slides[j].estilo[k].fontFamily;
+          if (font) {
+            let fontFamily = googleComSubstitutas[font.replace(' ', '_')] || font;
+            this.props.dispatch({
+              type: 'editar-slide-temporariamente', 
+              objeto: k, 
+              valor: { fontFamily }, 
+              selecionado: {elemento: i, slide: j}
+            });
+          }
+        }
+      }
+    }
+    this.props.dispatch({type: 'default'});
   }  
 
   render() {

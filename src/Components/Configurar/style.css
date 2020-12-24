@@ -410,3 +410,33 @@
 .isolar-spans-filhos > div > div:hover > span {
     font-weight: 600;
 }
+
+.separador-fontes {
+    /* font-weight: 600; */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.separador-fontes > div {
+    color: white;
+    margin-right: 0.4vw;
+    padding-top: 0.2vh;
+    position: relative;
+}
+
+.caixa-info {
+    position: absolute;
+    background-color: white;
+    font-size: 90%;
+    width: 13vw;
+    bottom: 4vh;
+    right: -0.5vw;
+    font-family: 'Noto Sans';
+    font-weight: 400;
+    padding: 1vh;
+    white-space: normal;
+    border-radius: var(--round-border-pequeno);
+    box-shadow: var(--box-shadow);
+    color: black;
+}

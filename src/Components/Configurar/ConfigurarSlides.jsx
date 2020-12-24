@@ -1,11 +1,11 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component, Fragment, useState } from 'react';
 import './style.css';
 import { connect } from 'react-redux';
 import { CgErase } from 'react-icons/cg';
 import { RiMastercardLine } from 'react-icons/ri'
 import { BsTextLeft, BsTextCenter, BsTextRight, BsJustify, BsMusicNoteBeamed, BsFileBreak} from 'react-icons/bs';
 import { VscCollapseAll } from 'react-icons/vsc';
-import { AiOutlineRotateLeft } from 'react-icons/ai';
+import { AiOutlineRotateLeft, AiOutlineInfoCircle } from 'react-icons/ai';
 import { CgEye } from 'react-icons/cg';
 import Slider from '../Basicos/Slider/Slider';
 import Select from '../Basicos/Select/Select';
@@ -13,6 +13,7 @@ import ColorPicker from '../Basicos/ColorPicker/ColorPicker';
 import { rgbObjToStr, parseCorToRgb } from '../../principais/FuncoesGerais';
 import { listaPartesEstilo } from '../../principais/Element';
 import { lerImagem } from '../Preview/Img';
+import { fontes } from '../MenuExportacao/ModulosFontes';
 
 const estiloBloco = {borderRadius: 'var(--round-border-pequeno)', maxWidth: '15vw', backgroundColor: '#efefef', marginTop: '0.8vh', zIndex: 29};
 
@@ -20,21 +21,32 @@ const casesTexto = [{valor: 'Nenhum', icone: (<span style={{color: '#999'}}>Aa</
                     {valor: 'Maiúsculas', icone: 'AA'}, {valor: 'Minúsculas', icone: 'aa'}
 ];
 
-export const fontes = {
-  basicas: ['Roboto', 'Helvetica', 'Arial', 'Times New Roman', 'Courier', 'Courier New', 'Verdana', 
-            'Tahoma', 'Arial Black', 'Georgia', 'Impact'
-  ], 
-  google: ['Montserrat', 'Source Sans Pro', 'Noto Sans', 'Amatic SC', 'Big Shoulders Stencil Display', 'Bree Serif', 'Cinzel', 
-                        'Comfortaa', 'Dosis', 'Indie Flower', 'Kanit', 'Lato', 'Libre Baskerville', 'Lobster', 'Major Mono Display',
-                        'Nunito', 'Oswald', 'Pacifico', 'Poppins', 'PT Sans', 'Texturina'
-  ]
+const SeparadorFontes = () => {
+  
+  let [info, setInfo] = useState(false);
+
+  return (
+    <div className='separador-fontes'>
+      Fontes Especiais
+      <div onMouseOver={() => setInfo(true)} onMouseLeave={() => setInfo(false)}>
+        <AiOutlineInfoCircle size={18}/>
+        {!info ? null :
+          <div className='caixa-info'>As fontes abaixo não estão disponíveis na maioria dos computadores. Para utiliza-las no PowerPoint você deverá instalá-las individualmente. Recomendamos o download em HTML, que não apresenta essa limitação.</div>
+        }
+      </div>
+    </div>
+  )
 }
 
-const listaFontes = [...fontes.basicas, ...fontes.google];
-
-const opcoesListaFontes = listaFontes.map(f => (
+const getOpcaoFonte = f => (
   {valor: f, style: {fontFamily: f}}
-));
+)
+const opcoesListaFontes = [
+  ...fontes.basicas.sort().map(getOpcaoFonte),
+  {valor: 'Fontes Especiais', rotulo: <SeparadorFontes/>, style: {backgroundColor: 'var(--azul-forte)', color: 'white'}, 
+   eSeparador: true},
+  ...fontes.google.sort().map(getOpcaoFonte)
+]
 
 const listaBotoesAbas = [{nomeCodigo: listaPartesEstilo[0], nomeInterface: 'Texto'},
                          {nomeCodigo: listaPartesEstilo[1], nomeInterface: 'Título', maxFonte: '7'}, 
@@ -303,7 +315,13 @@ class ConfigurarSlides extends Component {
     );
   }
   
-  getBackgroundImage = () => 'url("' + lerImagem(this.props.slidePreview.estilo.fundo, 600) + '")';
+  getQuadriculado = () => require('./Quadriculado PNG.png');
+
+  getBackgroundImage = () => {
+    let { fundo } = this.props.slidePreview.estilo;
+    let url = (!fundo.path && !fundo.src) ? this.getQuadriculado() : lerImagem(fundo, 600);
+    return 'url("' + url + '")';
+  }
 
   ativarPainelCorFundo = () => 
     this.ativarPainelCor(this.mudarCorFundo, this.props.slidePreview.estilo.tampao.backgroundColor || {r: 255, g: 255, b: 255});
@@ -313,6 +331,8 @@ class ConfigurarSlides extends Component {
     var slidePreview = this.props.slidePreview;
     var sel = this.props.selecionado;
     var slideSelecionado = this.props.slideSelecionado;
+    let { fundo } = slidePreview.estilo;
+    let semFundo = !fundo.path && !fundo.src;
     const corFonte = rgbObjToStr(parseCorToRgb(slideSelecionado.estilo[aba].color || '#000000'));
     const botoesDireita = (
       <>
@@ -389,7 +409,7 @@ class ConfigurarSlides extends Component {
           </div>
           <div id='container-configuracoes-tampao' style={{display: (aba === 'tampao' ? '' : 'none')}}>
             <button id='botao-cor-fundo' className='botao-configuracao bool' onMouseOver={this.ativarPainelCorFundo} onClick={this.ativarPainelCorFundo}>
-              <div className='container cor-fundo' style={{backgroundImage: ' url("' + require('./Quadriculado PNG.png') + '")'}}>
+              <div className='container cor-fundo' style={{backgroundImage: ' url("' + this.getQuadriculado() + '")'}}>
                 <div className='quadrado cor-fundo' style={{backgroundColor: slidePreview.estilo.tampao.backgroundColor}}>
                 </div>
               </div>
@@ -405,7 +425,8 @@ class ConfigurarSlides extends Component {
                     onMouseLeaveOpcao={() => this.atualizarEstiloPreview(undefined, true)}
                     style={{fontSize: '90%'}}
                     estiloBloco={{...estiloBloco, fontSize: '90%', backgroundImage: this.getBackgroundImage(), 
-                                  backgroundSize: 'auto 100%', backgroundPosition: 'center', backgroundRepeat: 'no-repeat',
+                                  backgroundPosition: 'center', backgroundSize: semFundo ? '' : 'auto 100%',  
+                                  backgroundRepeat: semFundo ? '' : 'no-repeat',
                                   boxShadow: 'var(--box-shadow)', color: slidePreview.estilo.paragrafo.color}}/>
           </div>
           <div className='div-sliders'> 
