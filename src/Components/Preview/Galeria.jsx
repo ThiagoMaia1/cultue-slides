@@ -12,7 +12,7 @@ import { mudancasArrays, objetosSaoIguais } from '../../principais/FuncoesGerais
 
 const fundosFixos = listaFundos.imagens.map(i => ({
     fundo: {path: i.path, src: null}, 
-    alt: i.path ? i.path.split('.')[0] : 'Cor Sólida', 
+    alt: i.path.split('.')[0], 
     tampao: {...i.tampao, eBasico: true}, 
     texto: {color: i.color, eBasico: true}
 }));
@@ -42,9 +42,20 @@ class Galeria extends Component {
         )
     }
 
-    getImagens = () => {
-        return this.state.imagens.concat(fundosFixos);
-    }
+    getImagens = () => [
+        {
+            fundo: {path: null, src: null},
+            tampao: {backgroundColor: '#ffffff', opacityFundo: 1},
+            texto: {color: '#000000'},
+            alt: 'Cor Sólida',
+            callback: () => {
+                console.log('oi')
+                this.props.dispatch({type: 'ativar-realce', abaAtiva: 'tampao'})
+                setTimeout(() => document.getElementById('botao-cor-fundo').click(), 50)
+            }
+        },
+            ...this.state.imagens.concat(fundosFixos)
+    ];
 
     abrirPopup = () => {
         this.setState({popupCompleto:
@@ -72,9 +83,7 @@ class Galeria extends Component {
         this.inserindoFundos = false;
     }
 
-    componentDidMount = () => {
-        this.inserirFundos(this.props.fundos);
-    }
+    componentDidMount = () => this.inserirFundos(this.props.fundos);
 
     componentDidUpdate = prevProps => {
         if(!this.state.galeriaVisivel && prevProps.tutorialAtivo !== this.props.tutorialAtivo) {
@@ -111,7 +120,7 @@ class Galeria extends Component {
                                     <div id='botao-enviar-fundo' className='imagem-galeria'>Enviar Fundo Personalizado</div>
                                 </div>
                                 {this.getImagens().map(img => (
-                                    <Img key={img.fundo.path || img.fundo.src} imagem={img}/>
+                                    <Img key={img.fundo.path || img.fundo.src} imagem={img} callback={img.callback}/>
                                 ))}
                                 <div className='pseudo-margem-galeria'></div>
                             </div>

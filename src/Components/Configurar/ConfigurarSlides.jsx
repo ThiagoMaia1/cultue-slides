@@ -305,6 +305,9 @@ class ConfigurarSlides extends Component {
   
   getBackgroundImage = () => 'url("' + lerImagem(this.props.slidePreview.estilo.fundo, 600) + '")';
 
+  ativarPainelCorFundo = () => 
+    this.ativarPainelCor(this.mudarCorFundo, this.props.slidePreview.estilo.tampao.backgroundColor || {r: 255, g: 255, b: 255});
+
 	render() {
     var aba = this.props.abaAtiva;
     var slidePreview = this.props.slidePreview;
@@ -385,7 +388,7 @@ class ConfigurarSlides extends Component {
               }
           </div>
           <div id='container-configuracoes-tampao' style={{display: (aba === 'tampao' ? '' : 'none')}}>
-            <button className='botao-configuracao bool' onMouseOver={() => this.ativarPainelCor(this.mudarCorFundo, slidePreview.estilo.tampao.backgroundColor || {r: 255, g: 255, b: 255})}>
+            <button id='botao-cor-fundo' className='botao-configuracao bool' onMouseOver={this.ativarPainelCorFundo} onClick={this.ativarPainelCorFundo}>
               <div className='container cor-fundo' style={{backgroundImage: ' url("' + require('./Quadriculado PNG.png') + '")'}}>
                 <div className='quadrado cor-fundo' style={{backgroundColor: slidePreview.estilo.tampao.backgroundColor}}>
                 </div>

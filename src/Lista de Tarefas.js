@@ -91,6 +91,8 @@
 //   ✔️ Indicar referência inválida no combo texto bíblico
 //   ✔️ Reduzir imagens que são grandes demais (galáxia...)
 //   ✔️ Nomes dos fundos personalizados
+//   ✔️ clickFora Select
+//   ✔️ Ordem fundos personalizados/cor sólida
 //   ✔️ Carrossel do Input Imagem não vai até o final.*/
 // Errinhos:
 //   ✔️ Click fora tutorial
@@ -106,8 +108,8 @@
 //   Atalhos funcionarem mesmo com foco nos inputs
 //   Link de download não faz nada
 //   Redimensionar imagem ao inseri-la
-//   clickFora Select
-//   Ordem fundos personalizados/cor sólida
+//   Deletar fundos personalizados
+//   Preview dos fundos com cor sólida
 
 /*// Features essenciais:
 //   ✔️ Envio de imagens
@@ -206,6 +208,8 @@
 //   Criar manual de uso
 //   Verificar se imagem já existe no BD antes de upar
 //   Atalho F1 para ajuda
+//   Capturar cor da imagem
+//   Página de imagens do usuário
 //   Logo no e-mail de forma que possa ser lida offline*/
 //
 // Negócio:

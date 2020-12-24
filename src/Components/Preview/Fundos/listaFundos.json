@@ -1,5 +1,4 @@
 {"imagens":[ 
-    {"path":  "",  "color": "#000000", "tampao": {"backgroundColor": "#000000", "opacityFundo": "0.0"}}, 
     {"path":  "Aquarela.jpg",  "color": "#000000", "tampao": {"backgroundColor": "#ffffff", "opacityFundo": "0.0"}}, 
     {"path":  "Galáxia.jpg",  "color": "#ffffff", "tampao": {"backgroundColor": "#000000", "opacityFundo": "0.2"}}, 
     {"path":  "Luz Rosa.jpg",  "color": "#000000", "tampao": {"backgroundColor": "#ffffff", "opacityFundo": "0.2"}}, 

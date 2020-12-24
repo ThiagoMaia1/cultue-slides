@@ -1,54 +1,46 @@
-import React, { Component } from 'react';
+import React, { Component, useRef, useState, useEffect } from 'react';
 import './Select.css';
 import ArrowColapsar from '../ArrowColapsar/ArrowColapsar';
-import { objetosSaoIguais } from '../../../principais/FuncoesGerais';
+import useOutsideClick from '../../../principais/Hooks/useOutsideClick';
 
-class Select extends Component {
-  
-    constructor (props) {
-        super(props);
-        this.ref = React.createRef();
-        this.refPai = React.createRef();
-        let opcoes = this.transformarOpcoesStringEmObjetos(props.opcoes);
-        let defaultValue;
-        if(props.defaultValue) {
-            let listaValor = opcoes.map(o => o.valor);
-            defaultValue = opcoes[listaValor.indexOf(props.defaultValue)];
-        }
-        // console.log(props.iniciaAberto)
-        this.state = {aberto: props.iniciaAberto, opcoes, opcao: defaultValue || {}};
-    }
+const Select = props => {
+    
+    let [opcoes, setOpcoes] = useState([]);
+    let [aberto, setAberto] = useState(!!props.iniciaAberto);
+    let [opcaoMarcada, setOpcaoMarcada] = useState();
+    let ref = useOutsideClick(() => setAberto(false));
+    let refPai = useRef();
 
-    abrir = () => this.setState({aberto: true});
-    fechar = () => this.setState({aberto: false});
-
-    toggleAberto = () => {
-        this.state.aberto
-        ? this.fechar()
-        : this.abrir()
-    }
-
-    onChange = (opcao, permanente = true) => {
-        this.setState({opcao});
+    const onChange = (opcao, permanente = true) => {
+        setOpcaoMarcada(opcao);
         if(permanente) {
-            this.setState({aberto: false});
-            if (this.props.onChange) this.props.onChange(opcao);
+            setAberto(false);
+            if (props.onChange) props.onChange(opcao);
         }
     }
 
-    onClick = e => {
-        setTimeout(() => this.toggleAberto(), 10);
-        if(this.props.onClick) this.props.onClick(e);
+    const onClick = e => {
+        setTimeout(() => setAberto(!aberto), 10);
+        if(props.onClick) props.onClick(e);
     }
 
-    componentDidUpdate = (prevProps) => {
-        if(!objetosSaoIguais(prevProps.opcoes, this.props.opcoes))
-            this.setState({opcoes: this.transformarOpcoesStringEmObjetos(this.props.opcoes)});
-        if(prevProps.iniciaAberto !== this.props.iniciaAberto)
-            this.setState({aberto: this.props.iniciaAberto});
-    }
+    useEffect(() => {
+        setOpcoes(transformarOpcoesStringEmObjetos(props.opcoes));
+        if (!opcaoMarcada) {
+            let defaultValue;
+            if(props.defaultValue) {
+                let listaValor = props.opcoes.map(o => o.valor);
+                defaultValue = props.opcoes[listaValor.indexOf(props.defaultValue)];
+            }
+            setOpcaoMarcada(defaultValue);
+        }
+    }, [props.opcoes, opcaoMarcada, props.defaultValue]);
 
-    transformarOpcoesStringEmObjetos = opcoes => {
+    useEffect(() => {        
+        setAberto(props.iniciaAberto);
+    }, [props.iniciaAberto]);
+
+    const transformarOpcoesStringEmObjetos = opcoes => {
         if (/string|number/.test(typeof opcoes[0])) {
             opcoes = opcoes.map(o => {
                 o.valor = o;
@@ -63,22 +55,20 @@ class Select extends Component {
         return opcoes;
     }
 
-    render() {
-        return (
-            <div id={this.props.id} className={'select-personalizado ' + (this.props.className || '')} ref={this.refPai}>
-                <div className='base-select'
-                    //  onBlur={() => setTimeout(this.fechar, 200)}
-                     onClick={this.onClick}
-                     tabIndex='0'
-                     ref={this.ref}
-                     style={this.props.style}>
-                     <div className='container-opcao-marcada'>{this.state.opcao.rotulo || this.state.opcao.textoSpan}</div>
-                     <ArrowColapsar style={{top: '0.5vh', right: 0, color: '#aaa', position: 'absolute'}} colapsado={!this.state.aberto} tamanhoIcone={window.innerHeight*0.03}/>
-                </div>
-                <BlocoOpcoes {...this.props} callback={this.onChange} refSelect={this.ref} refPai={this.refPai} aberto={this.state.aberto} opcao={this.state.opcao} opcoes={this.state.opcoes}/>
+    let { rotulo, textoSpan } = opcaoMarcada || {};
+    return (
+        <div id={props.id} className={'select-personalizado ' + (props.className || '')} ref={refPai}>
+            <div className='base-select'
+                    onClick={onClick}
+                    tabIndex='0'
+                    ref={ref}
+                    style={props.style}>
+                    <div className='container-opcao-marcada'>{rotulo || textoSpan}</div>
+                    <ArrowColapsar style={{top: '0.5vh', right: 0, color: '#aaa', position: 'absolute'}} colapsado={!aberto} tamanhoIcone={window.innerHeight*0.03}/>
             </div>
-        )
-    }
+            <BlocoOpcoes {...props} callback={onChange} refSelect={ref} refPai={refPai} aberto={aberto} opcao={opcaoMarcada} opcoes={opcoes}/>
+        </div>
+    )
 };
 
 class BlocoOpcoes extends Component {

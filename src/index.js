@@ -237,16 +237,16 @@ export function undoable(reducer) {
     var newPresent;
     var novosItensTutorial = [];
     var slidesPadrao = [];
-    // const tituloSemConexao = 'Sem Conexão com a Internet';
-    // if(!window.navigator.onLine) {
-    //   return {...state, ...getPopupConfirmacao(
-    //     'OK',
-    //     tituloSemConexao,
-    //     'Você não possui uma conexão ativa. Verifique sua conexão para continuar.'
-    //   )}
-    // } else if(popupConfirmacao.titulo === tituloSemConexao) {
-    //   state.popupConfirmacao = null;
-    // }
+    const tituloSemConexao = 'Sem Conexão com a Internet';
+    if(!window.navigator.onLine) {
+      return {...state, ...getPopupConfirmacao(
+        'OK',
+        tituloSemConexao,
+        'Você não possui uma conexão ativa. Verifique sua conexão para continuar.'
+      )}
+    } else if(popupConfirmacao && popupConfirmacao.titulo === tituloSemConexao) {
+      state.popupConfirmacao = null;
+    }
     if(propagandaAtiva) {
       if(action.type === 'desativar-propaganda') {        
         return {...state, propagandaAtiva: false};
@@ -375,9 +375,7 @@ export function undoable(reducer) {
 
 const rootReducer = () => (state, action) => {
   if (/persist\//.test(action.type)) {
-    if (action.type === 'persist/PERSIST') {
-      state = {...state, ...estadoInicialNaoRehidratado};
-    }
+    state = {...state, ...estadoInicialNaoRehidratado};
     return state;
   }
   return undoable(reducerElementos)(state, action);

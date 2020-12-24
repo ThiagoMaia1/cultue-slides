@@ -37,6 +37,16 @@ class NavBar extends React.Component {
     }
   }
 
+  // componentDidMount = () => {
+  //   window.addEventListener('online', this.forceUpdate);
+  //   window.addEventListener('offline', this.forceUpdate);
+  // }
+
+  // componentWillUnmount = () => {
+  //   window.removeEventListener('online', this.forceUpdate);
+  //   window.removeEventListener('offline', this.forceUpdate);
+  // }  
+
   render() {
     var u = this.props.usuario;
     var eDownload = this.props.apresentacao.autorizacao !== 'baixar';
@@ -102,7 +112,8 @@ const mapState = state => {
     usuario: state.usuario, 
     elementos: state.present.elementos, 
     apresentacao: state.present.apresentacao, 
-    ratio: state.present.ratio
+    ratio: state.present.ratio,
+    popupConfirmacao: state.popupConfirmacao
   };
 }
 

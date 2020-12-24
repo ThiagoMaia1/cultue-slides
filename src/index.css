@@ -117,27 +117,3 @@ input:-webkit-autofill:active  {
     -webkit-box-shadow: 0 0 0 30px white inset !important;
     box-shadow: 0 0 0 30px white inset !important;
 }
-
-.offline {
-  --azul-forte: rgb(175, 175, 175);    
-  --azul-fraco:  rgb(175, 175, 175);    
-  --azul-oxford:  rgb(175, 175, 175);
-} 
-
-.offline .gradiente-coluna { 
-  display: none;  
-}
-
-.offline #tampao-offline {
-  background-color: rgba(197, 197, 197, 0.1);
-  position: fixed;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  z-index: 120;
-}
-
-.offline .popup {
-  pointer-events: none !important;
-}

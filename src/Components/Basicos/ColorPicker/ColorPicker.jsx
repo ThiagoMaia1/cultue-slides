@@ -64,12 +64,10 @@ class ColorPicker extends Component {
   }
   
   getQuadradinhos = (arrayCores, onClick = null, onDoubleClick = null, hAtual = null) => {
-    let jsxCores = [];
     let QuadradinhoCor = this.QuadradinhoCor;
-    for (var c of arrayCores) {
-      jsxCores.push(<QuadradinhoCor cor={c} onClick={onClick} onDoubleClick={onDoubleClick} hAtual={hAtual}/>);
-    }
-    return jsxCores;
+    return arrayCores.map((c, i) => (
+      <QuadradinhoCor key={i} cor={c} onClick={onClick} onDoubleClick={onDoubleClick} hAtual={hAtual}/>
+    ));
   }
 
   QuadradinhoCor = ({cor, onClick = null, onDoubleClick = null, hAtual = null}) => {
@@ -88,8 +86,7 @@ class ColorPicker extends Component {
     }
     let strRgb = `${r},${g},${b}`;
     return (
-      <div key={strRgb}
-           className={'quadradinho-cor ' + (eHue ? 'hue' : 'cor') + (eAtual ? ' cor-selecionada' : '')} 
+      <div className={'quadradinho-cor ' + (eHue ? 'hue' : 'cor') + (eAtual ? ' cor-selecionada' : '')} 
            style={{
              backgroundColor: `rgb(${strRgb})`, 
              border: (l > 95 ? '1px solid lightgray' : '')}}

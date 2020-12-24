@@ -47,6 +47,8 @@ class Img extends Component {
         this.props.dispatch(this.getObjetoDispatch(this.props.imagem));
         this.mudancaTemporaria = false;
         this.estiloAnterior = {...this.props.slideSelecionado.estilo};
+        let { callback } = this.props;
+        if (callback) callback();
     }
 
     togglePrevia(estiloImagem) {

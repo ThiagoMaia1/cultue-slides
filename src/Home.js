@@ -13,6 +13,7 @@ import Splash from './Components/Basicos/Splash/Splash';
 import Propaganda from './Components/Propaganda/Propaganda';
 import history from './principais/history';
 import { PersistGate } from 'redux-persist/integration/react';
+import OnlineGate from './Components/Basicos/OnlineGate/OnlineGate';
 
 const paginas = [{nome: 'app', componente: App},
                  {nome: 'login', componente: PaginaLogin},
@@ -29,31 +30,19 @@ const paginas = [{nome: 'app', componente: App},
 ]
 
 class Home extends Component {
-
-  componentDidMount = () => {
-    window.addEventListener('online', this.forceUpdate);
-    window.addEventListener('offline', this.forceUpdate);
-  }
-
-  componentWillUnmount = () => {
-    window.removeEventListener('online', this.forceUpdate);
-    window.removeEventListener('offline', this.forceUpdate);
-  }  
-
+  
   render() {
-    let online = true; //window.navigator.onLine;
     return (
       <Provider store={store}>
         <PersistGate loading={<Splash/>} persistor={persistor}>
-          <div className={online ? '' : 'offline'}>
-            <div id='tampao-offline'></div>
+          <OnlineGate>
             <Router history={history}>     
                 <Notificacoes/>
                 <Switch>
                     {paginas.map(p => (
                         <Route path={'/' + p.nome} key={p.nome}
                               component={
-                                p.semSplash 
+                                p.semSplash
                                   ? p.componente
                                   : sobreporSplash(p.nome, p.componente, p.exigeLogin, checarLogin, true, true, true)
                                 }
@@ -65,7 +54,7 @@ class Home extends Component {
             </Router>
             <PopupConfirmacao/>
             <Propaganda/>
-          </div>
+          </OnlineGate>
         </PersistGate>
       </Provider>
     );

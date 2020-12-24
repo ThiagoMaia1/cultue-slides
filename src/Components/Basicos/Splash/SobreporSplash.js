@@ -33,7 +33,7 @@ export default function sobreporSplash (NomeKey, Componente, exigeUsuario = fals
       render() {
         return (
           <Fragment key={NomeKey}>
-            {/* {(this.state.loading || (this.props.idUsuario === undefined && conferirLogin))
+            {(this.state.loading || (this.props.idUsuario === undefined && conferirLogin))
                 ? paginaInteira 
                       ? <Splash/> 
                       : <div className='fundo-splash-parcial' style={{backgroundColor: 'inherit', width: '100%', height: this.props.height}}>
@@ -46,7 +46,7 @@ export default function sobreporSplash (NomeKey, Componente, exigeUsuario = fals
             {exigeUsuario && this.props.idUsuario === 0
               ? <Redirect to='/login'/> 
               : null
-            } */}
+            }
             {!exigeUsuario || this.props.idUsuario
               ? <ComponenteMontado {...this.props} desativarSplash={() => {
                   if(this.state.loading) this.setState({loading: false})
