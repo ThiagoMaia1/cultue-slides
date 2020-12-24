@@ -2,6 +2,7 @@ import React, { Component, useRef, useState, useEffect } from 'react';
 import './Select.css';
 import ArrowColapsar from '../ArrowColapsar/ArrowColapsar';
 import useOutsideClick from '../../../principais/Hooks/useOutsideClick';
+import useFilter from '../../../principais/Hooks/useFilter';
 
 const Select = props => {
     
@@ -10,6 +11,7 @@ const Select = props => {
     let [opcaoMarcada, setOpcaoMarcada] = useState();
     let ref = useOutsideClick(() => setAberto(false));
     let refPai = useRef();
+    let termo = useFilter(aberto);
 
     const onChange = (opcao, permanente = true) => {
         setOpcaoMarcada(opcao);
@@ -25,6 +27,21 @@ const Select = props => {
     }
 
     useEffect(() => {
+        const transformarOpcoesStringEmObjetos = opcoes => {
+            if (/string|number/.test(typeof opcoes[0])) {
+                opcoes = opcoes.map(o => {
+                    o.valor = o;
+                    o.rotulo = o;
+                    return o;
+                }) 
+            }
+            opcoes = opcoes.map(o => {
+                if (o.rotulo === undefined) o.rotulo = o.valor;
+                return o;
+            })
+            return opcoes;
+        }
+
         setOpcoes(transformarOpcoesStringEmObjetos(props.opcoes));
         if (!opcaoMarcada) {
             let defaultValue;
@@ -40,21 +57,7 @@ const Select = props => {
         setAberto(props.iniciaAberto);
     }, [props.iniciaAberto]);
 
-    const transformarOpcoesStringEmObjetos = opcoes => {
-        if (/string|number/.test(typeof opcoes[0])) {
-            opcoes = opcoes.map(o => {
-                o.valor = o;
-                o.rotulo = o;
-                return o;
-            }) 
-        }
-        opcoes = opcoes.map(o => {
-            if (o.rotulo === undefined) o.rotulo = o.valor;
-            return o;
-        })
-        return opcoes;
-    }
-
+    let regTermo = new RegExp(termo.toLowerCase());
     let { rotulo, textoSpan } = opcaoMarcada || {};
     return (
         <div id={props.id} className={'select-personalizado ' + (props.className || '')} ref={refPai}>
@@ -63,10 +66,14 @@ const Select = props => {
                     tabIndex='0'
                     ref={ref}
                     style={props.style}>
-                    <div className='container-opcao-marcada'>{rotulo || textoSpan}</div>
+                    <div className='container-opcao-marcada'>{termo || rotulo || textoSpan}</div>
                     <ArrowColapsar style={{top: '0.5vh', right: 0, color: '#aaa', position: 'absolute'}} colapsado={!aberto} tamanhoIcone={window.innerHeight*0.03}/>
             </div>
-            <BlocoOpcoes {...props} callback={onChange} refSelect={ref} refPai={refPai} aberto={aberto} opcao={opcaoMarcada} opcoes={opcoes}/>
+            <BlocoOpcoes {...props} callback={onChange} refSelect={ref} refPai={refPai} aberto={aberto} opcao={opcaoMarcada} 
+                         opcoes={opcoes.filter(o => {
+                            let nome = (o.rotulo || o.textoSpan || o.valor || ''); 
+                            return regTermo.test(typeof nome === 'string' ? nome.toLowerCase() : nome);
+                         })}/>
         </div>
     )
 };
@@ -96,6 +103,7 @@ class BlocoOpcoes extends Component {
     }
 
     onClick = o => {
+        if (o.eSeparador) return;
         clearTimeout(this.timeoutLeave);
         this.valorAnterior = null;
         this.props.callback(o);
@@ -104,6 +112,7 @@ class BlocoOpcoes extends Component {
     }
 
     onMouseEnter = o => {
+        if (o.eSeparador) return;
         clearTimeout(this.timeoutLeave);
         if(!this.valorAnterior) this.valorAnterior = this.props.opcao;
         this.props.callback(o, false);
@@ -111,6 +120,7 @@ class BlocoOpcoes extends Component {
     }
 
     onMouseLeave = o => {
+        if (o.eSeparador) return;
         this.timeoutLeave = setTimeout(() => {
             if(this.valorAnterior) {
                 this.props.callback(this.valorAnterior, false);
@@ -138,9 +148,8 @@ class BlocoOpcoes extends Component {
                          key={o.valor}>
                         <span>{o.textoSpan}</span>
                         <div key={o.valor} 
-                            className={'opcao-select ' + o.className || ''} 
-                            style={{height: (this.tamanhoOpcao || 4) + 'vh', ...(o.style || {}), ...(this.props.estiloOpcao || {})}} 
-                            >
+                             className={'opcao-select ' + o.className || ''} 
+                             style={{height: (this.tamanhoOpcao || 4) + 'vh', ...(o.style || {}), ...(this.props.estiloOpcao || {})}}>
                                 <span>{o.rotulo}</span>
                         </div>
                     </div>
