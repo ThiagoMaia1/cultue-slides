@@ -91,7 +91,7 @@ class Arrastar extends React.Component {
         <div className='gradiente-coluna emcima'></div>
         <div className='gradiente-coluna embaixo'></div>
         <Carrossel direcao='vertical' tamanhoIcone={50} tamanhoMaximo={'60vh'} 
-                   style={{zIndex: '50', width: '21vw', overflow: 'hidden', ...(this.props.elementos.length < 2 ? {height: '3vh'} : {})}} 
+                   style={{width: '21vw', overflow: 'hidden', ...(this.props.elementos.length < 2 ? {height: '3vh'} : {})}} 
                    refElemento={this.refElemento} refSlide={this.refSlide} beiradaFinal={8}>
             <ol ref={this.ref} id="ordem-elementos">
               { editavel 
