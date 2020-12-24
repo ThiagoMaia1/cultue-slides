@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import { getNomeInterfaceTipo } from '../../principais/Element';
 import { capitalize, getImgBase64, parseCorToRgb, rgbObjToStr } from '../../principais/FuncoesGerais';
 import SlideFormatado from '../Preview/SlideFormatado'; 
-// import getCssFontesBase64 from './ModulosFontes';
 
 export function getBase64Image(imagem, total, ratio, callback) {
   const img = new Image();
@@ -60,6 +59,12 @@ export const slidesOrdenados = (elementos, incluirMestre = false, selecionado = 
   return elem;
 }
 
+export function getPreviews(elementos) {
+  var sOrdenados = slidesOrdenados(elementos, false);
+  let previews = sOrdenados.map((selecionado, indice) => ({ ...getSlidePreview({ elementos, selecionado }), indice }));
+  return previews;
+}
+
 export function getSlidePreview ({elementos, selecionado}) {
   const global = elementos[0].slides[0];
   const elemento = elementos[selecionado.elemento].slides[0];
@@ -79,7 +84,7 @@ export function getSlidePreview ({elementos, selecionado}) {
       }
     }
     return estilo;
-  } 
+  }
 
   var estiloTexto = estiloAplicavel('texto');
   var estiloParagrafo = {...estiloTexto, ...estiloAplicavel('paragrafo')};
@@ -132,9 +137,8 @@ class Exportador extends Component {
   getCopiaDOM = () => {
     document.body.style.cursor = 'progress';
     var imagensBase64 = [];
-    var sOrdenados = slidesOrdenados(this.props.elementos, false);
-    var ratio = this.props.ratio;
-    var previews = sOrdenados.map((s, i) => ({...getSlidePreview({elementos: this.props.elementos, selecionado: s}), indice: i}));
+    let ratio = this.props.ratio;
+    let previews = getPreviews(this.props.elementos);
     if (this.props.criarSlideFinal) previews.push({...slideFinal, indice: previews.length});
     this.setState({previews: previews.map((s, i) => 
       <SlideFormatado slidePreview={s}

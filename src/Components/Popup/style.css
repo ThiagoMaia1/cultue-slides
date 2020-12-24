@@ -109,6 +109,11 @@ body {
   padding-top: 1.5vh;
   display: flex;
   justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.botao-longo-popup {
+  margin-bottom: 2vh;
 }
 
 .conteudo-popup {
@@ -160,6 +165,7 @@ body {
   white-space: break-spaces;
   width: max-content;
   max-width: 25vw;
+  text-align: justify;
 }
 
 .popup-confirmacao .botao {

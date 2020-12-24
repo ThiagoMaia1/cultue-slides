@@ -4,19 +4,21 @@ import { connect } from 'react-redux';
 import './style.css';
 import store from '../../index';
 
-const botoes = {botaoSim: {texto: 'Sim', parametroCallback: true}, 
-                botaoNao: {texto: '✕ Não', parametroCallback: false, classe: 'limpar-input'}, 
-                botaoCancelar: {texto: 'Cancelar', parametroCallback: false, classe: 'neutro'},
-                botaoOK: {texto: 'OK', parametroCallback: true},
-                botaoEnviar: {texto: 'Enviar', parametroCallback: true}
+const botoesProntos = {
+  botaoSim: {texto: 'Sim', parametroCallback: true}, 
+  botaoNao: {texto: '✕ Não', parametroCallback: false, classe: 'limpar-input'}, 
+  botaoCancelar: {texto: 'Cancelar', parametroCallback: 0, classe: 'neutro'},
+  botaoOK: {texto: 'OK', parametroCallback: true},
+  botaoEnviar: {texto: 'Enviar', parametroCallback: true}
 }
                 
-const gruposDeBotoes = {simNao: ['botaoSim', 'botaoNao'],
-                        simNaoCancelar: ['botaoSim', 'botaoNao', 'botaoCancelar'],
-                        OKCancelar: ['botaoOK', 'botaoCancelar'],
-                        OK: ['botaoOK'],
-                        enviarCancelar: ['botaoEnviar', 'botaoCancelar'],
-                        nenhum: []
+const gruposDeBotoes = {
+  simNao: ['botaoSim', 'botaoNao'],
+  simNaoCancelar: ['botaoSim', 'botaoNao', 'botaoCancelar'],
+  OKCancelar: ['botaoOK', 'botaoCancelar'],
+  OK: ['botaoOK'],
+  enviarCancelar: ['botaoEnviar', 'botaoCancelar'],
+  nenhum: []
 }
 
 export const ativarPopupLoginNecessario = strFinalidade => {
@@ -52,11 +54,15 @@ class PopupConfirmacao extends React.Component {
   }
 
   render() {
-    if (!this.props.popup) return null;
+    let { botoes, titulo, texto, fechar, filhos, popup } = this.props;
+    if (!popup) return null;
     
-    var grupoBotoes = gruposDeBotoes[this.props.botoes];
-    var botoesJSX = grupoBotoes.map((g, i) => {
-      var b = botoes[g];
+    let arrayBotoes;
+    if (typeof botoes === 'string') arrayBotoes = gruposDeBotoes[botoes];
+    else arrayBotoes = botoes;
+    
+    let botoesJSX = arrayBotoes.map((b, i) => {
+      if (typeof b === 'string') b = botoesProntos[b];
       return (
         <button className={'botao ' + (b.classe || '')} onClick={() => this.chamarCallback(b.parametroCallback)} key={i}>
           {b.texto}
@@ -65,13 +71,13 @@ class PopupConfirmacao extends React.Component {
     });
     
     return (
-        <Popup tamanho='pequeno' ocultarPopup={this.props.fechar}>   
+        <Popup tamanho='pequeno' ocultarPopup={fechar}>   
           <div className='popup-confirmacao'>
             <div className='conteudo-popup'>
-                {this.props.titulo ? <h4 className='titulo-popup'>{this.props.titulo}</h4> : null}
-                {this.props.texto ? <div className='texto-popup-pequeno'>{this.props.texto}</div> : null}
+                {titulo ? <h4 className='titulo-popup'>{titulo}</h4> : null}
+                {texto ? <div className='texto-popup-pequeno'>{texto}</div> : null}
             </div>
-            {this.props.filhos}
+            {filhos}
             <div className='container-botoes-popup' 
                  style={botoesJSX.length === 1 ? {justifyContent: 'center'} : null }>
                    {botoesJSX}

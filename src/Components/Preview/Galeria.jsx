@@ -45,11 +45,10 @@ class Galeria extends Component {
     getImagens = () => [
         {
             fundo: {path: null, src: null},
-            tampao: {backgroundColor: '#ffffff', opacityFundo: 1},
+            tampao: {backgroundColor: '#ffffff', opacityFundo: '1'},
             texto: {color: '#000000'},
             alt: 'Cor Sólida',
             callback: () => {
-                console.log('oi')
                 this.props.dispatch({type: 'ativar-realce', abaAtiva: 'tampao'})
                 setTimeout(() => document.getElementById('botao-cor-fundo').click(), 50)
             }
@@ -74,8 +73,8 @@ class Galeria extends Component {
             imagens.unshift({
                     fundo: {src: url, path: null},
                     alt: name.substr(0, name.length - 18),
-                    tampao: {},
-                    texto: {},
+                    tampao: {opacityFundo: '0', backgroundColor: '#000000'},
+                    texto: {color: '#000000'},
                     excluivel: true
             })
         };

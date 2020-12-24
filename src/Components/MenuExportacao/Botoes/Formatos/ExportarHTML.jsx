@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import BotaoExportador from '../BotaoExportador';
 import { toggleFullscreen as fullScreen } from '../../../../principais/FuncoesGerais';
 import TratarDadosHTML from '../../tratarDadosHTML';
+import getCssFontesBase64 from '../../ModulosFontes';
 
 const toggleFullscreen = fullScreen;
 
@@ -102,10 +103,11 @@ class ExportarHTML extends Component {
     this.cssImagens = [];
   }
 
-  exportarHTML = (copiaDOM, imagensBase64, _previews, nomeArquivo) => {
+  exportarHTML = (copiaDOM, imagensBase64, previews, nomeArquivo) => {
 
     var tratado = TratarDadosHTML(copiaDOM);
     copiaDOM = tratado.copiaDOM;
+    copiaDOM = getCssFontesBase64(copiaDOM, previews);
     var { botaoTelaCheia, setaMovimento } = tratado;
     
     var apresentacao = '<div id="container-apresentacao">' + copiaDOM.body.innerHTML + '</div>'

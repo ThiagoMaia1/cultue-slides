@@ -93,6 +93,7 @@
 //   ✔️ Nomes dos fundos personalizados
 //   ✔️ clickFora Select
 //   ✔️ Ordem fundos personalizados/cor sólida
+//   ✔️ Preview dos fundos com cor sólida
 //   ✔️ Carrossel do Input Imagem não vai até o final.*/
 // Errinhos:
 //   ✔️ Click fora tutorial
@@ -109,7 +110,6 @@
 //   Link de download não faz nada
 //   Redimensionar imagem ao inseri-la
 //   Deletar fundos personalizados
-//   Preview dos fundos com cor sólida
 
 /*// Features essenciais:
 //   ✔️ Envio de imagens
@@ -200,7 +200,7 @@
 //   Lista de slides no arquivo html
 //   Animações de transição
 //   Ranking músicas
-//   Acrescentar músicas BD
+//   Acrescentar músicas BD (Estrofe 1, Adicionar estrofe, adicionar refrão)
 //   Pesquisa cifra
 //   Dicas eventuais: B/W, forma de escrita da referência bíblica
 //   Atalhos e clickFora dos menus
@@ -210,6 +210,7 @@
 //   Atalho F1 para ajuda
 //   Capturar cor da imagem
 //   Página de imagens do usuário
+//   Otimizar css para exportação
 //   Logo no e-mail de forma que possa ser lida offline*/
 //
 // Negócio:

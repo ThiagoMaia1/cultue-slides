@@ -29,7 +29,7 @@ class Img extends Component {
 
     onMouseOver = () => {
         clearTimeout(this.esperaMouseOver);
-        var t = this.mudancaTemporaria;
+        let t = this.mudancaTemporaria;
         this.mudancaTemporaria = true;
         if (!t || !this.estiloAnterior) this.estiloAnterior = this.getEstiloAnterior();
         this.esperaMouseOver = setTimeout(() => {
@@ -40,28 +40,33 @@ class Img extends Component {
     onMouseLeave = () => {
         clearTimeout(this.esperaMouseOver);
         this.mudancaTemporaria = false;
-        this.togglePrevia(this.estiloAnterior);
+
+        this.togglePrevia(this.estiloAnterior, false);
     }
 
     onClick = () => {
         this.props.dispatch(this.getObjetoDispatch(this.props.imagem));
         this.mudancaTemporaria = false;
-        this.estiloAnterior = {...this.props.slideSelecionado.estilo};
+
+        this.estiloAnterior = this.getEstiloAnterior();
         let { callback } = this.props;
         if (callback) callback();
     }
 
-    togglePrevia(estiloImagem) {
+    togglePrevia(estiloImagem, checarBasico = true) {
         var img = {...estiloImagem};
-        this.props.dispatch(this.getObjetoDispatch(img, true));
+        this.props.dispatch(this.getObjetoDispatch(img, true, checarBasico));
     }
 
-    getObjetoDispatch = (img, temp = false) => {
-        let keys = ['tampao', 'texto'];
+    getObjetoDispatch = (img, temp = false, checarBasico) => {
+        let { estilo } = this.props.slidePreview;
         let objetos = {};
+        let keys = ['tampao', 'texto'];
         for (let k of keys) {
-            if (this.props.slidePreview.estilo[k].eBasico)
+            if (!checarBasico || estilo[k].eBasico)
                 objetos[k] = {...img[k]};
+            else if (k === 'tampao' && Number(estilo[k].opacityFundo) >= 0.9)
+                objetos.tampao = {opacityFundo: img[k].opacityFundo};
         }
         return {
             type: 'editar-slide' + (temp ? '-temporariamente' : ''), 

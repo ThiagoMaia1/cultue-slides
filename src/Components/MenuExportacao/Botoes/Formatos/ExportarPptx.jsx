@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import BotaoExportador from '../BotaoExportador';
+import { getPreviews } from '../../Exportador';
 import pptxgen from "pptxgenjs";
 import { getFonteBase } from '../../../../principais/Element';
+import { getFontesUsadas } from '../../ModulosFontes';
+import { ativarPopupConfirmacao } from '../../../Popup/PopupConfirmacao';
 
 class ExportarPptx extends Component {
     
@@ -19,6 +22,9 @@ class ExportarPptx extends Component {
 
   exportarPptx = (_copiaDOM, imagensBase64, previews, nomeArquivo) => {
     
+    if(getFontesUsadas(previews).google.length) {
+      
+    }
     var imagens = imagensBase64.reduce((resultado, img) => {
       resultado[img.classe] = img.data.replace('data:','');
       return resultado;
@@ -66,9 +72,51 @@ class ExportarPptx extends Component {
       this.props.definirFormatoExportacao(this.exportarPptx, this.formato);
   }
 
+  onClick = () => {
+    let previews = getPreviews(this.props.elementos);
+    if(getFontesUsadas(previews).google.length) {
+      ativarPopupConfirmacao(
+        [
+          {texto: 'Baixar arquivo HTML', parametroCallback: 1, classe: 'botao-longo-popup'},
+          {texto: 'Baixar arquivo zip com fontes utilizadas', parametroCallback: 2, classe: 'neutro botao-longo-popup'},
+          {texto: 'Substituir por fontes seguras', parametroCallback: 3, classe: 'botao-longo-popup neutro'},
+          {texto: 'Cancelar', parametroCallback: 0, classe: 'neutro botao-longo-popup'}
+        ],
+        'Atenção!',
+        'Sua apresentação contém fontes incomuns, que não são encontradas em qualquer computador.\n\n' + 
+        'Recomendamos o download em HTML, pois nesse formato, o próprio arquivo da apresentação conterá as fontes utilizadas.\n\n' +
+        'Se você preferir utilizar o PowerPoint, baixe o arquivo zip com as fontes para instalar na máquina a ser utilizada, ou ' +
+        'substitua todas as fontes especiais utilizadas por fontes comuns.',
+        opcao => {
+          switch (opcao) {
+            case 0:
+              return;
+            case 1: 
+              this.fazerDownloadEmHtml();
+              return;
+            case 3:
+              this.substituirFontesGoogle();
+              break;
+            default:
+              break;
+          }
+          this.props.definirFormatoExportacao(this.exportarPptx, this.formato);
+        }     
+      )
+    }
+  }
+
+  fazerDownloadEmHtml = () => {
+    alert('todo');
+  }
+
+  substituirFontesGoogle = () => {
+    alert('todo');
+  }  
+
   render() {
       return (
-        <BotaoExportador formato={this.formato} onClick={() => this.props.definirFormatoExportacao(this.exportarPptx, this.formato)} 
+        <BotaoExportador formato={this.formato} onClick={this.onClick} 
           logo={this.logo} rotulo='PowerPoint'/>
       )
   }
@@ -165,7 +213,10 @@ const getDimensoesInches = (ratio, keysAbrev = true) => {
 }
 
 const mapState = state => (
-  {ratio: state.present.ratio}
+  {
+    ratio: state.present.ratio,
+    elementos: state.present.elementos
+  }
 )
 
 export default connect(mapState)(ExportarPptx);
