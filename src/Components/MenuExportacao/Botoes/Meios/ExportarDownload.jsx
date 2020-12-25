@@ -1,21 +1,10 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import BotaoExportador from '../BotaoExportador';
 import { MdFileDownload } from 'react-icons/md';
-
-export const downloadArquivo = (nomeArquivo, blob) => {
-  let elemx = window.document.createElement('a');
-  elemx.href = window.URL.createObjectURL(blob); // ! createObjectURL
-  elemx.download = nomeArquivo;
-  elemx.style.display = 'none';
-  document.body.appendChild(elemx);
-  elemx.click();
-  document.body.removeChild(elemx);
-}
-
-const downloadArquivoTexto = function(nomeArquivo, conteudoArquivo) {
-  let blob = new Blob([conteudoArquivo], { type: 'text/plain' }); // ! Blob
-  downloadArquivo(nomeArquivo, blob);
-}
+import { getPreviews } from '../../Exportador';
+import { getFontesUsadas, downloadZipFontes } from '../../ModulosFontes';
+import { downloadArquivoTexto, downloadArquivo } from '../../../../principais/FuncoesGerais';
 
 class ExportarDownload extends Component {
 
@@ -24,11 +13,16 @@ class ExportarDownload extends Component {
     this.meio = 'download';
   }
 
-  exportarDownload = obj => {
-    var { nomeArquivo, arquivo, formato } = obj;
+  exportarDownload = ({ nomeArquivo, arquivo, formato }) => {
     switch (formato) {
       case 'pptx':
         arquivo.writeFile(nomeArquivo);
+        let previews = getPreviews(this.props.elementos);
+        let fontesEspeciais = getFontesUsadas(previews).google;
+        downloadZipFontes(
+          fontesEspeciais || [], 
+          blob => downloadArquivo('Fontes Especiais.zip', blob)
+        ); 
         break;
       case 'html':
         downloadArquivoTexto(nomeArquivo, arquivo);
@@ -63,5 +57,8 @@ class ExportarDownload extends Component {
 
 }
 
-export default ExportarDownload;
+const mapState = state => ({
+    elementos: state.present.elementos
+});
 
+export default connect(mapState)(ExportarDownload);

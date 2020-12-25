@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-// import JSZip from 'jszip';
 import BotaoExportador from '../BotaoExportador';
-import { getPreviews } from '../../Exportador';
 import pptxgen from "pptxgenjs";
 import { getFonteBase } from '../../../../principais/Element';
-import { getFontesUsadas, googleComSubstitutas } from '../../ModulosFontes';
-import { ativarPopupConfirmacao } from '../../../Popup/PopupConfirmacao';
+import { perguntarAcaoFontesEspeciais } from '../../ModulosFontes';
 import { parseCorToRgb, rgbToHex } from '../../../../principais/FuncoesGerais';
+
+const parseCor = cor => rgbToHex(parseCorToRgb(cor));
 
 class ExportarPptx extends Component {
     
@@ -24,17 +23,6 @@ class ExportarPptx extends Component {
 
   exportarPptx = (_copiaDOM, imagensBase64, previews, nomeArquivo) => {
     
-    // let fontesEspeciais = getFontesUsadas(previews).google;
-    // if(fontesEspeciais.length) {
-    //   let zip = new JSZip();
-    //   for (let f of fontesEspeciais) {
-    //     let nomeArquivo = f + '.ttf';
-    //     let arquivoTTF = require('../../Fontes/FontesTTF/' + nomeArquivo);
-    //     zip.file(nomeArquivo, arquivoTTF); 
-    //   }
-    //   zip.generateAsync({type: 'blob'})
-    //     .then(blob => downloadArquivo('Fontes Especiais.zip', blob))
-    // }
     var imagens = imagensBase64.reduce((resultado, img) => {
       resultado[img.classe] = img.data.replace('data:','');
       return resultado;
@@ -57,7 +45,7 @@ class ExportarPptx extends Component {
       }
       slide.addShape(pptx.ShapeType.rect, 
                      {fill: {
-                        color: rgbToHex(parseCorToRgb(p.estilo.tampao.backgroundColor)).replace('#',''), 
+                        color: parseCor(p.estilo.tampao.backgroundColor).replace('#',''), 
                         transparency: (1-Number(p.estilo.tampao.opacityFundo))*100
                      }, x: 0, y: 0, w: '100%', h: '100%'}
       );
@@ -83,65 +71,13 @@ class ExportarPptx extends Component {
   }
 
   onClick = () => {
-    let previews = getPreviews(this.props.elementos);
-    if(getFontesUsadas(previews).google.length) {
-      ativarPopupConfirmacao(
-        [
-          {texto: 'Baixar arquivo HTML', parametroCallback: 1, classe: 'botao-longo-popup'},
-          {texto: 'Baixar arquivo zip com fontes utilizadas', parametroCallback: 2, classe: 'neutro botao-longo-popup'},
-          {texto: 'Substituir por fontes seguras', parametroCallback: 3, classe: 'botao-longo-popup neutro'},
-          {texto: 'Cancelar', parametroCallback: 0, classe: 'neutro botao-longo-popup'}
-        ],
-        'Atenção!',
-        'Sua apresentação contém fontes incomuns, que não são encontradas em qualquer computador.\n\n' + 
-        'Recomendamos o download em HTML, pois nesse formato, o próprio arquivo da apresentação conterá as fontes utilizadas.\n\n' +
-        'Se você preferir utilizar o PowerPoint, baixe o arquivo zip com as fontes para instalar na máquina a ser utilizada, ou ' +
-        'substitua todas as fontes especiais utilizadas por fontes comuns.',
-        opcao => {
-          switch (opcao) {
-            case 0:
-              return;
-            case 1: 
-              this.fazerDownloadEmHtml();
-              return;
-            case 3:
-              this.substituirFontesGoogle();
-              break;
-            default:
-              break;
-          }
-          this.props.definirFormatoExportacao(this.exportarPptx, this.formato);
-        }     
-      )
-    }
+    let { elementos, meio } = this.props;
+    perguntarAcaoFontesEspeciais({
+      elementos,
+      meio,
+      callbackExecutar: () => this.props.definirFormatoExportacao(this.exportarPptx, this.formato)
+    })
   }
-
-  fazerDownloadEmHtml = () => {
-    alert('todo');
-  }
-
-  substituirFontesGoogle = () => {
-    let { elementos } = this.props;
-    let keys = ['texto', 'paragrafo', 'titulo'];
-    for (let i = 0; i < elementos.length; i++) {
-      let { slides } = elementos[i];
-      for (let j = 0; j < slides.length; j++) {
-        for (let k of keys) {
-          let font = slides[j].estilo[k].fontFamily;
-          if (font) {
-            let fontFamily = googleComSubstitutas[font.replace(' ', '_')] || font;
-            this.props.dispatch({
-              type: 'editar-slide-temporariamente', 
-              objeto: k, 
-              valor: { fontFamily }, 
-              selecionado: {elemento: i, slide: j}
-            });
-          }
-        }
-      }
-    }
-    this.props.dispatch({type: 'default'});
-  }  
 
   render() {
       return (
@@ -198,7 +134,7 @@ const correcaoPixels = 0.522694;
 const atributosHtmlPptx = {textAlign: v => {
                             if (v === 'justify') v = 'left';
                             return {align: v}},
-                           color: v => ({color: v.replace('#', '')}),
+                           color: v => ({color: parseCor(v.replace('#', ''))}),
                            lineHeight: o => ({lineSpacing: Math.round(o.lineHeight*o.fontSize*correcaoPixels*getFonteBase().numero)/100}),
                            fontWeight: v => {if (v > 550) return{bold: true}},
                            fontStyle: v => {if (v === 'italic') return{italic: true}},

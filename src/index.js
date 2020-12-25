@@ -174,7 +174,10 @@ export const reducerElementos = function (state = defaultList, action, usuario) 
         notificacao = 'Estilo do Slide' + sel.slide + ' d' + dadosMensagem.genero + ' ' + dadosMensagem.elementos + '" Limp' + dadosMensagem.genero;
       }
       el = redividirSlides(el, sel, state.ratio);
-      return {...state, elementos: [...el], selecionado: action.selecionado, abaAtiva: 'texto', notificacao: notificacao};
+      return {...state, elementos: [...el], selecionado: action.selecionado, abaAtiva: 'texto', notificacao};
+    }
+    case "fixar-novas-fontes": {
+      return {...state, notificacao: 'Fontes Especiais Substituídas'};
     }
     case "ativar-popup-adicionar": {
       return {...state, popupAdicionar: {...action.popupAdicionar}};

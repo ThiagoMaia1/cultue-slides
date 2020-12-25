@@ -32,18 +32,21 @@ class ExportarEmail extends Component {
     const ListaComLoading = sobreporSplash('listaEmails', ListaEmails);
 
     this.filhosPopup = (
-      <div style={{maxHeight: '50vh', minHeight:'50vh', width: '100%', marginBottom: '2vh', overflow: 'hidden'}}>
-        <Carrossel direcao='vertical' tamanhoIcone={50} tamanhoMaximo={'50vh'} 
-                  percentualBeirada={0.05} style={{zIndex: '400', width: '50vw'}}>
-          <ListaComLoading selecionarEmail={this.selecionarEmail} height='50vh'/>
-        </Carrossel>
+      <div>
+        <div style={{marginLeft: '2vw'}}>Selecione os endereços de e-mail para os quais você deseja enviar o arquivo.</div>
+        <div style={{maxHeight: '50vh', minHeight:'50vh', width: '100%', marginBottom: '2vh', overflow: 'hidden'}}>
+          <Carrossel direcao='vertical' tamanhoIcone={50} tamanhoMaximo={'50vh'} 
+                    percentualBeirada={0.05} style={{zIndex: '400', width: '50vw'}}>
+            <ListaComLoading selecionarEmail={this.selecionarEmail} height='50vh'/>
+          </Carrossel>
+        </div>
       </div>
     )
 
     ativarPopupConfirmacao(
       'enviarCancelar', 
       'E-mails', 
-      'Selecione os endereços de e-mail para os quais você deseja enviar o arquivo.',
+      '',
       fazer => {if(fazer) {
         this.enviarArquivoEmail(obj);
         document.body.style.cursor = 'progress';

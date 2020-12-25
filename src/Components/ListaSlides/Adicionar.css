@@ -11,7 +11,7 @@
 #div-botoes .itens {
   min-width: 5.2vw;
   max-width: 5.2vw;
-  min-height: 4.2vw;
+  min-height: 7vh;
   margin: 1vh 1vh 0 0;
   text-align: center;
   color: var(--platinum-forte);

@@ -128,7 +128,6 @@ class ExportarHTML extends Component {
     for (var i = 0; i < fundos.length; i++) {
       var imgFundo = fundos[i];
       imgFundo.style.removeProperty('background-image');
-      console.log(imgFundo, imgFundo.style, imgFundo.style.backgroundImage);
       imgFundo.classList.add(imgFundo.className);
     }
     var css = copiaDOM.createElement("style"); //Inserir arquivo CSS no DOM.

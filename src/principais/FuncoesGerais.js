@@ -470,3 +470,20 @@ export const mudancasArrays = (arrayNovo, arrayAntigo) => ({
     acrescentar: diferencaArrays(arrayNovo, arrayAntigo),
     remover: diferencaArrays(arrayAntigo, arrayNovo)
 })
+
+
+export const downloadArquivo = (nomeArquivo, blob) => {
+    let elemx = window.document.createElement('a');
+    elemx.href = window.URL.createObjectURL(blob); // ! createObjectURL
+    elemx.download = nomeArquivo;
+    elemx.style.display = 'none';
+    document.body.appendChild(elemx);
+    elemx.click();
+    document.body.removeChild(elemx);
+}
+  
+export const downloadArquivoTexto = function(nomeArquivo, conteudoArquivo) {
+    let blob = new Blob([conteudoArquivo], { type: 'text/plain' }); // ! Blob
+    downloadArquivo(nomeArquivo, blob);
+}
+  

@@ -213,6 +213,7 @@
 //   Capturar cor da imagem
 //   Página de imagens do usuário
 //   Otimizar css para exportação
+//   Incluir anexos em e-mails confirmados (tem que pedirconfirmação de e-mail antes)
 //   Logo no e-mail de forma que possa ser lida offline*/
 //
 // Negócio:

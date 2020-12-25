@@ -29,7 +29,7 @@ class ListaEmails extends React.Component {
         return (
             <>
                 {this.state.emailsUsuario 
-                    ? this.state.emailsUsuario.map((e, i) => (
+                    ? this.state.emailsUsuario.map(e => (
                             <ItemListaEmails
                                 objEmail={e}
                                 key={e.id}

@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import './MenuExportacao.css';
-// import { toggleAnimacao } from '../Animacao/animacaoCoordenadas.js';
 import Exportador from './Exportador';
 import ExportarHTML from './Botoes/Formatos/ExportarHTML';
 import ExportarPptx from './Botoes/Formatos/ExportarPptx';
@@ -15,6 +14,7 @@ const getChamada = () => new Date().getTime();
 const getMaxTamanho = (width, height) => ({maxTamanho: {maxWidth: width, maxHeight: height}});
 
 const tamBotao = 8;
+const keysMeios = ['download', 'email', 'link'];
 
 class MenuExportacao extends Component {
     
@@ -59,6 +59,7 @@ class MenuExportacao extends Component {
                     <BotaoFormato key={i} 
                                   definirFormatoExportacao={this.definirFormatoExportacao} 
                                   formatoExportacao={this.props.formatoExportacao}
+                                  meio={keysMeios[this.state.posicaoArrow]}
                                   style={this.state.posicaoArrow === 2 && i === 3 ? {maxWidth: '100vw'} : this.estiloDivOculta}
                     />
                 )
