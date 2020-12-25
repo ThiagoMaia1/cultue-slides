@@ -173,6 +173,7 @@
 //   Otimizar trocas de dados com BD 🟨
 
 /*/ Features dispensáveis:
+//   Edição de estilo de partes do texto
 //   Slide-mestre de cada tipo 🟥
 //   Tela perfil do usuário: predefinições. 🟥 
 //   Outros efeitos no texto: sombra, realce, etc..

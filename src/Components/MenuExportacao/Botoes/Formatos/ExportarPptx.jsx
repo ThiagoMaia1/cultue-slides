@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+// import JSZip from 'jszip';
 import BotaoExportador from '../BotaoExportador';
 import { getPreviews } from '../../Exportador';
 import pptxgen from "pptxgenjs";
 import { getFonteBase } from '../../../../principais/Element';
 import { getFontesUsadas, googleComSubstitutas } from '../../ModulosFontes';
 import { ativarPopupConfirmacao } from '../../../Popup/PopupConfirmacao';
-// import JSZip from 'jszip';
+import { parseCorToRgb, rgbToHex } from '../../../../principais/FuncoesGerais';
 
 class ExportarPptx extends Component {
     
@@ -25,9 +26,14 @@ class ExportarPptx extends Component {
     
     // let fontesEspeciais = getFontesUsadas(previews).google;
     // if(fontesEspeciais.length) {
+    //   let zip = new JSZip();
     //   for (let f of fontesEspeciais) {
-
+    //     let nomeArquivo = f + '.ttf';
+    //     let arquivoTTF = require('../../Fontes/FontesTTF/' + nomeArquivo);
+    //     zip.file(nomeArquivo, arquivoTTF); 
     //   }
+    //   zip.generateAsync({type: 'blob'})
+    //     .then(blob => downloadArquivo('Fontes Especiais.zip', blob))
     // }
     var imagens = imagensBase64.reduce((resultado, img) => {
       resultado[img.classe] = img.data.replace('data:','');
@@ -51,8 +57,8 @@ class ExportarPptx extends Component {
       }
       slide.addShape(pptx.ShapeType.rect, 
                      {fill: {
-                        color: p.estilo.tampao.backgroundColor.replace('#',''), 
-                        transparency: (1-Number(p.estilo.tampao.opacity))*100
+                        color: rgbToHex(parseCorToRgb(p.estilo.tampao.backgroundColor)).replace('#',''), 
+                        transparency: (1-Number(p.estilo.tampao.opacityFundo))*100
                      }, x: 0, y: 0, w: '100%', h: '100%'}
       );
       var opcoesTitulo = {...getDimensaoTitulo(p.estilo.titulo), ...getAtributos(p.estilo.titulo)};

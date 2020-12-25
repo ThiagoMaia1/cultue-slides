@@ -2,15 +2,19 @@ import React, { Component } from 'react';
 import BotaoExportador from '../BotaoExportador';
 import { MdFileDownload } from 'react-icons/md';
 
-const downloadArquivoTexto = function(nomeArquivo, conteudoArquivo) {
-  let blobx = new Blob([conteudoArquivo], { type: 'text/plain' }); // ! Blob
+export const downloadArquivo = (nomeArquivo, blob) => {
   let elemx = window.document.createElement('a');
-  elemx.href = window.URL.createObjectURL(blobx); // ! createObjectURL
+  elemx.href = window.URL.createObjectURL(blob); // ! createObjectURL
   elemx.download = nomeArquivo;
   elemx.style.display = 'none';
   document.body.appendChild(elemx);
   elemx.click();
   document.body.removeChild(elemx);
+}
+
+const downloadArquivoTexto = function(nomeArquivo, conteudoArquivo) {
+  let blob = new Blob([conteudoArquivo], { type: 'text/plain' }); // ! Blob
+  downloadArquivo(nomeArquivo, blob);
 }
 
 class ExportarDownload extends Component {
