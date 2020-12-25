@@ -17,11 +17,11 @@ const wHeight = window.screen.height;
 export const ratioTela = {width: Math.max(wWidth, wHeight), height: Math.min(wWidth, wHeight)};
 const selecionadoPadrao = {elemento: 0, slide: 0};
 
-const getAprensentacaoPadraoUsuario = async  ({idApresentacaoPadrao, tipoApresentacaoPadrao}) => {
+const getAprensentacaoPadraoUsuario = async  ({idApresentacaoPadrao}, apresentacaoPadraoCompleta) => {
   let apresentacaoPadrao = await getApresentacaoComId(idApresentacaoPadrao);
   if(!apresentacaoPadrao) return getApresentacaoPadraoBasica();
   let { elementos, ratio } = apresentacaoPadrao;
-  if (tipoApresentacaoPadrao === 'estilo') elementos = elementos.slice(0, 1);
+  if (!apresentacaoPadraoCompleta) elementos = elementos.slice(0, 1);
   elementos = getElementosDesconvertidos(elementos);
   return {elementos, ratio, selecionado: selecionadoPadrao};
 }
@@ -53,13 +53,13 @@ export const gerarNovaApresentacao = async (idUsuario, elementos, zerada, ratio)
   );
 };
 
-const getAprensentacaoPadrao = async (usuario = {}) => {
+const getAprensentacaoPadrao = async (usuario = {}, apresentacaoPadraoCompleta) => {
   if(usuario.uid)
-    return await getAprensentacaoPadraoUsuario(usuario);
+    return await getAprensentacaoPadraoUsuario(usuario, apresentacaoPadraoCompleta);
   return getApresentacaoPadraoBasica(); 
 }
 
-export const definirApresentacaoAtiva = async (usuario, apresentacao = {}, elementos = null, ratio = null, mudarURL = true) => {
+export const definirApresentacaoAtiva = async (usuario, apresentacao = {}, elementos = null, ratio = null, mudarURL = true, apresentacaoPadraoCompleta = true) => {
   if (!apresentacao) apresentacao = {};
   var novaApresentacao = apresentacao;
   var zerada = false;
@@ -72,7 +72,7 @@ export const definirApresentacaoAtiva = async (usuario, apresentacao = {}, eleme
   }
   if (!elementos) {
     zerada = true;
-    let apresentacaoPadrao = await getAprensentacaoPadrao(usuario);
+    let apresentacaoPadrao = await getAprensentacaoPadrao(usuario, apresentacaoPadraoCompleta);
     elementos = apresentacaoPadrao.elementos;
   }
   if (!usuario.uid && !apresentacao.id) {
@@ -173,14 +173,14 @@ export const getElementosConvertidos = elementos => {
   return el;
 }
 
-export const zerarApresentacao = (usuario, apresentacao) => {
+export const zerarApresentacao = (usuario, apresentacao, apresentacaoPadraoCompleta) => {
   ativarPopupConfirmacao(
     'simNao',
     'Atenção', 
     'Deseja iniciar uma nova apresentação?' + 
       (!apresentacao.id ? '\n\n(A apresentação atual será excluída)' : ''), 
     fazer => {
-      if(fazer) definirApresentacaoAtiva(usuario);
+      if(fazer) definirApresentacaoAtiva(usuario, undefined, undefined, undefined, undefined, apresentacaoPadraoCompleta);
     }
   );
 }

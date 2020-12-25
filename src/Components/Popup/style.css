@@ -165,7 +165,6 @@ body {
   white-space: break-spaces;
   width: max-content;
   max-width: 25vw;
-  text-align: justify;
 }
 
 .popup-confirmacao .botao {

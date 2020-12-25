@@ -46,17 +46,16 @@ class MenuBotaoDireito extends Component {
     }
 };
 
-export class QuadroOpcoes extends Component {
+export function QuadroOpcoes ({opcoes, callback, fecharPai, style = {}}) {
 
-    render () {
-        return (
-            <QuadroMenu callback={this.props.callback} style={{position: 'fixed', ...estiloQuadro, ...this.props.style}}>
-                {this.props.opcoes.map(o => 
-                    <OpcaoMenu opcao={o} key={o.rotulo} fecharPai={this.props.fecharPai}/>  
-                )}
-            </QuadroMenu>
-        )
-    }
+    console.log(opcoes);
+    return (
+        <QuadroMenu callback={callback} style={{position: 'fixed', ...estiloQuadro, ...style}}>
+            {opcoes.map(o => 
+                <OpcaoMenu opcao={o} key={o.rotulo} fecharPai={fecharPai}/>  
+            )}
+        </QuadroMenu>
+    )
 }
 
 class OpcaoMenu extends Component {

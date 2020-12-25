@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import store from '../../index';
 import QuadroAtalhos from './QuadroAtalhos';
 import QuadroEnviar from './QuadroEnviar';
@@ -11,33 +11,32 @@ const opcoesTutoriais = [
     {rotulo: 'Todos', valor: keysTutoriais},
     ...listaTutoriais].map(t => ({rotulo: t.rotulo, callback: () => refazerTutorial(t.valor)}));
 
-class QuadroAjuda extends Component {
+const estiloQuadoEnviar = {padding: '3.5vh'};
 
-    constructor (props) {
-        super(props);
-        this.opcoes = [
-            {rotulo: 'Atalhos Gerais', submenu: {children: <QuadroAtalhos lista={'listaGeral'}/>}},
-            {rotulo: 'Atalhos Apresentação', submenu: {children: <QuadroAtalhos lista={'listaApresentacao'}/>}},
-            {rotulo: 'Fale Conosco', submenu: {children: 
-                <QuadroEnviar fechar={props.callback} 
-                              titulo='Escreva sua Mensagem:'
-                              textoBotao='Enviar Mensagem'/>, style: {padding: '3.5vh'}}},
-            {rotulo: 'Informar um Problema', submenu: {children: 
-                <QuadroEnviar fechar={props.callback} 
-                              titulo='Descreva o problema:'
-                              textoBotao='Enviar Relatório'
-                              incluirRelatorio={true}/>, style: {padding: '3.5vh'}}},
-            {rotulo: 'Rever Tutoriais', submenu: {opcoes: opcoesTutoriais}},
-            {rotulo: 'Documentação', callback: () => alert('todo')},
-            {rotulo: 'Vídeos', callback: () => alert('todo')}
-        ]
-    }
-
-    render() {
-        return (
-            <QuadroOpcoes opcoes={this.opcoes} callback={() => this.props.callback()} fecharPai={() => this.props.callback()} style={{left: this.props.left}}/>
-        )
-    }
+const QuadroAjuda = props => {
+    
+    let { callback } = props;
+    let opcoes = [
+        {rotulo: 'Atalhos Gerais', submenu: {children: <QuadroAtalhos lista={'listaGeral'}/>}},
+        {rotulo: 'Atalhos Apresentação', submenu: {children: <QuadroAtalhos lista={'listaApresentacao'}/>}},
+        {rotulo: 'Fale Conosco', submenu: {children: 
+            <QuadroEnviar fechar={callback} 
+                            titulo='Escreva sua Mensagem:'
+                            textoBotao='Enviar Mensagem'/>, style: estiloQuadoEnviar}},
+        {rotulo: 'Informar um Problema', submenu: {children: 
+            <QuadroEnviar fechar={callback} 
+                          titulo='Descreva o problema:'
+                          textoBotao='Enviar Relatório'
+                          incluirRelatorio={true}/>, style: estiloQuadoEnviar}},
+        {rotulo: 'Rever Tutoriais', submenu: {opcoes: opcoesTutoriais}}
+        // ,
+        // {rotulo: 'Documentação', callback: () => alert('todo')},
+        // {rotulo: 'Vídeos', callback: () => alert('todo')}
+    ]
+    
+    return (
+        <QuadroOpcoes opcoes={opcoes} fecharPai={callback} {...props}/>
+    )
 };
 
 export default QuadroAjuda;

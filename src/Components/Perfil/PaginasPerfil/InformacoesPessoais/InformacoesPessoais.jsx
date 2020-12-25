@@ -4,14 +4,14 @@ import './InformacoesPessoais.css';
 import { atualizarRegistro, getDocumentoUsuario } from '../../../../principais/firestore/apiFirestore';
 import { objetosSaoIguais } from '../../../../principais/FuncoesGerais';
 import SelectCargo from '../../../Login/SelectCargo';
-import RadioTipoPadrao from './RadioTipoPadrao';
+// import RadioTipoPadrao from './RadioTipoPadrao';
 import SelectNumero from './SelectNumero';
 
 const campos = {
   nomeCompleto: {label: 'Nome Completo'},
   email: {label: 'E-mail'}, 
   cargo: {label: 'Cargo', Input: SelectCargo},
-  tipoApresentacaoPadrao: {label: 'Apresentação padrão deve utilizar: ', Input: RadioTipoPadrao},
+  // tipoApresentacaoPadrao: {label: 'Apresentação padrão deve utilizar: ', Input: RadioTipoPadrao},
   frequentadores: {label: 'Qual o número médio aproximado de frequentadores dos cultos em que você utiliza as apresentações?', Input: SelectNumero}
 }
 

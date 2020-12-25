@@ -163,13 +163,14 @@
 //   ✔️ Editar slide de imagens ou desabilitar edição 🟨
 //   ✔️ Pool de images
 //   ✔️ Excluir/editar slide padrão
+//   ✔️ Incluir fontes como base64 (html) 
+//   ✔️ Diferentes tipos de "Nova apresentação"
 //   ✔️ Lista de atalhos do modo apresentação.*/
 //   Tentar de novo/Avisar se upload da imagem não pôde ser feito
 //   Botões centralizar nas configurações de imagem
-//   Incluir fontes como base64 (html) ou zip (power point) 🟥
+//   Incluir fontes como zip (power point) 🟨
 //   Exportação em PowerPoint
 //   Otimizar trocas de dados com BD 🟨
-//   Diferentes tipos de "Nova apresentação"
 
 /*/ Features dispensáveis:
 //   Slide-mestre de cada tipo 🟥

@@ -1,14 +1,15 @@
-import React, { Component, Fragment, useState } from 'react';
+import React, { Component, Fragment } from 'react';
 import './style.css';
 import { connect } from 'react-redux';
 import { CgErase } from 'react-icons/cg';
 import { RiMastercardLine } from 'react-icons/ri'
 import { BsTextLeft, BsTextCenter, BsTextRight, BsJustify, BsMusicNoteBeamed, BsFileBreak} from 'react-icons/bs';
 import { VscCollapseAll } from 'react-icons/vsc';
-import { AiOutlineRotateLeft, AiOutlineInfoCircle } from 'react-icons/ai';
+import { AiOutlineRotateLeft } from 'react-icons/ai';
 import { CgEye } from 'react-icons/cg';
 import Slider from '../Basicos/Slider/Slider';
 import Select from '../Basicos/Select/Select';
+import BotaoInfo from '../Basicos/BotaoInfo/BotaoInfo';
 import ColorPicker from '../Basicos/ColorPicker/ColorPicker';
 import { rgbObjToStr, parseCorToRgb } from '../../principais/FuncoesGerais';
 import { listaPartesEstilo } from '../../principais/Element';
@@ -23,17 +24,11 @@ const casesTexto = [{valor: 'Nenhum', icone: (<span style={{color: '#999'}}>Aa</
 
 const SeparadorFontes = () => {
   
-  let [info, setInfo] = useState(false);
-
   return (
     <div className='separador-fontes'>
       Fontes Especiais
-      <div onMouseOver={() => setInfo(true)} onMouseLeave={() => setInfo(false)}>
-        <AiOutlineInfoCircle size={18}/>
-        {!info ? null :
-          <div className='caixa-info'>As fontes abaixo não estão disponíveis na maioria dos computadores. Para utiliza-las no PowerPoint você deverá instalá-las individualmente. Recomendamos o download em HTML, que não apresenta essa limitação.</div>
-        }
-      </div>
+      <BotaoInfo mensagem={'As fontes abaixo não estão disponíveis na maioria dos computadores. Para utiliza-las no PowerPoint você deverá ' + 
+                          'instalá-las individualmente. Recomendamos o download em HTML, que não apresenta essa limitação.'}/>
     </div>
   )
 }
@@ -43,7 +38,7 @@ const getOpcaoFonte = f => (
 )
 const opcoesListaFontes = [
   ...fontes.basicas.sort().map(getOpcaoFonte),
-  {valor: 'Fontes Especiais', rotulo: <SeparadorFontes/>, style: {backgroundColor: 'var(--azul-forte)', color: 'white'}, 
+  {valor: 'Fontes Especiais', rotulo: <SeparadorFontes/>, style: {minHeight: '6vh', marginBottom: '1vh', backgroundColor: 'var(--platinum)'}, 
    eSeparador: true},
   ...fontes.google.sort().map(getOpcaoFonte)
 ]
@@ -148,13 +143,14 @@ class ConfigurarSlides extends Component {
 
   gerarBotoesAbas = () => {
     return listaBotoesAbas.slice(1).map((a, i) => {
-      var t = this.props.slidePreview.tipo;
-      if (t === 'Imagem' || t === 'Vídeo') {
+      var { tipo, eTitulo } = this.props.slidePreview;
+      if (tipo === 'Imagem' || tipo === 'Vídeo') {
         if (a.nomeCodigo === 'paragrafo') return null;
-        if (a.nomeCodigo === 'imagem' && t !== a.nomeInterface) return null;
+        if (a.nomeCodigo === 'imagem' && tipo !== a.nomeInterface) return null;
       } else {
         if (a.nomeCodigo === 'imagem') return null;
       }
+      if(eTitulo && a.nomeCodigo === 'paragrafo') return null;
       var tampar;
       if (this.props.abaAtiva === a.nomeCodigo) tampar = (<div className='tampar-shadow'></div>);
       return (

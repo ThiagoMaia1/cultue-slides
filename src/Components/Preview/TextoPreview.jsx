@@ -90,6 +90,6 @@ export function formatarVersiculos(versiculos) {
             }
         } 
         r.push(<><b>{superscritoPrevia(v.vers)}</b> {v.texto} </>);
-        return <div>{r}</div>;
+        return <span>{r}</span>;
     })
 }
