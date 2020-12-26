@@ -1,6 +1,8 @@
 import JSZip from 'jszip';
 import JSZipUtils from 'jszip-utils';
 import store from '../../index';
+import { getPreviews } from './Exportador';
+import { ativarPopupConfirmacao } from '../Popup/PopupConfirmacao';
 
 export const googleComSubstitutas = {
   Montserrat: 'Trebuchet MS',
@@ -108,7 +110,7 @@ export const getCssFontesBase64 = (copiaDOM, previews) => {
   return copiaDOM;
 }
 
-export function downloadZipFontes(fontes, callback) {
+export function getZipFontes(fontes, callback) {
   let zip = new JSZip();
   let contador = 0;
   for (let f of fontes) {
@@ -180,6 +182,7 @@ export const perguntarAcaoFontesEspeciais = ({elementos, meio, callbackExecutar}
         setTimeout(callbackExecutar, 100);
       }     
     )
-  }
+  } 
+  else callbackExecutar();
 }
 

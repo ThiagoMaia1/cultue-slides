@@ -11,7 +11,7 @@ const Select = props => {
     let [opcaoMarcada, setOpcaoMarcada] = useState();
     let ref = useOutsideClick(() => setAberto(false));
     let refPai = useRef();
-    let termo = useFilter(aberto);
+    let [termo] = useFilter(aberto, ref);
 
     const onChange = (opcao, permanente = true) => {
         setOpcaoMarcada(opcao);

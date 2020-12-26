@@ -110,6 +110,8 @@
 //   Link de download não faz nada
 //   Redimensionar imagem ao inseri-la
 //   Deletar fundos personalizados
+//   Filtrar com foco
+//   HTML no e-mail indo sem CSS/Scripts
 
 /*// Features essenciais:
 //   ✔️ Envio de imagens
@@ -165,10 +167,10 @@
 //   ✔️ Excluir/editar slide padrão
 //   ✔️ Incluir fontes como base64 (html) 
 //   ✔️ Diferentes tipos de "Nova apresentação"
+//   ✔️ Incluir fontes como zip (power point) 🟨
 //   ✔️ Lista de atalhos do modo apresentação.*/
 //   Tentar de novo/Avisar se upload da imagem não pôde ser feito
 //   Botões centralizar nas configurações de imagem
-//   Incluir fontes como zip (power point) 🟨
 //   Exportação em PowerPoint
 //   Otimizar trocas de dados com BD 🟨
 

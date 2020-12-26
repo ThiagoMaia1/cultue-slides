@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Element from '../../../../principais/Element.js';
 import InputImagem from './InputImagem';
-import { connect } from 'react-redux';
+import store from '../../../../index';
 
 class AdicionarImagem extends Component { 
 
@@ -14,8 +14,8 @@ class AdicionarImagem extends Component {
         var imagensValidas = imgs.filter(i => i.width);
         var srcs = imagensValidas.map(i => ({src: i.src, ...(i.idUpload !== undefined ? {idUpload: i.idUpload} : {})}));
         var popupAdicionar = {input1: this.state.titulo || imagensValidas[0].alt, input2: srcs};
-        this.props.dispatch({type: 'inserir', elemento: new Element('Imagem', this.state.titulo || imagensValidas[0].alt, [], srcs),
-                             popupAdicionar: popupAdicionar, elementoASubstituir: this.props.elementoASubstituir})
+        store.dispatch({type: 'inserir', elemento: new Element('Imagem', this.state.titulo || imagensValidas[0].alt, [], srcs),
+                             popupAdicionar, elementoASubstituir: this.props.elementoASubstituir})
     }
 
     onChange = e => {
@@ -34,4 +34,4 @@ class AdicionarImagem extends Component {
     }
 }
 
-export default connect()(AdicionarImagem);
+export default AdicionarImagem;

@@ -8,8 +8,7 @@ export const enviarEmail = firebaseFunctions.httpsCallable('enviarEmail');
 export const enviarEmailTemplate = (assunto, destinatarios, corpo, JSXInterno, linksBotoes = null, anexos = null, callback = null) => {
     
     const azulForte = '#3757a9';    
-    const urlLogo = 'https://firebasestorage.googleapis.com/v0/b/slidesigreja-ff51f.appspot.com/o/public%2FLogoCultue.png?alt=media&amp;token=e525c9f9-b0cf-4ffa-a595-77998ceca9b3';
-
+    const urlLogo = 'https://firebasestorage.googleapis.com/v0/b/slidesigreja-ff51f.appspot.com/o/public%2FLogoCultue.png?alt=media&token=e525c9f9-b0cf-4ffa-a595-77998ceca9b3';
     const getEstiloBarraAzul = altura => (
         {backgroundColor: azulForte, height: altura + 'px', width: '100%'}
     )

@@ -8,6 +8,8 @@ import sobreporSplash from '../../../Basicos/Splash/SobreporSplash';
 import { ativarPopupConfirmacao, ativarPopupLoginNecessario } from '../../../Popup/PopupConfirmacao';
 import { enviarEmailTemplate } from '../../ChamadaEnvioEmail';
 import { gerarNovaPermissao, getLinkPermissao } from '../../../../principais/firestore/apresentacoesBD';
+import { getFontesUsadas, getZipFontes } from '../../ModulosFontes';
+import { getPreviews } from '../../Exportador';
 
 class ExportarEmail extends Component {
 
@@ -56,14 +58,15 @@ class ExportarEmail extends Component {
   }
 
   enviarArquivoEmail = async obj => {
+    console.log(obj)
     var { nomeArquivo, arquivo, formato } = obj;
     var encoding = {};
     switch (formato) {
+      case 'html':
+        break;
       case 'pptx':
         arquivo = await arquivo.write('base64');
         encoding = {encoding: 'base64'};
-        break;
-      case 'html':
         break;
       case 'pdf':
         arquivo.save(nomeArquivo);
@@ -75,17 +78,42 @@ class ExportarEmail extends Component {
     this.partes = this.getPartesEmail();
     var link = await this.getLinkDownload('baixar', formato);
 
+    let attachments = [{
+      filename: nomeArquivo,
+      content: arquivo,
+      ...encoding
+    }]
+
+    const enviar = () => this.enviar(attachments, link)
+    
+    if (formato === 'pptx') {
+      let previews = getPreviews(this.props.elementos);
+      let fontesEspeciais = getFontesUsadas(previews).google;
+      if (fontesEspeciais.length) {
+        getZipFontes(
+          fontesEspeciais || [], 
+          blob => {
+            attachments.push({
+              filename: 'Fontes Especiais.zip',
+              streamSource: blob.stream()
+            });
+            enviar();
+          }
+        ); 
+        return;
+      }
+    }
+    enviar();
+  }
+
+  enviar = (attachments, link) => {
     enviarEmailTemplate(
       'Apresentação de Slides para o Culto', 
       this.getDestinatarios(), 
       this.getCorpoEmail(), 
       this.getHTMLEmail(),
       [{url: link, rotulo: 'Download Apresentação'}],
-      {
-        filename: nomeArquivo,
-        content: arquivo,
-        ...encoding
-      }
+      attachments
     )
   }
 
@@ -149,7 +177,11 @@ class ExportarEmail extends Component {
 }
 
 const mapState = state => {
-  return {usuario: state.usuario, idApresentacao: state.present.apresentacao.id}
+  return {
+    usuario: state.usuario, 
+    idApresentacao: state.present.apresentacao.id,
+    elementos: state.present.elementos  
+  }
 }
 
 export default connect(mapState)(ExportarEmail);

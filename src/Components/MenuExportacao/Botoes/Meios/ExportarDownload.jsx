@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import BotaoExportador from '../BotaoExportador';
 import { MdFileDownload } from 'react-icons/md';
 import { getPreviews } from '../../Exportador';
-import { getFontesUsadas, downloadZipFontes } from '../../ModulosFontes';
+import { getFontesUsadas, getZipFontes } from '../../ModulosFontes';
 import { downloadArquivoTexto, downloadArquivo } from '../../../../principais/FuncoesGerais';
 
 class ExportarDownload extends Component {
@@ -19,7 +19,7 @@ class ExportarDownload extends Component {
         arquivo.writeFile(nomeArquivo);
         let previews = getPreviews(this.props.elementos);
         let fontesEspeciais = getFontesUsadas(previews).google;
-        downloadZipFontes(
+        getZipFontes(
           fontesEspeciais || [], 
           blob => downloadArquivo('Fontes Especiais.zip', blob)
         ); 

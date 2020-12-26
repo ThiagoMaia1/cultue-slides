@@ -1,7 +1,9 @@
-import { useCallback, useState, useEffect } from 'react';
+import { useCallback, useState, useEffect, useRef } from 'react';
 
-const useFilter = zerar => {
+const useFilter = (zerar, ref) => {
 
+    let newRef = useRef();
+    if (!ref) ref = newRef;
     let [termo, setTermo] = useState('');
     let [, setTimer] = useState(0);
     const limparTermo = () => setTermo('');
@@ -21,7 +23,7 @@ const useFilter = zerar => {
     }, []);
 
     useEffect(() => {
-        document.addEventListener('keyup', onKeyUp);
+        ref.current.addEventListener('keyup', onKeyUp);
         return () => document.removeEventListener('keyup', onKeyUp);
     })
 
@@ -29,7 +31,7 @@ const useFilter = zerar => {
         setTimeout(limparTermo, 10);
     }, [zerar])
 
-    return termo;
+    return [termo, ref];
 
 }
 
