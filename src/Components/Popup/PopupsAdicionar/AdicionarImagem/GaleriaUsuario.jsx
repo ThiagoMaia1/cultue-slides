@@ -4,17 +4,21 @@ import store from '../../../../index';
 import GaleriaImagensPopup from './GaleriaImagensPopup';
 import Popup from '../../Popup';
 
-const GaleriaUsuario = ({callback, imagensUsuario = [], soFundos = false, fecharPopup}) => {
-    let imagens = imagensUsuario.fundos || [];
-    if (!soFundos) imagens = [...imagens, ...imagensUsuario.gerais];
-
+const GaleriaUsuario = ({callback, imagensUsuario = [], subconjunto = null, fecharPopup}) => {
+    let imagens = (subconjunto 
+                   ? imagensUsuario[subconjunto]
+                   : Object.keys(imagensUsuario).map(k => imagensUsuario[k])) || [];
     const apagar = i => {
-        let link = imagens[i];
-        for (var subconjunto of Object.keys(imagensUsuario)) {
-            var indice = imagensUsuario[subconjunto].indexOf(link);
-            if (indice > -1) break;
+        let url = imagens[i];
+        let subconjunto;
+        for (var s of Object.keys(imagensUsuario)) {
+            let indice = imagensUsuario[s].indexOf(url);
+            if (indice > -1) {
+                subconjunto = s;
+                break;
+            }
         }
-        store.dispatch({type: 'alterar-imagem-colecao-usuario', subconjunto, indice});
+        store.dispatch({type: 'alterar-imagem-colecao-usuario', subconjunto, urls: url, excluir: true});
     }
 
     return (
@@ -23,8 +27,9 @@ const GaleriaUsuario = ({callback, imagensUsuario = [], soFundos = false, fechar
             <GaleriaImagensPopup imagens={imagens}
                                  onClickImagem={callback}
                                  apagar={apagar}
+                                 fecharPopup={fecharPopup}
                                  mensagemConfirmarExclusao={'Tem certeza que deseja excluir essa imagem do banco de dados?\n\n' +
-                                                            '(Essa ação não pode ser desfeita)'}                                
+                                                            '(Essa ação não poderá ser desfeita)'}                                
             />
         </Popup>
     )

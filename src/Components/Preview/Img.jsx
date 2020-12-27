@@ -15,7 +15,9 @@ export const getPathImagem = (path, px) => {
 export const lerImagem = (fundo, px = null) => (
     fundo.src
         ? fundo.src
-        : require('' + getPathImagem(fundo.path || 'Cor Sólida.jpg', px)) 
+        : fundo.path 
+            ? require('' + getPathImagem(fundo.path, px))
+            : ''
 );  
 
 class Img extends Component {
@@ -40,8 +42,7 @@ class Img extends Component {
     onMouseLeave = () => {
         clearTimeout(this.esperaMouseOver);
         this.mudancaTemporaria = false;
-
-        this.togglePrevia(this.estiloAnterior, false);
+        this.reverterPrevia();
     }
 
     onClick = () => {
@@ -57,6 +58,8 @@ class Img extends Component {
         var img = {...estiloImagem};
         this.props.dispatch(this.getObjetoDispatch(img, true, checarBasico));
     }
+
+    reverterPrevia = () => this.togglePrevia(this.estiloAnterior, false);
 
     getObjetoDispatch = (img, temp = false, checarBasico) => {
         let { estilo } = this.props.slidePreview;
@@ -78,7 +81,9 @@ class Img extends Component {
         }
     }
 
-    clickApagar = () => {
+    clickApagar = e => {
+        e.stopPropagation();
+        this.reverterPrevia();
         ativarPopupConfirmacao(
             'simNao',
             'Confirmar Exclusão',
@@ -91,9 +96,9 @@ class Img extends Component {
             </div>,
             fazer => {
                 if(fazer)   
-                    this.props.dispatch({
+                        this.props.dispatch({
                         type: 'alterar-imagem-colecao-usuario', 
-                        url: this.props.imagem.fundo.src, 
+                        urls: this.props.imagem.fundo.src, 
                         subconjunto: 'fundos', 
                         transferirPara: 'gerais'
                     })
@@ -111,13 +116,17 @@ class Img extends Component {
                 onMouseOver={this.onMouseOver}
                 onMouseLeave={this.onMouseLeave}
                 style={{pointerEvents: this.props.estatico ? 'none' : ''}}>
-                {!img.excluivel ? null : 
-                    <button className='x-apagar-imagem' onClick={this.clickApagar}>✕</button>
+                {this.props.estatico ? null :
+                    <>
+                        {!img.excluivel ? null : 
+                            <button className='x-apagar-imagem' onClick={this.clickApagar}>✕</button>
+                        }
+                        <div className='texto-mini-preview'>
+                            <div style={img.texto}>{img.alt}</div>
+                        </div>
+                        <div className='tampao' style={estiloTampao}></div>
+                    </>
                 }
-                <div className='texto-mini-preview'>
-                    <div style={img.texto}>{img.alt}</div>
-                </div>
-                <div className='tampao' style={estiloTampao}></div>
                 <img className='imagem-galeria' 
                      src={lerImagem(img.fundo, 300)} 
                      alt={img.alt}

@@ -1,7 +1,8 @@
 import firebase, { firebaseStorage } from '../firebase.js';
+import store from '../../index';
 // import { atualizarRegistro } from '../../../../principais/firestore/apiFirestore';
 
-export function uploadImagem (arquivo, metadata, callback) {
+export function uploadImagem (arquivo, metadata, callback, tentativa = 0) {
 
     var idUpload = new Date().getTime();
     var nomeArquivo = arquivo.name + '_' + new Date().getTime(); //Nomes de arquivo no firebase storage precisam ser únicos.
@@ -9,39 +10,12 @@ export function uploadImagem (arquivo, metadata, callback) {
 
     // Listen for state changes, errors, and completion of the upload.
     uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
-        function(snapshot) {
-            // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
-            var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-            console.log('Upload is ' + progress + '% done');
-            switch (snapshot.state) {
-            case firebase.storage.TaskState.PAUSED:
-                console.log('Upload is paused');
-                break;
-            case firebase.storage.TaskState.RUNNING:
-                console.log('Upload is running');
-                break;
-            default:
-                return;
-            }
+        () => void 0, 
+        () => {
+            if (tentativa < 3) uploadImagem(arquivo, metadata, callback, tentativa + 1);
+            else store.dispatch({type: 'inserir-notificacao', conteudo: 'Erro ao realizar upload da imagem, tente novamente mais tarde.'});
         }, 
-        function(error) {
-            switch (error.code) {
-                case 'storage/unauthorized':
-                    // User doesn't have permission to access the object
-                    break;
-
-                case 'storage/canceled':
-                    // User canceled the upload
-                    break;
-
-                case 'storage/unknown':
-                    // Unknown error occurred, inspect error.serverResponse
-                    break;
-                default:
-                    return;
-            }
-        }, function() {
-            // Upload completed successfully, now we can get the download URL
+        () => {
             uploadTask.snapshot.ref.getDownloadURL()
                 .then(downloadURL => {
                     callback(idUpload, downloadURL);

@@ -1,0 +1,1 @@
+export const listaDirecoes = ['left', 'right', 'top', 'bottom'];

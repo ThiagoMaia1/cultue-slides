@@ -14,6 +14,8 @@ export const tiposElemento = {
   // , Vídeo: AdicionarVideo
 }
 
+export const imagemEstaNoBD = strSrc => /firebase/.test(strSrc || '');
+
 export function getNomeInterfaceTipo(nome) {
   nome = nome.split('');
   for (var i = 1; i < nome.length; i++) {
@@ -253,6 +255,12 @@ export default class Element {
   }
 
   descoversorFirestore = elementoDB => {
+  
+    const zerarSrc = objImagem => {
+      objImagem.src = '';
+      objImagem.idUpload = null;
+    }
+
     this.tipo = elementoDB.tipo;
     this.titulo = elementoDB.titulo;
     this.texto = elementoDB.texto;
@@ -261,9 +269,16 @@ export default class Element {
     this.input1 = elementoDB.input1;
     this.input2 = elementoDB.input2;
     this.slides = elementoDB.slides;
+    for (let s of this.slides) {
+      if (!imagemEstaNoBD(s.imagem.src)) zerarSrc(s.imagem);
+      let { fundo } = s.estilo;
+      if (!fundo.path && !imagemEstaNoBD(fundo.src)) zerarSrc(fundo);
+    }
+
   }
 }
-  
+
+
 const marcarEstrofesRepetidas = texto => {
 
   const limparTexto = t => retiraAcentos(t).toLowerCase().replace(/[^a-z]/g,'');

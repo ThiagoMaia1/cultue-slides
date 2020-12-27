@@ -7,7 +7,8 @@ import { getPathImagem } from './Img';
 import { limparHighlights } from '../NavBar/BarraPesquisa/BarraPesquisa';
 import { markupParaSuperscrito } from '../Preview/TextoPreview';
 import { ratioTela } from '../../principais/firestore/apresentacoesBD';
-import ImagemRedimensionavel from './ImagemRedimensionavel';
+import ImagemSlide from './ImagemSlide';
+import BotaoReupload from './BotaoReupload';
 
 class SlideFormatado extends Component {
     
@@ -64,51 +65,62 @@ class SlideFormatado extends Component {
         borderRadius: Number((estImagem.borderRadius || '').replace('px', ''))*proporcao + 'px'
     })
 
+    reupload = () => {
+        alert('todo')
+    }
+
     render() {
-        var slidePreview = this.props.slidePreview;
-        var proporcao = this.props.proporcao;
-        var proporcaoTela = proporcao*this.props.ratio.width/ratioTela.width;
-        var sel = this.props.selecionado;
+        let { slidePreview, proporcao, selecionado, editavel, referencia, id, className, ratio, style, children } = this.props
+        var proporcaoTela = proporcao*ratio.width/ratioTela.width;
         return (
-                <div ref={this.props.referencia} 
-                     id={this.props.id} 
-                     className={this.props.className}
-                     style={{width: this.props.ratio.width*proporcao, 
-                             height: this.props.ratio.height*proporcao,
+                <div ref={referencia} 
+                     id={id} 
+                     className={className}
+                     style={{width: ratio.width*proporcao, 
+                             height: ratio.height*proporcao,
                              ...this.realcarElemento('tampao', 'dentro'),
-                             ...this.props.style}}>
+                             ...style}}>
                     {!slidePreview.imagem ? null 
-                        : <ImagemRedimensionavel key={sel.elemento + '.' + sel.slide} 
-                                                 imagem={slidePreview.imagem} 
-                                                 estiloImagem={this.getEstiloImagem(slidePreview.estilo.imagem, proporcao)} 
-                                                 estiloRealce={this.realcarElemento('imagem')}
-                                                 editavel={this.props.editavel}/>
+                        : <ImagemSlide key={selecionado.elemento + '.' + selecionado.slide} 
+                                       imagem={slidePreview.imagem} 
+                                       estiloImagem={this.getEstiloImagem(slidePreview.estilo.imagem, proporcao)} 
+                                       estiloRealce={this.realcarElemento('imagem')}
+                                       editavel={editavel}/>
                     }
-                    <Img imagem={slidePreview.estilo.fundo} proporcao={proporcaoTela} tampao={slidePreview.estilo.tampao}/>
+                    <Img imagem={slidePreview.estilo.fundo} 
+                         proporcao={proporcaoTela} 
+                         tampao={slidePreview.estilo.tampao} 
+                         botaoInativo={!editavel || typeof slidePreview.estilo.fundo.path === 'string'}
+                         selecionado={selecionado}/>
                     <div className='texto-preview' style={{fontSize: getFonteBase().numero*proporcao + getFonteBase().unidade}}>
-                        {slidePreview.estilo.titulo.abaixo ? null : this.getBlocoTitulo(slidePreview, sel)}
+                        {slidePreview.estilo.titulo.abaixo ? null : this.getBlocoTitulo(slidePreview, selecionado)}
                         <div id='paragrafo-slide' className={'slide-paragrafo ' + this.getClasseLetraClara('paragrafo')} style={slidePreview.estilo.paragrafo}>
                             <div style={this.realcarElemento('paragrafo')} 
                                  className={'realce-paragrafo ' + (slidePreview.estilo.paragrafo.duasColunas ? 'dividido-colunas' : '')}>
-                                {<Estrofes slidePreview={slidePreview} onInput={this.editarTexto} ativarRealce={this.ativarRealce} editavel={this.props.editavel}
-                                           selecionado={sel}/>}
+                                {<Estrofes slidePreview={slidePreview} onInput={this.editarTexto} ativarRealce={this.ativarRealce} editavel={editavel}
+                                           selecionado={selecionado}/>}
                             </div>
                         </div>
-                        {slidePreview.estilo.titulo.abaixo ? this.getBlocoTitulo(slidePreview, sel) : null}
+                        {slidePreview.estilo.titulo.abaixo ? this.getBlocoTitulo(slidePreview, selecionado) : null}
                     </div>
-                    {this.props.children}
+                    {children}
                 </div>
         )
     }
 }
 
-const ImgNormal = ({corTampao, strBackground, mixBlendMode}) => (
+const ImgNormal = ({corTampao, strBackground, mixBlendMode, reupload, src, botaoInativo}) => (
     <div className='imagem-fundo-preview' style={{backgroundImage: strBackground}}>
         <div className='tampao' style={{backgroundColor: corTampao, mixBlendMode}}/>
+        <BotaoReupload callbackReupload={reupload} src={src} inativo={botaoInativo}/>
     </div>
 )
 
-export const Img = ({imagem, proporcao, tampao}) => {
+export const Img = ({imagem, proporcao, tampao, botaoInativo, selecionado}) => {
+    const reupload = () => {
+        alert('todo', selecionado);
+    }
+
     var strBackground = '';
     var strPrincipal;
     if (imagem.src) {
@@ -124,7 +136,14 @@ export const Img = ({imagem, proporcao, tampao}) => {
             return resultado;            
         }, []).join(', ');
     }
-    return <ImgNormal corTampao={tampao.backgroundColor} strBackground={strBackground} mixBlendMode={tampao.mixBlendMode}/>
+    return (
+        <ImgNormal corTampao={tampao.backgroundColor} 
+                   strBackground={strBackground} 
+                   mixBlendMode={tampao.mixBlendMode} 
+                   botaoInativo={botaoInativo} 
+                   reupload={reupload}
+                   src={imagem.src}/>
+    )
 };
 
 const mapState = function (state) {

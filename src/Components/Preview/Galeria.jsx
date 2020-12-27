@@ -9,6 +9,8 @@ import Popup from '../Popup/Popup';
 import { toggleAnimacao } from '../Basicos/Animacao/animacaoCoordenadas.js'
 import { getMetadata } from '../../principais/firestore/imagemFirebase';
 import { mudancasArrays, objetosSaoIguais } from '../../principais/FuncoesGerais';
+import { imagemEstaNoBD } from '../../principais/Element';
+import { ativarPopupConfirmacao } from '../Popup/PopupConfirmacao';
 
 const fundosFixos = listaFundos.imagens.map(i => ({
     fundo: {path: i.path, src: null}, 
@@ -44,7 +46,7 @@ class Galeria extends Component {
 
     getImagens = () => [
         {
-            fundo: {path: null, src: null},
+            fundo: {path: '', src: null},
             tampao: {backgroundColor: '#ffffff', opacityFundo: '1'},
             texto: {color: '#000000'},
             alt: 'Cor Sólida',
@@ -60,15 +62,38 @@ class Galeria extends Component {
         this.setState({popupCompleto:
             <Popup ocultarPopup={() => this.setState({popupCompleto: null})}>
                 <h4>Enviar Fundo Personalizado</h4>
-                <InputImagem eFundo={true}/>
+                <InputImagem eFundo={true} 
+                             callback={this.inserirFundoDaColecao}/>
             </Popup>
         });
     }
 
-    inserirFundos = async arrayFundos => {
-        this.inserindoFundos = true;
+    inserirFundoDaColecao = imgs => {
+        imgs = imgs.filter(i => i.eLinkFirebase);
+        if (imgs.length) {
+            if (this.props.fundos.includes(imgs[0].src)) {
+                ativarPopupConfirmacao(
+                    'OK',
+                    'Imagem Já Selecionada',
+                    'A imagem selecionada já está incluída na galeria de fundos personalizados.'
+                )
+            } else {
+                this.props.dispatch({
+                    type: 'alterar-imagem-colecao-usuario',
+                    urls: imgs.map(i => i.src), 
+                    subconjunto: 'fundos'
+                })
+                this.setState({popupCompleto: null});
+            }
+        }    
+    }
+
+    inserirFundos = async fundos => {
+        if (!Array.isArray(fundos)) fundos = [fundos];
         let imagens = [...this.state.imagens];
-        for (let url of arrayFundos) {
+        fundos = fundos.filter(f => imagemEstaNoBD(f));
+        for (let url of fundos) {
+            console.log(url)
             let name = (await getMetadata(url)).name || '';
             imagens.unshift({
                     fundo: {src: url, path: null},
@@ -79,7 +104,6 @@ class Galeria extends Component {
             })
         };
         this.setState({imagens});
-        this.inserindoFundos = false;
     }
 
     componentDidMount = () => this.inserirFundos(this.props.fundos);
@@ -91,9 +115,10 @@ class Galeria extends Component {
         if (!objetosSaoIguais(prevProps.fundos, this.props.fundos)) {
             let fundos = this.state.imagens.map(i => i.fundo.src);
             let { acrescentar, remover } = mudancasArrays(this.props.fundos, fundos); 
-            if(remover.length) 
+            if(remover.length) {
                 this.setState({imagens: this.state.imagens.filter(i => !remover.includes(i.fundo.src))});
-            this.inserirFundos(acrescentar);
+            }
+            setTimeout(() => this.inserirFundos(acrescentar), 10);
         }
     }
 

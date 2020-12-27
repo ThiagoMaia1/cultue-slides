@@ -5,7 +5,7 @@ import '../LetrasMusica/style.css';
 import './style.css';
 import { getImgBase64 } from '../../../../principais/FuncoesGerais';
 
-const ImagemGaleriaInput = ({img, indice, apagar, nFiles, setFinalCarrossel = null, onClick = null, mensagemConfirmarExclusao = ''}) => {
+const ImagemGaleriaInput = ({img, indice, apagar, nFiles, setFinalCarrossel = null, onClick = null, mensagemConfirmarExclusao = '', fecharPopup}) => {
 
     let imgRef = useRef(img);
     let [image, setImage] = useState({});
@@ -86,7 +86,13 @@ const ImagemGaleriaInput = ({img, indice, apagar, nFiles, setFinalCarrossel = nu
     }
 
     return (
-        <div className='container-imagem-upload' style={{cursor: onClick ? 'pointer' : ''}} key={image.alt} onClick={() => {if(onClick) onClick(img)}}>
+        <div className={'container-imagem-upload' + (onClick ? ' clicavel' : '')} key={image.alt} 
+             onClick={() => {
+                if(onClick) {
+                    onClick(img);
+                    fecharPopup();
+                }
+             }}>
             <div className='imagem-invalida previa-imagem-upload' 
                  style={{...background, maxWidth, transition}}>
                 {!image.invalida ? null

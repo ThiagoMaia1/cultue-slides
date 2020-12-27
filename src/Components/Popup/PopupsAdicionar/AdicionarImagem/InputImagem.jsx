@@ -43,8 +43,8 @@ function atualizarArrayInput2(elemento, i, idUpload, src) {
     }
 }
 
-const adicionarImagemColecaoUsuario = (subconjunto, url) => {
-    store.dispatch({type: 'alterar-imagem-colecao-usuario', subconjunto, url});
+const adicionarImagemColecaoUsuario = (subconjunto, urls) => {
+    store.dispatch({type: 'alterar-imagem-colecao-usuario', subconjunto, urls});
 }
 
 class InputImagem extends Component {
@@ -54,6 +54,7 @@ class InputImagem extends Component {
         this.refInputFile = React.createRef();
         this.aumentando = true;
         let imagens = props.imagens || [];
+        console.log(imagens);
         this.state = {
             imagens: imagens.map(({src}, i) => ({
                 src, 
@@ -96,8 +97,6 @@ class InputImagem extends Component {
         this.adicionarImagem(img);
     }
 
-    adicionarImagem = img => this.setState({imagens: [...this.state.imagens, img]});
-
     validarImagens(inputImagens){
         if(this.state.imagens.length === 1 && !this.state.imagens[0].width) this.limparInputs();
         var url = window.URL || window.webkitURL;
@@ -131,9 +130,9 @@ class InputImagem extends Component {
         this.refInputFile.current.value = '';        
     }
     
-    apagarImagem = indice => {
-        this.setState({imagens: this.state.imagens.filter((_img, i) => i !== indice)});
-    }
+    adicionarImagem = img => this.setState({imagens: [...this.state.imagens, img]});
+
+    apagarImagem = indice => this.setState({imagens: this.state.imagens.filter((_img, i) => i !== indice)});
 
     limparInputs = () => this.setState({imagens: []});
     
@@ -141,27 +140,32 @@ class InputImagem extends Component {
         if(this.refInputFile.current) this.refInputFile.current.click();
     }
 
-    upload = () => {
-        var imgsFiltradas = this.state.imagens.filter(i => i.width);
-        
+    eImagemValida = img => !!img.width || img.eLinkFirebase;
+
+    callbackImagensValidas = () => {
+        let imgsFiltradas = this.state.imagens.filter(this.eImagemValida);
         imgsFiltradas = imgsFiltradas.map(i => {
-            if (!i.eLinkFirebase) {
-                let metadados = {
-                    name: i.altContador
-                };
-                i.idUpload = uploadImagem(i.arquivo, metadados, (idUpload, urlUpload) => {
-                    callbackUpload(idUpload, urlUpload, this.props.eFundo);
-                });
-            }
+            if (!i.eLinkFirebase) this.upload(i);
             return i;
-        })
-        if (this.props.callback) this.props.callback(imgsFiltradas);
+        });
+        this.props.callback(imgsFiltradas);
     }
 
+    upload = img => {
+        let metadados = {
+            name: img.altContador
+        };
+        img.idUpload = uploadImagem(img.arquivo, metadados, (idUpload, urlUpload) => {
+            callbackUpload(idUpload, urlUpload, this.props.eFundo);
+        });
+        return img
+    };
+
     render () {
-        let nValidos = this.state.imagens.filter(i => !!i.width).length;
-        let nInvalidos = this.state.imagens.length - nValidos;
-        let visibilidadeBotao = !this.state.imagens.length ? {visibility: 'hidden'} : null;
+        let { imagens } = this.state;
+        let nValidos = imagens.filter(this.eImagemValida).length;
+        let nInvalidos = imagens.length - nValidos;
+        let visibilidadeBotao = !imagens.length ? {visibility: 'hidden'} : null;
         return (
             <>
                 <div className='caixa-input-imagem'
@@ -169,7 +173,7 @@ class InputImagem extends Component {
                     onDrop={this.onDrop}
                     onDragLeave={this.onDrop} 
                     onMouseOver={() => this.setState({pointerEvents: 'all'})}>
-                    <GaleriaImagensPopup imagens={this.state.imagens} 
+                    <GaleriaImagensPopup imagens={imagens} 
                                         onClickGaleria={this.clicarInput} 
                                         apagar={this.apagarImagem} 
                                         textoPlaceholder='Arraste uma imagem, ou clique para selecionar o arquivo.'
@@ -181,7 +185,7 @@ class InputImagem extends Component {
                     </div>
                 </div>
                 <div className='container-botoes-popup'>
-                    <button className='botao' onClick={this.upload} style={nValidos ?  visibilidadeBotao : {visibility: 'hidden'}}>
+                    <button className='botao' onClick={this.callbackImagensValidas} style={nValidos ?  visibilidadeBotao : {visibility: 'hidden'}}>
                         {'Inserir Image' + (nInvalidos ? 'ns Válidas' : nValidos > 1 ? 'ns' : 'm')}
                     </button>
                     {!this.props.usuario.uid ? null :
@@ -190,7 +194,9 @@ class InputImagem extends Component {
                     <button className='botao limpar-input' onClick={this.limparInputs} style={visibilidadeBotao}>✕ Limpar</button>
                 </div>
                 {!this.state.galeriaUsuarioAtiva ? null :
-                    <GaleriaUsuario callback={this.adicionarImagem} fecharPopup={() => this.setState({galeriaUsuarioAtiva: false})}/>
+                    <GaleriaUsuario callback={this.adicionarImagem} 
+                                    fecharPopup={() => this.setState({galeriaUsuarioAtiva: false})}
+                                    subconjunto={this.props.eFundo ? 'gerais' : null}/>
                 }
             </>
         )

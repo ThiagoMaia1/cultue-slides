@@ -112,6 +112,9 @@
 //   Deletar fundos personalizados
 //   Filtrar com foco
 //   HTML no e-mail indo sem CSS/Scripts
+//   Galeria abrindo muito devagar
+//   Mensagem de reupload aparecendo quando tira o mouse na galeria
+//   Selecionar imagem da galeria pessoal para um slide
 
 /*// Features essenciais:
 //   ✔️ Envio de imagens
@@ -169,12 +172,14 @@
 //   ✔️ Diferentes tipos de "Nova apresentação"
 //   ✔️ Incluir fontes como zip (power point) 🟨
 //   ✔️ Lista de atalhos do modo apresentação.*/
-//   Tentar de novo/Avisar se upload da imagem não pôde ser feito
-//   Botões centralizar nas configurações de imagem
+//   ✔️ Tentar de novo/Avisar se upload da imagem não pôde ser feito (não testado)
+//   Botões centralizar/preencher nas configurações de imagem
 //   Exportação em PowerPoint
 //   Otimizar trocas de dados com BD 🟨
+//   Criar popup para reupload
 
 /*/ Features dispensáveis:
+//   Tamanho dos ícones quando largura menor que altura
 //   Edição de estilo de partes do texto
 //   Slide-mestre de cada tipo 🟥
 //   Tela perfil do usuário: predefinições. 🟥 
@@ -216,6 +221,8 @@
 //   Página de imagens do usuário
 //   Otimizar css para exportação
 //   Incluir anexos em e-mails confirmados (tem que pedirconfirmação de e-mail antes)
+//   Limitar número de imagens/limpar storage de imagens não utilizadas.
+//   Considerar border radius para o cursor da imagem redimensionável.
 //   Logo no e-mail de forma que possa ser lida offline*/
 //
 // Negócio:

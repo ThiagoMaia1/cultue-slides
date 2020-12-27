@@ -4,7 +4,7 @@ import './style.css';
 import Carrossel from '../../../Basicos/Carrossel/Carrossel';
 import ImagemGaleriaInput from './ImagemGaleriaInput';
 
-const ListaImagens = ({imagens, apagar, irFinalCarrossel, onClick, mensagemConfirmarExclusao}) => {
+const ListaImagens = ({imagens, apagar, irFinalCarrossel, onClick, mensagemConfirmarExclusao, fecharPopup}) => {
     if (imagens.length === 0) return null;
     if (imagens.length === 1 && !imagens[0].width && !imagens[0].eLinkFirebase) 
         return (<div className='texto-arquivo-invalido'>Arquivo Inválido: "{imagens[0].alt}"</div>);
@@ -19,13 +19,14 @@ const ListaImagens = ({imagens, apagar, irFinalCarrossel, onClick, mensagemConfi
                                     setFinalCarrossel={irFinalCarrossel}
                                     onClick={onClick}
                                     mensagemConfirmarExclusao={mensagemConfirmarExclusao}
-                />)
-            }
+                                    fecharPopup={fecharPopup}
+                 />
+            )}
         </div>
     )
 }
 
-const GaleriaImagensPopup = ({imagens, onClickGaleria, onClickImagem, apagar, mensagemConfirmarExclusao, textoPlaceholder = '', pointerEvents = null}) => {
+const GaleriaImagensPopup = ({imagens, onClickGaleria, onClickImagem, apagar, mensagemConfirmarExclusao, textoPlaceholder = '', pointerEvents = null, fecharPopup}) => {
 
     let [finalCarrossel, setFinalCarrossel] = useState(null);
 
@@ -51,6 +52,7 @@ const GaleriaImagensPopup = ({imagens, onClickGaleria, onClickImagem, apagar, me
                         <ListaImagens imagens={imagens.map(getObjetoImagem)} 
                                       apagar={indice => apagar(indice)}
                                       irFinalCarrossel={() => setFinalCarrossel(new Date().getTime())}
+                                      fecharPopup={fecharPopup}
                                       onClick={onClickImagem}
                                       mensagemConfirmarExclusao={mensagemConfirmarExclusao}/>
                     </div>

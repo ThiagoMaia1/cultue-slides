@@ -292,13 +292,16 @@ export function undoable(reducer) {
         atualizarDadosUsuario(usuario.uid, {slidesPadrao});
         return {...state, usuario: {...usuario, slidesPadrao}};
       case 'alterar-imagem-colecao-usuario':
-        let { url, subconjunto, excluir, transferirPara } = action;
+        let { urls, subconjunto, excluir, transferirPara } = action;
+        if (!Array.isArray(urls)) urls = [urls];
         let imagens = {...usuario.imagens} || {};
         let conjunto = [...imagens[subconjunto]] || [];
         imagens[subconjunto] = (excluir || transferirPara)
-                               ? conjunto.filter(img => img !== url)
-                               : [url, ...conjunto];
-        if(transferirPara) imagens[transferirPara] = [...conjunto, url];
+                               ? conjunto.filter(img => !urls.includes(img))
+                               : [...urls, ...conjunto];
+        if(transferirPara) imagens[transferirPara] = [...imagens[transferirPara], ...urls];
+        for (let k of Object.keys(imagens)) 
+          imagens[k] = [...new Set(imagens[k])];
         atualizarDadosUsuario(usuario.uid, {imagens});
         return {...state, usuario: {...usuario, imagens }};
       case 'toggle-search':

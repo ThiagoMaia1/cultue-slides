@@ -75,6 +75,15 @@
     user-select: none;
 }
 
+.container-imagem-upload.clicavel {
+    cursor: pointer;
+    pointer-events: all;
+}
+
+.container-imagem-upload.clicavel:hover {
+    transform: scale(1.1);
+}
+
 .x-apagar-imagem {
     color: var(--platinum-forte);
     font-size: 120%;
