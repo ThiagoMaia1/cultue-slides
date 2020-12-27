@@ -11,7 +11,7 @@ class AdicionarImagem extends Component {
     }
 
     adicionarSlideImagem = imgs => {
-        var imagensValidas = imgs.filter(i => i.width);
+        var imagensValidas = imgs.filter(i => i.width || i.eLinkFirebase);
         var srcs = imagensValidas.map(i => ({src: i.src, ...(i.idUpload !== undefined ? {idUpload: i.idUpload} : {})}));
         var popupAdicionar = {input1: this.state.titulo || imagensValidas[0].alt, input2: srcs};
         store.dispatch({type: 'inserir', elemento: new Element('Imagem', this.state.titulo || imagensValidas[0].alt, [], srcs),

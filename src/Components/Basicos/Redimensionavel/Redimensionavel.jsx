@@ -229,7 +229,7 @@ class Redimensionavel extends Component {
                                     ? 'vertical'
                                     : ''; 
         let { cursor } = this.state;
-        let { redimensionamentoAtivo, estilo } = this.props;
+        let { redimensionamentoAtivo, estilo, proporcao } = this.props;
         return (
             <div id='container-quadro-redimensionar' onMouseMove={this.onMouseMove} style={{cursor}}>
                 <div id='quadro-redimensionar' 

@@ -94,6 +94,9 @@
 //   ✔️ clickFora Select
 //   ✔️ Ordem fundos personalizados/cor sólida
 //   ✔️ Preview dos fundos com cor sólida
+//   ✔️ Mensagem de reupload aparecendo quando tira o mouse na galeria
+//   ✔️ Deletar fundos personalizados
+//   ✔️ Filtrar com foco
 //   ✔️ Carrossel do Input Imagem não vai até o final.*/
 // Errinhos:
 //   ✔️ Click fora tutorial
@@ -109,11 +112,8 @@
 //   Atalhos funcionarem mesmo com foco nos inputs
 //   Link de download não faz nada
 //   Redimensionar imagem ao inseri-la
-//   Deletar fundos personalizados
-//   Filtrar com foco
 //   HTML no e-mail indo sem CSS/Scripts
 //   Galeria abrindo muito devagar
-//   Mensagem de reupload aparecendo quando tira o mouse na galeria
 //   Selecionar imagem da galeria pessoal para um slide
 
 /*// Features essenciais:
@@ -221,8 +221,9 @@
 //   Página de imagens do usuário
 //   Otimizar css para exportação
 //   Incluir anexos em e-mails confirmados (tem que pedirconfirmação de e-mail antes)
-//   Limitar número de imagens/limpar storage de imagens não utilizadas.
-//   Considerar border radius para o cursor da imagem redimensionável.
+//   Limitar número de imagens/limpar storage de imagens não utilizadas
+//   Considerar border radius para o cursor da imagem redimensionável
+//   Filtrar fundos personalizados
 //   Logo no e-mail de forma que possa ser lida offline*/
 //
 // Negócio:

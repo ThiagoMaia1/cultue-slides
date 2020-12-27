@@ -1,12 +1,12 @@
 import React, { Component, Fragment } from 'react';
 import './style.css';
 import { connect } from 'react-redux';
-import { CgErase } from 'react-icons/cg';
+import { CgErase, CgEye } from 'react-icons/cg';
 import { RiMastercardLine } from 'react-icons/ri'
-import { BsTextLeft, BsTextCenter, BsTextRight, BsJustify, BsMusicNoteBeamed, BsFileBreak} from 'react-icons/bs';
+import { BsTextLeft, BsTextCenter, BsTextRight, BsJustify, BsMusicNoteBeamed, BsFileBreak, BsArrowsFullscreen} from 'react-icons/bs';
+import { BiVerticalCenter, BiHorizontalCenter } from 'react-icons/bi';
 import { VscCollapseAll } from 'react-icons/vsc';
 import { AiOutlineRotateLeft } from 'react-icons/ai';
-import { CgEye } from 'react-icons/cg';
 import Slider from '../Basicos/Slider/Slider';
 import Select from '../Basicos/Select/Select';
 import BotaoInfo from '../Basicos/BotaoInfo/BotaoInfo';
@@ -132,13 +132,39 @@ class ConfigurarSlides extends Component {
                                   if(t.display === 'none') this.toggleEstiloTexto(this.listaEstilosTexto[8]);
                                 }},
                               {apelido: 'Ocultar Título', nomeAtributo: 'display', valorNormal: null, valorAlterado: 'none', 
-                                exigeNaoTitulo: true, naoAplicarEstilo: true, objeto: 'titulo', simbolo: 
-                                                                                                  <>
-                                                                                                    <div className='risco-olho'/>
-                                                                                                    <CgEye size={this.state.tamIcones}/>
-                                                                                                  </>
+                                exigeNaoTitulo: true, naoAplicarEstilo: true, objeto: 'titulo', 
+                                simbolo: <><div className='risco-olho'/><CgEye size={this.state.tamIcones}/></>
+                              },
+                              {apelido: 'Cobrir Tela', exigeNaoTitulo: true, naoAplicarEstilo: true, objeto: 'imagem', 
+                               simbolo: <BsArrowsFullscreen size={this.state.tamIcones}/>, 
+                               callback: () => void 0
                               }
     ]; 
+  }
+  
+  gerarBotoesEstiloTexto = (aba, iIni = 0, iFin = 20) => {
+    var lista = this.listaEstilosTexto.filter((_e, i) => i >= iIni && i <= iFin);
+    return lista.map((e, i) => {
+      const slidePreview = this.props.slidePreview;
+      if (   (e.tipo && e.tipo !== slidePreview.tipo) 
+          || (e.objeto && e.objeto !== aba)
+          || (e.exigeNaoTitulo && slidePreview.eTitulo))
+        return null;
+      var objEstilo = {};
+      objEstilo[e.nomeAtributo] = e.valorAlterado;
+      if (e.exigeMestre && !slidePreview.eMestre) objEstilo.visibility = 'hidden';
+      return (
+        <button key={i} title={e.apelido}
+                className={e.nomeAtributo + ' botao-configuracao bool ' + (this.props.slideSelecionado.estilo[aba][e.nomeAtributo] === e.valorAlterado ? ' clicado' : '')} 
+                onClick={() => {
+                  if(e.callback) e.callback();
+                  if(e.nomeAtributo) this.toggleEstiloTexto(e);
+                }}
+                style={e.naoAplicarEstilo ? null : objEstilo}>
+          {e.simbolo ? e.simbolo : e.apelido[0]}
+        </button>
+      )
+    })
   }
 
   gerarBotoesAbas = () => {
@@ -163,29 +189,6 @@ class ConfigurarSlides extends Component {
         </Fragment>
       )
     });
-  }
-
-  gerarBotoesEstiloTexto = (aba, iIni = 0, iFin = 20) => {
-    var lista = this.listaEstilosTexto.filter((_e, i) => i >= iIni && i <= iFin);
-    return lista.map((e, i) => {
-      const slidePreview = this.props.slidePreview;
-      if (   (e.tipo && e.tipo !== slidePreview.tipo) 
-          || (e.objeto && e.objeto !== this.props.abaAtiva)
-          || (e.exigeNaoTitulo && slidePreview.eTitulo))
-        return null;
-      var objEstilo = {};
-      objEstilo[e.nomeAtributo] = e.valorAlterado;
-      if (e.exigeMestre && !slidePreview.eMestre) objEstilo.visibility = 'hidden';
-      return (
-        <button key={i} title={e.apelido}
-        className={e.nomeAtributo + ' botao-configuracao bool ' + (this.props.slideSelecionado.estilo[aba][e.nomeAtributo] === e.valorAlterado ? ' clicado' : '')} 
-        onClick={() => {
-          if(e.callback) e.callback();
-          this.toggleEstiloTexto(e)
-        }}
-        style={e.naoAplicarEstilo ? null : objEstilo}>{e.simbolo ? e.simbolo : e.apelido[0]}</button>
-      )
-    })
   }
 
   gerarBotoesAlinhamento = aba => {
@@ -425,6 +428,8 @@ class ConfigurarSlides extends Component {
                                   backgroundRepeat: semFundo ? '' : 'no-repeat',
                                   boxShadow: 'var(--box-shadow)', color: slidePreview.estilo.paragrafo.color}}/>
           </div>
+          {aba !== 'imagem' ? null :
+            this.gerarBotoesEstiloTexto(aba, 7)}
           <div className='div-sliders'> 
             {listaSliders.reduce(this.reducerListaSliders, [])}
           </div>

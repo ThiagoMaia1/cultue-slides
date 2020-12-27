@@ -54,7 +54,6 @@ class InputImagem extends Component {
         this.refInputFile = React.createRef();
         this.aumentando = true;
         let imagens = props.imagens || [];
-        console.log(imagens);
         this.state = {
             imagens: imagens.map(({src}, i) => ({
                 src, 

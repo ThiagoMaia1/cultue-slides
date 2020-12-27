@@ -93,7 +93,6 @@ class Galeria extends Component {
         let imagens = [...this.state.imagens];
         fundos = fundos.filter(f => imagemEstaNoBD(f));
         for (let url of fundos) {
-            console.log(url)
             let name = (await getMetadata(url)).name || '';
             imagens.unshift({
                     fundo: {src: url, path: null},

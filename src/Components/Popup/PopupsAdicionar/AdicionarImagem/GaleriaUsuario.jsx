@@ -7,7 +7,9 @@ import Popup from '../../Popup';
 const GaleriaUsuario = ({callback, imagensUsuario = [], subconjunto = null, fecharPopup}) => {
     let imagens = (subconjunto 
                    ? imagensUsuario[subconjunto]
-                   : Object.keys(imagensUsuario).map(k => imagensUsuario[k])) || [];
+                   : [...new Set(Object.keys(imagensUsuario).reduce((resultado, k) => 
+                        [...resultado, ...imagensUsuario[k]], []))]);
+    
     const apagar = i => {
         let url = imagens[i];
         let subconjunto;

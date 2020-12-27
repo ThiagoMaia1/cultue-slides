@@ -4,6 +4,8 @@ import Redimensionavel from '../Basicos/Redimensionavel/Redimensionavel';
 import { listaDirecoes } from '../../principais/Constantes';
 import BotaoReupload from './BotaoReupload';
 
+const despachar = valor => store.dispatch({type: 'editar-slide', objeto: 'imagem', valor});
+
 class ImagemSlide extends Component {
 
     constructor (props) {
@@ -13,12 +15,9 @@ class ImagemSlide extends Component {
         img.src = props.imagem.src;
     }
 
-    setProporcaoNatural = img => {
-        this.setState({proporcao: img.naturalWidth/img.naturalHeight});
-    }
+    setProporcaoNatural = img => despachar({proporcao: img.naturalWidth/img.naturalHeight});
 
     callback = estiloState => {
-        const despachar = valor => store.dispatch({type: 'editar-slide', objeto: 'imagem', valor});
         for (var l of listaDirecoes) {
             if (estiloState[l] !== this.props.estiloImagem[l]) {
                 despachar(estiloState);
@@ -33,13 +32,17 @@ class ImagemSlide extends Component {
 
     render () {
         let { imagem, editavel, estiloRealce, estiloImagem } = this.props;
-        let {borderRadius} = estiloImagem;
+        let inset = listaDirecoes.reduce((resultado, l) => {
+            resultado[l] = estiloImagem[l];
+            return resultado;            
+        }, {})
+        let {borderRadius, proporcaoNatural} = estiloImagem;
         return (
             <Redimensionavel callback={this.callback} 
                              estilo={{...estiloRealce, borderRadius}} 
                              redimensionamentoAtivo={editavel} 
-                             proporcao={this.proporcao} 
-                             insetInicial={estiloImagem}>
+                             proporcao={proporcaoNatural || 1} 
+                             insetInicial={inset}>
                 <div className='div-imagem-slide'
                          style={{backgroundImage: 'url(' + imagem.src + ')'}}>
                     <BotaoReupload callbackReupload={this.reupload} src={imagem.src} inativo={!editavel}/>
