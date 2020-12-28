@@ -176,11 +176,13 @@
 //   ✔️ Botões centralizar/preencher nas configurações de imagem
 //   ✔️ Lista de atalhos do modo apresentação.*/
 //   ✔️ Tentar de novo/Avisar se upload da imagem não pôde ser feito
+//   Criar popup para reupload de imagem
 //   Exportação em PowerPoint
-//   Otimizar trocas de dados com BD 🟨
-//   Criar popup para reupload
 
 /*/ Features dispensáveis:
+//   TabIndex dos botões e tal
+//   Tutoriais nos popups de adicionar
+//   Otimizar trocas de dados com BD 🟨
 //   Tamanho dos ícones quando largura menor que altura
 //   Edição de estilo de partes do texto
 //   Slide-mestre de cada tipo 🟥

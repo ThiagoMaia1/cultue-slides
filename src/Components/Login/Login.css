@@ -120,6 +120,7 @@
     align-items: center;
     right: 0.8vw;
     color: var(--cor-olho);
+    z-index: 1;
 }
 
 .risco-olho {
