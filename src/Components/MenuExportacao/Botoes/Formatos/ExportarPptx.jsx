@@ -4,7 +4,7 @@ import BotaoExportador from '../BotaoExportador';
 import pptxgen from "pptxgenjs";
 import { getFonteBase } from '../../../../principais/Element';
 import { perguntarAcaoFontesEspeciais } from '../../ModulosFontes';
-import { parseCorToRgb, rgbToHex } from '../../../../principais/FuncoesGerais';
+import { parseCorToRgb, rgbToHex, getInsetNum } from '../../../../principais/FuncoesGerais';
 
 const parseCor = cor => rgbToHex(parseCorToRgb(cor));
 
@@ -23,38 +23,38 @@ class ExportarPptx extends Component {
 
   exportarPptx = (_copiaDOM, imagensBase64, previews, nomeArquivo) => {
     
-    var imagens = imagensBase64.reduce((resultado, img) => {
+    let imagens = imagensBase64.reduce((resultado, img) => {
       resultado[img.classe] = img.data.replace('data:','');
       return resultado;
     }, {});
     let pptx = new pptxgen();
-    pptx.defineLayout({name: 'LayoutTela', ...getDimensoesInches(this.props.ratio, false)});
+    let {ratio} = this.props;
+    pptx.defineLayout({name: 'LayoutTela', ...getDimensoesInches(ratio, false)});
     pptx.layout = 'LayoutTela';
-    var quadro = document.getElementById('preview')
-    var alturaQuadro = quadro.offsetHeight;
-    var larguraQuadro = quadro.offsetWidth;
-    this.taxaPadTop = alturaQuadro/larguraQuadro;
+    this.taxaPadTop = ratio.height/ratio.width;
 
-    for (var p of previews) {
+    for (let p of previews) {
       let slide = pptx.addSlide();
       substituirPorcentagensPreview(p.estilo);
-      slide.background = ({data: imagens[p.classeImagemFundo], ...getDimensoesInches(this.props.ratio)});
-      if (p.classeImagem) {
-        var opcoesImagem = getDimensaoImagem(p.estilo.imagem);
-        slide.addImage({data: imagens[p.classeImagem], sizing: {type: 'contain'}, ...opcoesImagem});
-      }
+      slide.background = ({data: imagens[p.classeImagemFundo], ...getDimensoesInches(ratio)});
+      if (p.classeImagem)
+        slide.addImage({
+          data: imagens[p.classeImagem], 
+          sizing: {type: 'contain'}, 
+          ...getDimensaoImagem(p.estilo.imagem)
+        });
       slide.addShape(pptx.ShapeType.rect, 
                      {fill: {
                         color: parseCor(p.estilo.tampao.backgroundColor).replace('#',''), 
                         transparency: (1-Number(p.estilo.tampao.opacityFundo))*100
                      }, x: 0, y: 0, w: '100%', h: '100%'}
       );
-      var opcoesTitulo = {...getDimensaoTitulo(p.estilo.titulo), ...getAtributos(p.estilo.titulo)};
+      let opcoesTitulo = {...getDimensaoTitulo(p.estilo.titulo), ...getAtributos(p.estilo.titulo)};
       slide.addText(p.titulo, opcoesTitulo);
       
-      var separador = p.tipo === 'TextoBíblico' ? ' ' : '\n\n';
-      var texto = p.textoArray.join(separador);
-      var opcoesTexto = {...getDimensaoTexto(p.estilo, this.taxaPadTop), ...getAtributos(p.estilo.paragrafo)};
+      let separador = p.tipo === 'TextoBíblico' ? ' ' : '\n\n';
+      let texto = p.textoArray.join(separador);
+      let opcoesTexto = {...getDimensaoTexto(p.estilo, this.taxaPadTop), ...getAtributos(p.estilo.paragrafo)};
       slide.addText(texto, opcoesTexto);
     }
     return {nomeArquivo: nomeArquivo + this.formato, arquivo: pptx, formato: this.formato}
@@ -89,37 +89,38 @@ class ExportarPptx extends Component {
 }
 
 function getDimensaoTitulo(titulo) {
-  var x = titulo.paddingRight + '%';
-  var y = 0;
-  var w = (100 - titulo.paddingRight*2) + '%';
-  var h = titulo.height + '%';
-  return {x: x, y: y, w: w, h: h, valign: 'center'};
+  let x = titulo.paddingRight + '%';
+  let y = 0;
+  let w = (100 - titulo.paddingRight*2) + '%';
+  let h = titulo.height + '%';
+  return {x, y, w, h, valign: 'center'};
 }
 
 function getDimensaoTexto(estilo, taxaPadTop) {
-  var titulo = estilo.titulo;
-  var paragrafo = estilo.paragrafo;
-  var padTop = paragrafo.paddingTop*taxaPadTop;
-  var x = paragrafo.paddingRight + '%';
-  var y = (titulo.height + padTop) + '%';
-  var w = (100 - paragrafo.paddingRight*2) + '%';
-  var h = (100 - titulo.height - padTop) + '%';
-  return {x: x, y: y, w: w, h: h, valign: 'top'};
+  let titulo = estilo.titulo;
+  let paragrafo = estilo.paragrafo;
+  let padTop = paragrafo.paddingTop*taxaPadTop;
+  let x = paragrafo.paddingRight + '%';
+  let y = (titulo.height + padTop) + '%';
+  let w = (100 - paragrafo.paddingRight*2) + '%';
+  let h = (100 - titulo.height - padTop) + '%';
+  return {x, y, w, h, valign: 'top'};
 }
 
 function getDimensaoImagem(imagem) {
-  var x = imagem.padding + '%';
-  var y = imagem.padding + '%';
-  var w = imagem.width + '%';
-  var h = imagem.height + '%';
-  return {x: x, y: y, w: w, h: h};
+  let {left, top, bottom, right} = getInsetNum(imagem);
+  let x = left + '%';
+  let y = top + '%';
+  let w = 100 - left - right + '%';
+  let h = 100 - top - bottom + '%';
+  return {x, y, w, h};
 }
 
 function getAtributos(objeto) {
-  var atributos = Object.keys(objeto);
-  var estilo = {};
-  var novoAtributo;
-  for (var i = 0; i < atributos.length; i++) {
+  let atributos = Object.keys(objeto);
+  let estilo = {};
+  let novoAtributo;
+  for (let i = 0; i < atributos.length; i++) {
     if(atributos[i] === 'lineHeight') {
       novoAtributo = converterAtributosPptx(atributos[i], objeto);
     } else {
@@ -144,16 +145,16 @@ const atributosHtmlPptx = {textAlign: v => {
 }
 
 function converterAtributosPptx(atributoHTML, valor) {
-  var f = atributosHtmlPptx[atributoHTML];
+  let f = atributosHtmlPptx[atributoHTML];
   if (!!f) return f(valor);
 }
 
 function substituirPorcentagensPreview(estilo) {
-  var keysEstilo = Object.keys(estilo);
-  for (var i of keysEstilo) {
-    var atributos = Object.keys(estilo[i]);
-    for (var j of atributos) {
-      var obj = {};
+  let keysEstilo = Object.keys(estilo);
+  for (let i of keysEstilo) {
+    let atributos = Object.keys(estilo[i]);
+    for (let j of atributos) {
+      let obj = {};
       if (/%/.test(estilo[i][j])) {
         obj[j] = Number(estilo[i][j].replace('%',''));
         estilo[i] = {...estilo[i], ...obj}; 
@@ -163,18 +164,18 @@ function substituirPorcentagensPreview(estilo) {
 }
 
 const getDimensoesInches = (ratio, keysAbrev = true) => {
-  var divDpi = document.createElement('div');
-  divDpi.setAttribute('style', "height: 1in; width: 1in; left: 100%; position: fixed; top: 100%;");
-  document.body.appendChild(divDpi);
-  var dpi_x = divDpi.offsetWidth;
-  var dpi_y = divDpi.offsetHeight;
-  var width = ratio.width/dpi_x;
-  var height = ratio.height/dpi_y;
-  if (keysAbrev) {
-    return {w: width, h: height};
-  } else {
-    return {width: width, height: height}
-  }
+  // let divDpi = document.createElement('div');
+  // divDpi.setAttribute('style', "height: 1in; width: 1in; left: 100%; position: fixed; top: 100%;");
+  // document.body.appendChild(divDpi);
+  // let dpi_x = divDpi.offsetWidth;
+  // let dpi_y = divDpi.offsetHeight;
+  // let width = ratio.width/dpi_x;
+  // let height = ratio.height/dpi_y;
+  let {height, width} = ratio;
+  height = height/96;
+  width = width/96;
+  if (keysAbrev) return {w: width, h: height};
+  return {width, height};
 }
 
 const mapState = state => (

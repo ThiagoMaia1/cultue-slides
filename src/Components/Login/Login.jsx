@@ -176,7 +176,7 @@ class Login extends React.Component {
                                             {esqueceu ? null
                                                 : <div className={'container-senha ' + (senhaVisivel ? 'visivel' : '')}>
                                                     <button type='button' className='botao-olho' 
-                                                            onClick={this.mostrarSenha}>
+                                                            onClick={this.mostrarSenha} style={{visibility: this.state.senha ? '' : 'hidden'}}>
                                                         <div className='risco-olho' style={{width: senhaVisivel ? 0 : tamanhoOlho}}></div>
                                                         <CgEye size={tamanhoOlho}/>
                                                     </button>

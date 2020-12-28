@@ -140,7 +140,8 @@ export const substituirFontesGoogle = elementos => {
             type: 'editar-slide-temporariamente', 
             objeto: k, 
             valor: { fontFamily }, 
-            selecionado: {elemento: i, slide: j}
+            selecionado: {elemento: i, slide: j},
+            redividir: true
           });
         }
       }

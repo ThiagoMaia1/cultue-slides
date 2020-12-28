@@ -504,3 +504,14 @@ export const getInset = origem => {
         return resultado;
     }, {})
 };
+
+const insetVazio = getInset();
+
+export const getInsetNum = insetImagem => {
+    var inset = {...insetVazio, ...insetImagem};
+    var semPorcentagem = {};
+    for (var l of listaDirecoes) {
+        semPorcentagem[l] = removerPorcentagem(inset[l]);
+    }
+    return semPorcentagem; 
+}

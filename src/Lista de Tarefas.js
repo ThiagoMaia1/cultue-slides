@@ -99,6 +99,7 @@
 //   ✔️ Filtrar com foco
 //   ✔️ Selecionar imagem da galeria pessoal para um slide
 //   ✔️ Redimensionar imagem ao inseri-la
+//   ✔️ Exportação de imagens após mudanças inset
 //   ✔️ Carrossel do Input Imagem não vai até o final.*/
 // Errinhos:
 //   ✔️ Click fora tutorial
@@ -109,7 +110,6 @@
 //   Padding bottom redividir slides um pouco errado
 //   Redividir quando o texto de um slide é todo deletado
 //   Edição do conteúdo do parágrafo dando alguns erros (falha ao perder foco, não exibe cursor, markup aparecendo)
-//   Exportação de imagens após mudanças inset
 //   Clonar estilo está uma bosta
 //   Atalhos funcionarem mesmo com foco nos inputs
 //   Link de download não faz nada
@@ -117,6 +117,7 @@
 //   Galeria abrindo muito devagar
 //   Alguns cálculos do "Redimensionavel" estão errados
 //   Soltar click do Redimensionavel
+//   Exportação PowerPoint: Tamanho fonte e lineHeight, round border das imagens, titulos abaixo/invisiveis
 
 /*// Features essenciais:
 //   ✔️ Envio de imagens
@@ -174,10 +175,11 @@
 //   ✔️ Diferentes tipos de "Nova apresentação"
 //   ✔️ Incluir fontes como zip (power point) 🟨
 //   ✔️ Botões centralizar/preencher nas configurações de imagem
+//   ✔️ Exportação em PowerPoint
 //   ✔️ Lista de atalhos do modo apresentação.*/
 //   ✔️ Tentar de novo/Avisar se upload da imagem não pôde ser feito
 //   Criar popup para reupload de imagem
-//   Exportação em PowerPoint
+//   B/W na exportação HTML
 
 /*/ Features dispensáveis:
 //   TabIndex dos botões e tal

@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
 import store from '../../../index';
 import './Redimensionavel.css';
-import { numeroEntre, removerPorcentagem, getInset } from '../../../principais/FuncoesGerais';
+import { numeroEntre, getInset, getInsetNum } from '../../../principais/FuncoesGerais';
 import { listaDirecoes } from '../../../principais/Constantes';
-
-const insetVazio = getInset();
 
 class Redimensionavel extends Component {
 
@@ -47,7 +45,7 @@ class Redimensionavel extends Component {
         const tolerancia = 7;        
         [this.bordaEsquerda, this.bordaDireita, this.bordaInferior, this.bordaSuperior] = Array(4).fill(false);
 
-        this.posicaoInicialQuadrado = this.getInsetNum();
+        this.posicaoInicialQuadrado = getInsetNum(this.state.insetImagem);
         this.posicaoInicialMouse = [pos.x, pos.y];
 
         var [x, y] = [pos.x - pos.filho.left, pos.y - pos.filho.top];
@@ -84,7 +82,7 @@ class Redimensionavel extends Component {
     resize = pos => {
         const xRelativo = Math.min(pos.x/pos.pai.width, this.relativoAoRatio.width);
         const yRelativo = Math.min(pos.y/pos.pai.height, this.relativoAoRatio.height);
-        var novoInset = this.getInsetNum();
+        var novoInset = getInsetNum(this.state.insetImagem);
 
         if(this.bordaDireita) {novoInset.right = 1 - xRelativo}
         if(this.bordaEsquerda) {novoInset.left = xRelativo}
@@ -103,15 +101,6 @@ class Redimensionavel extends Component {
         novo.top = antigo.top + diferencaY;
         novo.bottom = antigo.bottom - diferencaY;
         this.setInset(novo);
-    }
-
-    getInsetNum = () => {
-        var inset = {...insetVazio, ...this.state.insetImagem};
-        var semPorcentagem = {};
-        for (var l of listaDirecoes) {
-            semPorcentagem[l] = removerPorcentagem(inset[l]);
-        }
-        return semPorcentagem; 
     }
 
     setInset = novoInset => {

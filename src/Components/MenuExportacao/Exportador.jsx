@@ -154,64 +154,64 @@ class Exportador extends Component {
     } else {
       setTimeout(() => {
         var copiaDOM = document.cloneNode(true);
-        var spans = copiaDOM.querySelectorAll('span');
-        for (var s of spans) {
-          if (s.innerText === slideFinal.textoArray[0]) {
-            s.id = 'mensagem-slide-final';
-            break;
-          }
-        }
+        this.substituirSpanFinal(copiaDOM);
         this.getImagensBase64(previews, imagensBase64, copiaDOM, ratio, this.callbackMeio, this.props.callbackFormato);
       }, 10);
+    }
+  }
+
+  substituirSpanFinal = copiaDOM => {
+    var spans = [...copiaDOM.querySelectorAll('span')].reverse();
+    for (var s of spans) {
+      if (s.innerText === slideFinal.textoArray[0]) {
+        s.id = 'mensagem-slide-final';
+        return;
+      }
     }
   }
 
   getImagensBase64 = (previews, imagensBase64, copiaDOM, ratio, callbackMeio, callbackFormato) => {
     var [ uniques, imgsUnique] = [{}, []];
     var nClasses = 0;
-    setTimeout(() => {
-      for (var p of previews) {
-        var imgs = [...copiaDOM.querySelectorAll('#preview-fake' + p.indice + ' img')].map(img => {
-          return img;
-        });
-        var fundo = p.estilo.fundo;
-        if (fundo.src || fundo.path) {
-          imgs = imgs.concat([...copiaDOM.querySelectorAll('#preview-fake' + p.indice + ' .imagem-fundo-preview')].map(f => {
-            f.src = f.style.backgroundImage.replace('url("', '').split('")')[0];
-            f.eFundo = true;
-            return f;
-          }));
+    for (var p of previews) {
+      let id = '#preview-fake' + p.indice;
+      let imgs = [...copiaDOM.querySelectorAll(id + ' .imagem-fundo-preview, ' + id + ' .div-imagem-slide')]
+                  .reduce((resultado, i) => {
+                    i.src = i.style.backgroundImage.replace('url("', '').split('")')[0];
+                    if (/fundo/.test(i.className)) i.eFundo = true;
+                    if (i.src) resultado.push(i);
+                    return resultado;
+                  }, []);
+      for(let i = 0; i < imgs.length; i++) {
+        if(!uniques[imgs[i].src]) {
+          uniques[imgs[i].src] = 'classeImagem' + nClasses;
+          nClasses++;
+          imgsUnique.push(imgs[i]);
         }
-        for(var i = 0; i < imgs.length; i++) {
-          if(!uniques[imgs[i].src]) {
-            uniques[imgs[i].src] = 'classeImagem' + nClasses;
-            nClasses++;
-            imgsUnique.push(imgs[i]);
-          }
-          var classe = uniques[imgs[i].src];
-          imgs[i].className = classe;
-          if (imgs[i].eFundo) {
-            p.classeImagemFundo = classe;
-          } else {
-            p.classeImagem = classe;
-          }
+        let classe = uniques[imgs[i].src];
+        imgs[i].classList.add(classe);
+        imgs[i].classe = classe;
+        imgs[i].style.removeProperty('background-image');
+        if (imgs[i].eFundo) p.classeImagemFundo = classe;
+        else p.classeImagem = classe;
+      }
+    }
+
+    var nomeArquivo = getDate() + ' Apresentação.';
+    
+    const chamarCallback = imagens => callbackMeio(callbackFormato(copiaDOM, imagens, previews, nomeArquivo))
+
+    if(!nClasses) chamarCallback([]);
+
+    for (var j = 0; j < imgsUnique.length; j++) {
+      getBase64Image(imgsUnique[j], imgsUnique.length, ratio,
+        (data, {classe}, total) => {
+          imagensBase64.push({data, classe});
+          if (total === imagensBase64.length)
+            chamarCallback(imagensBase64, previews, nomeArquivo);
         }
-      }
-
-      var nomeArquivo = getDate() + ' Apresentação.';
-      if(!nClasses) callbackMeio(callbackFormato(copiaDOM, [], previews, nomeArquivo));
-
-      for (var j = 0; j < imgsUnique.length; j++) {
-        getBase64Image(imgsUnique[j], imgsUnique.length, ratio,
-          (data, {className, offsetHeight, offsetWidth, offsetTop, offsetLeft}, total) => {
-            imagensBase64.push({data, classe: className, offsetHeight, offsetWidth, offsetTop, offsetLeft});
-            if (total === imagensBase64.length) {
-              callbackMeio(callbackFormato(copiaDOM, imagensBase64, previews, nomeArquivo));
-            }
-          }
-        );
-      }
-    }, 1000);
+      );
+    }
   }
 
   finalizar = () => {
@@ -230,7 +230,6 @@ class Exportador extends Component {
     }
   }
 
-  
   componentWillUnmount = () => {
     this.finalizar();
   }

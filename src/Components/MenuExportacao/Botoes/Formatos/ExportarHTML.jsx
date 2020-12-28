@@ -113,22 +113,8 @@ class ExportarHTML extends Component {
     var apresentacao = '<div id="container-apresentacao">' + copiaDOM.body.innerHTML + '</div>'
     copiaDOM.body.innerHTML = botaoTelaCheia + setaMovimento + apresentacao;
     for (var img of imagensBase64) { //Criar o css para as imagens.
-      var { classe, data, offsetHeight, offsetWidth, offsetTop, offsetLeft} = img;
-      this.cssImagens.push('.' + classe + '::before{content: url(' + data + '); position: absolute; z-index: 0;' + 
-                           'top: ' + offsetTop + '; left: ' + offsetLeft + '; width: ' + offsetWidth + '; height:' + offsetHeight + ';}');
-    }
-    var imagensDOM = [...copiaDOM.querySelectorAll('img')]; //Substituir Imagens por spans, para que o fundo seja definido pelo css.
-    for (var imgDOM of imagensDOM) {
-      var span = document.createElement('span');
-      span.classList.add(imgDOM.className);
-      imgDOM.parentNode.insertBefore(span, imgDOM);
-      imgDOM.remove();
-    }
-    var fundos = copiaDOM.querySelectorAll('.imagem-fundo-preview');
-    for (var i = 0; i < fundos.length; i++) {
-      var imgFundo = fundos[i];
-      imgFundo.style.removeProperty('background-image');
-      imgFundo.classList.add(imgFundo.className);
+      var { classe, data} = img;
+      this.cssImagens.push('.' + classe + '{background-image: url(' + data + ');}');
     }
     var css = copiaDOM.createElement("style"); //Inserir arquivo CSS no DOM.
     css.type = 'text/css';
