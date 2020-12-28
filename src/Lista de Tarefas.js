@@ -97,6 +97,8 @@
 //   ✔️ Mensagem de reupload aparecendo quando tira o mouse na galeria
 //   ✔️ Deletar fundos personalizados
 //   ✔️ Filtrar com foco
+//   ✔️ Selecionar imagem da galeria pessoal para um slide
+//   ✔️ Redimensionar imagem ao inseri-la
 //   ✔️ Carrossel do Input Imagem não vai até o final.*/
 // Errinhos:
 //   ✔️ Click fora tutorial
@@ -111,10 +113,10 @@
 //   Clonar estilo está uma bosta
 //   Atalhos funcionarem mesmo com foco nos inputs
 //   Link de download não faz nada
-//   Redimensionar imagem ao inseri-la
 //   HTML no e-mail indo sem CSS/Scripts
 //   Galeria abrindo muito devagar
-//   Selecionar imagem da galeria pessoal para um slide
+//   Alguns cálculos do "Redimensionavel" estão errados
+//   Soltar click do Redimensionavel
 
 /*// Features essenciais:
 //   ✔️ Envio de imagens
@@ -171,9 +173,9 @@
 //   ✔️ Incluir fontes como base64 (html) 
 //   ✔️ Diferentes tipos de "Nova apresentação"
 //   ✔️ Incluir fontes como zip (power point) 🟨
+//   ✔️ Botões centralizar/preencher nas configurações de imagem
 //   ✔️ Lista de atalhos do modo apresentação.*/
-//   ✔️ Tentar de novo/Avisar se upload da imagem não pôde ser feito (não testado)
-//   Botões centralizar/preencher nas configurações de imagem
+//   ✔️ Tentar de novo/Avisar se upload da imagem não pôde ser feito
 //   Exportação em PowerPoint
 //   Otimizar trocas de dados com BD 🟨
 //   Criar popup para reupload

@@ -165,6 +165,9 @@ body {
   white-space: break-spaces;
   width: max-content;
   max-width: 25vw;
+  overflow: hidden;
+  word-break: break-word;
+  overflow-wrap: anywhere;
 }
 
 .popup-confirmacao .botao {

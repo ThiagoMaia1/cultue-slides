@@ -136,12 +136,26 @@ class ConfigurarSlides extends Component {
                                 simbolo: <><div className='risco-olho'/><CgEye size={this.state.tamIcones}/></>
                               },
                               {apelido: 'Cobrir Tela', exigeNaoTitulo: true, naoAplicarEstilo: true, objeto: 'imagem', 
-                               simbolo: <BsArrowsFullscreen size={this.state.tamIcones}/>, 
-                               callback: () => void 0
+                               valorAlterado: -1, simbolo: <BsArrowsFullscreen size={this.state.tamIcones}/>, 
+                               callback: () => this.despacharAlinhamento('cobrir')
+                              },
+                              {apelido: 'Alinhar Horizontalmente', exigeNaoTitulo: true, naoAplicarEstilo: true, objeto: 'imagem', 
+                               valorAlterado: -1, simbolo: <BiHorizontalCenter size={this.state.tamIcones}/>, 
+                               callback: () => this.despacharAlinhamento('horizontal')
+                              },
+                              {apelido: 'Alinhar Verticalmente', exigeNaoTitulo: true, naoAplicarEstilo: true, objeto: 'imagem', 
+                               valorAlterado: -1, simbolo: <BiVerticalCenter size={this.state.tamIcones}/>, 
+                               callback: () => this.despacharAlinhamento('vertical')
                               }
     ]; 
   }
-  
+
+  getTargetBotao = event => {
+    let {target} = event;
+    if(target.parentNode.tagName === 'BUTTON') target = target.parentNode; 
+    return target;
+  }
+
   gerarBotoesEstiloTexto = (aba, iIni = 0, iFin = 20) => {
     var lista = this.listaEstilosTexto.filter((_e, i) => i >= iIni && i <= iFin);
     return lista.map((e, i) => {
@@ -156,7 +170,12 @@ class ConfigurarSlides extends Component {
       return (
         <button key={i} title={e.apelido}
                 className={e.nomeAtributo + ' botao-configuracao bool ' + (this.props.slideSelecionado.estilo[aba][e.nomeAtributo] === e.valorAlterado ? ' clicado' : '')} 
-                onClick={() => {
+                onMouseDown={event => {
+                  let target = this.getTargetBotao(event);
+                  target.classList.add('clicado')}}
+                onClickCapture={event => {
+                  let target = this.getTargetBotao(event);
+                  target.classList.remove('clicado');
                   if(e.callback) e.callback();
                   if(e.nomeAtributo) this.toggleEstiloTexto(e);
                 }}
@@ -165,6 +184,10 @@ class ConfigurarSlides extends Component {
         </button>
       )
     })
+  }
+
+  despacharAlinhamento = alinhamento => {
+    this.props.dispatch({type: 'editar-slide', objeto: 'insetImagem', alinhamento})
   }
 
   gerarBotoesAbas = () => {

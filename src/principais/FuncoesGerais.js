@@ -1,3 +1,5 @@
+import { listaDirecoes } from './Constantes';
+
 export function getCoords(elem, x = 0, y = 0) {
     var box = elem.getBoundingClientRect();
 
@@ -486,4 +488,19 @@ export const downloadArquivoTexto = function(nomeArquivo, conteudoArquivo) {
     let blob = new Blob([conteudoArquivo], { type: 'text/plain' }); // ! Blob
     downloadArquivo(nomeArquivo, blob);
 }
-  
+
+export const removerPorcentagem = str => {
+    if (typeof str === 'string' && /%/.test(str))
+        str = Number(str.replace('%',''))/100;
+    if (typeof str === 'number' && !isNaN(str))
+        return str;
+    return 0;
+}
+
+export const getInset = origem => {
+    if (!origem) origem = {};
+    return listaDirecoes.reduce((resultado, d) => {
+        resultado[d] = getStrPercentual(origem[d]) || 0;
+        return resultado;
+    }, {})
+};

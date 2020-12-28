@@ -1,26 +1,10 @@
 import React, { Component } from 'react';
 import store from '../../../index';
 import './Redimensionavel.css';
-import { getStrPercentual, numeroEntre } from '../../../principais/FuncoesGerais';
+import { numeroEntre, removerPorcentagem, getInset } from '../../../principais/FuncoesGerais';
 import { listaDirecoes } from '../../../principais/Constantes';
 
-const getInset = origem => {
-    if (!origem) origem = {};
-    return listaDirecoes.reduce((resultado, d) => {
-        resultado[d] = getStrPercentual(origem[d]) || 0;
-        return resultado;
-    }, {})
-};
-
 const insetVazio = getInset();
-
-const removerPorcentagem = str => {
-    if (typeof str === 'string' && /%/.test(str))
-        str = Number(str.replace('%',''))/100;
-    if (typeof str === 'number' && !isNaN(str))
-        return str;
-    return 0;
-}
 
 class Redimensionavel extends Component {
 
@@ -140,8 +124,11 @@ class Redimensionavel extends Component {
         this.setInset(novoInset);
     }
 
-    getDiferenca = (inset, direcao1, direcao2) => 
-        1 - (1 - inset[direcao1] - inset[direcao2])/this.proporcaoRelativa;
+    getDiferenca = (inset, direcao1, direcao2) => {
+        let valor = 1 - (1 - inset[direcao1] - inset[direcao2]);
+        if (direcao1 === 'right') return valor*this.proporcaoRelativa;
+        return valor/this.proporcaoRelativa;
+    }
 
     corrigirProporcao = novoInset => {
         if (!this.props.proporcao) return novoInset;
@@ -179,11 +166,8 @@ class Redimensionavel extends Component {
     }
 
     corrigirInversao = novoInset => {
-        if (1 - novoInset.right < novoInset.left) {
-        console.log('antes', novoInset)
+        if (1 - novoInset.right < novoInset.left)
             novoInset = this.inverterHorizontal(novoInset);
-        console.log('depois', novoInset)
-    }
         if (1 - novoInset.bottom < novoInset.top)
             novoInset = this.inverterVertical(novoInset);
         return novoInset;
@@ -213,6 +197,19 @@ class Redimensionavel extends Component {
         window.addEventListener('keyup', this.setProporcaoLivreFalse);
     }
 
+    componentDidUpdate = prevProps => {
+        let { insetImagem } = this.state;
+        let insetProps = getInset(this.props.insetInicial); 
+        let insetPrevProps = getInset(prevProps.insetInicial);
+        for (let d of listaDirecoes) {
+            if (insetPrevProps[d] !== insetProps[d])
+                if (insetProps[d] !== insetImagem[d]) {
+                    this.setState({insetImagem: insetProps});
+                    return;
+                }
+        }
+    }
+
     componentWillUnmount = () => {
         window.removeEventListener('mousedown', this.setClicadoTrue);
         window.removeEventListener('mouseup', this.setClicadoFalse);
@@ -239,7 +236,8 @@ class Redimensionavel extends Component {
                         {this.props.children}
                 </div>
                 {listaDirecoes.map(l => l + ': ' + this.state.insetImagem[l]).join(', ')}
-                {this.props.proporcao}
+                
+                Proporcao: {proporcao}
             </div>
         )
     }

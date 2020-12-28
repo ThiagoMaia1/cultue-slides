@@ -4,7 +4,7 @@ import './index.css';
 import Home from './Home';
 import { createStore } from 'redux';
 import hotkeys from 'hotkeys-js';
-import { getEstiloPadrao, newEstilo, getPadding, getDadosMensagem, listaPartesEstilo } from './principais/Element.js';
+import { getEstiloPadrao, newEstilo, getDadosMensagem } from './principais/Element.js';
 import { selecionadoOffset, getSlidePreview } from './Components/MenuExportacao/Exportador';
 import { atualizarApresentacao, getApresentacaoPadraoBasica, autorizacaoEditar, autorizacaoPadrao, apresentacaoAnonima, getElementosDesconvertidos } from './principais/firestore/apresentacoesBD';
 import { atualizarRegistro } from './principais/firestore/apiFirestore';
@@ -15,25 +15,12 @@ import inicializarHotkeys from './principais/atalhos';
 import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage'; // defaults to localStorage for web
 import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2';
+import reducerEditarSlide from './principais/reducerEditarSlide';
 
 const persistConfig = {
   key: 'root',
   storage,
   stateReconciler: autoMergeLevel2
-}
-
-const redividirSlides = (elementos, sel, ratio) => {
-  if (elementos.length !== 1) {
-      var [ i, slide, repetir ] = (sel.elemento === 0 ? [ 1, 0, 1 ] : [ sel.elemento, sel.slide, 0]);
-    do {
-      var e = elementos[i];
-      if (!e.getArrayTexto) e = getElementosDesconvertidos([e])[0];
-      e.criarSlides(e.getArrayTexto(slide, e), e.slides[0].estilo, slide, elementos[0].slides[0].estilo, ratio, e);
-      i++;
-    } while (repetir && i < elementos.length)
-  }
-  
-  return elementos;
 }
 
 const numeroAcoesPropaganda = 20;
@@ -52,6 +39,20 @@ const getAutorizacao = (autorizacao, idUsuario, idUsuarioAtivo) => {
   return autorizacao;
 }
 
+export const redividirSlides = (elementos, sel, ratio) => {
+  if (elementos.length !== 1) {
+      var [ i, slide, repetir ] = (sel.elemento === 0 ? [ 1, 0, 1 ] : [ sel.elemento, sel.slide, 0]);
+    do {
+      var e = elementos[i];
+      if (!e.getArrayTexto) e = getElementosDesconvertidos([e])[0];
+      e.criarSlides(e.getArrayTexto(slide, e), e.slides[0].estilo, slide, elementos[0].slides[0].estilo, ratio, e);
+      i++;
+    } while (repetir && i < elementos.length)
+  }
+  
+  return elementos;
+}
+
 export const reducerElementos = function (state = defaultList, action, usuario) {
 
   var el = [...state.elementos];
@@ -60,6 +61,7 @@ export const reducerElementos = function (state = defaultList, action, usuario) 
   var notificacao;
   var dadosMensagem;
   var autorizacao;
+  let { ratio } = state;
   delete state.notificacao;
   switch (action.type) {
     case 'definir-apresentacao-ativa':
@@ -83,7 +85,7 @@ export const reducerElementos = function (state = defaultList, action, usuario) 
           elNovo.slides[i].estilo = elSub.slides[i].estilo;
         }
         el.splice(action.elementoASubstituir, 1, elNovo);
-        el = redividirSlides(el, {elemento: action.elementoASubstituir, slide: 0}, state.ratio);
+        el = redividirSlides(el, {elemento: action.elementoASubstituir, slide: 0}, ratio);
       } else {
         el.push(elNovo);
       }
@@ -109,48 +111,7 @@ export const reducerElementos = function (state = defaultList, action, usuario) 
       el[sel.elemento].colapsado = !el[sel.elemento].colapsado;
       return {...state, elementos: el};
     case "editar-slide": {
-      e = {...el[sel.elemento]};
-      var s = e.slides[sel.slide];
-      var est = s.estilo;
-      if (action.objeto === 'estilo') {
-        s.estilo = {...action.valor};
-      } else if (action.objeto === 'estiloSemReplace') {
-        var keys = Object.keys(action.estilo).filter(k => listaPartesEstilo.includes(k));
-        for (var k of keys) {
-          s.estilo[k] = {...s.estilo[k], ...action.estilo[k]};
-        }
-      } else if(action.objeto === 'srcImagem') {
-        s.imagem = {...action.valor};
-      } else if (action.objeto === 'textoArray') {
-        if (action.valor === '') {
-          s.textoArray.splice(action.numero, 1);
-        } else {
-          var quebra = action.valor.split(/(?<=\n\n)/);
-          if (quebra.length > 1) {
-            s.textoArray.splice(action.numero, 1, quebra.filter(q => /\S/.test(q)));
-            s.textoArray = s.textoArray.flat();
-          } else {
-            s.textoArray[action.numero] = action.valor;
-          }
-        }
-      } else if(action.objeto === 'input2') {
-        e.input2 = action.valor;
-      } else if(action.objeto === 'textoTitulo') {
-        s.titulo = action.valor;
-        if (!sel.slide && e.tipo !== 'Imagem' && e.tipo !== 'Vídeo') e.titulo = action.valor;
-      } else if (Object.keys(action.valor)[0] === 'paddingRight') {
-        est[action.objeto].paddingRight = action.valor.paddingRight;
-        est[action.objeto] = getPadding(est, action.objeto);
-      } else if (action.objeto === 'fundo') {
-        est.fundo = {...action.valor};
-      } else {
-        est[action.objeto] = {...est[action.objeto], ...action.valor};
-        if (['paragrafo', 'texto', 'titulo'].includes(action.objeto) && Object.keys(action.valor).includes('color')) est.texto.eBasico = false;
-        if (action.objeto === 'tampao') est.tampao.eBasico = false; 
-      }
-      el[sel.elemento] = e;
-      if (action.redividir) el = redividirSlides(el, sel, state.ratio);
-      return {...state, elementos: [...el], selecionado: sel};
+      return {...state, ...reducerEditarSlide({elementos: el, sel, action, ratio})};
     }
     case "limpar-estilo": {
       dadosMensagem = getDadosMensagem(el[sel.elemento]);

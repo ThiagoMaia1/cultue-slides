@@ -60,7 +60,7 @@ export const estiloPadrao = {
   paragrafo: {fontSize: 1.5, paddingRight: 0.08, lineHeight: 1.9}, 
   fundo: {path: ''}, 
   tampao: {backgroundColor: '#ffffff', opacityFundo: 0.2, eBasico: true},
-  imagem: {left: '10%', right: '10%', top: '10%', bottom: '10%', borderRadius: '0px'}
+  imagem: {left: '10%', right: '10%', top: '10%', bottom: '10%', borderRadius: '0px', proporcaoNatural: 1}
 };
 
 const proporcaoPadTop = 0;
@@ -270,6 +270,7 @@ export default class Element {
     this.input2 = elementoDB.input2;
     this.slides = elementoDB.slides;
     for (let s of this.slides) {
+      if (!s.imagem) return;
       if (!imagemEstaNoBD(s.imagem.src)) zerarSrc(s.imagem);
       let { fundo } = s.estilo;
       if (!fundo.path && !imagemEstaNoBD(fundo.src)) zerarSrc(fundo);

@@ -15,7 +15,7 @@ class ImagemSlide extends Component {
         img.src = props.imagem.src;
     }
 
-    setProporcaoNatural = img => despachar({proporcao: img.naturalWidth/img.naturalHeight});
+    setProporcaoNatural = img => despachar({proporcaoNatural: img.naturalWidth/img.naturalHeight});
 
     callback = estiloState => {
         for (var l of listaDirecoes) {
