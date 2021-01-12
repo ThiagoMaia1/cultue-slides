@@ -9,9 +9,7 @@ const QuadroNovaApresentacao = props => {
     const novaVazia = () => zerarApresentacao({uid: 0}, apresentacao);
     
     let opcoes;
-    if (!usuario.uid) {
-        novaVazia();
-    } else {   
+    if (usuario.uid) 
         opcoes = [
             {rotulo: 'Vazia', callback: novaVazia},
             {rotulo: 'Apenas Estilo', callback: () => zerarApresentacao(usuario, apresentacao, false)},
@@ -19,9 +17,12 @@ const QuadroNovaApresentacao = props => {
             {rotulo: 'Limpar Estilo da Apresentação Atual',
                 callback: () => store.dispatch({type: 'limpar-estilo', selecionado: {elemento: 0, slide: 0}})}
         ]
-    }
 
-    if (!opcoes) return null;
+    if (!opcoes) {
+        novaVazia();
+        callback();
+        return null;
+    }
     return (
         <QuadroOpcoes opcoes={opcoes} fecharPai={callback} {...props}/>
     )

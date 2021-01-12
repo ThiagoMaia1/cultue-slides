@@ -19,21 +19,21 @@ const getTipoEvento = userAuth => {
 export const checarLogin = (callbackLogin) => {
     if (!primeiraTentativa) return;
     firebaseAuth.onAuthStateChanged(async userAuth => {
-        var state = store.getState().present;
-        var elementos = state.elementos;
-        var apresentacaoStore = state.apresentacao;
-        var tipoEvento = getTipoEvento(userAuth);
+        let state = store.getState().present;
+        let { elementos, apresentacaoStore } = state;
+        let tipoEvento = getTipoEvento(userAuth);
         if (tipoEvento === 'noChange' && !primeiraTentativa) return;
         
-        var user = await gerarDocumentoUsuario(userAuth) || usuarioAnonimo;
-        var apresentacao;
-        if (tipoEvento === 'logout') {
+        let user = await gerarDocumentoUsuario(userAuth) || usuarioAnonimo;
+        let apresentacao;
+        let apresentacaoLocation;
+
+        if (tipoEvento === 'logout')
             apresentacao = null;
-        } else if (apresentacaoStore.id) {
-            apresentacao = apresentacaoStore;
-        } else {
+        else if (history.location.hash)
             if (primeiraTentativa) {
-                apresentacao = await getApresentacaoComLocation(history.location, user.uid) || 
+                apresentacaoLocation = await getApresentacaoComLocation(history.location);
+                apresentacao = apresentacaoLocation || 
                                await getUltimaApresentacaoUsuario(user.uid);
                 primeiraTentativa = false;
             } else {
@@ -45,16 +45,18 @@ export const checarLogin = (callbackLogin) => {
                     }
                 }
             }
-        }
+        else if (apresentacaoStore.id)
+            apresentacao = apresentacaoStore;
+
         store.dispatch({type: 'login', usuario: user});
-        var mudarURL = (
+        let mudarURL = (
             tipoEvento === 'login'
             ? /\/perfil/.test(history.location.pathname) 
                 ? false 
                 : true 
             : false
         );
-        if(tipoEvento !== 'noChange') definirApresentacaoAtiva(user, apresentacao, undefined, undefined, mudarURL);
+        if (tipoEvento !== 'noChange' || apresentacaoLocation) definirApresentacaoAtiva(user, apresentacao, undefined, undefined, mudarURL);
         if (tipoEvento === 'logout') history.push('/logout');
         if (callbackLogin) callbackLogin(user);
     });

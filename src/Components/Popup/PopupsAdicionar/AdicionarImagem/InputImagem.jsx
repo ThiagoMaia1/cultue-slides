@@ -10,20 +10,24 @@ import GaleriaImagensPopup from './GaleriaImagensPopup';
 const dMaxTracejado = 97;
 const dMinTracejado = 91;
 
-const substituirImagem = (selecionado, url, objeto) => 
-    store.dispatch({type: 'editar-slide-temporariamente', objeto, valor: { src: url }, selecionado});
+const substituirImagem = (selecionado, src, objeto) =>
+    store.dispatch({type: 'editar-slide-temporariamente', objeto, valor: {src}, selecionado});
 
 const callbackUpload = (idUpload, urlDownload, eFundo = false) => {
-    adicionarImagemColecaoUsuario(eFundo ? 'fundos' : 'gerais', urlDownload);
+    if (urlDownload) adicionarImagemColecaoUsuario(eFundo ? 'fundos' : 'gerais', urlDownload);
     const elementos = store.getState().present.elementos;
     for (var i = 0; i < elementos.length; i++) {
         const slides = elementos[i].slides;
         for (var j = 0; j < slides.length; j++) {
             var sel = {elemento: i, slide: j};
-            if (slides[j].estilo.fundo.idUpload === idUpload) 
-                substituirImagem(sel, urlDownload, 'fundo');
-            if (slides[j].imagem && slides[j].imagem.idUpload === idUpload)
-                substituirImagem(sel, urlDownload, 'srcImagem');
+            
+            let { fundo } = slides[j].estilo;
+            if (fundo.idUpload === idUpload)  
+                substituirImagem(sel, urlDownload || fundo.src, 'fundo');
+            
+            let { imagem } = slides[j];
+            if (imagem && imagem.idUpload === idUpload)
+                substituirImagem(sel, urlDownload || imagem.src, 'srcImagem');
         }
         atualizarArrayInput2(elementos[i], i, idUpload, urlDownload);
     }

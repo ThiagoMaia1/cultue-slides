@@ -21,10 +21,12 @@ const paginas = [{nome: 'app', componente: App},
                  {nome: 'splash', componente: Splash, semSplash: true},
                  {nome: 'logout', componente: props => {
                     window.history.replaceState(undefined, undefined, '/login');
-                    return <PaginaLogin {...props}/>}, semSplash: true
+                    store.dispatch({type: 'resetar'});
+                    return <PaginaLogin {...props}/>
+                  }, semSplash: true
                  },
                  {nome: '', componente: props => {
-                    if (props.location.hash) {return <App/>}
+                    if (props.location.hash) {return <App history={history}/>}
                     else {return <Redirect to='/login'/>}
                  }}
 ]

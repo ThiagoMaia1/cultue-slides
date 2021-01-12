@@ -1,6 +1,5 @@
 import React from 'react';
 import { MdCloudUpload } from 'react-icons/md';
-// import { ratioTela } from '../../principais/firestore/apresentacoesBD';
 import { imagemEstaNoBD } from '../../principais/Element';
 
 const BotaoReupload = ({callbackReupload, src, inativo}) => {

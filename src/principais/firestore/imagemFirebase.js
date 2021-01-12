@@ -12,8 +12,8 @@ export function uploadImagem (arquivo, metadata, callback, tentativa = 0) {
     uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
         () => void 0, 
         () => {
-            if (tentativa < 3) uploadImagem(arquivo, metadata, callback, tentativa + 1);
-            else store.dispatch({type: 'inserir-notificacao', conteudo: 'Erro ao realizar upload da imagem, tente novamente mais tarde.'});
+            store.dispatch({type: 'inserir-notificacao', conteudo: 'Erro ao realizar upload da imagem, tente novamente mais tarde.'});
+            callback(idUpload, null);
         }, 
         () => {
             uploadTask.snapshot.ref.getDownloadURL()

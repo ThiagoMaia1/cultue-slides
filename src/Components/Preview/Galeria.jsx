@@ -6,7 +6,6 @@ import Img from './Img';
 import Carrossel from '../Basicos/Carrossel/Carrossel';
 import InputImagem from '../Popup/PopupsAdicionar/AdicionarImagem/InputImagem';
 import Popup from '../Popup/Popup';
-import { toggleAnimacao } from '../Basicos/Animacao/animacaoCoordenadas.js'
 import { getMetadata } from '../../principais/firestore/imagemFirebase';
 import { mudancasArrays, objetosSaoIguais } from '../../principais/FuncoesGerais';
 import { imagemEstaNoBD } from '../../principais/Element';
@@ -23,25 +22,7 @@ class Galeria extends Component {
 
     constructor (props) {
         super(props);
-        this.coordenadasBotao = [ 86, 89, 6, 3];
-        this.coordenadasGaleria = [ 73, 2, 3, 2];
-        this.state = {popupCompleto: null, imagens: [], coordenadas: [...this.coordenadasBotao], galeriaVisivel: false};
-    }
-
-    mostrarGaleria = () => {
-        if (this.state.coordenadas[0] === this.coordenadasBotao[0]) 
-            this.props.dispatch({type: 'definir-item-tutorial', itemTutorial: 'galeriaFundos'})
-        toggleAnimacao(
-            this.state.coordenadas,
-            this.coordenadasBotao,
-            this.coordenadasGaleria,
-            c => this.setState({coordenadas: c}),
-            bool => {
-                if (this.state.galeriaVisivel !== bool)
-                    this.setState({galeriaVisivel: bool})
-            },
-            c => c[1] < 45
-        )
+        this.state = {popupCompleto: null, imagens: []};
     }
 
     getImagens = () => [
@@ -125,30 +106,20 @@ class Galeria extends Component {
         if (this.props.autorizacao !== 'editar') return null;
         return (
             <>
-                <div id='botao-mostrar-galeria' className='botao-azul' onClick={this.mostrarGaleria} 
-                    style={{top: this.state.coordenadas[0] + 'vh', right: this.state.coordenadas[1] + 'vw', bottom: this.state.coordenadas[2] + 'vh', left: this.state.coordenadas[3] + 'vw',
-                            pointerEvents: this.state.galeriaVisivel ? 'none' : 'all', background: this.state.galeriaVisivel ? 'var(--azul-forte)' : ''}}>
-                    <div className='colapsar-menu galeria' 
-                        onClick={this.mostrarGaleria} 
-                        style={{display: this.state.galeriaVisivel ? '' : 'none'}}>◣
-                    </div>
-                    <div style={{display: !this.state.galeriaVisivel ? '' : 'none'}}>Galeria de Fundos</div>
-                    <div className={'container-carrossel-fundos'} style={{display: this.state.galeriaVisivel ? '' : 'none'}}
-                        onClick={e => e.stopPropagation()}>
-                        <Carrossel tamanhoIcone={100} tamanhoMaximo='96vw' style={{zIndex: '45'}} corGradiente='var(--azul-forte)'
-                                percentualBeirada={0.04}>
-                            <div className='galeria-fundos'>
-                                <div className='pseudo-margem-galeria'></div>
-                                <div className='div-img' onClick={this.abrirPopup}>
-                                    <div id='botao-enviar-fundo' className='imagem-galeria'>Enviar Fundo Personalizado</div>
-                                </div>
-                                {this.getImagens().map(img => (
-                                    <Img key={img.fundo.path || img.fundo.src} imagem={img} callback={img.callback}/>
-                                ))}
-                                <div className='pseudo-margem-galeria'></div>
+                <div className='container-carrossel-fundos' onClick={e => e.stopPropagation()}>
+                    <Carrossel tamanhoIcone={100} tamanhoMaximo='96vw' style={{zIndex: '45'}} corGradiente='var(--azul-forte)'
+                            percentualBeirada={0.04}>
+                        <div className='galeria-fundos'>
+                            <div className='pseudo-margem-galeria'></div>
+                            <div className='div-img' onClick={this.abrirPopup}>
+                                <div id='botao-enviar-fundo' className='imagem-galeria'>Enviar Fundo Personalizado</div>
                             </div>
-                        </Carrossel>
-                    </div>
+                            {this.getImagens().map(img => (
+                                <Img key={img.fundo.path || img.fundo.src} imagem={img} callback={img.callback}/>
+                            ))}
+                            <div className='pseudo-margem-galeria'></div>
+                        </div>
+                    </Carrossel>
                 </div>
                 {this.state.popupCompleto}
             </>

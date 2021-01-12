@@ -185,16 +185,21 @@ export const zerarApresentacao = (usuario, apresentacao, apresentacaoPadraoCompl
   );
 }
 
-export const getApresentacaoComLocation = async (location, idUsuario) => {
-  var apresentacao;
+export const getApresentacaoComLocation = async location => {
+  let apresentacao;
   if (location.hash) {
-    var idHash = getIdHash(location);
-    var temApp = location.pathname === '/app/';
-    var getApresentacao = temApp ? getApresentacaoComId : getApresentacaoComPermissao; 
+    let idHash = getIdHash(location);
+    let temApp = location.pathname === '/app/';
+    console.log(temApp)
+    let getApresentacao = temApp 
+                          ? getApresentacaoComId 
+                          : getApresentacaoComPermissao; 
     apresentacao = await getApresentacao(idHash);
-  }
-  if (apresentacao === null) {
-    store.dispatch({type: 'inserir-notificacao', conteudo: 'URL Inválida: ' + window.location.origin.toString() + location.pathname + location.hash})
+    if (apresentacao === null)
+      store.dispatch({
+        type: 'inserir-notificacao', 
+        conteudo: 'URL Inválida: ' + window.location.origin.toString() + location.pathname + location.hash
+      })
   }
   return apresentacao;
 }
@@ -205,9 +210,13 @@ const getApresentacaoComId = async idApresentacao => {
 
 const getApresentacaoComPermissao = async idPermissao => {
   var permissao = await getRegistro('permissões', idPermissao);
+  console.log(permissao);
+  
   if (permissao) { 
     var apresentacao = await getRegistro('apresentações', permissao.idApresentacao);
-    return {...apresentacao, autorizacao: permissao.autorizacao, formatoExportacao: permissao.formatoExportacao}
+    let { autorizacao, formatoExportacao } = permissao;
+    console.log(apresentacao, permissao);
+    return {...apresentacao, autorizacao, formatoExportacao}
   } else {
     return null;
   }

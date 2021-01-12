@@ -45,7 +45,7 @@ class ImagemSlide extends Component {
                              insetInicial={inset}>
                 <div className='div-imagem-slide'
                          style={{backgroundImage: 'url(' + imagem.src + ')'}}>
-                    <BotaoReupload callbackReupload={this.reupload} src={imagem.src} inativo={!editavel}/>
+                    <BotaoReupload callbackReupload={this.reupload} src={imagem.src} inativo={!editavel || imagem.idUpload}/>
                 </div>
             </Redimensionavel>
         )

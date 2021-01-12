@@ -4,10 +4,29 @@
     z-index: 90;
 }
 
+.menu-aberto {
+    pointer-events: none;
+    background: var(--azul-forte) !important;
+}
+
+.menu-fechado .colapsar-menu.galeria, .menu-fechado .container-carrossel-fundos {
+    visibility: hidden;
+    width: 0;
+    height: 0;
+}
+
+.menu-aberto #rotulo-menu-galeria {
+    display: none;
+}
+
 .container-carrossel-fundos {
     position: relative;
     overflow: visible;
     pointer-events: auto;
+}
+
+.em-transicao * {
+    pointer-events: none !important;
 }
 
 .galeria-fundos {

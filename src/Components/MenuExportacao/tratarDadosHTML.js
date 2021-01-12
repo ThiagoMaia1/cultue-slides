@@ -4,7 +4,12 @@ const styleSheet = '.preview-fake {background-color: white; position: absolute}'
                    '#ativar-tela-cheia:hover {opacity: 0.8;}' + 
                    '.tampao {z-index: 1; border-radius: 0}' + 
                    '.texto-preview {z-index: 2;}' + 
-                   '#container-apresentacao {background: black; display: flex; justify-content: center; align-items: center; width: 100%; height: 100%;}';
+                   '#container-apresentacao {background: black; display: flex; justify-content: center; align-items: center; width: 100%; height: 100%;}' +
+                   '#bloqueador-preto {background-color: black;}' +
+                   '#bloqueador-branco {background-color: white;}' +
+                   '.bloqueador-apresentacao {z-index: 0;}' +
+                   '.bloqueador-ativo {z-index: 50;}';
+
 
 export default function TratarDadosHTML(copiaDOM) {
 

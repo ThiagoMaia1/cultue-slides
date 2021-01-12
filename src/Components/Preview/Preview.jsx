@@ -34,17 +34,18 @@ class Preview extends Component {
     definirAtalhos = () => {
         hotkeys('b,w,enter,space,backspace,esc,up,left,down,right', 'apresentacao', (e, handler) => {
             e.preventDefault();
+            this.setCorBloqueador(null);
             switch (handler.key) {
                 case 'right':
                 case 'down':
                 case 'enter':
                 case 'space':
-                    this.props.dispatch({type: 'offset-selecao', offset: 1});
+                    this.props.dispatch({type: 'definir-selecao', offset: 1});
                     break;
                 case 'left':
                 case 'up':
                 case 'backspace':
-                    this.props.dispatch({type: 'offset-selecao', offset: -1});
+                    this.props.dispatch({type: 'definir-selecao', offset: -1});
                     break;
                 case 'esc': 
                     this.props.dispatch({type: 'definir-modo-apresentacao', modoApresentacao: false})
@@ -62,10 +63,10 @@ class Preview extends Component {
     }    
 
     setCorBloqueador = cor => {
-        this.setState({corBloqueador: this.state.corBloqueador === cor ? null : cor});
+        this.setState({corBloqueador: cor});
     }
 
-    offsetSlide = offset => this.props.dispatch({type: 'offset-selecao', offset: offset})
+    offsetSlide = offset => this.props.dispatch({type: 'definir-selecao', offset: offset})
     
     tornarBotaoVisivel = () => {
         this.setState({screen: {...this.state.screen, opacidadeBotao: '80%'}})

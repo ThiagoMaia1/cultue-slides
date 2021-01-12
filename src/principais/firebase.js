@@ -7,14 +7,13 @@ import "firebase/firestore";
 import "firebase/functions";
 
 var firebaseConfig = {
-    apiKey: "AIzaSyCeaxx8Or-S_s18iq0fePw9XkkunZ-RH_4",
-    authDomain: "slidesigreja-ff51f.firebaseapp.com",
-    databaseURL: "https://slidesigreja-ff51f.firebaseio.com",
-    projectId: "slidesigreja-ff51f",
-    storageBucket: "slidesigreja-ff51f.appspot.com",
-    messagingSenderId: "683801084894",
-    appId: "1:683801084894:web:3e62806204d8e91a67134f",
-    measurementId: "G-R04T1JMDN0"
+    apiKey: "AIzaSyAEUvnSQXQtDk3sWB1OWP5glYD9JJ1NDZ8",
+    authDomain: "cultue.firebaseapp.com",
+    projectId: "cultue",
+    storageBucket: "cultue.appspot.com",
+    messagingSenderId: "478235807271",
+    appId: "1:478235807271:web:103590a7a6c384a5ac0802",
+    measurementId: "G-HVSWJFQ21G"
 };
 
 // Initialize Firebase

@@ -7,7 +7,7 @@ const tipos = Object.keys(tiposElemento);
 const atalhosAdicionar = {ctrlm: 0, ctrlb: 1, ctrll: 2, ctrli: 3, ctrle: 4};
 export const arrowsHotkeys = '';
 
-export const atalhoOffset = offset => store.dispatch({type: 'offset-selecao', offset});
+export const atalhoOffset = offset => store.dispatch({type: 'definir-selecao', offset});
 
 const inicializarHotkeys = () => {
     hotkeys('ctrl+d,ctrl+z,ctrl+shift+z,ctrl+y,f5', (e, handler) => {

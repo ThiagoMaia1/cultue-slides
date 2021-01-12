@@ -5,15 +5,15 @@ import { getStrPercentual, removerPorcentagem } from './FuncoesGerais';
 
 const funcoes = {
     estilo: ({s, valor}) => s.estilo = {...valor},
-    estiloSemReplace: complementarEstilo,
     srcImagem: ({s, valor}) => s.imagem = { ...valor },
-    textoArray: editarTextoArray,
+    fundo: ({est, valor}) => est.fundo = {...valor},
     input2: ({e, valor}) => e.input2 = valor,
     textoTitulo: ({sel, e, valor}) => {
         if (!sel.slide && e.tipo !== 'Imagem' && e.tipo !== 'Vídeo') 
-            e.titulo = valor
+        e.titulo = valor
     },
-    fundo: ({est, valor}) => est.fundo = {...valor},
+    estiloSemReplace: complementarEstilo,
+    textoArray: editarTextoArray,
     insetImagem: editarInsetImagem
 }
 

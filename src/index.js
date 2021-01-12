@@ -12,21 +12,16 @@ import { keysTutoriais } from './Components/Tutorial/ListaTutorial';
 import { toggleFullscreen, objetosSaoIguais } from './principais/FuncoesGerais';
 import { getPopupConfirmacao } from './Components/Popup/PopupConfirmacao';
 import inicializarHotkeys from './principais/atalhos';
-import { persistStore, persistReducer } from 'redux-persist';
+import { persistStore, persistReducer, createTransform } from 'redux-persist';
 import storage from 'redux-persist/lib/storage'; // defaults to localStorage for web
 import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2';
 import reducerEditarSlide from './principais/reducerEditarSlide';
 
-const persistConfig = {
-  key: 'root',
-  storage,
-  stateReconciler: autoMergeLevel2
-}
-
 const numeroAcoesPropaganda = 20;
+const abaAtivaPadrao = 'texto';
 
 const defaultList = {...getApresentacaoPadraoBasica(), 
-  abaAtiva: 'texto',
+  abaAtiva: abaAtivaPadrao,
   popupAdicionar: {},
   apresentacao: apresentacaoAnonima,
   modoApresentacao: false
@@ -61,7 +56,7 @@ export const reducerElementos = function (state = defaultList, action, usuario) 
   var notificacao;
   var dadosMensagem;
   var autorizacao;
-  let { ratio } = state;
+  let { ratio, abaAtiva } = state;
   delete state.notificacao;
   switch (action.type) {
     case 'definir-apresentacao-ativa':
@@ -135,7 +130,7 @@ export const reducerElementos = function (state = defaultList, action, usuario) 
         notificacao = 'Estilo do Slide' + sel.slide + ' d' + dadosMensagem.genero + ' ' + dadosMensagem.elementos + '" Limp' + dadosMensagem.genero;
       }
       el = redividirSlides(el, sel, state.ratio);
-      return {...state, elementos: [...el], selecionado: action.selecionado, abaAtiva: 'texto', notificacao};
+      return {...state, elementos: [...el], selecionado: action.selecionado, abaAtiva: abaAtivaPadrao, notificacao};
     }
     case "fixar-novas-fontes": {
       return {...state, notificacao: 'Fontes Especiais Substituídas'};
@@ -147,14 +142,17 @@ export const reducerElementos = function (state = defaultList, action, usuario) 
       return {...state, abaAtiva: action.abaAtiva};
     }
     case "definir-selecao":
-      if (!autorizacaoEditar(state.apresentacao.autorizacao)) 
-        sel = selecionadoOffset(state.elementos, action.selecionado, 0, true);
-      if(sel.elemento > el.length -1) sel.elemento = 0;
-      if(sel.slide > el[sel.elemento].slides.length - 1) sel.slide = 0;
-      return {...state, selecionado: sel};
-    case "offset-selecao":  
-      sel = {...selecionadoOffset(state.elementos, state.selecionado, action.offset, autorizacaoEditar(state.apresentacao.autorizacao) ? undefined : true)};
-      return {...state, selecionado: sel, elementos: el};
+      if(action.offset !== undefined) 
+        sel = {...selecionadoOffset(el, sel, action.offset, autorizacaoEditar(state.apresentacao.autorizacao) ? undefined : true)};
+      else if (!autorizacaoEditar(state.apresentacao.autorizacao)) 
+        sel = selecionadoOffset(el, sel, 0, true);
+      let [elMax, slideMax] = [el.length -1, el[sel.elemento].slides.length - 1] 
+      if(sel.elemento > elMax) sel.elemento = elMax;
+      if(sel.slide > slideMax) sel.slide = slideMax;
+      if(/imagem|video/.test(el[sel.elemento].tipo)) {
+        if(abaAtiva === 'paragrafo') abaAtiva = abaAtivaPadrao;
+      } else if(abaAtiva === 'imagem') abaAtiva = abaAtivaPadrao;
+      return {...state, selecionado: sel, abaAtiva};
     case 'definir-modo-apresentacao':
       var novoModo = action.modoApresentacao || !state.modoApresentacao;
       toggleFullscreen(novoModo ? document.getElementById('borda-slide-mestre') : null);
@@ -168,7 +166,7 @@ export const reducerElementos = function (state = defaultList, action, usuario) 
   }
 };
 
-const estadoInicialNaoRehidratado = {
+const estadoSessao = {
   popupConfirmacao: null,
   notificacoes: [],
   itensTutorial: [],
@@ -188,7 +186,7 @@ export function undoable(reducer) {
     tutoriaisFeitos: [],
     contadorPropaganda: 0,
     propagandaAtiva: false,
-    ...estadoInicialNaoRehidratado
+    ...estadoSessao
   }
 
   const limiteUndo = 50;
@@ -219,6 +217,8 @@ export function undoable(reducer) {
       }
     }
     switch (action.type) {
+      case 'resetar':
+        return {...initialState};
       case 'login':
         var feitos = [...tutoriaisFeitos, ...(action.usuario.tutoriaisFeitos || [])];
         novosItensTutorial = itensTutorial.filter(n => !feitos.includes(n))
@@ -340,15 +340,25 @@ export function undoable(reducer) {
   }
 }
 
-const rootReducer = () => (state, action) => {
-  if (/persist\//.test(action.type)) {
-    state = {...state, ...estadoInicialNaoRehidratado};
-    return state;
-  }
+const rootReducer = (state, action) => {
+  if (/persist\//.test(action.type)) return state;
   return undoable(reducerElementos)(state, action);
 }
 
-const persistedReducer = persistReducer(persistConfig, rootReducer())
+const limparSessao = createTransform(
+  undefined,
+  (_state, key) => estadoSessao[key],
+  {whitelist: Object.keys(estadoSessao)}
+)
+
+const persistConfig = {
+  key: 'root',
+  storage,
+  stateReconciler: autoMergeLevel2,
+  transforms: [limparSessao]
+}
+
+const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 let store = createStore(persistedReducer, /* preloadedState, */
     window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()

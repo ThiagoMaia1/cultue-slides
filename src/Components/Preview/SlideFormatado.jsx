@@ -90,7 +90,7 @@ class SlideFormatado extends Component {
                     <Img imagem={slidePreview.estilo.fundo} 
                          proporcao={proporcaoTela} 
                          tampao={slidePreview.estilo.tampao} 
-                         botaoInativo={!editavel || typeof slidePreview.estilo.fundo.path === 'string'}
+                         botaoInativo={!editavel || typeof slidePreview.estilo.fundo.path === 'string' || (slidePreview.imagem && slidePreview.imagem.idUpload)}
                          selecionado={selecionado}/>
                     <div className='texto-preview' style={{fontSize: getFonteBase().numero*proporcao + getFonteBase().unidade}}>
                         {slidePreview.estilo.titulo.abaixo ? null : this.getBlocoTitulo(slidePreview, selecionado)}

@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import './App.css';
 import Arrastar from '../ListaSlides/ListaSlides';
 import Preview from '../Preview/Preview';
-import Galeria from '../Preview/Galeria'
+import MenuGaleria from '../Preview/MenuGaleria'
 import Configurar from '../Configurar/Configurar.jsx';
 import MenuExportacao from '../MenuExportacao/MenuExportacao';
 import NavBar from '../NavBar/NavBar';
@@ -18,14 +18,16 @@ class App extends Component {
   componentDidMount = () => hotkeys.setScope('app');
 
   render() {
+    let { autorizacao, formatoExportacao } = this.props.apresentacao;
+    let editavel = autorizacao === 'editar';
     return (
       <div id='App'>
         <BarraPesquisa/>
-        {this.props.apresentacao.autorizacao !== 'editar' ? null : <Tutorial/>}
+        {editavel ? <Tutorial/> : null}
         <PopupAdicionar/>
         <NavBar history={this.props.history}/>
-        {this.props.apresentacao.autorizacao === 'baixar' 
-          ? <MensagemBaixar formatoExportacao={this.props.apresentacao.formatoExportacao}/>
+        {autorizacao === 'baixar' 
+          ? <MensagemBaixar formatoExportacao={formatoExportacao}/>
           : <>
               <div id='organizador'>
                 <Arrastar/>
@@ -33,7 +35,7 @@ class App extends Component {
               </div>
               <div id='botoes-flutuantes-app'>
                 <Configurar/>
-                <Galeria id='galeria'/>
+                {editavel ? <MenuGaleria/> : null}
                 <MenuExportacao/>
               </div>
             </>

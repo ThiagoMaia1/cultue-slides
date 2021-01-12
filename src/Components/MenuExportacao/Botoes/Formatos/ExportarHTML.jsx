@@ -57,6 +57,11 @@ function scriptHTML () {
   document.addEventListener('fullscreenchange', alternarTransparenciaBotao, false);
 
   document.addEventListener("keydown", function (event) {
+    let bloqueador;
+    let idBloqueador = 'bloqueador-';
+    let classe = 'bloqueador-ativo';
+    let ativo = document.getElementsByClassName(classe)[0];
+    if (ativo) ativo.classList.remove(classe);
     switch (event.code) {
       case 'ArrowLeft':
       case 'ArrowUp':
@@ -71,9 +76,16 @@ function scriptHTML () {
       case 'Escape':
         if (document.fullscreenElement) toggleFullscreen();
         break;
+      case 'KeyB':
+        bloqueador = document.getElementById(idBloqueador + 'preto');
+        break
+      case 'KeyW':
+        bloqueador = document.getElementById(idBloqueador + 'branco');
+        break;
       default:
         break;
     }
+    if (bloqueador) if (ativo !== bloqueador) bloqueador.classList.add(classe);
   }, false);
 
   document.getElementById('preview-fake0').classList.add('slide-ativo')
@@ -110,8 +122,11 @@ class ExportarHTML extends Component {
     copiaDOM = getCssFontesBase64(copiaDOM, previews);
     var { botaoTelaCheia, setaMovimento } = tratado;
     
-    var apresentacao = '<div id="container-apresentacao">' + copiaDOM.body.innerHTML + '</div>'
-    copiaDOM.body.innerHTML = botaoTelaCheia + setaMovimento + apresentacao;
+    
+    copiaDOM.body.innerHTML = '<div id="bloqueador-branco" class="bloqueador-apresentacao"></div>'+
+                              '<div id="bloqueador-preto" class="bloqueador-apresentacao"></div>' + 
+                              botaoTelaCheia + setaMovimento + 
+                              '<div id="container-apresentacao">' + copiaDOM.body.innerHTML + '</div>';
     for (var img of imagensBase64) { //Criar o css para as imagens.
       var { classe, data} = img;
       this.cssImagens.push('.' + classe + '{background-image: url(' + data + ');}');
