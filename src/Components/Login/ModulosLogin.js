@@ -20,7 +20,8 @@ export const checarLogin = (callbackLogin) => {
     if (!primeiraTentativa) return;
     firebaseAuth.onAuthStateChanged(async userAuth => {
         let state = store.getState().present;
-        let { elementos, apresentacaoStore } = state;
+        let { elementos } = state;
+        let apresentacaoStore = state.apresentacao;
         let tipoEvento = getTipoEvento(userAuth);
         if (tipoEvento === 'noChange' && !primeiraTentativa) return;
         
