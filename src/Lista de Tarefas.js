@@ -105,6 +105,8 @@
 //   ✔️ Conexao novo projeto firebase
 //   ✔️ Link de download não faz nada
 //   ✔️ Clicar nova apresentação quando não tem usuário 
+//   ✔️ Posição/clickFora do popup de enviar fundo personalizado
+//   ✔️ Erro ao enviar fundo personalizado
 //   ✔️ Carrossel do Input Imagem não vai até o final.*/
 // Errinhos:
 //   ✔️ Click fora tutorial
@@ -115,12 +117,12 @@
 //   Redividir quando o texto de um slide é todo deletado
 //   Edição do conteúdo do parágrafo dando alguns erros (falha ao perder foco, não exibe cursor, markup aparecendo)
 //   Clonar estilo está uma bosta
-//   Atalhos funcionarem mesmo com foco nos inputs
 //   HTML no e-mail indo sem CSS/Scripts
 //   Alguns cálculos do "Redimensionavel" estão errados
 //   Soltar click do Redimensionavel
-//   Exportação PowerPoint: Tamanho fonte e lineHeight, round border das imagens, titulos abaixo/invisiveis
-//   Posição/clickFora do popup de enviar fundo personalizado
+//   Exportação PowerPoint: Tamanho fonte e lineHeight, round border das imagens, titulos abaixo/invisíveis
+//   Corrigir envio automático do github
+//   Slide mestre pode ser duplicado
 
 /*// Features essenciais:
 //   ✔️ Envio de imagens
@@ -184,6 +186,7 @@
 //   ✔️ Lista de atalhos do modo apresentação.*/
 //   Criar popup para reupload de imagem
 //   Organizar focus/tab index
+//   Atalhos funcionarem mesmo com foco nos inputs
 
 /*/ Features dispensáveis:
 //   TabIndex dos botões e tal

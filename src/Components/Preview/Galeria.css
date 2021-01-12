@@ -1,7 +1,7 @@
 #botao-mostrar-galeria {
     overflow: hidden;
     position: fixed;
-    z-index: 90;
+    z-index: 910;
 }
 
 .menu-aberto {
@@ -57,6 +57,19 @@
 .div-img:hover {
     transform: scale(1.08);
     margin: 0 1.1vw;
+}
+
+.popup .div-img {
+    max-height: 25vh;
+}
+
+#botao-mostrar-galeria .popup {
+    color: black;
+    text-align: initial;
+}
+
+#botao-mostrar-galeria #fundo-popup {
+    pointer-events: all;
 }
 
 .img-popup-confirmacao {

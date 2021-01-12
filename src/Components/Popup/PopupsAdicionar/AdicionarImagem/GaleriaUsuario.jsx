@@ -4,11 +4,11 @@ import store from '../../../../index';
 import GaleriaImagensPopup from './GaleriaImagensPopup';
 import Popup from '../../Popup';
 
-const GaleriaUsuario = ({callback, imagensUsuario = [], subconjunto = null, fecharPopup}) => {
+const GaleriaUsuario = ({callback, imagensUsuario = {}, subconjunto = null, fecharPopup}) => {
     let imagens = (subconjunto 
                    ? imagensUsuario[subconjunto]
                    : [...new Set(Object.keys(imagensUsuario).reduce((resultado, k) => 
-                        [...resultado, ...imagensUsuario[k]], []))]);
+                        [...resultado, ...imagensUsuario[k]], []))]) || [];
     
     const apagar = i => {
         let url = imagens[i];

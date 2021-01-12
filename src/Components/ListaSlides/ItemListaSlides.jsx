@@ -78,7 +78,7 @@ class ItemListaSlides extends Component {
     }
 
     getOpcoesMenu = () => {
-        let strTipo = ' ' + (this.state.colapsa ? 'Grupo' : 'Elemento')
+        let strTipo = ' ' + (this.state.colapsa ? 'Grupo' : 'Slide')
         let opcoes = [
             {rotulo: 'Excluir' + strTipo, callback: this.excluirElemento},
             {rotulo: 'Duplicar' + strTipo, callback: () => this.props.dispatch({type: 'duplicar-slide', selecionado: {elemento: this.props.ordem, slide: 0}})},

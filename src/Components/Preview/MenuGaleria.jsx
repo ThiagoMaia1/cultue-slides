@@ -21,14 +21,14 @@ const MenuGaleria = () => {
         getDirecoes(coordenadasBotao),
         getDirecoes(coordenadasGaleria),
         tempo,
-        false
+        false,
+        true
     )
 
     let [ ativo, setAtivo ] = useState(false);
     let [ clicavel, setClicavel ] = useState(true);
 
     const toggle = bool => {
-        console.log(bool, ativo);
         if(bool === ativo) return;
         setClicavel(false);
         toggleQuadro(bool);

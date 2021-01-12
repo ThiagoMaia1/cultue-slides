@@ -44,7 +44,7 @@ class Galeria extends Component {
             <Popup ocultarPopup={() => this.setState({popupCompleto: null})}>
                 <h4>Enviar Fundo Personalizado</h4>
                 <InputImagem eFundo={true} 
-                             callback={this.inserirFundoDaColecao}/>
+                            callback={this.inserirFundoDaColecao}/>
             </Popup>
         });
     }

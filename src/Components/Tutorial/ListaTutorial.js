@@ -17,13 +17,13 @@ const selecionarAba = abaAtiva => store.dispatch({ type: 'ativar-realce', abaAti
   
 const listaBoxes = {
     painelAdicionar: {rotulo: 'Adicionar um Slide', listaEtapas: [{
-      texto: 'Clique para criar um elemento', 
-      arrow: {posicao: 'bottomCenter', posicaoChildren: 'right', selectorElemento: '#container-botoes-adicionar'},
+      texto: 'Clique para criar um slide', 
+      arrow: {posicao: 'bottomCenter', posicaoChildren: 'right'},
       selectorElemento: '#container-botoes-adicionar',
       evento: {listener: 'redux', alvo: '.present.popupAdicionar'}
     }]},
     slides: {rotulo: 'Lista de Slides', listaEtapas: [
-      {texto: 'As configurações do Slide-Mestre se aplicam aos demais slides. Cada grupo de slides também possui seu próprio slide-mestre.', 
+      {texto: 'As configurações do Slide-Mestre se aplicam aos demais slides. Cada grupso de slides também possui seu próprio slide-mestre.', 
        coordenadas: [15, 25], 
        arrow: {posicao: 'centerRight', posicaoChildren: 'bottom'},
        selectorElemento: '#slide-mestre',
@@ -36,11 +36,11 @@ const listaBoxes = {
        callbackDepois: () => selecionarSlide(1, 0),
        evento: {listener: 'redux', alvo: '.present.ratio', timeout: 800}
       },
-      {texto: 'Clique para alterar as configurações e a imagem de fundo do slide selecionado', 
-       coordenadas: [40, 40], 
-       selectorElemento: '#botao-menu-configurar, #botao-mostrar-galeria',
-       evento: {listener: 'click', alvo: 'botao-menu-configurar', timeout: 500}
-      },
+      // {texto: 'Clique para alterar as configurações e a imagem de fundo do slide selecionado', 
+      //  coordenadas: [40, 40], 
+      //  selectorElemento: '#botao-menu-configurar, #botao-mostrar-galeria',
+      //  evento: {listener: 'click', alvo: 'botao-menu-configurar', timeout: 500}
+      // },
       {texto: 'Clique ou pressione F5 para ativar o modo de apresentação', 
        arrow: {posicao: 'bottomCenter', posicaoChildren: 'left', selectorElemento: '#ativar-tela-cheia'},
        selectorElemento: '#borda-slide-mestre',
@@ -56,7 +56,7 @@ const listaBoxes = {
        callbackAntes: () => hotkeys.setScope('app'),
        callbackDepois: () => hotkeys.setScope('tutorial'),
        evento: {listener: 'redux', alvo: '.present.selecionado', timeout: 500}},
-      {texto: 'Arraste os elementos para reordenar a apresentação', 
+      {texto: 'Arraste um slide ou grupo de slides para reordenar a apresentação', 
        arrow: {posicao: 'centerRight', posicaoChildren: 'bottom'},
        selectorElemento: '#ordem-elementos',
        evento: {listener: 'redux', alvo: '.present.elementos', timeout: 500}},

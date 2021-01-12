@@ -34,8 +34,8 @@ class App extends Component {
                 <Preview/>
               </div>
               <div id='botoes-flutuantes-app'>
-                <Configurar/>
                 {editavel ? <MenuGaleria/> : null}
+                <Configurar/>
                 <MenuExportacao/>
               </div>
             </>

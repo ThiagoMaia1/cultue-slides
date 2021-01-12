@@ -93,10 +93,9 @@ export const reducerElementos = function (state = defaultList, action, usuario) 
       if (state.selecionado.elemento >= el.length) novaSelecao.elemento = state.selecionado.elemento-1 
       return {...state, elementos: el, selecionado: {...novaSelecao}, notificacao };
     case 'duplicar-slide':
-      if(!el[sel.elemento].eMestre) {
-        el.splice(sel.elemento, 0, el[sel.elemento]);
-        sel.elemento++;
-      }
+      if(!el[sel.elemento].eMestre) return state;
+      el.splice(sel.elemento, 0, el[sel.elemento]);
+      sel.elemento++;
       dadosMensagem = getDadosMensagem(el[sel.elemento]);
       notificacao = dadosMensagem.elemento + ' Duplicad' + dadosMensagem.genero;
       return {...state, elementos: el, selecionado: sel, notificacao};
@@ -256,11 +255,11 @@ export function undoable(reducer) {
         let { urls, subconjunto, excluir, transferirPara } = action;
         if (!Array.isArray(urls)) urls = [urls];
         let imagens = {...usuario.imagens} || {};
-        let conjunto = [...imagens[subconjunto]] || [];
+        let conjunto = [...(imagens[subconjunto] || [])];
         imagens[subconjunto] = (excluir || transferirPara)
                                ? conjunto.filter(img => !urls.includes(img))
                                : [...urls, ...conjunto];
-        if(transferirPara) imagens[transferirPara] = [...imagens[transferirPara], ...urls];
+        if(transferirPara) imagens[transferirPara] = [...(imagens[transferirPara] || []), ...urls];
         for (let k of Object.keys(imagens)) 
           imagens[k] = [...new Set(imagens[k])];
         atualizarDadosUsuario(usuario.uid, {imagens});
