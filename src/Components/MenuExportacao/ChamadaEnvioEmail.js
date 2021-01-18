@@ -59,7 +59,6 @@ export const enviarEmailTemplate = (assunto, destinatarios, corpo, JSXInterno, l
         anexos
     }
       
-    console.log(objEmail);
     enviarEmail(objEmail).then(
         () => {
             inserirNotificacao('E-mail enviado com sucesso')

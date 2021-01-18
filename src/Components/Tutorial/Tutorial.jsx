@@ -73,7 +73,6 @@ class EtapaTutorial extends Component {
     if(evento.listener !== 'redux') {
       this.funcaoListener = e => {
         let alvo = document.getElementById(evento.alvo);
-        console.log(evento.listener, !document.fullscreenElement)
         if( (
               evento.listener === 'click'
               && (!evento.alvo || e.target.id === evento.alvo || (alvo && alvo.contains(e.target)))
@@ -232,22 +231,24 @@ class Tutorial extends Component {
 
   render() {
     var ativo = this.temTutorialAtivo();
+    let {display, indiceEtapa} = this.state;
+    let {itensTutorial} = this.props;
     return (
-      <div id='fundo-tutorial' style={ativo ? {display: this.state.display} : {pointerEvents: 'none'}}>
-        <EtapaTutorial key={this.props.itensTutorial.join(',') + this.state.indiceEtapa} 
-                       itens={[...this.props.itensTutorial]} 
-                       indice={this.state.indiceEtapa} offset={this.offsetEtapaTutorial} 
-                       display={this.state.display}/>
+      <div id='fundo-tutorial' style={ativo ? {display} : {pointerEvents: 'none'}}>
+        <EtapaTutorial key={itensTutorial.join(',') + indiceEtapa} 
+                       itens={[...itensTutorial]} 
+                       indice={indiceEtapa} offset={this.offsetEtapaTutorial} 
+                       display={display}/>
         {ativo
           ? <>
               <button id='pular-tutorial' className='botao limpar-input' onClick={this.finalizar}>Não Exibir Tutoriais</button>
               <div id='rodape-tutorial'>
                 <button className='botao neutro' onClick={() => this.offsetEtapaTutorial(-1)}
-                  style={this.state.indiceEtapa === 0 ? {visibility: 'hidden'} : null}>
+                  style={indiceEtapa === 0 ? {visibility: 'hidden'} : null}>
                   Anterior
                 </button>
                 <button className='botao neutro' onClick={() => this.offsetEtapaTutorial(1)}>
-                  {(this.state.indiceEtapa === this.props.itensTutorial.length-1) ? 'Concluir' : 'Próximo'}
+                  {(indiceEtapa === itensTutorial.length-1) ? 'Concluir' : 'Próximo'}
                 </button>
               </div>
             </>

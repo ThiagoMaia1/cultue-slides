@@ -175,8 +175,12 @@ body {
 }
 
 .popup-confirmacao {
-  color: black;
   width: min-content;
   min-width: 30vw;
   z-index: 160;
+}
+
+.popup {
+  color: black;
+  text-align: initial;
 }

@@ -107,6 +107,8 @@
 //   ✔️ Clicar nova apresentação quando não tem usuário 
 //   ✔️ Posição/clickFora do popup de enviar fundo personalizado
 //   ✔️ Erro ao enviar fundo personalizado
+//   ✔️ Slide mestre pode ser duplicado
+//   ✔️ HTML no e-mail indo sem CSS/Scripts
 //   ✔️ Carrossel do Input Imagem não vai até o final.*/
 // Errinhos:
 //   ✔️ Click fora tutorial
@@ -117,12 +119,12 @@
 //   Redividir quando o texto de um slide é todo deletado
 //   Edição do conteúdo do parágrafo dando alguns erros (falha ao perder foco, não exibe cursor, markup aparecendo)
 //   Clonar estilo está uma bosta
-//   HTML no e-mail indo sem CSS/Scripts
 //   Alguns cálculos do "Redimensionavel" estão errados
 //   Soltar click do Redimensionavel
 //   Exportação PowerPoint: Tamanho fonte e lineHeight, round border das imagens, titulos abaixo/invisíveis
 //   Corrigir envio automático do github
-//   Slide mestre pode ser duplicado
+//   Branquear menu de configurações ao ativar tutorial
+//   Link para download exibindo a apresentação antes de ir pra página de download
 
 /*// Features essenciais:
 //   ✔️ Envio de imagens
@@ -183,12 +185,14 @@
 //   ✔️ Exportação em PowerPoint
 //   ✔️ B/W na exportação HTML
 //   ✔️ Click fora da galeria de fundos
+//   ✔️ Fullscreen com double click
 //   ✔️ Lista de atalhos do modo apresentação.*/
 //   Criar popup para reupload de imagem
-//   Organizar focus/tab index
 //   Atalhos funcionarem mesmo com foco nos inputs
+//   Alterar rótulos do ratio para o formato: "16:9"
 
 /*/ Features dispensáveis:
+//   Selecionar/Arrastar múltiplos grupos
 //   TabIndex dos botões e tal
 //   Tutoriais nos popups de adicionar
 //   Otimizar trocas de dados com BD 🟨
@@ -215,7 +219,7 @@
 //   Animação excluir item lista perfil
 //   Nomear apresentacao
 //   Opção de inserir texto bíblico/imagem como grupo ou separado. 
-//   Tela assinaturas/compras. 
+//   Tela assinaturas/compras
 //   Input por texto nos sliders
 //   Fotos de perfil
 //   Compartilhar layouts
@@ -233,10 +237,10 @@
 //   Capturar cor da imagem
 //   Página de imagens do usuário
 //   Otimizar css para exportação
-//   Incluir anexos em e-mails confirmados (tem que pedirconfirmação de e-mail antes)
+//   Incluir anexos em e-mails confirmados (tem que pedir confirmação de e-mail antes)
 //   Limitar número de imagens/limpar storage de imagens não utilizadas
 //   Considerar border radius para o cursor da imagem redimensionável
-//   Filtrar fundos personalizados
+//   Filtrar fundos personalizados/Pesquisar fundos
 //   Logo no e-mail de forma que possa ser lida offline*/
 //
 // Negócio:

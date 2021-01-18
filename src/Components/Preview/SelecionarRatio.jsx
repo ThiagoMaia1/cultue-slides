@@ -3,18 +3,13 @@ import { connect } from 'react-redux';
 import './SelecionarRatio.css';
 import { BsAspectRatio } from 'react-icons/bs';
 import { ratioTela } from '../../principais/firestore/apresentacoesBD';
+import { maximoDivisorComum } from '../../principais/FuncoesGerais';
 
-let opcoesRatioDesordenadas = [
-    {width: 1024, height: 768}
-   ,{width: 1280, height: 800}
+let opcoesRatio = [
    ,{width: 1400, height: 1050}
-   ,{width: 1920, height: 1080}
    ,{width: 1920, height: 1200}
+   ,{width: 1920, height: 1080}
 ];
-
-opcoesRatioDesordenadas = opcoesRatioDesordenadas.filter(o => o.width !== ratioTela.width || o.height !== ratioTela.height);
-
-const opcoesRatio = [...opcoesRatioDesordenadas, ratioTela].sort((a, b) => a.height - b.height || a.width - b.width);
 
 const getEstiloAnimacao = (maxHeight = '0', maxWidth = '0', color = 'white', transform = 'none') => (
     {maxHeight: maxHeight + 'vh', maxWidth: maxWidth + 'vw', color: color, transform: transform}
@@ -81,13 +76,17 @@ class SelecionarRatio extends React.Component {
                 <div id='selecionar-aspect-ratio' onMouseEnter={this.onMouseEnter} onMouseLeave={this.onMouseLeave}></div>
                 <div id='fundo-selecionar-aspect-ratio' style={{...estiloFundo}} ref={this.ref} onMouseLeave={this.onMouseLeave}>
                         {this.state.opcoesVisiveis 
-                            ? opcoesRatio.map((o, i) => 
+                            ? opcoesRatio.map((o, i) => {
+                                let divisor = maximoDivisorComum(o.width, o.height)
+                                return (
                                     <div className='opcao-ratio' onClick={() => this.selecionarRatio(o)} key={i} 
                                         style={{borderRadius: (i === 0 ? '1vh 0 0 0' : ''),
                                         backgroundColor: (o.width === ratio.width && o.height === ratio.height ? 'var(--preto-fraco)' : '' )}}>
-                                        {o.width + 'x' + o.height}
+                                        {o.width/divisor + ':' + o.height/divisor}
                                     </div>
-                                )
+                                    )
+                                }
+                            )
                             : (estiloFundo.maxHeight !== estiloInvisivel.maxHeight 
                                 ? <button id='botao-selecionar-ratio' onClick={this.onClick}>
                                     <BsAspectRatio size={20}/>

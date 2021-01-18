@@ -89,9 +89,6 @@ class Galeria extends Component {
     componentDidMount = () => this.inserirFundos(this.props.fundos);
 
     componentDidUpdate = prevProps => {
-        if(!this.state.galeriaVisivel && prevProps.tutorialAtivo !== this.props.tutorialAtivo) {
-            this.mostrarGaleria();
-        }
         if (!objetosSaoIguais(prevProps.fundos, this.props.fundos)) {
             let fundos = this.state.imagens.map(i => i.fundo.src);
             let { acrescentar, remover } = mudancasArrays(this.props.fundos, fundos); 
@@ -131,7 +128,6 @@ const mapState = state => (
     {
         fundos: (state.usuario.imagens || {}).fundos || [],
         autorizacao: state.present.apresentacao.autorizacao, 
-        tutorialAtivo: state.itensTutorial.includes('galeriaFundos')
     }
 )
 

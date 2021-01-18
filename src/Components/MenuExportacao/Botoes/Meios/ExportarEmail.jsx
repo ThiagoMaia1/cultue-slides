@@ -5,7 +5,8 @@ import { IoMdMail } from 'react-icons/io';
 import ListaEmails from '../../../Perfil/PaginasPerfil/ListaEmails/ListaEmails';
 import Carrossel from '../../../Basicos/Carrossel/Carrossel';
 import sobreporSplash from '../../../Basicos/Splash/SobreporSplash';
-import { ativarPopupConfirmacao, ativarPopupLoginNecessario } from '../../../Popup/PopupConfirmacao';
+import Popup from '../../../Popup/Popup';
+import { ativarPopupLoginNecessario } from '../../../Popup/PopupConfirmacao';
 import { enviarEmailTemplate } from '../../ChamadaEnvioEmail';
 import { gerarNovaPermissao, getLinkPermissao } from '../../../../principais/firestore/apresentacoesBD';
 import { getFontesUsadas, getZipFontes } from '../../ModulosFontes';
@@ -15,50 +16,59 @@ class ExportarEmail extends Component {
 
   constructor (props) {
     super(props);
-    this.state = {listaEmails: []};
+    this.state = {listaEmails: [], popup: null};
     this.meio = 'email';
   }
 
   selecionarEmail = (email, novoStatus) => {
-    var lista = this.state.listaEmails;
+    let { listaEmails } = this.state;
     if (novoStatus) {
-      lista.push(email);
+      listaEmails.push(email);
     } else {
-      lista = lista.filter(e => e !== email);
+      listaEmails = listaEmails.filter(e => e.enderecoEmail !== email.enderecoEmail);
     }
-    this.setState({listaEmails: lista});
+    this.setState({listaEmails});
   }
+
+  desativarPopup = () => this.setState({popup: null})
 
   exportarEmail = obj => {
 
     const ListaComLoading = sobreporSplash('listaEmails', ListaEmails);
 
-    this.filhosPopup = (
-      <div>
-        <div style={{marginLeft: '2vw'}}>Selecione os endereços de e-mail para os quais você deseja enviar o arquivo.</div>
-        <div style={{maxHeight: '50vh', minHeight:'50vh', width: '100%', marginBottom: '2vh', overflow: 'hidden'}}>
-          <Carrossel direcao='vertical' tamanhoIcone={50} tamanhoMaximo={'50vh'} 
-                    percentualBeirada={0.05} style={{zIndex: '400', width: '50vw'}}>
-            <ListaComLoading selecionarEmail={this.selecionarEmail} height='50vh'/>
-          </Carrossel>
+    this.setState({popup: () =>
+      <Popup tamanho='pequeno' ocultarPopup={this.desativarPopup}>
+        <div className='popup-confirmacao'>
+          <div>
+            <h4>E-mails</h4>
+            <div style={{marginLeft: '2vw', marginBottom: '2vh'}}>Selecione os endereços de e-mail para os quais você deseja enviar o arquivo.</div>
+            <div style={{maxHeight: '50vh', minHeight:'50vh', width: '100%', marginBottom: '2vh', overflow: 'hidden'}}>
+              <Carrossel direcao='vertical' tamanhoIcone={50} tamanhoMaximo={'50vh'} 
+                        beiradaFinal={15} style={{zIndex: '400', width: '50vw'}}>
+                <ListaComLoading selecionarEmail={this.selecionarEmail} height='50vh'/>
+              </Carrossel>
+            </div>
+          </div>
+          <div className='container-botoes-popup'>
+              <button className='botao' 
+                    onClick={() => {
+                      if (this.state.listaEmails.length) {
+                        this.enviarArquivoEmail(obj);
+                        document.body.style.cursor = 'progress';
+                        this.desativarPopup();
+                      }
+                    }}
+                    style={this.state.listaEmails.length ? null : {visibility: 'hidden'}}
+                  >Enviar</button>
+              <button className='botao neutro' onClick={this.desativarPopup}>Cancelar</button>  
+            </div>
         </div>
-      </div>
-    )
-
-    ativarPopupConfirmacao(
-      'enviarCancelar', 
-      'E-mails', 
-      '',
-      fazer => {if(fazer) {
-        this.enviarArquivoEmail(obj);
-        document.body.style.cursor = 'progress';
-      }},
-      this.filhosPopup
-    )
+      </Popup>,
+      listaEmails: []
+    })
   }
 
   enviarArquivoEmail = async obj => {
-    console.log(obj)
     var { nomeArquivo, arquivo, formato } = obj;
     var encoding = {};
     switch (formato) {
@@ -112,7 +122,7 @@ class ExportarEmail extends Component {
       this.getDestinatarios(), 
       this.getCorpoEmail(), 
       this.getHTMLEmail(),
-      [{url: link, rotulo: 'Download Apresentação'}],
+      [{url: link, rotulo: 'Baixar Apresentação'}],
       attachments
     )
   }
@@ -168,10 +178,14 @@ class ExportarEmail extends Component {
   }
 
   render() {
-      return (
+    let ComponentePopup = this.state.popup;
+    return (
+      <>
+        {this.state.popup ? <ComponentePopup/> : null}
         <BotaoExportador formato={this.meio} onClick={this.verificarLogin} 
           arrow={this.props.posicaoArrow === this.props.posicao} logo={<IoMdMail size={this.props.tamIcones}/>} rotulo='E-mail'/>
-      )
+      </>
+    )
   }
 
 }

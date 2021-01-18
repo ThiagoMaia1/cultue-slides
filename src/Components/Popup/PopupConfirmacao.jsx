@@ -8,8 +8,7 @@ const botoesProntos = {
   botaoSim: {texto: 'Sim', parametroCallback: true}, 
   botaoNao: {texto: '✕ Não', parametroCallback: false, classe: 'limpar-input'}, 
   botaoCancelar: {texto: 'Cancelar', parametroCallback: 0, classe: 'neutro'},
-  botaoOK: {texto: 'OK', parametroCallback: true},
-  botaoEnviar: {texto: 'Enviar', parametroCallback: true}
+  botaoOK: {texto: 'OK', parametroCallback: true}
 }
                 
 const gruposDeBotoes = {
@@ -17,7 +16,6 @@ const gruposDeBotoes = {
   simNaoCancelar: ['botaoSim', 'botaoNao', 'botaoCancelar'],
   OKCancelar: ['botaoOK', 'botaoCancelar'],
   OK: ['botaoOK'],
-  enviarCancelar: ['botaoEnviar', 'botaoCancelar'],
   nenhum: []
 }
 
@@ -63,6 +61,11 @@ class PopupConfirmacao extends React.Component {
     
     let botoesJSX = arrayBotoes.map((b, i) => {
       if (typeof b === 'string') b = botoesProntos[b];
+      if (b.funcaoJSX) {
+        let Componente = b.funcaoJSX;
+        return <Componente {...(b.props || {})}/>
+      }
+      if (!b.texto) return b;
       return (
         <button className={'botao ' + (b.classe || '')} onClick={() => this.chamarCallback(b.parametroCallback)} key={i}>
           {b.texto}

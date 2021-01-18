@@ -18,7 +18,7 @@ const QuadroAjuda = props => {
     let { callback } = props;
     let opcoes = [
         {rotulo: 'Atalhos Gerais', submenu: {children: <QuadroAtalhos lista={'listaGeral'}/>}},
-        {rotulo: 'Atalhos Apresentação', submenu: {children: <QuadroAtalhos lista={'listaApresentacao'}/>}},
+        {rotulo: 'Atalhos Modo de Apresentação', submenu: {children: <QuadroAtalhos lista={'listaApresentacao'}/>}},
         {rotulo: 'Fale Conosco', submenu: {children: 
             <QuadroEnviar fechar={callback} 
                             titulo='Escreva sua Mensagem:'

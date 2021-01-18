@@ -515,3 +515,8 @@ export const getInsetNum = insetImagem => {
     }
     return semPorcentagem; 
 }
+
+export const maximoDivisorComum = (a, b) => {
+    if (b === 0) return a;
+    return maximoDivisorComum (b, a % b)
+}

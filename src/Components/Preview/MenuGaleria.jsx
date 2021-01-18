@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { connect } from 'react-redux';
 import './Galeria.css';
 import useAnimationOutsideClick from '../../principais/Hooks/useAnimationOutsideClick';
 import { listaDirecoes } from '../../principais/Constantes';
 import Galeria from './Galeria';
 
-const MenuGaleria = () => {
+const MenuGaleria = ({tutorialAtivo}) => {
 
     const coordenadasBotao = [ 86, 89, 6, 3];
     const coordenadasGaleria = [ 73, 2, 3, 2];
@@ -38,6 +39,11 @@ const MenuGaleria = () => {
     let aberto = Number(estilo.top.replace('vh', '')) === coordenadasGaleria[0];
     if (aberto !== ativo) setTimeout(() => setAtivo(aberto), tempo*0.6);
 
+    useEffect(
+        () => tutorialAtivo ? toggle(true) : void 0, 
+        [tutorialAtivo]
+    )
+
     return (
         <div id='botao-mostrar-galeria' 
              className={'botao-azul' + (ativo ? ' menu-aberto' : ' menu-fechado') + (clicavel ? '' : ' em-transicao')} 
@@ -52,4 +58,9 @@ const MenuGaleria = () => {
     )
 }
 
-export default MenuGaleria;
+const mapState = state => ({
+    tutorialAtivo: state.itensTutorial.includes('galeriaFundos')
+});
+
+export default connect(mapState)(MenuGaleria);
+

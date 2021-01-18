@@ -92,13 +92,17 @@ class SlideFormatado extends Component {
                          tampao={slidePreview.estilo.tampao} 
                          botaoInativo={!editavel || typeof slidePreview.estilo.fundo.path === 'string' || (slidePreview.imagem && slidePreview.imagem.idUpload)}
                          selecionado={selecionado}/>
-                    <div className='texto-preview' style={{fontSize: getFonteBase().numero*proporcao + getFonteBase().unidade}}>
+                    <div className='texto-preview' style={{fontSize: getFonteBase().numero*proporcao + getFonteBase().unidade}}
+                         onDoubleClickCapture={() => {
+                             if (editavel)
+                                this.props.dispatch({type: 'definir-modo-apresentacao'})
+                         }}>
                         {slidePreview.estilo.titulo.abaixo ? null : this.getBlocoTitulo(slidePreview, selecionado)}
                         <div id='paragrafo-slide' className={'slide-paragrafo ' + this.getClasseLetraClara('paragrafo')} style={slidePreview.estilo.paragrafo}>
                             <div style={this.realcarElemento('paragrafo')} 
                                  className={'realce-paragrafo ' + (slidePreview.estilo.paragrafo.duasColunas ? 'dividido-colunas' : '')}>
-                                {<Estrofes slidePreview={slidePreview} onInput={this.editarTexto} ativarRealce={this.ativarRealce} editavel={editavel}
-                                           selecionado={selecionado}/>}
+                                <Estrofes slidePreview={slidePreview} onInput={this.editarTexto} ativarRealce={this.ativarRealce} editavel={editavel}
+                                           selecionado={selecionado}/>
                             </div>
                         </div>
                         {slidePreview.estilo.titulo.abaixo ? this.getBlocoTitulo(slidePreview, selecionado) : null}

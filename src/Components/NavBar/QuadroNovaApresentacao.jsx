@@ -14,7 +14,7 @@ const QuadroNovaApresentacao = props => {
             {rotulo: 'Vazia', callback: novaVazia},
             {rotulo: 'Apenas Estilo', callback: () => zerarApresentacao(usuario, apresentacao, false)},
             {rotulo: 'Todos os Slides', callback: () => zerarApresentacao(usuario, apresentacao)},
-            {rotulo: 'Limpar Estilo da Apresentação Atual',
+            {rotulo: 'Limpar Estilo da Apresentação',
                 callback: () => store.dispatch({type: 'limpar-estilo', selecionado: {elemento: 0, slide: 0}})}
         ]
 
