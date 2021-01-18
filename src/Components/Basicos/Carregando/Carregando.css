@@ -1,0 +1,180 @@
+.wraper {
+        position:relative;
+        --cor: var(--azul-forte);
+        animation: mudarCor 5.7s linear 0.95s infinite;
+}
+
+.container-arc {
+        width: auto;
+        height: auto;
+        animation: girar 0.8s linear infinite;
+        width: calc(var(--tamanho-loading)*26vh);
+        height: calc(var(--tamanho-loading)*26vh);
+}
+
+.arc {
+        position:absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border-radius: 100%;
+        border: calc(var(--tamanho-loading)*3vh) solid transparent;
+}
+
+.arc_start {
+        border-color:var(--cor) transparent transparent transparent;
+        animation: expandir0 0.95s linear alternate infinite;
+}
+
+.arc_end {
+        border-color: var(--cor) transparent transparent transparent;
+        animation: expandir2 0.95s linear alternate infinite;
+}
+
+.arc_end2 {
+        border-color: var(--cor) transparent transparent transparent;
+        animation: expandir3 0.95s linear alternate infinite;
+}
+
+.arc_end3 {
+        border-color: var(--cor) transparent transparent transparent;
+        animation: expandir4 0.95s linear alternate infinite;
+}
+
+.arc_tampar {
+        top: calc(var(--tamanho-loading)*-1vh);
+        left: calc(var(--tamanho-loading)*-1vh);
+        width: calc(var(--tamanho-loading)*27vh);
+        height: calc(var(--tamanho-loading)*27vh);
+        border: calc(var(--tamanho-loading)*5vh) solid;
+        border-color: var(--cor-fundo) transparent transparent transparent;
+        /* animation: expandir 0.95s linear alternate infinite; */
+}
+
+@keyframes girar {
+        from {
+                transform: rotate(0deg);
+      }
+      to {
+                transform: rotate(359deg);
+      }
+}
+
+@keyframes expandir {
+        from {
+                transform: rotate(0deg);
+      }
+      to {
+                transform: rotate(-90deg);
+      }
+}
+
+@keyframes expandir0 {
+        from {
+                transform: rotate(0deg);
+      }
+      to {
+                transform: rotate(90deg);
+      }
+}
+
+@keyframes expandir2 {
+        from {
+                transform: rotate(0deg);
+      }
+      to {
+                transform: rotate(180deg);
+      }
+} 
+@keyframes expandir3 {
+        from {
+                transform: rotate(0deg);
+      }
+      to {
+                transform: rotate(270deg);
+      }
+} 
+@keyframes expandir4 {
+        from {
+                transform: rotate(0deg);
+      }
+      to {
+                transform: rotate(360deg);
+      }
+} 
+
+@keyframes mudarCor {
+        0% {
+                --cor: var(--azul-forte);
+        }
+        33% {
+                --cor: var(--azul-fraco);
+        }
+        66% {
+                --cor: var(--platinum-forte);        
+        }
+        100% {
+                --cor: var(--azul-forte);
+        }
+}
+
+/* <div className='container-nest'>
+      <div id="nest5"></div>
+    </div> */
+/* 
+.container-nest {
+        position: absolute;
+        top: 70vh;
+}
+#nest5 {
+    display: block;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    height: 180px;
+    width: 180px;
+    margin: -75px 0 0 -75px;
+    border: 12px solid transparent;
+    border-top-color: var(--azul-forte);
+    border-right-color: var(--azul-forte);
+    border-radius: 50%;
+    animation: spin11 2s linear infinite;
+  }
+  
+  #nest5:before {
+    content: "";
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    bottom: 15px;
+    left: 15px;
+    border: 12px solid transparent;
+    border-radius: 50%;
+    border-top-color: var(--azul-fraco);
+    border-right-color: var(--azul-fraco);
+    animation: spin11 .8s linear infinite reverse;
+  }
+  
+  #nest5:after {
+    content: "";
+    position: absolute;
+    top: 40px;
+    right: 40px;
+    bottom: 40px;
+    left: 40px;
+    border: 12px solid transparent;
+    border-radius: 50%;
+    border-top-color: var(--platinum-forte);
+    -webkit-animation: spin11 2s linear infinite;
+            animation: spin11 2s linear infinite;
+  }
+  
+  @keyframes spin11 {
+    from {
+              transform: rotate(0deg);
+    }
+    to {
+              transform: rotate(359deg);
+    }
+  } */

@@ -36,7 +36,7 @@ class NavBar extends React.Component {
     if (bool) {
       this.props.history.push('/perfil');
     } else {
-      this.props.history.push('/app');
+      this.props.history.push('/main');
     }
   }
 

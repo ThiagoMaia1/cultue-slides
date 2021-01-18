@@ -130,7 +130,7 @@ class EtapaTutorial extends Component {
 
   componentWillUnmount = () => {
     if (this.state.item.callbackDepois) this.state.item.callbackDepois();
-    hotkeys.setScope('app');
+    hotkeys.setScope('main');
     this.removerCss();
     window.removeEventListener('resize', this.funcaoResize);
     window.removeEventListener('click', this.funcaoResize);

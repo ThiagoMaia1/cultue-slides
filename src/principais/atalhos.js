@@ -28,7 +28,7 @@ const inicializarHotkeys = () => {
         }
     })
     
-    hotkeys('esc,ctrl+o,ctrl+d,ctrl+m,ctrl+i,ctrl+b,ctrl+l,ctrl+e,ctrl+f,up,left,down,right', 'app', (e, handler)=> {
+    hotkeys('esc,ctrl+o,ctrl+d,ctrl+m,ctrl+i,ctrl+b,ctrl+l,ctrl+e,ctrl+f,up,left,down,right', 'main', (e, handler)=> {
         e.preventDefault();
         const state = store.getState();
         switch (handler.key) {

@@ -44,7 +44,7 @@ const listaBoxes = {
       {texto: 'Clique ou pressione F5 para ativar o modo de apresentação', 
        arrow: {posicao: 'bottomCenter', posicaoChildren: 'left', selectorElemento: '#ativar-tela-cheia'},
        selectorElemento: '#borda-slide-mestre',
-       callbackAntes: () => hotkeys.setScope('app'),
+       callbackAntes: () => hotkeys.setScope('main'),
        callbackDepois: () => hotkeys.setScope('tutorial'),
        evento: {listener: 'fullscreenchange'}
       }
@@ -53,7 +53,7 @@ const listaBoxes = {
       {texto: 'Clique no slide, ou utilize as setas para navegar', 
        arrow: {posicao: 'centerRight', posicaoChildren: 'bottom'},
        selectorElemento: '#ordem-elementos',
-       callbackAntes: () => hotkeys.setScope('app'),
+       callbackAntes: () => hotkeys.setScope('main'),
        callbackDepois: () => hotkeys.setScope('tutorial'),
        evento: {listener: 'redux', alvo: '.present.selecionado', timeout: 500}},
       {texto: 'Arraste um slide ou grupo de slides para reordenar a apresentação', 

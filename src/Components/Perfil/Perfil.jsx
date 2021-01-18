@@ -27,7 +27,7 @@ class Perfil extends React.Component {
             <Router>
                 <div id='perfil'>
                     <div id='barra-lateral-perfil'>
-                        <SetaVoltar title='Voltar ao App' callback={() => this.props.history.push('/app/#/' + store.getState().present.apresentacao.id)}
+                        <SetaVoltar title='Voltar ao App' callback={() => this.props.history.push('/main/#/' + store.getState().present.apresentacao.id)}
                                     tamanhoIcone={window.innerWidth*0.05}/>
                         <div id='menu-perfil'>
                             {paginasPerfil.map(p => 

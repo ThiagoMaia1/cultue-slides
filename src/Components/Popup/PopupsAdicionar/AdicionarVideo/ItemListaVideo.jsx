@@ -18,7 +18,7 @@ class ItemListaVideo extends React.Component {
     render() {
         return (
             <div>
-                {this.props.idBuscarLetra === this.props.musica.id ? <Carregando tamanho={3} noCanto={true}/> : null}
+                {this.props.idBuscarLetra === this.props.musica.id ? <Carregando tamanho={0.1} noCanto={true}/> : null}
                 <button key={this.props.musica.id} className='itens sombrear-selecao' onClick={() => {
                     this.props.buscarLetra(this.props.musica.id)}}>
                     <b>{this.props.musica.title} - </b>{this.props.musica.band}

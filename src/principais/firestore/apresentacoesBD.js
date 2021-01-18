@@ -84,7 +84,7 @@ export const definirApresentacaoAtiva = async (usuario, apresentacao = {}, eleme
   }
   delete novaApresentacao.elementos;
   novaApresentacao = {...novaApresentacao, zerada };
-  if (mudarURL) history.replace('/app' + (novaApresentacao.id ? '/#/' + novaApresentacao.id : ''));
+  if (mudarURL) history.replace('/main' + (novaApresentacao.id ? '/#/' + novaApresentacao.id : ''));
   store.dispatch({type: 'definir-apresentacao-ativa', apresentacao: novaApresentacao, elementos, ratio})
 }
 
@@ -189,7 +189,7 @@ export const getApresentacaoComLocation = async location => {
   let apresentacao;
   if (location.hash) {
     let idHash = getIdHash(location);
-    let temApp = location.pathname === '/app/';
+    let temApp = location.pathname === '/main/';
     console.log(temApp)
     let getApresentacao = temApp 
                           ? getApresentacaoComId 

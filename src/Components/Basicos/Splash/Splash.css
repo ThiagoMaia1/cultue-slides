@@ -58,3 +58,7 @@
 #fundo-animacao-3d > * {
     position: absolute;
 }
+
+.wraper-loading-splash {
+    margin:20px;
+}

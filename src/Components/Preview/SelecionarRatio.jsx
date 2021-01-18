@@ -2,11 +2,10 @@ import React from 'react';
 import { connect } from 'react-redux';
 import './SelecionarRatio.css';
 import { BsAspectRatio } from 'react-icons/bs';
-import { ratioTela } from '../../principais/firestore/apresentacoesBD';
 import { maximoDivisorComum } from '../../principais/FuncoesGerais';
 
 let opcoesRatio = [
-   ,{width: 1400, height: 1050}
+    {width: 1400, height: 1050}
    ,{width: 1920, height: 1200}
    ,{width: 1920, height: 1080}
 ];

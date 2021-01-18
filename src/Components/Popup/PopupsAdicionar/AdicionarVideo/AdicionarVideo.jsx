@@ -24,7 +24,7 @@ class AdicionarVideo extends Component {
     }
     
     toggleCarregador (estado) {
-        this.setState({carregando: estado ? <Carregando tamanho={3} noCanto={true}/> : null});
+        this.setState({carregando: estado ? <Carregando tamanho={0.1} noCanto={true}/> : null});
     }
 
     pegarMusicas (termo){

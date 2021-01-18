@@ -15,7 +15,7 @@ import hotkeys from 'hotkeys-js';
 
 class App extends Component {
 
-  componentDidMount = () => hotkeys.setScope('app');
+  componentDidMount = () => hotkeys.setScope('main');
 
   render() {
     let { autorizacao, formatoExportacao } = this.props.apresentacao;

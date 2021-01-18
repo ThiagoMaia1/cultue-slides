@@ -157,7 +157,7 @@ export const reducerElementos = function (state = defaultList, action, usuario) 
       toggleFullscreen(novoModo ? document.getElementById('borda-slide-mestre') : null);
       novoModo
         ? hotkeys.setScope('apresentacao')
-        : hotkeys.setScope('app')
+        : hotkeys.setScope('main')
       if (novoModo) sel = selecionadoOffset(state.elementos, sel, 0, true);
       return {...state, modoApresentacao: novoModo, selecionado: sel};
     default:

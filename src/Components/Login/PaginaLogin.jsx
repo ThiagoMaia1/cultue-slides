@@ -38,7 +38,7 @@ class PaginaLogin extends React.Component {
     getBase = () => [0, 0];
 
     render() {
-        if (this.props.idUsuario) return <Redirect to='/app'/>
+        if (this.props.idUsuario) return <Redirect to='/main'/>
         return (
             <div onMouseMove={this.onMouseMove} onMouseLeave={this.onMouseLeave} onMouseEnter={this.onMouseEnter} onClick={() => this.deslocamento = [0, 0]}>
                 <div id='container-login' className='fundo-login'>
@@ -46,7 +46,7 @@ class PaginaLogin extends React.Component {
                         <div className='quadro-centralizado quadro-navbar'>
                             <Login history={this.props.history}/>
                         </div>
-                        <div id='comece-usar' className='botao-azul' onClick={() => this.props.history.push('/app')}>
+                        <div id='comece-usar' className='botao-azul' onClick={() => this.props.history.push('/main')}>
                             <div>Comece a Usar</div>
                         </div>
                     </div>

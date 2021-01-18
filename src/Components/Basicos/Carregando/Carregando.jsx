@@ -1,4 +1,5 @@
 import React from 'react';
+import './Carregando.css';
 
 const estiloNaoClique = {userSelect: 'none', clickEvents: 'none'}
 
@@ -8,55 +9,38 @@ const CarregandoNoCanto = (props) => (
     </div>
 )
 
-const CirculoCarregando = props => {
-   var p = props.propsImagem;
-   return <img src={require('./' + p.imagem)} alt={''} 
-               style={{transform: 'rotate(' + p.angulo + 'deg)', height: p.tamanho, width: p.tamanho, zIndex: 20, ...estiloNaoClique, ...p.style}}/>
+const CirculoCarregando = ({tamanho, alternarCor, style, corFundo}) => {
+   return (
+        <div class="wraper" 
+            style={{
+                '--tamanho-loading': tamanho, 
+                '--cor-fundo': corFundo || 'white',
+                zIndex: 20, 
+                ...estiloNaoClique, 
+                borderColor: alternarCor ? '' : 'var(--azul-forte)',
+                ...style
+            }}>
+            <div className='container-arc'>
+                <div class="arc arc_start"></div>    
+                <div class="arc arc_end"></div>
+                <div class="arc arc_end2"></div>
+                <div class="arc arc_end3"></div>
+                <div class="arc arc_tampar"></div>
+            </div> 
+        </div>
+   )
 }
 
-class Carregando extends React.Component {
-  
-    constructor (props) {
-        super(props);
-        this.state = {angulo: 0}
-        this.proporcaoVelocidade = this.props.proporcaoVelocidade || 1;
-        this.tamanho = this.props.tamanho + 'vh';
-        this.imagem = (this.props.tamanho < 5) ? 'CarregandoPequeno.svg' : 'Carregando.svg';
-    }
-
-    componentDidMount() {
-        this.idTimer = setInterval(() => this.rodar(), 10)
-    }
-
-    componentWillUnmount() {
-        clearInterval(this.idTimer);
-    }
-
-    rodar() {
-        var angulo = this.state.angulo + 5*this.proporcaoVelocidade;
-        if (angulo > 360) angulo -= 360;
-        this.setState({angulo: angulo})
-    }
-
-    render() {
-        var propsImagem = {
-            tamanho: this.tamanho, 
-            angulo:this.state.angulo, 
-            style: this.props.style, 
-            imagem:this.imagem
-        }
-        if(this.props.noCanto) {
-            return (
-                <CarregandoNoCanto>
-                    <CirculoCarregando propsImagem={propsImagem}/>
-                </CarregandoNoCanto>
-            )
-        } else {
-            return (
-                <CirculoCarregando propsImagem={propsImagem}/>
-            )
-        }
+export default function Carregando (props) {
+    if(props.noCanto) {
+        return (
+            <CarregandoNoCanto>
+                <CirculoCarregando {...props}/>
+            </CarregandoNoCanto>
+        )
+    } else {
+        return (
+            <CirculoCarregando {...props}/>
+        )
     }
 };
-  
-export default Carregando;

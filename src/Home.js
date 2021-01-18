@@ -15,7 +15,7 @@ import history from './principais/history';
 import { PersistGate } from 'redux-persist/integration/react';
 import OnlineGate from './Components/Basicos/OnlineGate/OnlineGate';
 
-const paginas = [{nome: 'app', componente: App},
+const paginas = [{nome: 'main', componente: App},
                  {nome: 'login', componente: PaginaLogin},
                  {nome: 'perfil', componente: Perfil, exigeLogin: true},
                  {nome: 'splash', componente: Splash, semSplash: true},
