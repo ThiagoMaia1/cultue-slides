@@ -195,10 +195,10 @@ ol {
   word-break: break-all;
 }
 
-/* .elemento-slide-estilizado {
-  font-style: italic;
+.elemento-slide-estilizado {
+  background-color: rgb(221, 221, 255);
 }
 
 .fade-estilizado {
-  transition: backgound-color 2s;
-} */
+  transition: background-color 0.2s;
+}

@@ -15,9 +15,10 @@ const CirculoCarregando = ({tamanho, alternarCor, style, corFundo}) => {
             style={{
                 '--tamanho-loading': tamanho, 
                 '--cor-fundo': corFundo || 'white',
+                '--largura-borda': tamanho < 0.2 ? 1.5 : 1,
+                '--animacao-mudar-cor': alternarCor ? 'mudarCor' : '',
                 zIndex: 20, 
                 ...estiloNaoClique, 
-                borderColor: alternarCor ? '' : 'var(--azul-forte)',
                 ...style
             }}>
             <div className='container-arc'>

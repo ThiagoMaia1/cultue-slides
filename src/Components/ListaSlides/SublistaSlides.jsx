@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { getNumeroVersiculo } from '../Preview/TextoPreview.jsx';
 import { connect } from 'react-redux';
 
-const eEstiloVazio = estilo => {
+export const eEstiloVazio = estilo => {
     var keysEstilo = Object.keys(estilo);
     for (var k of keysEstilo) {
         var keysObjeto = Object.keys(estilo[k]).filter(k => k !== 'paddingBottom');

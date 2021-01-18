@@ -109,6 +109,7 @@
 //   ✔️ Erro ao enviar fundo personalizado
 //   ✔️ Slide mestre pode ser duplicado
 //   ✔️ HTML no e-mail indo sem CSS/Scripts
+//   ✔️ Clonar estilo está uma bosta
 //   ✔️ Carrossel do Input Imagem não vai até o final.*/
 // Errinhos:
 //   ✔️ Click fora tutorial
@@ -118,7 +119,6 @@
 //   Padding bottom redividir slides um pouco errado
 //   Redividir quando o texto de um slide é todo deletado
 //   Edição do conteúdo do parágrafo dando alguns erros (falha ao perder foco, não exibe cursor, markup aparecendo)
-//   Clonar estilo está uma bosta
 //   Alguns cálculos do "Redimensionavel" estão errados
 //   Soltar click do Redimensionavel
 //   Exportação PowerPoint: Tamanho fonte e lineHeight, round border das imagens, titulos abaixo/invisíveis

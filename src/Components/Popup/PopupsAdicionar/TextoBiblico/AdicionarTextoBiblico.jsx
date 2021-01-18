@@ -46,7 +46,7 @@ class AdicionarTextoBiblico extends Component {
     }
 
     requestVersos(ref) {
-        this.setState({carregando:<Carregando tamanho={0.1} noCanto={true} style={{backgroundColor:'white'}} />})
+        this.setState({carregando:<Carregando tamanho={0.12} noCanto={true} style={{backgroundColor:'white'}} />})
         this.referenciaLimpa = this.getReferenciaLimpa(ref);
         this.versiculos = []; 
         this.contadorRef = 0;

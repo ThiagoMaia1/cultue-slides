@@ -1,7 +1,7 @@
 .wraper {
         position:relative;
         --cor: var(--azul-forte);
-        animation: mudarCor 5.7s linear 0.95s infinite;
+        animation: var(--animacao-mudar-cor) 5.7s linear 0.8s infinite;
 }
 
 .container-arc {
@@ -19,7 +19,8 @@
         width: 100%;
         height: 100%;
         border-radius: 100%;
-        border: calc(var(--tamanho-loading)*3vh) solid transparent;
+        border: calc(var(--tamanho-loading)*3vh*var(--largura-borda)) solid transparent;
+        transition: border-color 0.3s ease-in-out;
 }
 
 .arc_start {
@@ -43,11 +44,11 @@
 }
 
 .arc_tampar {
-        top: calc(var(--tamanho-loading)*-1vh);
-        left: calc(var(--tamanho-loading)*-1vh);
-        width: calc(var(--tamanho-loading)*27vh);
-        height: calc(var(--tamanho-loading)*27vh);
-        border: calc(var(--tamanho-loading)*5vh) solid;
+        top: calc(var(--tamanho-loading)*-0.5vh*var(--largura-borda));
+        left: calc(var(--tamanho-loading)*-0.7vh*var(--largura-borda));
+        width: calc(var(--tamanho-loading)*(26vh + 2vh*var(--largura-borda)));
+        height: calc(var(--tamanho-loading)*(26vh + 2vh*var(--largura-borda)));
+        border: calc(var(--tamanho-loading)*4.5vh*var(--largura-borda)) solid;
         border-color: var(--cor-fundo) transparent transparent transparent;
         /* animation: expandir 0.95s linear alternate infinite; */
 }
@@ -109,10 +110,10 @@
                 --cor: var(--azul-forte);
         }
         33% {
-                --cor: var(--azul-fraco);
+                --cor: var(--azul-claro);
         }
         66% {
-                --cor: var(--platinum-forte);        
+                --cor: rgb(202, 202, 202);        
         }
         100% {
                 --cor: var(--azul-forte);

@@ -28,7 +28,7 @@
 
 .container-adicionar {
   width: 18vw;
-  margin: 0 6%;
+  margin: 0 5%;
   position: relative;
 }
 
@@ -75,7 +75,7 @@
 
 #adicionar-slide {
   position: relative;
-  width: 18vw;
+  width: 100%;
   background-color: var(--azul-forte);
   margin: 0;
 }

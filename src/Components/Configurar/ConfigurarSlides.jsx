@@ -58,7 +58,7 @@ const listaBotoesAlinhamento = [{direcao: 'left', titulo: 'Alinhado à Esquerda'
 ];
 
 const listaSliders = [{rotulo: 'Fonte', aba: 'paragrafo', atributo: 'fontSize', min: 1, max: 3.5, step: 0.01,  redividir: true},
-                      {rotulo: 'Margem', aba: 'paragrafo', atributo: 'paddingRight', min: 0, max: 0.4, step: 0.01,  redividir: true},
+                      {rotulo: 'Margem', aba: 'paragrafo', atributo: 'paddingRight', min: 0, max: 0.5, step: 0.01,  redividir: true},
                       {rotulo: 'Espaça-\nmento', aba: 'paragrafo', atributo: 'lineHeight', min: 0.5, max: 3, step: 0.1,  redividir: true},
                       {rotulo: 'Fonte', aba: 'titulo', atributo: 'fontSize', min: 1, max: 7, step: 0.01,  redividir: true},
                       {rotulo: 'Margem', aba: 'titulo', atributo: 'paddingRight', min: 0, max: 0.4, step: 0.01,  redividir: true},
@@ -319,20 +319,14 @@ class ConfigurarSlides extends Component {
 
   aplicarEstiloAoMestre = () => {
     var sel = this.props.selecionado;
-    var aba = this.props.abaAtiva;
-    var valor;
-    if (aba === 'texto') {
-      aba = 'estilo';
-      valor = this.props.slidePreview.estilo;
-    } else {
-      valor = this.props.slidePreview.estilo[aba];
-    }
     this.props.dispatch(
       {type: 'editar-slide', 
-       objeto: aba, 
-       valor: valor,
-       selecionado: {elemento: sel.slide !== 0 ? sel.elemento : 0,
-                    slide: 0}
+       objeto: 'estilo', 
+       valor: this.props.slidePreview.estilo,
+       selecionado: {
+          elemento: sel.slide !== 0 ? sel.elemento : 0,
+          slide: 0
+        }
       }
     );
   }

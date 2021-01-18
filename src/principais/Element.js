@@ -354,3 +354,7 @@ function linhasTrecho(texto, fontStyle, larguraLinha, widthInicial = 0) {
   }
   return [widthParcial];
 }
+
+export const eEstiloLimpo = slide => {
+  
+}

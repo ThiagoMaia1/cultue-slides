@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
-import SublistaSlides from './SublistaSlides';
+import SublistaSlides, { eEstiloVazio } from './SublistaSlides';
 import { connect } from 'react-redux';
 import { ativarPopupConfirmacao } from '../Popup/PopupConfirmacao';
 import { MdEdit } from 'react-icons/md';
-import { getNomeInterfaceTipo, newEstilo, getDadosMensagem } from '../../principais/Element';
-import { objetosSaoIguais } from '../../principais/FuncoesGerais';
+import { getNomeInterfaceTipo, getDadosMensagem } from '../../principais/Element';
 import ArrowColapsar from '../Basicos/ArrowColapsar/ArrowColapsar';
 import MenuBotaoDireito from '../Basicos/MenuBotaoDireito/MenuBotaoDireito';
 
@@ -109,7 +108,9 @@ class ItemListaSlides extends Component {
                             marginBottom: this.props.placeholder.posicao === i 
                             ? this.props.placeholder.tamanho + 'px' 
                             : (this.eSelecionado(i) ? this.getMargin(elemento) + (this.props.ultimo ? -2 : 0.4) + 'vh' : (this.props.ultimo ? '-1.5vh': ''))}}>
-                    <div data-id={i} className='itens lista-slides' onClick={() => this.props.marcarSelecionado(i, (editavel ? 0 : 0 + (elemento.slides.length > 1)))} ref={this.props.selecionado.slide ? null : this.props.objRef.slide}>
+                    <div data-id={i} 
+                         className={'itens lista-slides fade-estilizado ' + (!eEstiloVazio(elemento.slides[0].estilo) ? 'elemento-slide-estilizado' : '')} 
+                         onClick={() => this.props.marcarSelecionado(i, (editavel ? 0 : 0 + (elemento.slides.length > 1)))} ref={this.props.selecionado.slide ? null : this.props.objRef.slide}>
                         {editavel
                             ? <div className='quadradinho-canto'>
                                   <div data-id={i} className='botao-quadradinho' onClick={e => this.botaoExcluirElemento(e)}>✕</div>
@@ -119,7 +120,7 @@ class ItemListaSlides extends Component {
                               </div>
                             : null
                         }
-                        <div className={'texto-lista-slides fade-estilizado ' + (!objetosSaoIguais(elemento.slides[0].estilo, newEstilo()) ? 'elemento-slide-estilizado' : '')}>
+                        <div className='texto-lista-slides'>
                             <b> {i}. {getNomeInterfaceTipo(elemento.tipo)}: </b>{(elemento.tipo === 'Imagem' && !elemento.titulo) ? elemento.imagens[0].alt : elemento.titulo}
                         </div>
                         {!this.state.colapsa ? null :

@@ -25,7 +25,7 @@ class ItemListaMusica extends React.Component {
         return (
             <div className='item-lista-musica'>
                 {eEssa && carregando
-                    ? <Carregando tamanho={0.1} corFundo={'transparent'} noCanto={true}/> 
+                    ? <Carregando tamanho={0.12} corFundo={'transparent'} noCanto={true}/> 
                     : null
                 }
                 <div key={this.props.musica.id} className='itens' 
