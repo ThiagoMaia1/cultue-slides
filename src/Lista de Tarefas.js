@@ -120,11 +120,12 @@
 //   Corrigir redivisão
 //   Redividir quando o texto de um slide é todo deletado
 //   Edição do conteúdo do parágrafo dando alguns erros (falha ao perder foco, não exibe cursor, markup aparecendo)
-//   Exportação PowerPoint: Tamanho fonte e lineHeight, round border das imagens, titulos abaixo/invisíveis
+//   Exportação PowerPoint: Tamanho fonte e lineHeight, round border/espelhar imagens, titulos abaixo/invisíveis
 //   Corrigir envio automático do github
 //   Branquear menu de configurações ao ativar tutorial
 //   Link para download exibindo a apresentação antes de ir pra página de download
 //   Redimensionavel distorcendo ao aproximar do tamanho do quadro
+//   Posição do loading no ItemListaMusica
 
 /*// Features essenciais:
 //   ✔️ Envio de imagens
@@ -241,6 +242,7 @@
 //   Limitar número de imagens/limpar storage de imagens não utilizadas
 //   Considerar border radius para o cursor da imagem redimensionável
 //   Filtrar fundos personalizados/Pesquisar fundos
+//   Reenquadrar imagem
 //   Logo no e-mail de forma que possa ser lida offline*/
 //
 // Negócio:
