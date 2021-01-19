@@ -117,7 +117,7 @@ class Preview extends Component {
         const eMestre = slidePreview.eMestre;
         return (
             <div id='centralizador-preview'>
-                <div id='borda-slide-mestre' style={{height: this.props.ratio.height*proporcao + 0.045*window.innerHeight, 
+                <div id='borda-slide-mestre' style={{height: this.props.ratio.height*proporcao + 0.05*window.innerHeight, 
                                              visibility: eMestre ? '' : 'hidden',
                                              padding: telaCheia ? '' : '1vh',
                                              ...this.realcarElemento('tampao', 'fora')}}>
@@ -145,9 +145,7 @@ class Preview extends Component {
                         </button>
                     </SlideFormatado>
                     {telaCheia && !eMestre ? null
-                        : <div id="texto-slide-mestre" 
-                               style={{textAlign: 'center', ...(telaCheia ? {padding: '1vh 0', fontSize: '110%'} : {paddingTop: '0.7vh'}), 
-                                       maxWidth: proporcao*this.props.ratio.width}}>
+                        : <div id='texto-slide-mestre' style={{maxWidth: proporcao*this.props.ratio.width}}>
                             Slide-Mestre - {slidePreview.selecionado.elemento === 0 ? 'Global' : slidePreview.nomeLongoElemento}
                         </div>
                     }

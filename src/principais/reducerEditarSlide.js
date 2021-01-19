@@ -39,6 +39,8 @@ function editarTextoArray({valor, s, numero}) {
 }
 
 function editarInsetImagem({est, alinhamento, ratio}) {
+    let el = document.querySelectorAll('#preview #quadro-redimensionar')[0];
+    el.style.transition = 'left 0.5s, right 0.5s, top 0.5s, bottom 0.5s';
     let { proporcaoNatural } = est.imagem;
     let { left, right, top, bottom } = listaDirecoes.reduce((resultado, d) => {
         resultado[d] = removerPorcentagem(est.imagem[d]);
@@ -56,14 +58,8 @@ function editarInsetImagem({est, alinhamento, ratio}) {
         case 'cobrir':
             let proporcaoJanela = ratio.width/ratio.height;
             let proporcaoRelativa = proporcaoNatural/proporcaoJanela;
-            if (proporcaoRelativa  > 1) {
-                novo.left = 0;
-                novo.top = 1 - 1/proporcaoRelativa;
-            }
-            if (proporcaoRelativa < 1) {
-                novo.top = 0; 
-                novo.left = 1 - 1*proporcaoRelativa;
-            }
+            novo.top = Math.max(0, 1 - 1/proporcaoRelativa)/2;
+            novo.left = Math.max(0, 1 - 1*proporcaoRelativa)/2;
             break;
         default:
             return;
@@ -83,6 +79,7 @@ function editarInsetImagem({est, alinhamento, ratio}) {
         objRetorno[d] = getNovo(d);
     }
     est.imagem = {...est.imagem, ...objRetorno};
+    setTimeout(() => el.style.transition = null, 1500);
 }
 
 export default function reducerEditarSlide ({elementos, sel, action, ratio}) {

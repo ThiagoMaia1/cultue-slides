@@ -92,7 +92,7 @@ function scriptHTML () {
 
   function adicionarEstiloTamanho() {
     var sheets = document.styleSheets;
-    var rule = sheets[sheets.length - 2].cssRules[0];
+    var rule = sheets[sheets.length - 3].cssRules[0];
     var slide = document.getElementById('preview-fake0');
     var quadro = document.getElementById('container-apresentacao');
     var scale = Math.min(quadro.offsetWidth/slide.offsetWidth, quadro.offsetHeight/ slide.offsetHeight);

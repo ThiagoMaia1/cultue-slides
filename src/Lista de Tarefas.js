@@ -110,21 +110,21 @@
 //   ✔️ Slide mestre pode ser duplicado
 //   ✔️ HTML no e-mail indo sem CSS/Scripts
 //   ✔️ Clonar estilo está uma bosta
+//   ✔️ Soltar click do Redimensionavel
+//   ✔️ Alguns cálculos do "Redimensionavel" estão errados
 //   ✔️ Carrossel do Input Imagem não vai até o final.*/
 // Errinhos:
 //   ✔️ Click fora tutorial
-//   Padding dando NaN (?)
-//   Redividir slides às vezes não deleta os últimos (?)
-//   Drag do Input Imagem (?)
-//   Padding bottom redividir slides um pouco errado
+//   Drag do Input Imagem falha (raramente) (?)
+//   Padding dando NaN
+//   Corrigir redivisão
 //   Redividir quando o texto de um slide é todo deletado
 //   Edição do conteúdo do parágrafo dando alguns erros (falha ao perder foco, não exibe cursor, markup aparecendo)
-//   Alguns cálculos do "Redimensionavel" estão errados
-//   Soltar click do Redimensionavel
 //   Exportação PowerPoint: Tamanho fonte e lineHeight, round border das imagens, titulos abaixo/invisíveis
 //   Corrigir envio automático do github
 //   Branquear menu de configurações ao ativar tutorial
 //   Link para download exibindo a apresentação antes de ir pra página de download
+//   Redimensionavel distorcendo ao aproximar do tamanho do quadro
 
 /*// Features essenciais:
 //   ✔️ Envio de imagens
@@ -186,10 +186,11 @@
 //   ✔️ B/W na exportação HTML
 //   ✔️ Click fora da galeria de fundos
 //   ✔️ Fullscreen com double click
+//   ✔️ Alterar rótulos do ratio para o formato: "16:9"
+//   ✔️ Indicar que há estilização nos slides/grupos
 //   ✔️ Lista de atalhos do modo apresentação.*/
 //   Criar popup para reupload de imagem
 //   Atalhos funcionarem mesmo com foco nos inputs
-//   Alterar rótulos do ratio para o formato: "16:9"
 
 /*/ Features dispensáveis:
 //   Selecionar/Arrastar múltiplos grupos
@@ -211,7 +212,6 @@
 //   Adicionar logo da igreja (upload ou a partir de lista de logos famosas de denominações)
 //   Otimizar mobile
 //   Reutilizar links de compartilhamento
-//   Indicar que há estilização nos slides/grupos
 //   Página de redefinição de senha em português
 //   Fundo em gradiente
 //   Shenanigans de segunda tela
@@ -257,3 +257,4 @@
 //   Criar canal do youtube
 //   Gravar tutoriais em vídeo
 //   Versão em inglês
+//   Criar termos de uso

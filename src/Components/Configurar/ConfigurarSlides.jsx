@@ -370,7 +370,7 @@ class ConfigurarSlides extends Component {
         </div>
         {this.state.painelCor}
         <div id='configuracoes'>
-          {aba === 'tampao' 
+          {aba === 'tampao' || aba === 'imagem' 
             ? <div className='botoes-direita float'>
                 {botoesDireita}
               </div> 

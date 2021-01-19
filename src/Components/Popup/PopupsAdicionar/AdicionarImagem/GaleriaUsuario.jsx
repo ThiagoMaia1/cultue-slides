@@ -8,7 +8,8 @@ const GaleriaUsuario = ({callback, imagensUsuario = {}, subconjunto = null, fech
     let imagens = (subconjunto 
                    ? imagensUsuario[subconjunto]
                    : [...new Set(Object.keys(imagensUsuario).reduce((resultado, k) => 
-                        [...resultado, ...imagensUsuario[k]], []))]) || [];
+                        [...resultado, ...imagensUsuario[k]]
+                    , []))]) || [];
     
     const apagar = i => {
         let url = imagens[i];

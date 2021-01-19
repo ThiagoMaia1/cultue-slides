@@ -9,14 +9,19 @@ class Redimensionavel extends Component {
     constructor (props) {
         super(props);
         this.relativoAoRatio = {width: 1, height: 1};
-        this.state = {cursor: 'initial', insetImagem: getInset(props.insetInicial)};
+        this.state = {
+            cursor: 'initial', 
+            insetImagem: getInset(props.insetInicial), 
+            espelhadoVertical: props.espelhadoVertical, 
+            espelhadoHorizontal: props.espelhadoHorizontal
+        };
     }
 
     getPosicoesMouse = e => {
         const pai = e.currentTarget.parentNode.getBoundingClientRect();
         var filho = e.currentTarget.firstChild.getBoundingClientRect();
         filho = {left: filho.left - pai.left, top: filho.top - pai.top, width: filho.width, height: filho.height}
-        var proporcaoPai = pai.width/pai.height;
+        let proporcaoPai = pai.width/pai.height;
         this.proporcaoRelativa = this.props.proporcao/proporcaoPai;
         this.relativoAoRatio = this.props.proporcao > proporcaoPai
                                 ? {width: 1, height: 1/this.proporcaoRelativa}
@@ -80,8 +85,9 @@ class Redimensionavel extends Component {
     }
 
     resize = pos => {
-        const xRelativo = Math.min(pos.x/pos.pai.width, this.relativoAoRatio.width);
-        const yRelativo = Math.min(pos.y/pos.pai.height, this.relativoAoRatio.height);
+        
+        const xRelativo = pos.x/pos.pai.width;
+        const yRelativo = pos.y/pos.pai.height;
         var novoInset = getInsetNum(this.state.insetImagem);
 
         if(this.bordaDireita) {novoInset.right = 1 - xRelativo}
@@ -114,28 +120,32 @@ class Redimensionavel extends Component {
     }
 
     getDiferenca = (inset, direcao1, direcao2) => {
-        let valor = 1 - (1 - inset[direcao1] - inset[direcao2]);
-        if (direcao1 === 'right') return valor*this.proporcaoRelativa;
-        return valor/this.proporcaoRelativa;
+        let valor = 1 - (inset[direcao1] + inset[direcao2]);
+        let prop = this.proporcaoRelativa;
+        if (direcao1 === 'right') return 1 - valor/prop;
+        return 1 - valor*prop;
     }
 
     corrigirProporcao = novoInset => {
         if (!this.props.proporcao) return novoInset;
-        var diferenca;
         if (this.bordaDireita || this.bordaEsquerda) {
-            diferenca = this.getDiferenca(novoInset, 'right', 'left');
-            if(this.bordaSuperior) {
-                novoInset.top = diferenca - novoInset.bottom;
-            } else {
-                novoInset.bottom = diferenca - novoInset.top;
+            let bottomMaisTop = this.getDiferenca(novoInset, 'right', 'left');
+            if(this.bordaSuperior) novoInset.top = bottomMaisTop - novoInset.bottom;
+            else if (this.bordaInferior) novoInset.bottom = bottomMaisTop - novoInset.top;
+            else {
+                let alturaInicial = 1 - novoInset.top - novoInset.bottom;
+                let novaAltura = 1 - bottomMaisTop;
+                let diferencaAlturaDividida = (novaAltura - alturaInicial)/2;
+                novoInset.top -= diferencaAlturaDividida;
+                novoInset.bottom -= diferencaAlturaDividida;
             }
         } else {
-            diferenca = this.getDiferenca(novoInset, 'bottom', 'top');
-            if(this.bordaEsquerda) {
-                novoInset.left = diferenca - novoInset.right;
-            } else {
-                novoInset.right = diferenca - novoInset.left;
-            }
+            let leftMaisRight = this.getDiferenca(novoInset, 'bottom', 'top');
+            let larguraInicial = 1 - novoInset.left - novoInset.right;
+            let novaLargura = 1 - leftMaisRight;
+            let diferencaLarguraDividida = (novaLargura - larguraInicial)/2;
+            novoInset.left -= diferencaLarguraDividida;
+            novoInset.right -= diferencaLarguraDividida;
         }
         return novoInset;
     }
@@ -155,35 +165,34 @@ class Redimensionavel extends Component {
     }
 
     corrigirInversao = novoInset => {
-        if (1 - novoInset.right < novoInset.left)
+        if ((1 - novoInset.right) < (novoInset.left) && (this.bordaEsquerda || this.bordaDireita))
             novoInset = this.inverterHorizontal(novoInset);
-        if (1 - novoInset.bottom < novoInset.top)
+        if ((1 - novoInset.bottom) < (novoInset.top) && (this.bordaSuperior || this.bordaInferior))
             novoInset = this.inverterVertical(novoInset);
         return novoInset;
     }
 
-    setClicadoTrue = () => {
-        this.clicado = true;
+    setClicado = e => {
+        let clicado = e.type === 'mousedown';
+        this.clicado = clicado;
+        if (clicado) 
+            this.props.callback({
+                ...this.state.insetImagem, 
+                espelhadoVertical: this.state.espelhadoVertical || false, 
+                espelhadoHorizontal: this.state.espelhadoHorizontal || false
+            });
     }
 
-    setClicadoFalse = () => {
-        this.clicado = false;
-        this.props.callback(this.state.insetImagem);
-    }
+    setProporcaoLivre = e => {
+        if(/Shift/.test(e.code)) this.proporcaoLivre = e.type === 'keydown';
 
-    setProporcaoLivreTrue = e => {
-        if(/Shift/.test(e.code)) this.proporcaoLivre = true;
-    }
-
-    setProporcaoLivreFalse = e => {
-        if(/Shift/.test(e.code)) this.proporcaoLivre = false;
     }
 
     componentDidMount = () => {
-        window.addEventListener('mousedown', this.setClicadoTrue);
-        window.addEventListener('mouseup', this.setClicadoFalse);
-        window.addEventListener('keydown', this.setProporcaoLivreTrue);
-        window.addEventListener('keyup', this.setProporcaoLivreFalse);
+        window.addEventListener('mousedown', this.setClicado);
+        window.addEventListener('mouseup', this.setClicado);
+        window.addEventListener('keydown', this.setProporcaoLivre);
+        window.addEventListener('keyup', this.setProporcaoLivre);
     }
 
     componentDidUpdate = prevProps => {
@@ -200,10 +209,10 @@ class Redimensionavel extends Component {
     }
 
     componentWillUnmount = () => {
-        window.removeEventListener('mousedown', this.setClicadoTrue);
-        window.removeEventListener('mouseup', this.setClicadoFalse);
-        window.removeEventListener('keydown', this.setProporcaoLivreTrue);
-        window.removeEventListener('keyup', this.setProporcaoLivreFalse);
+        window.removeEventListener('mousedown', this.setClicado);
+        window.removeEventListener('mouseup', this.setClicado);
+        window.removeEventListener('keydown', this.setProporcaoLivre);
+        window.removeEventListener('keyup', this.setProporcaoLivre);
     }
 
     render () {
@@ -215,7 +224,7 @@ class Redimensionavel extends Component {
                                     ? 'vertical'
                                     : ''; 
         let { cursor } = this.state;
-        let { redimensionamentoAtivo, estilo, proporcao } = this.props;
+        let { redimensionamentoAtivo, estilo } = this.props;
         return (
             <div id='container-quadro-redimensionar' onMouseMove={this.onMouseMove} style={{cursor}}>
                 <div id='quadro-redimensionar' 
@@ -224,9 +233,6 @@ class Redimensionavel extends Component {
                     onDragStart={this.onDragStart}>
                         {this.props.children}
                 </div>
-                {listaDirecoes.map(l => l + ': ' + this.state.insetImagem[l]).join(', ')}
-                
-                Proporcao: {proporcao}
             </div>
         )
     }

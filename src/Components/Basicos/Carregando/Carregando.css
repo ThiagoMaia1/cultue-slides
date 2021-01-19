@@ -1,13 +1,13 @@
 .wraper {
         position:relative;
         --cor: var(--azul-forte);
-        animation: var(--animacao-mudar-cor) 5.7s linear 0.8s infinite;
+        animation: var(--animacao-mudar-cor) 4.8s linear 0.7s infinite;
 }
 
 .container-arc {
         width: auto;
         height: auto;
-        animation: girar 0.8s linear infinite;
+        animation: girar 5s linear infinite;
         width: calc(var(--tamanho-loading)*26vh);
         height: calc(var(--tamanho-loading)*26vh);
 }
@@ -21,26 +21,23 @@
         border-radius: 100%;
         border: calc(var(--tamanho-loading)*3vh*var(--largura-borda)) solid transparent;
         transition: border-color 0.3s ease-in-out;
+        border-color: var(--cor) transparent transparent transparent;
 }
 
 .arc_start {
-        border-color:var(--cor) transparent transparent transparent;
-        animation: expandir0 0.95s linear alternate infinite;
+        animation: quarto 1.6s ease-in-out infinite;
 }
 
 .arc_end {
-        border-color: var(--cor) transparent transparent transparent;
-        animation: expandir2 0.95s linear alternate infinite;
+        animation: primeiro 1.6s ease-in-out infinite;
 }
 
 .arc_end2 {
-        border-color: var(--cor) transparent transparent transparent;
-        animation: expandir3 0.95s linear alternate infinite;
+        animation: segundo 1.6s ease-in-out infinite;
 }
 
 .arc_end3 {
-        border-color: var(--cor) transparent transparent transparent;
-        animation: expandir4 0.95s linear alternate infinite;
+        animation: terceiro 1.6s ease-in-out infinite;
 }
 
 .arc_tampar {
@@ -48,9 +45,9 @@
         left: calc(var(--tamanho-loading)*-0.7vh*var(--largura-borda));
         width: calc(var(--tamanho-loading)*(26vh + 2vh*var(--largura-borda)));
         height: calc(var(--tamanho-loading)*(26vh + 2vh*var(--largura-borda)));
-        border: calc(var(--tamanho-loading)*4.5vh*var(--largura-borda)) solid;
+        border: calc(var(--tamanho-loading)*5vh*var(--largura-borda)) solid;
         border-color: var(--cor-fundo) transparent transparent transparent;
-        /* animation: expandir 0.95s linear alternate infinite; */
+        animation: expandir 1.6s ease-in-out infinite;
 }
 
 @keyframes girar {
@@ -63,47 +60,65 @@
 }
 
 @keyframes expandir {
-        from {
-                transform: rotate(0deg);
-      }
-      to {
-                transform: rotate(-90deg);
-      }
-}
-
-@keyframes expandir0 {
-        from {
-                transform: rotate(0deg);
-      }
-      to {
-                transform: rotate(90deg);
-      }
-}
-
-@keyframes expandir2 {
-        from {
-                transform: rotate(0deg);
-      }
-      to {
-                transform: rotate(180deg);
-      }
+        0% {
+                transform: rotate(2deg);
+        }
+        50% {
+                transform: rotate(272deg);
+        }
+        100% {
+                transform: rotate(362deg);
+        }
 } 
-@keyframes expandir3 {
-        from {
+
+@keyframes primeiro {
+        0% {
                 transform: rotate(0deg);
-      }
-      to {
+        }
+        50% {
                 transform: rotate(270deg);
-      }
-} 
-@keyframes expandir4 {
-        from {
-                transform: rotate(0deg);
-      }
-      to {
+        }
+        100% {
                 transform: rotate(360deg);
-      }
+        }
 } 
+
+@keyframes segundo {
+        0% {
+                transform: rotate(0deg);
+        }
+        50% {
+                transform: rotate(180deg);
+        }
+        100% {
+                transform: rotate(360deg);
+        }
+} 
+
+@keyframes terceiro {
+        0% {
+                transform: rotate(0deg);
+        }
+        50% {
+                transform: rotate(90deg);
+        }
+        100% {
+                transform: rotate(360deg);
+        }
+} 
+
+@keyframes quarto {
+        0% {
+                transform: rotate(0deg);
+        }
+        40% {
+                transform: rotate(0deg);
+        }
+        100% {
+                transform: rotate(360deg);
+        }
+} 
+
 
 @keyframes mudarCor {
         0% {

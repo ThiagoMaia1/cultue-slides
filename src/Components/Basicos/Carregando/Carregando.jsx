@@ -11,22 +11,22 @@ const CarregandoNoCanto = (props) => (
 
 const CirculoCarregando = ({tamanho, alternarCor, style, corFundo}) => {
    return (
-        <div class="wraper" 
+        <div className="wraper" 
             style={{
                 '--tamanho-loading': tamanho, 
                 '--cor-fundo': corFundo || 'white',
-                '--largura-borda': tamanho < 0.2 ? 1.5 : 1,
+                '--largura-borda': tamanho < 0.2 ? 1.5 : 0.7,
                 '--animacao-mudar-cor': alternarCor ? 'mudarCor' : '',
                 zIndex: 20, 
                 ...estiloNaoClique, 
                 ...style
             }}>
             <div className='container-arc'>
-                <div class="arc arc_start"></div>    
-                <div class="arc arc_end"></div>
-                <div class="arc arc_end2"></div>
-                <div class="arc arc_end3"></div>
-                <div class="arc arc_tampar"></div>
+                <div className="arc arc_start"></div>    
+                <div className="arc arc_end"></div>
+                <div className="arc arc_end2"></div>
+                <div className="arc arc_end3"></div>
+                <div className="arc arc_tampar"></div>
             </div> 
         </div>
    )
