@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useEffect } from 'react';
 import store, { persistor } from './index';
 import { Provider } from 'react-redux';
 import PopupConfirmacao from './Components/Popup/PopupConfirmacao';
@@ -14,6 +14,7 @@ import Propaganda from './Components/Propaganda/Propaganda';
 import history from './principais/history';
 import { PersistGate } from 'redux-persist/integration/react';
 import OnlineGate from './Components/Basicos/OnlineGate/OnlineGate';
+import { adicionarFontesPagina } from './Components/MenuExportacao/ModulosFontes';
 
 const paginas = [{nome: 'main', componente: App},
                  {nome: 'login', componente: PaginaLogin},
@@ -31,36 +32,38 @@ const paginas = [{nome: 'main', componente: App},
                  }}
 ]
 
-class Home extends Component {
-  
-  render() {
-    return (
-      <Provider store={store}>
-        <PersistGate loading={<Splash/>} persistor={persistor}>
-          <OnlineGate>
-            <Router history={history}>     
-                <Notificacoes/>
-                <Switch>
-                    {paginas.map(p => (
-                        <Route path={'/' + p.nome} key={p.nome}
-                              component={
-                                p.semSplash
-                                  ? p.componente
-                                  : sobreporSplash(p.nome, p.componente, p.exigeLogin, checarLogin, true, true, true)
-                                }
-                        />
-                        )    
-                    )};
-                    <Route render={() => <Redirect to='/login'/>} />
-                </Switch>
-            </Router>
-            <PopupConfirmacao/>
-            <Propaganda/>
-          </OnlineGate>
-        </PersistGate>
-      </Provider>
-    );
-  }
+const Home = () => {
+
+  useEffect(()=> {
+    adicionarFontesPagina();
+  }, [])
+
+  return (
+    <Provider store={store}>
+      <PersistGate loading={<Splash/>} persistor={persistor}>
+        <OnlineGate>
+          <Router history={history}>     
+              <Notificacoes/>
+              <Switch>
+                  {paginas.map(p => (
+                      <Route path={'/' + p.nome} key={p.nome}
+                            component={
+                              p.semSplash
+                                ? p.componente
+                                : sobreporSplash(p.nome, p.componente, p.exigeLogin, checarLogin, true, true, true)
+                              }
+                      />
+                      )    
+                  )};
+                  <Route render={() => <Redirect to='/login'/>} />
+              </Switch>
+          </Router>
+          <PopupConfirmacao/>
+          <Propaganda/>
+        </OnlineGate>
+      </PersistGate>
+    </Provider>
+  );
 }
 
 export default Home;

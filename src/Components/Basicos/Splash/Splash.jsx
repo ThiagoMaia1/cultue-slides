@@ -8,7 +8,7 @@ const Splash = () =>
   <div id="fundo-splash">
     <LogoCultue animado={true}/>
     <div className='wraper-loading-splash'>
-      <LoadingSplash/>
+    <LoadingSplash/>
     </div>
   </div>
   

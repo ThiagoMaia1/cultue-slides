@@ -193,7 +193,7 @@ img {
 #texto-slide-mestre {
     color: white;
     user-select: none;
-    padding-top: 1vh;
+    padding-top: 0.7vh;
     text-align: center;
     font-size: 110%;
 }

@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import './MenuBotaoDireito.css';
 import QuadroMenu from '../QuadroMenu/QuadroMenu';
-// import { objetosSaoIguais } from '../../../principais/FuncoesGerais';
 
 const estiloQuadro = {
     padding: 0,
@@ -48,7 +47,6 @@ class MenuBotaoDireito extends Component {
 
 export function QuadroOpcoes ({opcoes, callback, fecharPai, style = {}}) {
 
-    console.log(opcoes);
     return (
         <QuadroMenu callback={callback} style={{position: 'fixed', ...estiloQuadro, ...style}}>
             {opcoes.map(o => 

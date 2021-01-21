@@ -2,7 +2,7 @@ import AdicionarMusica from '../Components/Popup/PopupsAdicionar/LetrasMusica/Ad
 import AdicionarTextoBiblico from '../Components/Popup/PopupsAdicionar/TextoBiblico/AdicionarTextoBiblico';
 import AdicionarTexto from '../Components/Popup/PopupsAdicionar/AdicionarTexto';
 import AdicionarImagem from '../Components/Popup/PopupsAdicionar/AdicionarImagem/AdicionarImagem';
-// import AdicionarVideo from '../Components/Popup/PopupsAdicionar/AdicionarVideo/AdicionarVideo';
+import AdicionarVideo from '../Components/Popup/PopupsAdicionar/AdicionarVideo/AdicionarVideo';
 import { capitalize, canvasTextWidth, retiraAcentos } from './FuncoesGerais';
 import store from '../index';
 
@@ -11,7 +11,7 @@ export const tiposElemento = {
   , TextoBíblico: AdicionarTextoBiblico
   , TextoLivre: AdicionarTexto
   , Imagem: AdicionarImagem
-  // , Vídeo: AdicionarVideo
+  , Vídeo: AdicionarVideo
 }
 
 export const imagemEstaNoBD = strSrc => /firebase/.test(strSrc || '');

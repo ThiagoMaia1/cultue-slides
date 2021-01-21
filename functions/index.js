@@ -2,7 +2,7 @@
 const functions  = require('firebase-functions');
 const nodemailer = require('nodemailer');
 // const cors = require('cors')({origin: true});
-const enderecoEmail = 'tthiagopmaia@gmail.com';
+const enderecoEmail = 'cultue.slides@gmail.com';
 
 var transporter = nodemailer.createTransport({
   host: 'smtp.sendgrid.net',
@@ -15,7 +15,7 @@ var transporter = nodemailer.createTransport({
 
 exports.enviarEmail = functions.https.onCall(data => {
   var { assunto, destinatarios, corpo, corpoHTML, anexos } = data;
-  let remetente = '"Thiago Pereira Maia" <' + enderecoEmail + '>';
+  let remetente = '"Cultue Slides" <' + enderecoEmail + '>';
 
   let email = {
       from: remetente,

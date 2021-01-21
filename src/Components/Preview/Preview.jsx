@@ -7,6 +7,8 @@ import { objetosSaoIguais } from '../../principais/FuncoesGerais';
 import { ratioTela } from '../../principais/firestore/apresentacoesBD';
 import hotkeys from 'hotkeys-js';
 
+const base64PixelPreto = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAIAAAD91JpzAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAMSURBVBhXY0ACDAwAAA4AAXqxuTAAAAAASUVORK5CYII=';
+
 class Preview extends Component {
     
     constructor(props) {
@@ -117,9 +119,10 @@ class Preview extends Component {
         const eMestre = slidePreview.eMestre;
         return (
             <div id='centralizador-preview'>
-                <div id='borda-slide-mestre' style={{height: this.props.ratio.height*proporcao + 0.05*window.innerHeight, 
+                <div id='borda-slide-mestre' style={{height: this.props.ratio.height*proporcao + 0.055*window.innerHeight, 
                                              visibility: eMestre ? '' : 'hidden',
                                              padding: telaCheia ? '' : '1vh',
+                                             ...(this.props.modoApresentacao ? {cursor: 'url(' + base64PixelPreto + '), auto'} : {}),
                                              ...this.realcarElemento('tampao', 'fora')}}>
                     {telaCheia ? null : <SelecionarRatio/>}
                     {!this.state.corBloqueador || !telaCheia ? null :

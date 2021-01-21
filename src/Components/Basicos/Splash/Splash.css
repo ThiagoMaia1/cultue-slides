@@ -14,12 +14,14 @@
 }
 
 #logo-splash {
-    margin: 13vh 0 16vh;
+    margin: 16vh 0 19vh;
     position: relative;
     width: calc(var(--largura-logo));
     height: calc(var(--altura-logo));
-    transition: transform 1s ease-in-out;
-    animation: aumentarDiminuir 2s infinite;
+}
+
+#logo-splash, .quadrado-logo {
+    transition: transform 700ms ease-in-out;
 }
 
 #logo-splash img {
@@ -31,7 +33,6 @@
     height: var(--altura-logo);
     border-radius: calc(var(--largura-logo)*0.0685);
     position: absolute;
-    transition: transform 1s ease-in-out;
 }
 
 .quadrado-logo.azul-forte {

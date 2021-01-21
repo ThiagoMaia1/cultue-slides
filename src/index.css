@@ -37,7 +37,7 @@ body {
   --round-border-grande: 1.5vh;
   --box-shadow: 1px 3px 7px rgba(0,0,0,0.5);
   --box-shadow-longe: 5px 5px 8px rgba(0,0,0,0.4), -5px -5px 8px rgba(0,0,0,0.4);
-  --largura-logo: 38vh;
+  --largura-logo: 28vh;
   --altura-logo: calc(var(--largura-logo)/1.2614);
 }
 

@@ -243,20 +243,20 @@
 //   Considerar border radius para o cursor da imagem redimensionável
 //   Filtrar fundos personalizados/Pesquisar fundos
 //   Reenquadrar imagem
+//   Tentar de novo/Avisar se upload da imagem não pôde ser feito
+//   Tela de descanso
 //   Logo no e-mail de forma que possa ser lida offline*/
 //
 // Negócio:
 //   ✔️ Criar logo
-//   Tentar de novo/Avisar se upload da imagem não pôde ser feito
+//   ✔️ Configurar site para ser encontrado pelo google
+//   ✔️ Criar canal do youtube
 //   Cadastrar google ads
 //   Buscar parceria com ultimato
-//   Comprar domínio
-//   Configurar site para ser encontrado pelo google
 //   Pedir amigos para compartilharem
-//   Logos "Apoio" na tela de descanso
 //   E-mails não caírem no spam
 //   Criar instagram
-//   Criar canal do youtube
 //   Gravar tutoriais em vídeo
 //   Versão em inglês
 //   Criar termos de uso
+//   Criar uma imagem de logo para aparecer nas pesquisas do google

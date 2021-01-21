@@ -1,13 +1,14 @@
 .wraper {
         --cor: var(--azul-forte);
         position: relative;
-        animation: var(--animacao-mudar-cor) 4.8s linear 0.6s infinite;
+        --tempo-animacao: 1600ms;
+        animation: var(--animacao-mudar-cor) calc(3*var(--tempo-animacao)) linear calc(var(--tempo-animacao)*0.4) infinite;
 }
 
 .container-arc {
         width: auto;
         height: auto;
-        animation: girar 3.5s linear infinite;
+        animation: girar calc(var(--tempo-animacao)*2.2) linear infinite;
         width: calc(var(--tamanho-loading)*22vh);
         height: calc(var(--tamanho-loading)*22vh);
         border-radius: 100%;
@@ -22,24 +23,24 @@
         height: 100%;
         border-radius: 100%;
         border: calc(var(--tamanho-loading)*3vh*var(--largura-borda)) solid transparent;
-        transition: border-color 0.3s ease-in-out;
+        transition: border-color calc(var(--tempo-animacao)/5) ease-in-out;
         border-color: var(--cor) transparent transparent transparent;
 }
 
 .arc_start {
-        animation: quarto 1.6s ease-in-out infinite;
+        animation: quarto var(--tempo-animacao) ease-in-out infinite;
 }
 
 .arc_end {
-        animation: primeiro 1.6s ease-in-out infinite;
+        animation: primeiro var(--tempo-animacao) ease-in-out infinite;
 }
 
 .arc_end2 {
-        animation: segundo 1.6s ease-in-out infinite;
+        animation: segundo var(--tempo-animacao) ease-in-out infinite;
 }
 
 .arc_end3 {
-        animation: terceiro 1.6s ease-in-out infinite;
+        animation: terceiro var(--tempo-animacao) ease-in-out infinite;
 }
 
 .arc_tampar {
@@ -49,7 +50,7 @@
         height: calc(var(--tamanho-loading)*(22vh + 2vh*var(--largura-borda)));
         border: calc(var(--tamanho-loading)*6vh*var(--largura-borda)) solid;
         border-color: var(--cor-fundo) transparent transparent transparent;
-        animation: expandir 1.6s ease-out infinite;
+        animation: expandir var(--tempo-animacao) ease-out infinite;
 }
 
 @keyframes girar {
@@ -169,7 +170,7 @@
     border-top-color: var(--azul-forte);
     border-right-color: var(--azul-forte);
     border-radius: 50%;
-    animation: spin11 1.6s linear infinite;
+    animation: spin11 var(--tempo-animacao) linear infinite;
   }
   
   #nest5:before {
@@ -196,8 +197,8 @@
     border: 12px solid transparent;
     border-radius: 50%;
     border-top-color: var(--platinum-forte);
-    -webkit-animation: spin11 1.6s linear infinite;
-            animation: spin11 1.6s linear infinite;
+    -webkit-animation: spin11 var(--tempo-animacao) linear infinite;
+            animation: spin11 var(--tempo-animacao) linear infinite;
   }
   
   @keyframes spin11 {

@@ -56,6 +56,13 @@ export const fontes = {
   google: Object.keys(googleComSubstitutas).map(f => f.replace(/_/g, ' '))
 }
 
+export const adicionarFontesPagina = () => {
+  const script = document.createElement('script');
+  script.innerHTML = `WebFont.load({google: {families: ['${fontes.google.join("', '")}']}});`;
+  script.async = true;
+  document.body.appendChild(script);
+}
+
 // Pegar no formato da lista do google fontes (+ no lugar de espaço e | como separador)
 // console.log(Object.keys(googleComSubstitutas).slice(0, 21).filter(f => !/_/.test(f)).sort().join('|').replace(/_/g, '+'))
 

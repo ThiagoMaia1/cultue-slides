@@ -66,7 +66,7 @@ export const enviarEmailTemplate = (assunto, destinatarios, corpo, JSXInterno, l
         }, 
         error => {
             inserirNotificacao('Erro ao enviar e-mail');
-            console.log(error);
+            console.log(error, objEmail);
             if(callback) callback(false);
     }).finally(() => {
         document.body.style.cursor = 'default';;
