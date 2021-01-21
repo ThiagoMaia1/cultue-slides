@@ -190,7 +190,6 @@ export const getApresentacaoComLocation = async location => {
   if (location.hash) {
     let idHash = getIdHash(location);
     let temApp = location.pathname === '/main/';
-    console.log(temApp)
     let getApresentacao = temApp 
                           ? getApresentacaoComId 
                           : getApresentacaoComPermissao; 

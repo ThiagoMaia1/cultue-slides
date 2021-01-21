@@ -8,6 +8,13 @@
     min-height: 8vh;
 }
 
+.container-preview-invisivel {
+    width: 0;
+    height: 0;
+    overflow: hidden;
+    opacity: 0;
+}
+
 .div-botao-exportar {
     margin: 0.7vw 1.1vw;
     display: flex;

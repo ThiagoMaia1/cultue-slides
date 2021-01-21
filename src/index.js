@@ -40,7 +40,7 @@ export const redividirSlides = (elementos, sel, ratio) => {
     do {
       var e = elementos[i];
       if (!e.getArrayTexto) e = getElementosDesconvertidos([e])[0];
-      e.criarSlides(e.getArrayTexto(slide, e), e.slides[0].estilo, slide, elementos[0].slides[0].estilo, ratio, e);
+      e.criarSlides(e.getArrayTexto(slide, e), e.slides[0].estilo, slide, elementos[0].slides[0].estilo, ratio, e, undefined, elementos);
       i++;
     } while (repetir && i < elementos.length)
   }

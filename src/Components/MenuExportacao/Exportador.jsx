@@ -236,7 +236,7 @@ class Exportador extends Component {
 
   render() {
     return (
-      <div style={{width: '0px', height: '0px', overflow: 'hidden', opacity: 0}}>
+      <div className='container-preview-invisivel'>
         {this.state.previews}
       </div>
     )

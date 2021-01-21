@@ -72,6 +72,7 @@ class SlideFormatado extends Component {
     render() {
         let { slidePreview, proporcao, selecionado, editavel, referencia, id, className, ratio, style, children } = this.props
         var proporcaoTela = proporcao*ratio.width/ratioTela.width;
+        let fonteBase = getFonteBase(ratio);
         return (
                 <div ref={referencia} 
                      id={id} 
@@ -92,7 +93,7 @@ class SlideFormatado extends Component {
                          tampao={slidePreview.estilo.tampao} 
                          botaoInativo={!editavel || typeof slidePreview.estilo.fundo.path === 'string' || (slidePreview.imagem && slidePreview.imagem.idUpload)}
                          selecionado={selecionado}/>
-                    <div className='texto-preview' style={{fontSize: getFonteBase().numero*proporcao + getFonteBase().unidade}}>
+                    <div className='texto-preview' style={{fontSize: fonteBase.numero*proporcao + fonteBase.unidade}}>
                         {slidePreview.estilo.titulo.abaixo ? null : this.getBlocoTitulo(slidePreview, selecionado)}
                         <div id='paragrafo-slide' className={'slide-paragrafo ' + this.getClasseLetraClara('paragrafo')} style={slidePreview.estilo.paragrafo}>
                             <div style={this.realcarElemento('paragrafo')} 
