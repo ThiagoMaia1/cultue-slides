@@ -23,8 +23,8 @@ class AdicionarTextoBiblico extends Component {
             botoesVisiveis: false,
             versiculosPronto: [],
             carregando: null,
-            termoPesquisa: null,
-            input2: this.props.input2
+            termoPesquisa: props.input2 || null,
+            input2: props.input2
         }
     }    
     
@@ -201,7 +201,7 @@ class AdicionarTextoBiblico extends Component {
     }
 
     componentDidMount() {
-        setTimeout(() => {this.ref.current.focus();}, 1)
+        setTimeout(() => this.ref.current.focus(), 1)
     }
 
     render () {

@@ -5,6 +5,8 @@ import AdicionarImagem from '../Components/Popup/PopupsAdicionar/AdicionarImagem
 import AdicionarVideo from '../Components/Popup/PopupsAdicionar/AdicionarVideo/AdicionarVideo';
 import { capitalize, canvasTextWidth, retiraAcentos } from './FuncoesGerais';
 import store from '../index';
+import React from 'react';
+import SlideFormatado from '../Components/Preview/SlideFormatado';
 
 export const tiposElemento = {
     Música: AdicionarMusica
@@ -95,8 +97,6 @@ export default class Element {
     }
     this.tipo = tipo;
     this.titulo = titulo;
-    this.texto = texto;
-    this.imagens = imagens;
     this.eMestre = eMestre;
     this.colapsado = false;
     
@@ -104,10 +104,10 @@ export default class Element {
     est = {...est, paragrafo: getPadding(est, 'paragrafo'), titulo: getPadding(est, 'titulo')};
     if (this.tipo === 'TextoLivre' && texto.filter(t => t !== '').length === 0) est.titulo.height = '1';
     this.slides = [{estilo: {...est}, eMestre: true, textoArray: [textoMestre]}];
-    this.criarSlides(this.texto, est);
+    this.criarSlides(texto, est, undefined, undefined, undefined, undefined, imagens);
   }
 
-  criarSlides = (texto, estiloMestre, nSlide = 0, estGlobal = null, ratio = null, thisP = this) => {
+  criarSlides = (texto, estiloMestre, nSlide = 0, estGlobal = null, ratio = null, thisP = this, imagens = []) => {
     
     if (thisP.eMestre) return;
     if (thisP.slides[nSlide].eMestre) nSlide++;
@@ -120,13 +120,13 @@ export default class Element {
       for (let i = 0; i < thisP.slides.length; i++) {
         if (thisP.slides[i].eTitulo) {
           thisP.slides.splice(i, 1);
-          nSlide = 1;
+          nSlide = nSlide -1;
           break;
         }
       }
     }
     if (thisP.tipo === 'Imagem') {
-      thisP.dividirImagens();
+      thisP.dividirImagens(this, imagens);
     } else {
       thisP.dividirTexto(texto, nSlide, estiloMestre, estGlobal, ratio, thisP);
     }
@@ -158,13 +158,13 @@ export default class Element {
     return arrayTexto.flat();
   }
 
-  dividirImagens = (thisP = this) => {
+  dividirImagens = (thisP = this, imagens) => {
     if (thisP.imagens.length === 1) {
-      thisP.slides[0].imagem = thisP.imagens[0];
+      thisP.slides[0].imagem = imagens[0];
       thisP.slides[0].eMestre = false;
       thisP.slides[0].textoArray = [];
     } else {
-      for (var img of thisP.imagens) {
+      for (var img of imagens) {
         thisP.slides.push({estilo: {...newEstilo()}, imagem: img, textoArray: []});
       }
     }
@@ -180,6 +180,8 @@ export default class Element {
       return;
     }
     var slide = thisP.slides[nSlide];  
+
+    
     var estSlide = slide.estilo;
     estGlobal = estGlobal ? estGlobal : store.getState().present.elementos[0].slides[0].estilo;
     if(!ratio) ratio = store.getState().present.ratio;
@@ -218,7 +220,6 @@ export default class Element {
       }
     }
 
-
     var estiloFonte = [(estP.fontStyle || ''), (estP.fontWeight || ''), estP.fontSize*fonteBase.numero + fonteBase.unidade, "'" + estP.fontFamily + "'"];
     estiloFonte = estiloFonte.filter(a => a !== '').join(' ');
     var caseTexto = estP.caseTexto || estP.caseTexto;
@@ -248,8 +249,6 @@ export default class Element {
     var elementoSimplificado = {
       tipo: thisP.tipo,
       titulo: thisP.titulo,
-      texto: thisP.texto,
-      imagens: thisP.imagens,
       eMestre: thisP.eMestre,
       input1: thisP.input1 || null,
       input2: thisP.input2 || null,
@@ -267,8 +266,6 @@ export default class Element {
 
     this.tipo = elementoDB.tipo;
     this.titulo = elementoDB.titulo;
-    this.texto = elementoDB.texto;
-    this.imagens = elementoDB.imagens;
     this.eMestre = elementoDB.eMestre;
     this.input1 = elementoDB.input1;
     this.input2 = elementoDB.input2;

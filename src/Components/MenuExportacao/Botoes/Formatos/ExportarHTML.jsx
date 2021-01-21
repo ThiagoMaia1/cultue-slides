@@ -91,11 +91,16 @@ function scriptHTML () {
   document.getElementById('preview-fake0').classList.add('slide-ativo')
 
   function adicionarEstiloTamanho() {
-    var sheets = document.styleSheets;
-    var rule = sheets[sheets.length - 3].cssRules[0];
-    var slide = document.getElementById('preview-fake0');
-    var quadro = document.getElementById('container-apresentacao');
-    var scale = Math.min(quadro.offsetWidth/slide.offsetWidth, quadro.offsetHeight/ slide.offsetHeight);
+    let sheets = document.styleSheets;
+    let rule;
+    for (let i = sheets.length -1; i >= 0; i--) {
+      rule = sheets[i].cssRules[0];
+      if (rule.selectorText === '.preview-fake')
+        break;
+    }
+    let slide = document.getElementById('preview-fake0');
+    let quadro = document.getElementById('container-apresentacao');
+    let scale = Math.min(quadro.offsetWidth/slide.offsetWidth, quadro.offsetHeight/ slide.offsetHeight);
     rule.style.transform = 'scale(' + scale + ')';
     rule.style.transformOrigin = 'center';
   }

@@ -17,8 +17,8 @@ class AdicionarMusica extends Component {
     constructor (props) {
         super(props);
         this.state = {opcoes: [], listaAtiva: false, letraMusica:{}, botoesVisiveis: false, buscandoLetra: false,
-                      carregando: null, idBuscarLetra: this.props.input2, divisivel: false,
-                      duasColunas: false, multiplicadores: true, omitirRepeticoes: true, input2: this.props.input2
+                      carregando: null, idBuscarLetra: props.input2, divisivel: false,
+                      duasColunas: false, multiplicadores: true, omitirRepeticoes: true, input2: props.input2
                     }
         this.listaCheckboxes = [{label: 'Omitir Repetições', opcao: 'omitirRepeticoes'},
                                 {label: 'Multiplicadores', opcao: 'multiplicadores'}

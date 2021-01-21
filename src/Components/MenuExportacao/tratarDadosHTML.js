@@ -1,4 +1,4 @@
-const styleSheet = '.preview-fake {background-color: white; position: absolute}' +
+const styleSheet = '.preview-fake {background-color: white; position: absolute; z-index: -1;}' +
                    '.slide-ativo {z-index: 20;}' +
                    '#ativar-tela-cheia {opacity: 0.2; right: 4vh; bottom: 4vh; width: 10vh; height: 10vh; background: rgba(255,255,255,0.5);}' +
                    '#ativar-tela-cheia:hover {opacity: 0.8;}' + 

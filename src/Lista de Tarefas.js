@@ -118,6 +118,7 @@
 //   Drag do Input Imagem falha (raramente) (?)
 //   Padding dando NaN
 //   Corrigir redivisão
+//   Redividir quando muda fonte está lento
 //   Redividir quando o texto de um slide é todo deletado
 //   Edição do conteúdo do parágrafo dando alguns erros (falha ao perder foco, não exibe cursor, markup aparecendo)
 //   Exportação PowerPoint: Tamanho fonte e lineHeight, round border/espelhar imagens, titulos abaixo/invisíveis
@@ -194,6 +195,7 @@
 //   Atalhos funcionarem mesmo com foco nos inputs
 
 /*/ Features dispensáveis:
+//   Contador de slides baixar html
 //   Selecionar/Arrastar múltiplos grupos
 //   TabIndex dos botões e tal
 //   Tutoriais nos popups de adicionar

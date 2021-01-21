@@ -409,16 +409,7 @@ function deepSpreadPresente(present) {
       }
       slides.push({...s, estilo: estilo, textoArray: [...s.textoArray]});
     }
-    let input2;
-    if((e.input2 || []).length) {
-      input2 = [];
-      for (let i of e.input2) {
-        input2.push({...i});
-      }
-    } else {
-      input2 = e.input2;
-    }
-    elementos.push({...e, slides, input2});
+    elementos.push({...e, slides});
   }
   return {...present, elementos, selecionado, abaAtiva, popupAdicionar, apresentacao, ratio};
 }
