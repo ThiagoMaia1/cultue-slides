@@ -33,7 +33,7 @@ class ExportadorPDF extends Component {
     return {nomeArquivo: nomeArquivo + this.formato, arquivo: pdf, formato: this.formato};
   }
 
-  componentDidUpdate = (prevProps) => {
+  componentDidUpdate = prevProps => {
     if(!prevProps.formatoExportacao === this.formato && this.props.formatoExportacao === this.formato)
       this.props.definirFormatoExportacao(this.exportarPDF, this.formato);
   }

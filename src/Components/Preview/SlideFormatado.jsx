@@ -70,7 +70,7 @@ class SlideFormatado extends Component {
     }
 
     render() {
-        let { slidePreview, proporcao, selecionado, editavel, referencia, id, className, ratio, style, children } = this.props
+        let { slidePreview, proporcao, selecionado, editavel, referencia, id, className, ratio, style, children, previewRedividir } = this.props
         var proporcaoTela = proporcao*ratio.width/ratioTela.width;
         let fonteBase = getFonteBase(ratio);
         return (
@@ -88,18 +88,20 @@ class SlideFormatado extends Component {
                                        estiloRealce={this.realcarElemento('imagem')}
                                        editavel={editavel}/>
                     }
-                    <Img imagem={slidePreview.estilo.fundo} 
-                         proporcao={proporcaoTela} 
-                         tampao={slidePreview.estilo.tampao} 
-                         botaoInativo={!editavel || typeof slidePreview.estilo.fundo.path === 'string' || (slidePreview.imagem && slidePreview.imagem.idUpload)}
-                         selecionado={selecionado}/>
+                    {previewRedividir ? null :
+                        <Img imagem={slidePreview.estilo.fundo} 
+                             proporcao={proporcaoTela} 
+                             tampao={slidePreview.estilo.tampao} 
+                             botaoInativo={!editavel || typeof slidePreview.estilo.fundo.path === 'string' || (slidePreview.imagem && slidePreview.imagem.idUpload)}
+                             selecionado={selecionado}/>
+                    }
                     <div className='texto-preview' style={{fontSize: fonteBase.numero*proporcao + fonteBase.unidade}}>
                         {slidePreview.estilo.titulo.abaixo ? null : this.getBlocoTitulo(slidePreview, selecionado)}
                         <div id='paragrafo-slide' className={'slide-paragrafo ' + this.getClasseLetraClara('paragrafo')} style={slidePreview.estilo.paragrafo}>
-                            <div style={this.realcarElemento('paragrafo')} 
+                            <div style={this.realcarElemento('paragrafo')} ref={this.props.ref1}
                                  className={'realce-paragrafo ' + (slidePreview.estilo.paragrafo.duasColunas ? 'dividido-colunas' : '')}>
                                 <Estrofes slidePreview={slidePreview} onInput={this.editarTexto} ativarRealce={this.ativarRealce} editavel={editavel}
-                                           selecionado={selecionado}/>
+                                           selecionado={selecionado} refEstrofes={this.props.ref2}/>
                             </div>
                         </div>
                         {slidePreview.estilo.titulo.abaixo ? this.getBlocoTitulo(slidePreview, selecionado) : null}

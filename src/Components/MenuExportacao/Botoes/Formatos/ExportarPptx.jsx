@@ -60,7 +60,7 @@ class ExportarPptx extends Component {
     return {nomeArquivo: nomeArquivo + this.formato, arquivo: pptx, formato: this.formato}
   }
 
-  componentDidUpdate = (prevProps) => {
+  componentDidUpdate = prevProps => {
     if(!prevProps.formatoExportacao === this.formato && this.props.formatoExportacao === this.formato)
       this.props.definirFormatoExportacao(this.exportarPptx, this.formato);
   }

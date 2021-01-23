@@ -88,7 +88,7 @@ export default function Estrofes(props) {
         } 
     }
     return (
-        <div className='container-estrofe' style={estiloDivEstrofe}>
+        <div className='container-estrofe' style={estiloDivEstrofe} ref={props.refEstrofes}>
             {spans} 
         </div>
     );

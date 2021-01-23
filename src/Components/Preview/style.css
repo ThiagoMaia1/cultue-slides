@@ -196,3 +196,7 @@ img {
     text-align: center;
     font-size: 110%;
 }
+
+#container-preview-redividir .preview-fake {
+    position: relative;
+}

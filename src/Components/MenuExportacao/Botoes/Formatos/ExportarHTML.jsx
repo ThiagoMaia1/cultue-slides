@@ -148,7 +148,7 @@ class ExportarHTML extends Component {
     return {nomeArquivo: nomeArquivo + this.formato, arquivo: this.stringArquivo, formato: this.formato};
   }
   
-  componentDidUpdate = (prevProps) => {
+  componentDidUpdate = prevProps => {
     if(!prevProps.formatoExportacao === this.formato && this.props.formatoExportacao === this.formato)
       this.props.definirFormatoExportacao(this.exportarHTML, this.formato, true);
   }

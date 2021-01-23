@@ -5,12 +5,8 @@ import AdicionarImagem from '../Components/Popup/PopupsAdicionar/AdicionarImagem
 import AdicionarVideo from '../Components/Popup/PopupsAdicionar/AdicionarVideo/AdicionarVideo';
 import { capitalize, canvasTextWidth, retiraAcentos } from './FuncoesGerais';
 import store from '../index';
-import { Provider } from 'react-redux';
-import {createStore} from 'redux';
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { getSlidePreview } from '../Components/MenuExportacao/Exportador';
-import SlideFormatado from '../Components/Preview/SlideFormatado';
+// import { getSlidePreview } from '../Components/MenuExportacao/Exportador';
+// import {storeRedividir} from '../Components/Preview/PreviewRedividirV1';
 
 export const tiposElemento = {
     Música: AdicionarMusica
@@ -111,45 +107,37 @@ export default class Element {
     this.criarSlides(texto, est, undefined, undefined, undefined, undefined, imagens);
   }
 
-  criarSlides = (texto, estiloMestre, nSlide = 0, estGlobal = null, ratio = null, thisP = this, imagens = [], elementos = null) => {
+  criarSlides = (texto, estiloMestre, nSlide = 0, estGlobal = null, ratio = null, thisP = this, imagens = [], elementos = null, nElemento) => {
     
     if (thisP.eMestre) return;
-    if (thisP.slides[nSlide].eMestre) nSlide++;
-    let isolarTitulo = ((estGlobal || {}).titulo || {}).isolar || estiloMestre.titulo.isolar;
-    if (isolarTitulo) { 
-      nSlide = Math.max(2, nSlide);
-      if (thisP.slides.length === 1 || !thisP.slides[1].eTitulo) 
-        thisP.slides.splice(1, 0, this.getSlideTitulo(estiloMestre));
-    } else {
-      for (let i = 0; i < thisP.slides.length; i++) {
-        if (thisP.slides[i].eTitulo) {
-          thisP.slides.splice(i, 1);
-          nSlide = nSlide -1;
-          break;
-        }
-      }
-    }
+    // if (thisP.slides[nSlide].eMestre) nSlide++;
+    // let isolarTitulo = ((estGlobal || {}).titulo || {}).isolar || estiloMestre.titulo.isolar;
+    // if (isolarTitulo) { 
+    //   nSlide = Math.max(2, nSlide);
+    //   if (thisP.slides.length === 1 || !thisP.slides[1].eTitulo) 
+    //     thisP.slides.splice(1, 0, this.getSlideTitulo(estiloMestre));
+    // } else {
+    //   for (let i = 0; i < thisP.slides.length; i++) {
+    //     if (thisP.slides[i].eTitulo) {
+    //       thisP.slides.splice(i, 1);
+    //       nSlide = nSlide -1;
+    //       break;
+    //     }
+    //   }
+    // }
     if (thisP.tipo === 'Imagem') {
       thisP.dividirImagens(this, imagens);
     } else {
-      thisP.dividirTexto(texto, nSlide, estiloMestre, estGlobal, ratio, thisP, elementos);
+      thisP.dividirTexto(texto, nSlide, estiloMestre, estGlobal, ratio, thisP, elementos, nElemento);
     }
-    if (thisP.slides.length > 1 && !thisP.slides[0].eMestre) {
-      thisP.slides.unshift({estilo: {...estiloMestre}, textoArray: [textoMestre], eMestre: true});
-      thisP.slides[1].estilo = {...newEstilo()};
-    } else if (thisP.slides.length === 2 && thisP.slides[0].eMestre) {
-      thisP.slides[1].estilo = thisP.slides[0].estilo;
-      thisP.slides.shift();
-    }
-    return thisP;
-  }
-
-  getSlideTitulo = (estiloMestre) => {
-    return {
-      textoArray: [],
-      estilo: {...estiloMestre, titulo: {...estiloMestre.titulo, height: 1, display: null}},
-      eTitulo: true
-    }
+    // if (thisP.slides.length > 1 && !thisP.slides[0].eMestre) {
+    //   thisP.slides.unshift({estilo: {...estiloMestre}, textoArray: [textoMestre], eMestre: true});
+    //   thisP.slides[1].estilo = {...newEstilo()};
+    // } else if (thisP.slides.length === 2 && thisP.slides[0].eMestre) {
+    //   thisP.slides[1].estilo = thisP.slides[0].estilo;
+    //   thisP.slides.shift();
+    // }
+    // return thisP;
   }
   
   getArrayTexto = (nSlide = 0, thisP = this) => {
@@ -174,99 +162,71 @@ export default class Element {
     }
   }
 
-  dividirTexto = (texto, nSlide, estElemento, estGlobal = null, ratio = null, thisP = this, elementos) => {
+  dividirTexto = (texto, nSlide = 0, estElemento, estGlobal = null, ratio = null, thisP = this, elementos, nElemento) => {
     
-    //Divide o texto a ser incluído em quantos slides forem necessários, mantendo a estilização de cada slide.
-    if (nSlide === thisP.slides.length) {
-      thisP.slides.push({estilo: {...newEstilo()}, textoArray: []});
-    } else if (nSlide > thisP.slides.length) {
-      console.log('Tentativa de criar slide além do limite: ' + nSlide);
-      return;
-    }
-    ratio = ratio || store.getState().present.ratio;
-    var slide = thisP.slides[nSlide];  
-    elementos = [
-      ...(elementos || store.getState().present.elementos), 
-      {...thisP, slides: [...thisP.slides.slice(0, nSlide+1), slide]}
-    ];
-    let selecionado;
+    texto = texto || this.getArrayTexto(nSlide, thisP);
+    store.dispatch({type: 'atualizar-dados-redividir', dados: {elemento: thisP, texto, nSlide, nElemento, estiloMestre: estElemento}})
 
-    const getSlide = () =>{
-      selecionado = {elemento: elementos.length-1, slide: nSlide};
-      return getSlidePreview({elementos, selecionado});
-    }
-
-    let {paragrafo, titulo} = getSlide().estilo;
+    // let {paragrafo, titulo} = getSlide().estilo;
     
-    // Variáveis relacionadas ao tamanho do slide.
-    // let padV = Number(paragrafo.paddingTop) + Number(paragrafo.paddingRight); //Right é a base de cálculo, bottom varia.
-    // var padH = Number(paragrafo.paddingRight) + Number(paragrafo.paddingLeft);
-    // var larguraLinha = ratio.width*(1-padH);
-    // let fonteBase = getFonteBase(ratio);
-    // let alturaLinha = paragrafo.lineHeight*paragrafo.fontSize*fonteBase.numero;
-    // let alturaTitulo = titulo.display === 'none'
-    //                     ? 0 
-    //                     : titulo.height;
-    // let alturaSecaoTitulo = ratio.height*alturaTitulo;
-    // let alturaSecaoParagrafo = ratio.height-alturaSecaoTitulo;
-    // let alturaParagrafo = alturaSecaoParagrafo*(1-padV);
-    // let nLinhas = alturaParagrafo/alturaLinha;
+    // // Variáveis relacionadas ao tamanho do slide.
+    // // let padV = Number(paragrafo.paddingTop) + Number(paragrafo.paddingRight); //Right é a base de cálculo, bottom varia.
+    // // var padH = Number(paragrafo.paddingRight) + Number(paragrafo.paddingLeft);
+    // // var larguraLinha = ratio.width*(1-padH);
+    // // let fonteBase = getFonteBase(ratio);
+    // // let alturaLinha = paragrafo.lineHeight*paragrafo.fontSize*fonteBase.numero;
+    // // let alturaTitulo = titulo.display === 'none'
+    // //                     ? 0 
+    // //                     : titulo.height;
+    // // let alturaSecaoTitulo = ratio.height*alturaTitulo;
+    // // let alturaSecaoParagrafo = ratio.height-alturaSecaoTitulo;
+    // // let alturaParagrafo = alturaSecaoParagrafo*(1-padV);
+    // // let nLinhas = alturaParagrafo/alturaLinha;
   
-    // if (nLinhas % 1 > 0.7) {
-    //   nLinhas = Math.ceil(nLinhas);
-    // } else {
-    //   nLinhas = Math.floor(nLinhas);
-    // }
-    // slide.estilo.paragrafo.paddingBottom = ((alturaSecaoParagrafo-nLinhas*alturaLinha)/ratio.width)-Number(paragrafo.paddingTop); 
+    // // if (nLinhas % 1 > 0.7) {
+    // //   nLinhas = Math.ceil(nLinhas);
+    // // } else {
+    // //   nLinhas = Math.floor(nLinhas);
+    // // }
+    // // slide.estilo.paragrafo.paddingBottom = ((alturaSecaoParagrafo-nLinhas*alturaLinha)/ratio.width)-Number(paragrafo.paddingTop); 
     
-    // var duasColunas = false;
-    // if (paragrafo.duasColunas) {
-    //   larguraLinha = larguraLinha*0.48;
-    //   if (thisP.tipo === 'Música') {
-    //     duasColunas = true;       
-    //   } else {
-    //     nLinhas = nLinhas*2;
+    // // var duasColunas = false;
+    // // if (paragrafo.duasColunas) {
+    // //   larguraLinha = larguraLinha*0.48;
+    // //   if (thisP.tipo === 'Música') {
+    // //     duasColunas = true;       
+    // //   } else {
+    // //     nLinhas = nLinhas*2;
+    // //   }
+    // // }
+
+    // // var estiloFonte = [(paragrafo.fontStyle || ''), (paragrafo.fontWeight || ''), paragrafo.fontSize*fonteBase.numero + fonteBase.unidade, "'" + paragrafo.fontFamily + "'"];
+    // // estiloFonte = estiloFonte.filter(a => a !== '').join(' ');
+    // // var caseTexto = paragrafo.caseTexto || paragrafo.caseTexto;
+    // // var separador = thisP.tipo === 'TextoBíblico' ? '' : '\n\n';
+    // // var { contLinhas, widthResto } = getLinhas(texto[0], estiloFonte, larguraLinha, caseTexto);
+    // let i;
+    // let idPreview = 'container-preview-invisivel';
+    // let node = document.getElementById(idPreview);
+
+    // for (i = 0; i < texto.length; i++) {
+    //   if (i + 1 >= texto.length) {
+    //     thisP.slides = thisP.slides.slice(0, nSlide + 1);
+    //     break;
     //   }
+    //   slide.textoArray = texto.slice(0, i+1);
+    //   storeRedividir.dispatch({type: 'atualizar-slide-preview', slidePreview: getSlide(), ratio});
+    //   setTimeout(() => console.log(document.querySelectorAll(`#${idPreview} .realce-paragrafo`)[0].getBoundingClientRect().height), 0);
+      
+    //   // let alturaQuadro = document.querySelectorAll(`#${idPreview} .realce-paragrafo`)[0].getBoundingClientRect().height;
+    //   // let {height} = document.querySelectorAll(`#${idPreview} .container-estrofe`)[0].getBoundingClientRect();
+    //   // console.log(height);
+    //   // if(height > alturaQuadro) {
+    //     // thisP.dividirTexto(texto.slice(i+1), nSlide+1, estElemento, estGlobal, ratio, thisP, elementos);
+    //     break;
+    //   // }
     // }
-
-    // var estiloFonte = [(paragrafo.fontStyle || ''), (paragrafo.fontWeight || ''), paragrafo.fontSize*fonteBase.numero + fonteBase.unidade, "'" + paragrafo.fontFamily + "'"];
-    // estiloFonte = estiloFonte.filter(a => a !== '').join(' ');
-    // var caseTexto = paragrafo.caseTexto || paragrafo.caseTexto;
-    // var separador = thisP.tipo === 'TextoBíblico' ? '' : '\n\n';
-    if (thisP.tipo === 'Música' && paragrafo.omitirRepeticoes) texto = marcarEstrofesRepetidas(texto);
-    // var { contLinhas, widthResto } = getLinhas(texto[0], estiloFonte, larguraLinha, caseTexto);
-    let i;
-    let idPreview = 'container-preview-invisivel';
-    let node = document.getElementById(idPreview);
-
-    for (i = 0; i < texto.length; i++) {
-      if (i + 1 >= texto.length) {
-        thisP.slides = thisP.slides.slice(0, nSlide + 1);
-        break;
-      }
-      slide.textoArray = texto.slice(0, i+1);
-      let preview = 
-        <Provider store={createStore((state = {present: {ratio, selecionado: {}}}) => state)}>
-          <div className={idPreview}> 
-            <SlideFormatado 
-              slidePreview={getSlide()}
-              className='preview-fake'
-              editavel={false}
-              proporcao={1}
-            />
-          </div>
-        </Provider>
-      ReactDOM.render(preview, node);
-      let alturaQuadro = document.querySelectorAll(`#${idPreview} .realce-paragrafo`)[0].getBoundingClientRect().height;
-      let {height} = document.querySelectorAll(`#${idPreview} .container-estrofe`)[0].getBoundingClientRect();
-      ReactDOM.unmountComponentAtNode(node);
-      console.log(height);
-      if(height > alturaQuadro) {
-        thisP.dividirTexto(texto.slice(i+1), nSlide+1, estElemento, estGlobal, ratio, thisP, elementos);
-        break;
-      }
-    }
-    slide.textoArray = texto.slice(0, i+1);
+    // slide.textoArray = texto.slice(0, i+1);
   }
 
   conversorFirestore = thisP => {
@@ -305,7 +265,7 @@ export default class Element {
 }
 
 
-const marcarEstrofesRepetidas = texto => {
+export const marcarEstrofesRepetidas = texto => {
 
   const limparTexto = t => retiraAcentos(t).toLowerCase().replace(/[^a-z]/g,'');
 

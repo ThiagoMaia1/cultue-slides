@@ -65,7 +65,7 @@ export function getPreviews(elementos) {
   return previews;
 }
 
-export function getSlidePreview ({elementos, selecionado}) {
+export function getSlidePreview ({elementos, selecionado, previewRedividir}) {
   const global = elementos[0].slides[0];
   const elemento = elementos[selecionado.elemento].slides[0];
   const slide = {...elementos[selecionado.elemento].slides[selecionado.slide]};
@@ -94,6 +94,15 @@ export function getSlidePreview ({elementos, selecionado}) {
   var tituloSlide = el.slides[selecionado.slide].titulo;
   var titulo = tituloSlide !== undefined ? tituloSlide : elementos[selecionado.elemento].titulo;
   titulo = capitalize(titulo, estiloTitulo.caseTexto);
+  let objEstilo;
+  if(previewRedividir) 
+    objEstilo = {fundo: {}, tampao: {}, imagem: {}};
+  else
+    objEstilo = {
+      fundo: estiloAplicavel('fundo'), 
+      tampao: estiloAplicavel('tampao'),
+      imagem: estiloAplicavel('imagem')
+    }
 
   return {...slide,
     tipo,
@@ -104,10 +113,8 @@ export function getSlidePreview ({elementos, selecionado}) {
     estilo: {
       titulo: {...estiloTitulo},
       paragrafo: {...estiloParagrafo},
-      fundo: estiloAplicavel('fundo'), 
-      tampao: estiloAplicavel('tampao'),
       texto: estiloTexto,
-      imagem: estiloAplicavel('imagem')
+      ...objEstilo
     }
   };
 }
@@ -219,7 +226,7 @@ class Exportador extends Component {
     this.setState({previews: null});
   }
 
-  componentDidUpdate = (prevProps) => {
+  componentDidUpdate = prevProps => {
     const p = this.props;
     if (p.callbackMeio && p.callbackFormato && p.chamada !== prevProps.chamada) {
       this.callbackMeio = obj => {

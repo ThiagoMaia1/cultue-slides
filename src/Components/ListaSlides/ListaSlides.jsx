@@ -68,7 +68,7 @@ class Arrastar extends React.Component {
     this.props.dispatch({type: 'definir-selecao', selecionado: {elemento: item, slide: slide}})
   }
 
-  componentDidUpdate = (prevProps) => {
+  componentDidUpdate = prevProps => {
     if(this.state.painelAdicionar && prevProps.elementos.length <= 1 && this.props.elementos.length > 1)
       this.setState({painelAdicionar: false});
   }
