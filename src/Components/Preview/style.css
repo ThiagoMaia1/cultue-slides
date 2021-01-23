@@ -87,6 +87,7 @@ img {
 .realce-paragrafo {
     height: 100%;
     overflow: hidden;
+    display: flex;
 }
 
 .div-imagem-slide {
@@ -155,6 +156,10 @@ img {
 
 .container-estrofe {
     vertical-align: top;
+}
+
+.container-estrofe sup {
+    line-height: 0;
 }
 
 .wraper-estrofe {

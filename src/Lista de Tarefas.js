@@ -116,16 +116,15 @@
 // Errinhos:
 //   ✔️ Click fora tutorial
 //   Drag do Input Imagem falha (raramente) (?)
+//   Redimensionavel distorcendo ao aproximar do tamanho do quadro (?)
 //   Padding dando NaN
-//   Corrigir redivisão
-//   Redividir quando muda fonte está lento
-//   Redividir quando o texto de um slide é todo deletado
+//   Salvar nº do versículo, repetições de estrofe de música indice de objeto
+//   Corrigir redivisão: redividir quando o texto de um slide é todo deletado, algumas vezes passa um pouco, quebrar estrofes grandes de músicas/textos-livres, melhorar número de iterações
 //   Edição do conteúdo do parágrafo dando alguns erros (falha ao perder foco, não exibe cursor, markup aparecendo)
 //   Exportação PowerPoint: Tamanho fonte e lineHeight, round border/espelhar imagens, titulos abaixo/invisíveis
 //   Corrigir envio automático do github
 //   Branquear menu de configurações ao ativar tutorial
 //   Link para download exibindo a apresentação antes de ir pra página de download
-//   Redimensionavel distorcendo ao aproximar do tamanho do quadro
 //   Posição do loading no ItemListaMusica
 
 /*// Features essenciais:
@@ -195,7 +194,7 @@
 //   Atalhos funcionarem mesmo com foco nos inputs
 
 /*/ Features dispensáveis:
-//   Contador de slides baixar html
+//   Contador de slides (baixar html)
 //   Selecionar/Arrastar múltiplos grupos
 //   TabIndex dos botões e tal
 //   Tutoriais nos popups de adicionar
