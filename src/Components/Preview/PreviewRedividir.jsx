@@ -14,53 +14,40 @@ class PreviewRedividir extends Component {
 
     constructor(props) {
         super(props);
-        this.tempoInicial = new Date().getTime();
         let {elementos, dados} = props;
+        this.tempoInicial = new Date().getTime();
         let {nSlide, elemento, texto, estiloMestre, nElemento} = dados;
         this.elemento = elemento;
-        this.nSlide = nSlide;
+        this.elementos = elementos;
+        this.selecionado = {slide: nSlide};
         this.contador = 0;
         
         estiloMestre = estiloMestre || this.elemento.slides[0].estilo;
         
-        if (elemento.slides[this.nSlide].eMestre) this.nSlide++;
+        if (elemento.slides[this.selecionado.slide].eMestre) this.selecionado.slide++;
         
         this.acrescentarSlide();
         
-        let selecionado = {slide: this.nSlide};
         if(nElemento === undefined) {
-            elementos = [...elementos, elemento];
-            selecionado.elemento = elementos.length-1;
-        } else selecionado.elemento = nElemento;
-
-        const getPreview = () => {
-            this.slidePreview = getSlidePreview({
-                elementos, 
-                selecionado,
-                previewRedividir: true
-            });
-        }
-
-        getPreview();
+            this.elementos = [...elementos, elemento];
+            this.selecionado.elemento = elementos.length-1;
+        } else this.selecionado.elemento = nElemento;
+        
+        this.getPreview();
 
         let isolarTitulo = this.slidePreview.estilo.titulo.isolar;
         if (isolarTitulo) { 
-            this.nSlide = Math.max(2, this.nSlide);
+            this.selecionado.slide = Math.max(2, this.selecionado.slide);
             if (elemento.slides.length === 1 || !elemento.slides[1].eTitulo) 
                 elemento.slides.splice(1, 0, getSlideTitulo(estiloMestre));
         } else {
             for (let i = 0; i < elemento.slides.length; i++) {
                 if (elemento.slides[i].eTitulo) {
                     elemento.slides.splice(i, 1);
-                    this.nSlide = this.nSlide -1;
+                    this.selecionado.slide = this.selecionado.slide -1;
                     break;
                 }
             }
-        }
-
-        if(selecionado.slide !== this.nSlide) {
-            selecionado.slide = this.nSlide;
-            getPreview();
         }
 
         if (elemento.tipo === 'Música' && this.slidePreview.estilo.paragrafo.omitirRepeticoes) 
@@ -92,9 +79,9 @@ class PreviewRedividir extends Component {
         if (this.passou || finalizou) {
             if (!finalizou && !this.alturaConfirmada)
             if (!finalizou && lenTexto > 1 && this.falta < 0) texto.pop();
-            elemento.slides[this.nSlide].textoArray = texto;
+            elemento.slides[this.selecionado.slide].textoArray = texto;
             if (finalizou) {
-                elemento.slides = elemento.slides.slice(0, this.nSlide+1);
+                elemento.slides = elemento.slides.slice(0, this.selecionado.slide+1);
                 if (elemento.slides.length > 1 && !elemento.slides[0].eMestre) {
                     elemento.slides.unshift({
                         estilo: {...estiloMestre}, 
@@ -111,8 +98,9 @@ class PreviewRedividir extends Component {
                 console.log(new Date().getTime() - this.tempoInicial)
                 atualizarDados(null);   
             } else {      
-                this.nSlide++;
+                this.selecionado.slide++;
                 this.acrescentarSlide();
+                this.getPreview();
                 this.texto = this.texto.slice(lenTexto + (this.falta > 0 ? 0 : -1));
                 this.setLenTexto(this.getLenEstimada());
                 this.passou = false;
@@ -142,12 +130,21 @@ class PreviewRedividir extends Component {
     }
     
     acrescentarSlide = () => {
-        if (this.nSlide === this.elemento.slides.length)
+        if (this.selecionado.slide === this.elemento.slides.length)
             this.elemento.slides.push({ estilo: { ...newEstilo() }, textoArray: [] });
     }
 
     setLenTexto = lenTexto => {
         setTimeout(() => this.setState({lenTexto}), 0)
+    }
+
+    getPreview = () => {
+        let {elementos, selecionado} = this;
+        this.slidePreview = getSlidePreview({
+            elementos,
+            selecionado,
+            previewRedividir: true
+        });
     }
 
     render () {

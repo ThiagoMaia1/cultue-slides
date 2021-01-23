@@ -1,4 +1,4 @@
-// // import React, {Component} from 'react';
+// // import React, {useEffect, useRef, useState} from 'react';
 // import { connect } from 'react-redux'; 
 // import { getSlidePreview } from '../MenuExportacao/Exportador';
 // import SlideFormatado from './SlideFormatado';
@@ -10,67 +10,70 @@
 //     eTitulo: true
 // })
 
-// class PreviewRedividir extends Component {
+// const PaiPreview = ({dados, elementos}) => {
 
-//     constructor(props) {
-//         super(props);
-//         this.tempoInicial = new Date().getTime();
-//         let {elementos, dados} = props;
-//         let {nSlide, elemento, texto, estiloMestre, nElemento} = dados;
-//         this.elemento = elemento;
-//         this.nSlide = nSlide;
-//         this.contador = 0;
+//     if(!dados) return null;
+    
+//     let tempoInicial = new Date().getTime();
+//     let {elemento, texto, estiloMestre, nElemento} = dados;
+//     let nSlide = useRef(dados.nSlide);
         
-//         estiloMestre = estiloMestre || this.elemento.slides[0].estilo;
+//     estiloMestre = estiloMestre || elemento.slides[0].estilo;
         
-//         if (elemento.slides[this.nSlide].eMestre) this.nSlide++;
+//     if (elemento.slides[nSlide.current].eMestre) nSlide.current++;
         
-//         this.acrescentarSlide();
+//     acrescentarSlide();
         
-//         let selecionado = {slide: this.nSlide};
-//         if(nElemento === undefined) {
-//             elementos = [...elementos, elemento];
-//             selecionado.elemento = elementos.length-1;
-//         } else selecionado.elemento = nElemento;
+//     let selecionado = {slide: nSlide.current};
+//     if(nElemento === undefined) {
+//         elementos = [...elementos, elemento];
+//         selecionado.elemento = elementos.length-1;
+//     } else selecionado.elemento = nElemento;
 
-//         const getPreview = () => {
-//             this.slidePreview = getSlidePreview({
-//                 elementos, 
-//                 selecionado,
-//                 previewRedividir: true
-//             });
-//         }
+//     const getPreview = () => {
+//         slidePreview = getSlidePreview({
+//             elementos, 
+//             selecionado,
+//             previewRedividir: true
+//         });
+//     }
 
-//         getPreview();
+//     getPreview();
 
-//         let isolarTitulo = this.slidePreview.estilo.titulo.isolar;
-//         if (isolarTitulo) { 
-//             this.nSlide = Math.max(2, this.nSlide);
-//             if (elemento.slides.length === 1 || !elemento.slides[1].eTitulo) 
-//                 elemento.slides.splice(1, 0, getSlideTitulo(estiloMestre));
-//         } else {
-//             for (let i = 0; i < elemento.slides.length; i++) {
-//                 if (elemento.slides[i].eTitulo) {
-//                     elemento.slides.splice(i, 1);
-//                     this.nSlide = this.nSlide -1;
-//                     break;
-//                 }
+//     let isolarTitulo = this.slidePreview.estilo.titulo.isolar;
+//     if (isolarTitulo) { 
+//         this.nSlide = Math.max(2, this.nSlide);
+//         if (elemento.slides.length === 1 || !elemento.slides[1].eTitulo) 
+//             elemento.slides.splice(1, 0, getSlideTitulo(estiloMestre));
+//     } else {
+//         for (let i = 0; i < elemento.slides.length; i++) {
+//             if (elemento.slides[i].eTitulo) {
+//                 elemento.slides.splice(i, 1);
+//                 this.nSlide = this.nSlide -1;
+//                 break;
 //             }
 //         }
-
-//         if(selecionado.slide !== this.nSlide) {
-//             selecionado.slide = this.nSlide;
-//             getPreview();
-//         }
-
-//         if (elemento.tipo === 'Música' && this.slidePreview.estilo.paragrafo.omitirRepeticoes) 
-//             texto = marcarEstrofesRepetidas(texto);
-//         this.texto = texto;
-        
-//         this.ref1 = React.createRef();
-//         this.ref2 = React.createRef();
-//         this.state = {lenTexto: 1};
 //     }
+
+//     if(selecionado.slide !== this.nSlide) {
+//         selecionado.slide = this.nSlide;
+//         getPreview();
+//     }
+
+//     if (elemento.tipo === 'Música' && this.slidePreview.estilo.paragrafo.omitirRepeticoes) 
+//         texto = marcarEstrofesRepetidas(texto);
+//     this.texto = texto;
+    
+//     this.ref1 = React.createRef();
+//     this.ref2 = React.createRef();
+
+
+// }
+
+// const PreviewRedividir = ({dados, elementos}) => {
+
+//     let contador = useRef(0);
+//     let lenTexto = useState(1);
 
 //     medir = () => {
 //         let {dados, atualizarDados, substituirSlides} = this.props;

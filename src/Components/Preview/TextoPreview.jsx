@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Fragment} from 'react';
 import { RefInvalida } from "../Popup/PopupsAdicionar/TextoBiblico/referenciaBiblica"
 
 function numSuperscrito(num) {
