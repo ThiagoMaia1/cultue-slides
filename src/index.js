@@ -34,21 +34,18 @@ const getAutorizacao = (autorizacao, idUsuario, idUsuarioAtivo) => {
   return autorizacao;
 }
 
-export const redividirSlides = (elementos, sel, dadosRedividir) => {
-  if(dadosRedividir) return dadosRedividir;
-  let elemento = getElementosDesconvertidos([elementos[sel.elemento]])[0];
-  return {elemento, texto: elemento.getArrayTexto(sel.slide, elemento), nSlide: sel.slide, nElemento: sel.elemento}
-  // if (elementos.length !== 1) {
-  //     var [ i, slide, repetir ] = (sel.elemento === 0 ? [ 1, 0, 1 ] : [ sel.elemento, sel.slide, 0]);
-  //   do {
-  //     var e = elementos[i];
-  //     if (!e.getArrayTexto) e = getElementosDesconvertidos([e])[0];
-  //     e.criarSlides(e.getArrayTexto(slide, e), e.slides[0].estilo, slide, elementos[0].slides[0].estilo, ratio, e, undefined, elementos, sel.elemento);
-  //     i++;
-  //   } while (repetir && i < elementos.length)
-  // }
+export const redividirSlides = (elementos, sel, ratio) => {
+  if (elementos.length !== 1) {
+      var [ i, slide, repetir ] = (sel.elemento === 0 ? [ 1, 0, 1 ] : [ sel.elemento, sel.slide, 0]);
+    do {
+      var e = elementos[i];
+      if (!e.getArrayTexto) e = getElementosDesconvertidos([e])[0];
+      e.criarSlides(e.getArrayTexto(slide, e), e.slides[0].estilo, slide, elementos[0].slides[0].estilo, ratio, e);
+      i++;
+    } while (repetir && i < elementos.length)
+  }
   
-  // return elementos;
+  return elementos;
 }
 
 export const reducerElementos = function (state = defaultList, action, usuario) {
@@ -59,7 +56,7 @@ export const reducerElementos = function (state = defaultList, action, usuario) 
   var notificacao;
   var dadosMensagem;
   var autorizacao;
-  let { ratio, abaAtiva, dadosRedividir } = state;
+  let { ratio, abaAtiva } = state;
   delete state.notificacao;
   switch (action.type) {
     case 'definir-apresentacao-ativa':
@@ -71,7 +68,7 @@ export const reducerElementos = function (state = defaultList, action, usuario) 
       autorizacao = getAutorizacao(action.autorizacao, state.apresentacao.idUsuario, usuario.uid);
       return {...state, apresentacao: {...state.apresentacao, autorizacao: autorizacao}};
     case 'selecionar-ratio-apresentacao':
-      return {...state, dadosRedividir: redividirSlides(el, getApresentacaoPadraoBasica().selecionado, dadosRedividir), ratio: {...action.ratio}}
+      return {...state, elementos: redividirSlides(el, getApresentacaoPadraoBasica().selecionado, action.ratio), ratio: {...action.ratio}}
     case "inserir":
       var elNovo = action.elemento;
       elNovo.input1 = action.popupAdicionar.input1;
@@ -83,11 +80,11 @@ export const reducerElementos = function (state = defaultList, action, usuario) 
           elNovo.slides[i].estilo = elSub.slides[i].estilo;
         }
         el.splice(action.elementoASubstituir, 1, elNovo);
-        dadosRedividir = redividirSlides(el, {elemento: action.elementoASubstituir, slide: 0}, dadosRedividir);
+        el = redividirSlides(el, {elemento: action.elementoASubstituir, slide: 0}, ratio);
       } else {
         el.push(elNovo);
       }
-      return {...state, elementos: [...el], selecionado: {elemento: el.length-1, slide: 0}, popupAdicionar: {}, dadosRedividir};
+      return {...state, elementos: [...el], selecionado: {elemento: el.length-1, slide: 0}, popupAdicionar: {}};
     case "deletar":
       var excluido = el.splice(Number(action.elemento), 1);
       dadosMensagem = getDadosMensagem(excluido[0]);
@@ -108,7 +105,7 @@ export const reducerElementos = function (state = defaultList, action, usuario) 
       el[sel.elemento].colapsado = !el[sel.elemento].colapsado;
       return {...state, elementos: el};
     case "editar-slide": {
-      return {...state, ...reducerEditarSlide({elementos: el, sel, action, ratio, dadosRedividir})};
+      return {...state, ...reducerEditarSlide({elementos: el, sel, action, ratio})};
     }
     case "limpar-estilo": {
       dadosMensagem = getDadosMensagem(el[sel.elemento]);
@@ -131,11 +128,9 @@ export const reducerElementos = function (state = defaultList, action, usuario) 
         limparEstiloSlide(el[sel.elemento].slides[sel.slide]);
         notificacao = 'Estilo do Slide' + sel.slide + ' d' + dadosMensagem.genero + ' ' + dadosMensagem.elementos + '" Limp' + dadosMensagem.genero;
       }
-      return {...state, elementos: [...el], selecionado: action.selecionado, abaAtiva: abaAtivaPadrao, notificacao, dadosRedividir: redividirSlides(el, sel, dadosRedividir)};
+      el = redividirSlides(el, sel, state.ratio);
+      return {...state, elementos: [...el], selecionado: action.selecionado, abaAtiva: abaAtivaPadrao, notificacao};
     }
-    case 'atualizar-dados-redividir':
-      if(dadosRedividir && action.dados) return state;
-      return {...state, dadosRedividir: action.dados};
     case "fixar-novas-fontes": {
       return {...state, notificacao: 'Fontes Especiais Substituídas'};
     }
@@ -351,12 +346,8 @@ const rootReducer = (state, action) => {
 
 const limparSessao = createTransform(
   undefined,
-  (state, key) => {
-    if (key === 'present')
-      return {...state.present, dadosRedividir: null}
-    return estadoSessao[key]
-  },
-  {whitelist: [...Object.keys(estadoSessao), 'present']}
+  (_state, key) => estadoSessao[key],
+  {whitelist: Object.keys(estadoSessao)}
 )
 
 const persistConfig = {

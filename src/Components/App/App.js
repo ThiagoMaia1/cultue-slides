@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import './App.css';
 import Arrastar from '../ListaSlides/ListaSlides';
 import Preview from '../Preview/Preview';
-import PreviewRedividir from '../Preview/PreviewRedividir';
 import MenuGaleria from '../Preview/MenuGaleria'
 import Configurar from '../Configurar/Configurar.jsx';
 import MenuExportacao from '../MenuExportacao/MenuExportacao';
@@ -41,17 +40,13 @@ class App extends Component {
               </div>
             </>
         }
-        {this.props.dadosRedividir ? <PreviewRedividir/> : null}
       </div>
     );
   }
 }
 
-const mapState = state => ({
-  apresentacao: state.present.apresentacao, 
-  usuario: state.usuario, 
-  searchAtivo: state.searchAtivo,
-  dadosRedividir: state.present.dadosRedividir
-})
+const mapState = state => (
+  {apresentacao: state.present.apresentacao, usuario: state.usuario, searchAtivo: state.searchAtivo}
+)
 
 export default connect(mapState)(App);

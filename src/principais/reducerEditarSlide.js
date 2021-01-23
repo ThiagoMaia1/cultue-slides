@@ -13,10 +13,8 @@ const funcoes = {
         e.titulo = valor
     },
     estiloSemReplace: complementarEstilo,
-    textoSlide: ({s, valor}) => s.textoArray = valor,
     textoArray: editarTextoArray,
-    insetImagem: editarInsetImagem,
-    slides: ({e, slides}) => e.slides = slides
+    insetImagem: editarInsetImagem
 }
 
 function complementarEstilo({estilo, s}) {
@@ -84,7 +82,7 @@ function editarInsetImagem({est, alinhamento, ratio}) {
     setTimeout(() => el.style.transition = null, 1500);
 }
 
-export default function reducerEditarSlide ({elementos, sel, action, ratio, dadosRedividir}) {
+export default function reducerEditarSlide ({elementos, sel, action, ratio}) {
 
     let e = {...elementos[sel.elemento]};
     let s = e.slides[sel.slide];
@@ -105,6 +103,6 @@ export default function reducerEditarSlide ({elementos, sel, action, ratio, dado
             est.tampao.eBasico = false; 
     }
     elementos[sel.elemento] = e;
-    if(redividir) dadosRedividir = redividirSlides(elementos, sel, dadosRedividir);
-    return {elementos: [...elementos], selecionado: sel, dadosRedividir};
+    if (redividir) elementos = redividirSlides(elementos, sel, ratio);
+    return {elementos: [...elementos], selecionado: sel};
 }

@@ -253,7 +253,6 @@
 //   ✔️ Criar logo
 //   ✔️ Configurar site para ser encontrado pelo google
 //   ✔️ Criar canal do youtube
-//   Criar mapa do site pro Google Search Console
 //   Cadastrar google ads
 //   Buscar parceria com ultimato
 //   Pedir amigos para compartilharem
