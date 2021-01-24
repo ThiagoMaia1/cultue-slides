@@ -28,7 +28,7 @@ class BarraPesquisa extends React.Component {
             var slides = elementos[i].slides;
             for (var j = 0; j < slides.length; j++) {
                 if (slides[j].eMestre) continue;
-                var estrofes = [...slides[j].textoArray, elementos[i].titulo];
+                var estrofes = [...slides[j].textoArray.map(({texto}) => texto), elementos[i].titulo];
                 for (var k = 0; k < estrofes.length; k++) {
                     var sel = this.contemTermo(estrofes[k], termo)
                               ? {elemento: i, slide: j, estrofe: k} 

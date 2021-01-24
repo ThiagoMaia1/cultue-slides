@@ -30,8 +30,14 @@ export const getApresentacaoPadraoBasica = (usuario = {}) => {
   if (!usuario.uid || !usuario.idApresentacaoPadrao) {
     return {
       elementos: [
-        new Element("Slide-Mestre", "Slide-Mestre", [textoMestre], null, {...getEstiloPadrao()}, true)
-      ],
+        new Element(
+          "Slide-Mestre", 
+          "Slide-Mestre", 
+          [textoMestre], 
+          null, 
+          {...getEstiloPadrao()}, 
+          true
+      )],
       ratio: ratioTela,
       selecionado: selecionadoPadrao
     }

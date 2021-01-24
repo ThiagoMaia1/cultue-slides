@@ -120,7 +120,7 @@ export function eObjetoVazio(objeto) {
   return JSON.stringify(objeto) === "{}";
 }
 
-export const getImgBase64 = (img, frameW = null, frameH = null, callback = null) => {
+export const getImgBase64 = (img, frameW = null, frameH = null, callback = null, radius = null) => {
     if (!frameW) frameW = img.width;
     if (!frameH) frameH = img.width;
     var canvas = document.createElement('canvas');
@@ -132,10 +132,27 @@ export const getImgBase64 = (img, frameW = null, frameH = null, callback = null)
     var hScaled = frameH/scale;
     canvas.width = frameW;
     canvas.height = frameH;
-    ctx.drawImage(img, (iw - wScaled)/2, (ih - hScaled)/2, wScaled, hScaled, 0, 0, frameW, frameH);
+    let [x, y] = [(iw - wScaled)/2, (ih - hScaled)/2];
+    arredondarCtx(ctx, radius, wScaled, hScaled, x, y)
+    ctx.drawImage(img, x, y, wScaled, hScaled, 0, 0, frameW, frameH);
     var dataURL = canvas.toDataURL('image/png');
     if (callback) callback(dataURL);
     return dataURL;
+}
+
+const arredondarCtx = (ctx, radius, width, height, x, y) => {
+    ctx.beginPath();
+    ctx.moveTo(x + radius, y);
+    ctx.lineTo(x + width - radius, y);
+    ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+    ctx.lineTo(x + width, y + height - radius);
+    ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+    ctx.lineTo(x + radius, y + height);
+    ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+    ctx.lineTo(x, y + radius);
+    ctx.quadraticCurveTo(x, y, x + radius, y);
+    ctx.closePath();
+    ctx.clip();
 }
 
 export const eEmailValido = enderecoEmail => {

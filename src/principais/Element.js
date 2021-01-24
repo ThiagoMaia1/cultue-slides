@@ -1,12 +1,11 @@
 import AdicionarMusica from '../Components/Popup/PopupsAdicionar/LetrasMusica/AdicionarMusica';
 import AdicionarTextoBiblico from '../Components/Popup/PopupsAdicionar/TextoBiblico/AdicionarTextoBiblico';
+import { getTextoVersiculo } from '../Components/Preview/TextoPreview';
 import AdicionarTexto from '../Components/Popup/PopupsAdicionar/AdicionarTexto';
 import AdicionarImagem from '../Components/Popup/PopupsAdicionar/AdicionarImagem/AdicionarImagem';
 import AdicionarVideo from '../Components/Popup/PopupsAdicionar/AdicionarVideo/AdicionarVideo';
 import { capitalize, canvasTextWidth, retiraAcentos } from './FuncoesGerais';
 import store from '../index';
-import React from 'react';
-import SlideFormatado from '../Components/Preview/SlideFormatado';
 
 export const tiposElemento = {
     Música: AdicionarMusica
@@ -40,7 +39,7 @@ export function getDadosMensagem(elemento) {
   };
 }
 
-export const textoMestre = 'As configurações do estilo desse slide serão aplicadas aos demais, exceto quando configurações específicas de cada slide se sobrepuserem às deste. \n\nEste slide não será exportado nem exibido no modo de apresentação.'
+export const textoMestre = {texto: 'As configurações do estilo desse slide serão aplicadas aos demais, exceto quando configurações específicas de cada slide se sobrepuserem às deste. \n\nEste slide não será exportado nem exibido no modo de apresentação.'}
 
 export const listaPartesEstilo = ['texto', 'titulo', 'paragrafo', 'fundo', 'tampao', 'imagem'];
 
@@ -59,7 +58,7 @@ export const getFonteBase = (ratio = {}) => ({numero: 0.025*(ratio.height || sto
 export const estiloPadrao = {
   texto: {fontFamily: fontePadrao, eBasico: true}, 
   titulo: {fontSize: 3, height: 0.25, paddingRight: 0.08, textAlign: 'center'}, 
-  paragrafo: {fontSize: 1.5, paddingRight: 0.08, lineHeight: 1.9}, 
+  paragrafo: {fontSize: 1.5, paddingRight: 0.08, lineHeight: 1.9, temVers: true, temLivro: true, temCap: true}, 
   fundo: {path: ''}, 
   tampao: {backgroundColor: '#ffffff', opacityFundo: 0.2, eBasico: true},
   imagem: {
@@ -159,7 +158,7 @@ export default class Element {
   }
 
   dividirImagens = (thisP = this, imagens) => {
-    if (thisP.imagens.length === 1) {
+    if (imagens.length === 1) {
       thisP.slides[0].imagem = imagens[0];
       thisP.slides[0].eMestre = false;
       thisP.slides[0].textoArray = [];
@@ -170,7 +169,7 @@ export default class Element {
     }
   }
 
-  dividirTexto = (texto, nSlide, estElemento, estGlobal = null, ratio = null, thisP = this) => {
+  dividirTexto = (texto, nSlide, estElemento, estGlobal = null, ratio = null, thisP = this, versoAnterior = null) => {
     
     //Divide o texto a ser incluído em quantos slides forem necessários, mantendo a estilização de cada slide.
     if (nSlide === thisP.slides.length) {
@@ -180,7 +179,6 @@ export default class Element {
       return;
     }
     var slide = thisP.slides[nSlide];  
-
     
     var estSlide = slide.estilo;
     estGlobal = estGlobal ? estGlobal : store.getState().present.elementos[0].slides[0].estilo;
@@ -220,12 +218,24 @@ export default class Element {
       }
     }
 
+    if (thisP.tipo === 'Música') {
+      if(estP.omitirRepeticoes) texto = marcarEstrofesRepetidas(texto);
+      else texto = multiplicarEstrofes(texto);
+    }
+
     var estiloFonte = [(estP.fontStyle || ''), (estP.fontWeight || ''), estP.fontSize*fonteBase.numero + fonteBase.unidade, "'" + estP.fontFamily + "'"];
     estiloFonte = estiloFonte.filter(a => a !== '').join(' ');
     var caseTexto = estP.caseTexto || estP.caseTexto;
-    var separador = thisP.tipo === 'TextoBíblico' ? '' : '\n\n';
-    if (thisP.tipo === 'Música' && estP.omitirRepeticoes) texto = marcarEstrofesRepetidas(texto);
-    var { contLinhas, widthResto } = getLinhas(texto[0], estiloFonte, larguraLinha, caseTexto);
+    const eBiblia = thisP.tipo === 'TextoBíblico';
+    var separador = eBiblia ? '' : '\n\n';
+    let {temVers, temCap, temLivro} = estP;
+
+    const getVersiculo = (verso, anterior) => {
+      if(eBiblia) return getTextoVersiculo(verso, anterior || {}, {temVers, temCap, temLivro}, false);
+      return verso; 
+    }
+
+    var { contLinhas, widthResto } = getLinhas(getVersiculo(texto[0], versoAnterior), estiloFonte, larguraLinha, caseTexto);
     var i;
 
     for (i = 0; i < texto.length; i++) {
@@ -233,12 +243,12 @@ export default class Element {
         thisP.slides = thisP.slides.slice(0, nSlide+1);
         break;
       }
-      var linhas = getLinhas(separador + texto[i+1], estiloFonte, larguraLinha, caseTexto, widthResto)
+      var linhas = getLinhas(separador + getVersiculo(texto[i+1], texto[i]), estiloFonte, larguraLinha, caseTexto, widthResto)
       contLinhas += linhas.contLinhas;
       widthResto = /\n/.test(separador) ? 0 : linhas.widthResto;        
       if ((contLinhas + (widthResto > 0 ? 1 : 0)) > nLinhas) { //Se próximo versículo vai ultrapassar o slide, conclui slide atual.
         if (duasColunas) [ contLinhas, widthResto, duasColunas ] = [ 0, 0, false ]; 
-        thisP.dividirTexto(texto.slice(i+1), nSlide+1, estElemento, estGlobal, ratio, thisP);
+        thisP.dividirTexto(texto.slice(i+1), nSlide+1, estElemento, estGlobal, ratio, thisP, texto[i]);
         break;
       }
     }
@@ -280,52 +290,34 @@ export default class Element {
   }
 }
 
-
 const marcarEstrofesRepetidas = texto => {
 
   const limparTexto = t => retiraAcentos(t).toLowerCase().replace(/[^a-z]/g,'');
+  let tAnterior = limparTexto(texto[0].texto);
+  for (let i = 1; i < texto.length; i++) {
+    let tAtual = limparTexto(texto[i].texto);
+    if(tAnterior === tAtual){
+      texto[i-1].repeticoes = (texto[i-1].repeticoes || 1) + 1;
+      texto.splice(i, 1);
+    } 
+    tAnterior = tAtual;
+  }
+  return texto;
+}
 
-  var textoAjeitado = [...texto];
-  for (var j = 0; j < textoAjeitado.length; j++) {
-    var separadoPorMultiplicador = textoAjeitado[j].split(/\((?= ?[2-9].{0,15})|(?<=\( ?[2-9]).{0,15}\)| (?=[2-9] ?(?:[xX]|[vV][eE][zZ][eE][sS]))|(?<=[2-9]) ?(?:[xX]|[vV][eE][zZ][eE][sS])/g);
-    separadoPorMultiplicador = separadoPorMultiplicador.reduce((resultado, t) => {
-      if(t) {
-        if (!isNaN(t)) t = '$' + t + '$';
-        resultado.push(t.trim());
-      } 
-      return resultado}, []
-      );
-      textoAjeitado.splice(j, 1, ...separadoPorMultiplicador);
-  }
-  var estrofeAnterior = limparTexto(textoAjeitado[0]);
-  var estrofeAtual;
-  var cont;
-  for (var i = 1; i < textoAjeitado.length; i++) {
-    if (/\$\d\$/.test(textoAjeitado[i])) continue;
-    estrofeAtual = limparTexto(textoAjeitado[i]);
-    if (estrofeAtual === estrofeAnterior) {
-      cont = textoAjeitado[i-1].replace('$', '');
-      if (!isNaN(cont)) {
-        cont = Number(cont) + 1;
-      } else {
-        cont = 2;
-      }
-      textoAjeitado[i] = '$' + cont + '$';
-      if (/\$\d\$/.test(textoAjeitado[i-1])) {
-        textoAjeitado.splice(i-1, 1); 
-        i--;
-      }
-    } else {
-      cont = 1;
-      estrofeAnterior = estrofeAtual;
-    }
-  }
-  return textoAjeitado;
+const multiplicarEstrofes = (texto, multiplicar) => {
+  if (!multiplicar) return texto;
+  return texto.reduce((resultado, t) => {
+    let rep = t.repeticoes || 1;
+    let flated = Array(rep);
+    flated.fill({...t, repeticoes: 1});
+    resultado = [...resultado, ...flated];
+    return resultado;
+  }, [])
 }
 
 export function getLinhas(texto, fontStyle, larguraLinha, caseTexto, widthInicial = 0) {
   
-  if (/\$\d\$/.test(texto)) return {contLinhas: 0, widthResto: 0}; 
   texto = capitalize(texto, caseTexto);
   var widthResto = widthInicial;
   var trechos = texto.split('\n');

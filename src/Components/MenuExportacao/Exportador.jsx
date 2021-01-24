@@ -4,13 +4,14 @@ import { getNomeInterfaceTipo } from '../../principais/Element';
 import { capitalize, getImgBase64, parseCorToRgb, rgbObjToStr } from '../../principais/FuncoesGerais';
 import SlideFormatado from '../Preview/SlideFormatado'; 
 
-export function getBase64Image(imagem, total, ratio, callback) {
+export function getBase64Image(imagem, total, ratio, callback, radius) {
   const img = new Image();
   img.crossOrigin = 'Anonymous';
   img.onload = () => {
     getImgBase64(
       img, ratio.width, ratio.height, 
-      dataURL => callback(dataURL, imagem, total)
+      dataURL => callback(dataURL, imagem, total),
+      radius
     )
   };
 
@@ -66,9 +67,11 @@ export function getPreviews(elementos) {
 }
 
 export function getSlidePreview ({elementos, selecionado}) {
+  let el = elementos[selecionado.elemento];
+  let s = el.slides[selecionado.slide];
   const global = elementos[0].slides[0];
-  const elemento = elementos[selecionado.elemento].slides[0];
-  const slide = {...elementos[selecionado.elemento].slides[selecionado.slide]};
+  const elemento = el.slides[0];
+  const slide = {...s};
   const estiloAplicavel = obj => {
     var estilo = {...global.estilo[obj], ...elemento.estilo[obj], ...slide.estilo[obj]};
     for (var k of Object.keys(estilo)) {    
@@ -89,18 +92,22 @@ export function getSlidePreview ({elementos, selecionado}) {
   var estiloTexto = estiloAplicavel('texto');
   var estiloParagrafo = {...estiloTexto, ...estiloAplicavel('paragrafo')};
   var estiloTitulo = {...estiloTexto, ...estiloAplicavel('titulo')};
-  var tipo = elementos[selecionado.elemento].tipo;
-  var el = elementos[selecionado.elemento];
-  var tituloSlide = el.slides[selecionado.slide].titulo;
-  var titulo = tituloSlide !== undefined ? tituloSlide : elementos[selecionado.elemento].titulo;
+  var { tipo } = el;
+  var tituloSlide = s.titulo;
+  var titulo = tituloSlide !== undefined ? tituloSlide : el.titulo;
   titulo = capitalize(titulo, estiloTitulo.caseTexto);
+  let sAnterior = el.slides[selecionado.slide-1];
+  let versoAnterior = tipo === "TextoBíblico" 
+                      ? sAnterior ? sAnterior.textoArray.length ? sAnterior.textoArray[sAnterior.textoArray.length-1] : undefined : undefined
+                      : undefined
 
   return {...slide,
     tipo,
     titulo,
-    nomeLongoElemento: getNomeInterfaceTipo(tipo) + ': ' + ((tipo === 'Imagem' && !titulo) ? elementos[selecionado.elemento].imagens[0].alt : titulo),
+    nomeLongoElemento: getNomeInterfaceTipo(tipo) + ': ' + ((tipo === 'Imagem' && !titulo) ? el.imagens[0].alt : titulo),
     selecionado: {...selecionado},
-    textoArray: slide.textoArray.map(t => capitalize(t, estiloParagrafo.caseTexto)),
+    textoArray: slide.textoArray.map(t => ({...t, texto: capitalize(t.texto, estiloParagrafo.caseTexto)})),
+    versoAnterior,
     estilo: {
       titulo: {...estiloTitulo},
       paragrafo: {...estiloParagrafo},
@@ -114,7 +121,7 @@ export function getSlidePreview ({elementos, selecionado}) {
   
 
 const slideFinal = {
-  tipo: '', textoArray: ['Fim da apresentação. Pressione F11 para sair do modo de tela cheia.'],
+  tipo: '', textoArray: [{texto: 'Fim da apresentação. Pressione F11 para sair do modo de tela cheia.'}],
   titulo: '',
   selecionado: {elemento: 999, slide: 0},
   estilo: {
@@ -163,7 +170,7 @@ class Exportador extends Component {
   substituirSpanFinal = copiaDOM => {
     var spans = [...copiaDOM.querySelectorAll('span')].reverse();
     for (var s of spans) {
-      if (s.innerText === slideFinal.textoArray[0]) {
+      if (s.innerText === slideFinal.textoArray[0].texto) {
         s.id = 'mensagem-slide-final';
         return;
       }
@@ -209,7 +216,8 @@ class Exportador extends Component {
           imagensBase64.push({data, classe});
           if (total === imagensBase64.length)
             chamarCallback(imagensBase64, previews, nomeArquivo);
-        }
+        },
+        imgsUnique[j].eFundo ? null : Number(p.estilo.imagem.borderRadius.replace('px',''))
       );
     }
   }

@@ -53,7 +53,11 @@ class AdicionarTexto extends Component {
     onClick () {
         var popupAdicionar = {input1: this.state.titulo, input2: this.state.textoSlide};
         this.props.dispatch({type: "inserir", 
-                             elemento: new Element( "TextoLivre", this.state.titulo, [...this.state.textoSlide.split('\n\n')]),
+                             elemento: new Element(
+                                 "TextoLivre", 
+                                 this.state.titulo, 
+                                 [...this.state.textoSlide.split('\n\n').map(texto => ({texto}))]
+                             ),
                              popupAdicionar: popupAdicionar,
                              elementoASubstituir: this.props.elementoASubstituir
                             });

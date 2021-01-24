@@ -21,6 +21,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  --font-size-geral: calc(11px + 0.4vh);
   font-size: calc(11px + 0.4vh);
   --preto-fraco: #333333;
   --azul-fraco: #6688df;
@@ -63,26 +64,6 @@ button, input[type="submit"], input[type="reset"], [contentEditable="true"]:focu
 	cursor: pointer;
   outline: inherit;
   text-align: left;
-}
-
-[contentEditable="true"]:focus {
-  background-color: white;
-  border-radius: var(--round-border-medio);
-  position: relative;
-  border: 1px solid gray;
-  padding: 0.2vh;
-  outline: 0;
-  cursor: text;
-  left: -0.1vh;
-  vertical-align: top;
-}
-
-.letra-clara [contentEditable="true"]:focus {
-  background-color: rgb(202, 202, 202);
-}
-
-sup {
-  font-size: 80%;
 }
 
 .quadriculado-imitando-transparente{

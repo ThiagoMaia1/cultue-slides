@@ -4,8 +4,6 @@ import { connect } from 'react-redux';
 import Estrofes from './Estrofes';
 import { getFonteBase } from '../../principais/Element';
 import { getPathImagem } from './Img';
-import { limparHighlights } from '../NavBar/BarraPesquisa/BarraPesquisa';
-import { markupParaSuperscrito } from '../Preview/TextoPreview';
 import { ratioTela } from '../../principais/firestore/apresentacoesBD';
 import ImagemSlide from './ImagemSlide';
 import BotaoReupload from './BotaoReupload';
@@ -18,21 +16,16 @@ class SlideFormatado extends Component {
         this.realcarElemento = props.realcarElemento || realcarElemento;
     }
     
-    editarTexto = e => {
-        clearTimeout(this.timeoutEditar);
-        this.timeoutEditar = setTimeout(div => {
-            var dados = div.id.split('-');
-            var [ objeto, numero ] = [ dados[0], dados[1] ]; 
-            var objAction = {
-                type: 'editar-slide', 
-                objeto: objeto, 
-                valor: markupParaSuperscrito(limparHighlights(div.innerHTML)), 
-                redividir: true, 
-                selecionado: this.props.selecionado
-            };
-            if (numero) objAction.numero = numero;
-            this.props.dispatch(objAction);
-        }, 1000, e.target);
+    editarTexto = (valor, objeto, numero) => {
+        var objAction = {
+            type: 'editar-slide', 
+            objeto, 
+            valor, 
+            redividir: true, 
+            selecionado: this.props.selecionado
+        };
+        if (numero !== undefined) objAction.numero = numero;
+        this.props.dispatch(objAction);
     }
 
     
@@ -52,12 +45,26 @@ class SlideFormatado extends Component {
         return eClara ? 'letra-clara' : '';   
     }
     
-    getBlocoTitulo(slidePreview, sel) {
-        return <div className={'slide-titulo ' + this.getClasseLetraClara('titulo')} style={slidePreview.estilo.titulo}>
-            <div><span key={sel.elemento + '.' + sel.slide} id='textoTitulo' onInput={this.editarTexto} onFocus={() => this.ativarRealce('titulo')}
-                contentEditable={this.props.editavel} suppressContentEditableWarning='true'
-                style={this.realcarElemento('titulo')}>{slidePreview.titulo}</span></div>
-        </div>;
+    getBlocoTitulo = (slidePreview, sel) => {
+        let id = 'textoTitulo';
+        let aba = 'titulo';
+        return (
+            <div className={'slide-titulo ' + this.getClasseLetraClara(aba)} 
+                style={slidePreview.estilo.titulo}>
+                <div>
+                    <span key={sel.elemento + '.' + sel.slide} 
+                        id={id} 
+                        onInput={e => this.editarTexto(e.target.innerText, id)} 
+                        onFocus={() => this.ativarRealce(aba)}
+                        contentEditable={this.props.editavel} 
+                        suppressContentEditableWarning='true'
+                        style={this.realcarElemento(aba)}
+                    >
+                        {slidePreview.titulo}
+                    </span>
+                </div>
+            </div>
+        );
     }
 
     getEstiloImagem = (estImagem, proporcao) => ({
@@ -72,6 +79,7 @@ class SlideFormatado extends Component {
     render() {
         let { slidePreview, proporcao, selecionado, editavel, referencia, id, className, ratio, style, children } = this.props
         var proporcaoTela = proporcao*ratio.width/ratioTela.width;
+        let est = slidePreview.estilo;
         return (
                 <div ref={referencia} 
                      id={id} 
@@ -83,25 +91,26 @@ class SlideFormatado extends Component {
                     {!slidePreview.imagem ? null 
                         : <ImagemSlide key={selecionado.elemento + '.' + selecionado.slide} 
                                        imagem={slidePreview.imagem} 
-                                       estiloImagem={this.getEstiloImagem(slidePreview.estilo.imagem, proporcao)} 
+                                       estiloImagem={this.getEstiloImagem(est.imagem, proporcao)} 
                                        estiloRealce={this.realcarElemento('imagem')}
                                        editavel={editavel}/>
                     }
-                    <Img imagem={slidePreview.estilo.fundo} 
+                    <Img imagem={est.fundo} 
                          proporcao={proporcaoTela} 
-                         tampao={slidePreview.estilo.tampao} 
-                         botaoInativo={!editavel || typeof slidePreview.estilo.fundo.path === 'string' || (slidePreview.imagem && slidePreview.imagem.idUpload)}
+                         tampao={est.tampao} 
+                         botaoInativo={!editavel || typeof est.fundo.path === 'string' || (slidePreview.imagem && slidePreview.imagem.idUpload)}
                          selecionado={selecionado}/>
                     <div className='texto-preview' style={{fontSize: getFonteBase().numero*proporcao + getFonteBase().unidade}}>
-                        {slidePreview.estilo.titulo.abaixo ? null : this.getBlocoTitulo(slidePreview, selecionado)}
-                        <div id='paragrafo-slide' className={'slide-paragrafo ' + this.getClasseLetraClara('paragrafo')} style={slidePreview.estilo.paragrafo}>
+                        {est.titulo.abaixo ? null : this.getBlocoTitulo(slidePreview, selecionado)}
+                        <div id='paragrafo-slide' className={'slide-paragrafo ' + this.getClasseLetraClara('paragrafo')} 
+                             style={{...est.paragrafo, '--tamanho-fonte': Number(est.paragrafo.fontSize.replace('%',''))/100}}>
                             <div style={this.realcarElemento('paragrafo')} 
-                                 className={'realce-paragrafo ' + (slidePreview.estilo.paragrafo.duasColunas ? 'dividido-colunas' : '')}>
+                                 className={'realce-paragrafo ' + (est.paragrafo.duasColunas ? 'dividido-colunas' : '')}>
                                 <Estrofes slidePreview={slidePreview} onInput={this.editarTexto} ativarRealce={this.ativarRealce} editavel={editavel}
                                            selecionado={selecionado}/>
                             </div>
                         </div>
-                        {slidePreview.estilo.titulo.abaixo ? this.getBlocoTitulo(slidePreview, selecionado) : null}
+                        {est.titulo.abaixo ? this.getBlocoTitulo(slidePreview, selecionado) : null}
                     </div>
                     {children}
                 </div>

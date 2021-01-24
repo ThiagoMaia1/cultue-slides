@@ -194,6 +194,7 @@
 //   Atalhos funcionarem mesmo com foco nos inputs
 
 /*/ Features dispensáveis:
+//   Numeração na lista de slides incluir capítulos e livros
 //   Contador de slides (baixar html)
 //   Selecionar/Arrastar múltiplos grupos
 //   TabIndex dos botões e tal

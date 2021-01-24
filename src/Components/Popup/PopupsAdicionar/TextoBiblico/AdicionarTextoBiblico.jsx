@@ -5,7 +5,7 @@ import './style.css';
 import { extrairReferencias, RefInvalida } from "./referenciaBiblica"
 import Element from '../../../../principais/Element'
 import { connect } from 'react-redux'
-import { formatarVersiculos, formatarVersiculosSlide } from '../../../Preview/TextoPreview.jsx'
+import { formatarVersiculos } from '../../../Preview/TextoPreview.jsx'
 import Carregando from '../../../Basicos/Carregando/Carregando.jsx';
 import Carrossel from '../../../Basicos/Carrossel/Carrossel'
 
@@ -174,7 +174,7 @@ class AdicionarTextoBiblico extends Component {
         var popupAdicionar = {input1: this.versao, input2: this.state.termoPesquisa};
         this.props.dispatch({ type: 'inserir', 
                               elemento: new Element('TextoBíblico', this.referenciaLimpa, 
-                                        formatarVersiculosSlide(this.versiculosValidos(this.state.versiculosPronto))),
+                                        this.versiculosValidos(this.state.versiculosPronto)),
                               popupAdicionar: popupAdicionar,
                               elementoASubstituir: this.props.elementoASubstituir
                             });

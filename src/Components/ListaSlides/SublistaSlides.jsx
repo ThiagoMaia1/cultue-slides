@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { getNumeroVersiculo } from '../Preview/TextoPreview.jsx';
 import { connect } from 'react-redux';
 
 export const eEstiloVazio = estilo => {
@@ -30,13 +29,13 @@ class SublistaSlides extends Component {
     }   
 
     getRotuloSlide = (elemento, slide) => {
+        let t0 = slide.textoArray[0];
         if(slide.eTitulo) return 'Título';
-        var t0 = slide.textoArray.filter(t => !/\$\d\$/.test(t))[0] || '';
         switch (elemento.tipo) {
             case 'Imagem':
                 return elemento.titulo || slide.imagem.alt;
             case 'TextoBíblico':
-                return 'v. ' + (getNumeroVersiculo(t0).numero || '').padStart(2, 0);
+                return 'v. ' + String(t0.vers).padStart(2, 0);
             default:
                 return t0.substr(0, 50);
         }

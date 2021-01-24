@@ -6,7 +6,7 @@ import { RiMastercardLine } from 'react-icons/ri'
 import { BsTextLeft, BsTextCenter, BsTextRight, BsJustify, BsMusicNoteBeamed, BsFileBreak, BsArrowsFullscreen} from 'react-icons/bs';
 import { BiVerticalCenter, BiHorizontalCenter } from 'react-icons/bi';
 import { VscCollapseAll } from 'react-icons/vsc';
-import { AiOutlineRotateLeft } from 'react-icons/ai';
+import { AiOutlineRotateLeft, AiOutlineBook } from 'react-icons/ai';
 import Slider from '../Basicos/Slider/Slider';
 import Select from '../Basicos/Select/Select';
 import BotaoInfo from '../Basicos/BotaoInfo/BotaoInfo';
@@ -146,6 +146,15 @@ class ConfigurarSlides extends Component {
                               {apelido: 'Alinhar Verticalmente', exigeNaoTitulo: true, naoAplicarEstilo: true, objeto: 'imagem', 
                                valorAlterado: -1, simbolo: <BiVerticalCenter size={this.state.tamIcones}/>, 
                                callback: () => this.despacharAlinhamento('vertical')
+                              },
+                              {apelido: 'Exibir Livro', exigeNaoTitulo: true, nomeAtributo: 'temLivro', objeto: 'paragrafo', 
+                               valorNormal: false, valorAlterado: true, simbolo: <AiOutlineBook size={this.state.tamIcones}/>, tipo: "TextoBíblico"
+                              },
+                              {apelido: 'Exibir Capítulo', exigeNaoTitulo: true, nomeAtributo: 'temCap', objeto: 'paragrafo', 
+                               valorNormal: false, valorAlterado: true, simbolo: 2, tipo: "TextoBíblico"
+                              },
+                              {apelido: 'Exibir Versículo', exigeNaoTitulo: true, nomeAtributo: 'temVers', objeto: 'paragrafo', 
+                               valorNormal: false, valorAlterado: true, simbolo: <sup>2</sup>, tipo: "TextoBíblico"
                               }
     ]; 
   }
@@ -176,7 +185,7 @@ class ConfigurarSlides extends Component {
                 onClickCapture={event => {
                   let target = this.getTargetBotao(event);
                   target.classList.remove('clicado');
-                  if(e.callback) e.callback();
+                  if(e.callback) e.callback(e);
                   if(e.nomeAtributo) this.toggleEstiloTexto(e);
                 }}
                 style={e.naoAplicarEstilo ? null : objEstilo}>
@@ -412,7 +421,7 @@ class ConfigurarSlides extends Component {
                     <div id='rotulo-configuracoes-musica' style={slidePreview.tipo === 'Música' ? null : {display: 'none'}}>
                       <BsMusicNoteBeamed size={this.state.tamIcones}/>
                     </div>
-                  {this.gerarBotoesEstiloTexto(aba, 4, 5)}
+                  {this.gerarBotoesEstiloTexto(aba, 4)}
                 </div>
                 : null
               }

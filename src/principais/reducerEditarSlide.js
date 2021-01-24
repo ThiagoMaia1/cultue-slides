@@ -12,9 +12,14 @@ const funcoes = {
         if (!sel.slide && e.tipo !== 'Imagem' && e.tipo !== 'Vídeo') 
         e.titulo = valor
     },
+    versoTem: ({est, subObjeto}) => {
+        let obj = {};
+        obj[subObjeto] = !est.paragrafo.versoTem[subObjeto];
+        est.paragrafo.versoTem = {...est.paragrafo.versoTem, ...obj}
+    },
     estiloSemReplace: complementarEstilo,
     textoArray: editarTextoArray,
-    insetImagem: editarInsetImagem
+    insetImagem: editarInsetImagem,
 }
 
 function complementarEstilo({estilo, s}) {
@@ -25,15 +30,16 @@ function complementarEstilo({estilo, s}) {
 }
 
 function editarTextoArray({valor, s, numero}) {
-    if (valor === '') {
+    if (valor.texto === '') {
         s.textoArray.splice(numero, 1);
     } else {
-        var quebra = valor.split(/(?<=\n\n)/);
+        var quebra = valor.texto.split(/(?<=\n\n)/)
+                          .map(texto =>({...valor, texto}));
         if (quebra.length > 1) {
-            s.textoArray.splice(numero, 1, quebra.filter(q => /\S/.test(q)));
+            s.textoArray.splice(numero, 1, quebra.filter(({texto}) => /\S/.test(texto)));
             s.textoArray = s.textoArray.flat();
         } else {
-            s.textoArray[numero] = valor;
+            s.textoArray[numero].texto = valor.texto;
         }
     }
 }

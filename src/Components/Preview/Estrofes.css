@@ -1,0 +1,33 @@
+
+.texto-preview [contentEditable="true"]:focus {
+    background-color: white;
+    border-radius: var(--round-border-medio);
+    transition: 0ms;
+    margin-left: 0;
+    cursor: pointer;
+}
+
+.container-estrofe [contentEditable="true"]:focus {
+    filter: drop-shadow(0px 0px 1px gray);
+}
+
+.esquerda[contentEditable="true"]:focus {
+    margin-left: calc(var(--tamanho-fonte)*var(--font-size-geral)*0.03*(-1));;
+}
+
+.nao-direita[contentEditable="true"]:focus {
+    margin-right: calc(var(--tamanho-fonte)*var(--font-size-geral)*0.10);
+}
+ 
+.letra-clara [contentEditable="true"]:focus {
+    background-color: rgb(202, 202, 202);
+}
+
+sup {
+    font-size: 80%;
+}
+
+.numero-verso {
+    padding: 0;
+    margin: 0;
+}

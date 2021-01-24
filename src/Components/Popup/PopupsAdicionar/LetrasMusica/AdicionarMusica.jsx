@@ -128,7 +128,7 @@ class AdicionarMusica extends Component {
                 </div>)
             this.setState({letraMusica: {esquerda: letraEsquerda, direita: letraDireita}, botoesVisiveis: true, 
                            listaAtiva: false, buscandoLetra: false,
-                           elemento: new Element('Música', vagalumeLetra.response.mus[0].name, letra, null, 
+                           elemento: new Element('Música', vagalumeLetra.response.mus[0].name, letra.map(texto => ({texto})), null, 
                                      {paragrafo: {...this.getEstiloParagrafo()}}
                            )
             });

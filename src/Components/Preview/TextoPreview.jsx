@@ -45,25 +45,53 @@ export function getNumeroVersiculo(texto) {
     return {textoAntes: palavras.slice(0, Math.max(n,0)).join(' '), numero: verso, textoDepois: palavras.slice(n+1).join(' ')};
 }
 
-export function formatarVersiculosSlide(versiculos) {
-    return versiculos.map((v, i) => {
-        if (v instanceof RefInvalida) 
-            return v.texto;
-        var r = numSuperscrito(v.vers) + ' ' + v.texto + ' ';
-        var c = v.cap + ' ';
-        var l = v.livro + ' ';
-        if (i === 0) {
-            r = l + c + r;
-        } else {
-            if (v.livro !== versiculos[i-1].livro) {
-                r = '\n\n' + l + c + r;
-            } else if (v.cap !== versiculos[i-1].cap) {
-                r = c + r;
-            }
-        } 
-        return r;
-    })
+export const getTextoVersiculo = (verso, versoAnterior = {}, versoTem = {}, sup = true) => {
+    let v = [{...versoAnterior}, {...verso}]
+    
+    let funcaoSuperscrito = sup 
+                            ? superscritoPrevia
+                            : numSuperscrito
+    let espaco = '';
+    
+    const tem = obj => {
+        let ind = 'tem' + obj.split('').map((c, i) => i > 0 ? c : c.toUpperCase()).join('');
+        if(obj === 'vers' && versoTem[ind]) {
+            espaco = ' ';
+            return funcaoSuperscrito(v[1].vers);
+        }
+        if(v[0][obj] !== v[1][obj] && versoTem[ind]) 
+            return v[1][obj] + ' ';
+        return '';
+    }
+
+    const keysVersiculo = ['livro', 'cap', 'vers'];
+    let final = keysVersiculo
+        .reduce((resultado, k) => 
+            resultado.concat(tem(k))
+        , []);
+    final.push(' ' + v[1].texto + (v[1].texto ? ' ' : ''));
+    final = final.filter(t => !!t);
+    return sup 
+           ? final
+           : final.join(' ');
 }
+// export function formatarVersiculosSlide(versiculos) {
+//     return versiculos.map((v, i) => {
+//         var r = numSuperscrito(v.vers) + ' ' + v.texto + ' ';
+//         var c = v.cap + ' ';
+//         var l = v.livro + ' ';
+//         if (i === 0) {
+//             r = l + c + r;
+//         } else {
+//             if (v.livro !== versiculos[i-1].livro) {
+//                 r = '\n\n' + l + c + r;
+//             } else if (v.cap !== versiculos[i-1].cap) {
+//                 r = c + r;
+//             }
+//         } 
+//         return r;
+//     })
+// }
 
 export function formatarVersiculos(versiculos) {
     return versiculos.map((v, i) => {
