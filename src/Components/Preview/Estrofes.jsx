@@ -1,66 +1,55 @@
-import React, { Fragment, useRef, useState } from 'react';
+import React, { Fragment, useRef } from 'react';
 import { getTextoVersiculo } from './TextoPreview';
+import store from '../../index';
 import './Estrofes.css';
 
 const divBreak = <div><br></br></div>;
 
-const SpanEstrofe = ({t, i, comBreaks = false, eVersiculo = false, versoAnterior, editavel, onInput, ativarRealce, slidePreview}) => {
+const SpanEstrofe = ({t, texto, i, eVersiculo = false, versoAnterior, editavel, onInput, ativarRealce, slidePreview}) => {
         
     let ref = useRef();
-    let [key, setKey] = useState(true);
-    let [classes, setClasses] = useState([]);
-    let rects = useRef();
-    let breaks = comBreaks ? divBreak : null;
     let {temVers, temCap, temLivro} = slidePreview.estilo.paragrafo;
     let versoTem = {temVers, temCap, temLivro}
-    let [texto, textoReferencia, quadro] = [t.texto, [], {}];
-    let editando = ref.current === document.activeElement;   
-    if(ref.current) {
-        quadro = ref.current.parentNode.getBoundingClientRect();
-        if(!editando) rects.current = ref.current.getClientRects();
-    }
+    let referencia
     if (eVersiculo) {
-        texto = <>{getTextoVersiculo(t, versoAnterior, versoTem)}</>;
-        textoReferencia = getTextoVersiculo({...t, texto: ''}, versoAnterior, versoTem);
+        referencia = getTextoVersiculo(t, versoAnterior, versoTem, true, !i);
+        referencia.pop();
     }
-    if (editando) ref.current.innerHTML = t.texto + ' '; 
-    else if (classes.length) setClasses([]);
-    if(ref.current) console.log(ref.current.innerHTML);
-    console.log(textoReferencia);
     return (
-        <Fragment key={key}>
-            {!textoReferencia.length || !editando || slidePreview.tipo !== 'TextoBíblico' ? null :
-                <span className='numero-verso'><>{textoReferencia}</></span>
+        <span className={'container-estrofe' + (!eVersiculo ? ' estrofe-area' : '')}
+              onClick={() => {
+                  ativarRealce('paragrafo');
+                  ref.current.focus();
+              }}>
+            {!eVersiculo ? null :
+                <span className='numero-verso'><>{referencia}</></span>
             }
-            <span className={classes.join(' ')}
+            <span className='estrofe-editavel'
+                  id={'textoArray-' + i}
                   ref={ref}
                   contentEditable={editavel} 
                   suppressContentEditableWarning='true'
-                  onFocus={() => {
-                    // let r = rects.current;
-                    // console.log(r, textoReferencia.length);
-                    // const tolerancia = 5;
-                    // let letClasses = [...classes]
-                    // if (r[textoReferencia.length].left < quadro.left + tolerancia) 
-                    //     letClasses.push('esquerda');
-                    // let ultimo = r[r.length-1];
-                    // if (ultimo.right < quadro.right - tolerancia) 
-                    //     letClasses.push('nao-direita');
-                    // setClasses(letClasses);
-                    ativarRealce('paragrafo')
-                  }}
                   onBlur={e => {
-                    let txt = e.target.innerText
-                    onInput({...t, texto: txt.substr(0, txt.length-1)}, 'textoArray', i);
-                    setKey(!key);
+                    onInput({...t, texto: e.target.innerText}, 'textoArray', i);
                   }}
             >
                 {texto} 
             </span>
-            {breaks}
-        </Fragment>
+        </span>
     )
 };
+
+const Repetidor = ({repeticoes, i}) => {
+    return (
+        <span className='marcador-estrofe'>
+            <span>✕</span>
+            <input style={{width: String(repeticoes).split('').length*2 + 'vw'}}
+                   value={repeticoes}
+                   type='number'
+                   onChange={e => store.dispatch({type: 'editar-slide', objeto: 'repeticoes', numero: i, valor: e.target.value})}/>
+        </span>
+    )
+}
 
 export default function Estrofes(props) {
     var s = props.slidePreview;
@@ -69,22 +58,14 @@ export default function Estrofes(props) {
     var estiloDivEstrofe;
     let sel = s.selecionado;
     let key = sel.elemento + '.' + sel.slide + '.';
-
-    const getSpanRepetidor = repeticoes => {
-        if (!s.estilo.paragrafo.multiplicadores || repeticoes < 2)
-            return null;
-        return <span className='marcador-estrofe' 
-                     contentEditable='true' 
-                     suppressContentEditableWarning='true'
-                >✕{repeticoes}
-               </span>
-    }
     
     const getConteudoWraper = (t, i, array) => (
         <Fragment key={i}>
             <div className='wraper-estrofe'>
-                <SpanEstrofe key={key + i} t={t} i={i} comBreaks={true} {...props}/>
-                {getSpanRepetidor(t.repeticoes)}
+                <SpanEstrofe key={key + i} t={t} i={i} texto={t.texto} {...props}/>
+                {!s.estilo.paragrafo.multiplicadores || (t.repeticoes || 1) < 2 ? null :
+                    <Repetidor repeticoes={t.repeticoes} i={i}/>
+                }
             </div>
             {i < array.length && t.texto.substr(0,4) !== '\n\n' ? divBreak : null}
         </Fragment>
@@ -104,16 +85,16 @@ export default function Estrofes(props) {
     if (s.tipo === 'TextoBíblico') {
         estiloDivEstrofe = {display: 'inline'};
         spans = tA.map((t, i) => 
-            <SpanEstrofe t={t} key={key + i} i={i} eVersiculo={true} versoAnterior={i ? tA[i-1] : s.versoAnterior} {...props}/>
+            <SpanEstrofe t={t} key={key + i} i={i} texto={t.texto} eVersiculo={!s.eMestre} versoAnterior={i ? tA[i-1] : s.versoAnterior} {...props}/>
         )
     } else {
         estiloDivEstrofe = {display: 'flex', width: '100%', flexDirection: 'column'};
         estiloDivEstrofe.alignItems = getAlinhamento(s.estilo.paragrafo.textAlign);
         if (s.tipo === 'Música') spans = tA.map(getConteudoWraper)
-        else spans = tA.map((t, i) => <SpanEstrofe t={t} key={key + i} i={i} comBreaks={true} {...props}/>)
+        else spans = tA.map((t, i) => <SpanEstrofe t={t} key={key + i} i={i} texto={t.texto} {...props}/>)
     }
     return (
-        <div className='container-estrofe' style={estiloDivEstrofe}>
+        <div className='container-estrofes' style={estiloDivEstrofe}>
             {spans} 
         </div>
     );

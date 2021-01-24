@@ -172,6 +172,10 @@ export default class Element {
   dividirTexto = (texto, nSlide, estElemento, estGlobal = null, ratio = null, thisP = this, versoAnterior = null) => {
     
     //Divide o texto a ser incluído em quantos slides forem necessários, mantendo a estilização de cada slide.
+    if (texto.length === 0) {
+      thisP.slides.splice(nSlide, 1000);
+      return;
+    }
     if (nSlide === thisP.slides.length) {
       thisP.slides.push({estilo: {...newEstilo()}, textoArray: []});
     } else if (nSlide > thisP.slides.length) {
@@ -230,20 +234,20 @@ export default class Element {
     var separador = eBiblia ? '' : '\n\n';
     let {temVers, temCap, temLivro} = estP;
 
-    const getVersiculo = (verso, anterior) => {
-      if(eBiblia) return getTextoVersiculo(verso, anterior || {}, {temVers, temCap, temLivro}, false);
-      return verso; 
+    const getVersiculo = (verso, anterior, primeiro) => {
+      if(eBiblia) return getTextoVersiculo(verso, anterior || {}, {temVers, temCap, temLivro}, false, primeiro);
+      return verso.texto; 
     }
 
-    var { contLinhas, widthResto } = getLinhas(getVersiculo(texto[0], versoAnterior), estiloFonte, larguraLinha, caseTexto);
+    var { contLinhas, widthResto } = getLinhas(getVersiculo(texto[0], versoAnterior, true), estiloFonte, larguraLinha, caseTexto);
     var i;
 
     for (i = 0; i < texto.length; i++) {
       if (i+1 >= texto.length) {
-        thisP.slides = thisP.slides.slice(0, nSlide+1);
+        thisP.slides.splice(nSlide + 1, 1000);
         break;
       }
-      var linhas = getLinhas(separador + getVersiculo(texto[i+1], texto[i]), estiloFonte, larguraLinha, caseTexto, widthResto)
+      var linhas = getLinhas(separador + getVersiculo(texto[i+1], texto[i], false), estiloFonte, larguraLinha, caseTexto, widthResto)
       contLinhas += linhas.contLinhas;
       widthResto = /\n/.test(separador) ? 0 : linhas.widthResto;        
       if ((contLinhas + (widthResto > 0 ? 1 : 0)) > nLinhas) { //Se próximo versículo vai ultrapassar o slide, conclui slide atual.

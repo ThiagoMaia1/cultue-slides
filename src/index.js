@@ -45,7 +45,9 @@ export const redividirSlides = (elementos, sel, ratio) => {
     } while (repetir && i < elementos.length)
   }
   
-  return elementos;
+  let maxSlide = elementos[sel.elemento].slides.length - 1;
+  if (sel.slide > maxSlide) sel.slide = maxSlide;
+  return {elementos, selecionado: sel};
 }
 
 export const reducerElementos = function (state = defaultList, action, usuario) {
@@ -68,7 +70,8 @@ export const reducerElementos = function (state = defaultList, action, usuario) 
       autorizacao = getAutorizacao(action.autorizacao, state.apresentacao.idUsuario, usuario.uid);
       return {...state, apresentacao: {...state.apresentacao, autorizacao: autorizacao}};
     case 'selecionar-ratio-apresentacao':
-      return {...state, elementos: redividirSlides(el, getApresentacaoPadraoBasica().selecionado, action.ratio), ratio: {...action.ratio}}
+      let redividido = redividirSlides(el, getApresentacaoPadraoBasica().selecionado, action.ratio);
+      return {...state, ratio: {...action.ratio}, ...redividido};
     case "inserir":
       var elNovo = action.elemento;
       elNovo.input1 = action.popupAdicionar.input1;
@@ -80,7 +83,7 @@ export const reducerElementos = function (state = defaultList, action, usuario) 
           elNovo.slides[i].estilo = elSub.slides[i].estilo;
         }
         el.splice(action.elementoASubstituir, 1, elNovo);
-        el = redividirSlides(el, {elemento: action.elementoASubstituir, slide: 0}, ratio);
+        el = redividirSlides(el, {elemento: action.elementoASubstituir, slide: 0}, ratio).elementos;
       } else {
         el.push(elNovo);
       }
@@ -128,8 +131,8 @@ export const reducerElementos = function (state = defaultList, action, usuario) 
         limparEstiloSlide(el[sel.elemento].slides[sel.slide]);
         notificacao = 'Estilo do Slide' + sel.slide + ' d' + dadosMensagem.genero + ' ' + dadosMensagem.elementos + '" Limp' + dadosMensagem.genero;
       }
-      el = redividirSlides(el, sel, state.ratio);
-      return {...state, elementos: [...el], selecionado: action.selecionado, abaAtiva: abaAtivaPadrao, notificacao};
+      let redividido = redividirSlides(el, sel, state.ratio);
+      return {...state, ...redividido, abaAtiva: abaAtivaPadrao, notificacao};
     }
     case "fixar-novas-fontes": {
       return {...state, notificacao: 'Fontes Especiais Substituídas'};

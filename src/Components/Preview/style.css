@@ -82,11 +82,11 @@ img {
     height: 100%;
     overflow: hidden;
     flex: 1 1;
+    top: -3px;
 }
 
 .realce-paragrafo {
     height: 100%;
-    overflow: hidden;
     display: flex;
 }
 
@@ -152,46 +152,6 @@ img {
 
 .bloqueador-apresentacao {
     z-index: 400;
-}
-
-.container-estrofe {
-    vertical-align: top;
-}
-
-.container-estrofe sup {
-    line-height: 0;
-}
-
-.wraper-estrofe {
-    vertical-align: top;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    min-width: 48%;
-}
-
-.marcador-estrofe {
-    font-size: 140%;
-    margin-left: 2vh;
-    font-weight: 500;
-    opacity: 0.9;
-}
-
-.dividido-colunas {
-    display: flex;
-    flex-direction: column;
-    flex-wrap: wrap;
-    height: 100%;
-    overflow: hidden;
-}
-
-.dividido-colunas > div {
-    max-width: 48%;
-    margin-right: 4%;
-}
-
-.dividido-colunas .wraper-estrofe {
-    width: auto;
 }
 
 #texto-slide-mestre {

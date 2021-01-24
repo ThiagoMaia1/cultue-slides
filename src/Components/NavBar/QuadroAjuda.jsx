@@ -21,17 +21,17 @@ const QuadroAjuda = props => {
         {rotulo: 'Atalhos Modo de Apresentação', submenu: {children: <QuadroAtalhos lista={'listaApresentacao'}/>}},
         {rotulo: 'Fale Conosco', submenu: {children: 
             <QuadroEnviar fechar={callback} 
-                            titulo='Escreva sua Mensagem:'
-                            textoBotao='Enviar Mensagem'/>, style: estiloQuadoEnviar}},
+                          titulo='Escreva sua Mensagem:'
+                          textoBotao='Enviar Mensagem'/>, style: estiloQuadoEnviar}},
         {rotulo: 'Informar um Problema', submenu: {children: 
             <QuadroEnviar fechar={callback} 
                           titulo='Descreva o problema:'
                           textoBotao='Enviar Relatório'
                           incluirRelatorio={true}/>, style: estiloQuadoEnviar}},
-        {rotulo: 'Rever Tutoriais', submenu: {opcoes: opcoesTutoriais}}
-        // ,
+        {rotulo: 'Rever Tutoriais', submenu: {opcoes: opcoesTutoriais}},
         // {rotulo: 'Documentação', callback: () => alert('todo')},
-        // {rotulo: 'Vídeos', callback: () => alert('todo')}
+        // {rotulo: 'Vídeos', callback: () => alert('todo')},
+        {rotulo: 'Localizar', callback: () => store.dispatch({type: 'toggle-search'})}
     ]
     
     return (

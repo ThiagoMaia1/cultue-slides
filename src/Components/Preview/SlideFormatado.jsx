@@ -100,10 +100,13 @@ class SlideFormatado extends Component {
                          tampao={est.tampao} 
                          botaoInativo={!editavel || typeof est.fundo.path === 'string' || (slidePreview.imagem && slidePreview.imagem.idUpload)}
                          selecionado={selecionado}/>
-                    <div className='texto-preview' style={{fontSize: getFonteBase().numero*proporcao + getFonteBase().unidade}}>
+                    <div className='texto-preview' 
+                         style={{fontSize: getFonteBase().numero*proporcao + getFonteBase().unidade, cursor: editavel ? 'text' : ''}}>
                         {est.titulo.abaixo ? null : this.getBlocoTitulo(slidePreview, selecionado)}
                         <div id='paragrafo-slide' className={'slide-paragrafo ' + this.getClasseLetraClara('paragrafo')} 
-                             style={{...est.paragrafo, '--tamanho-fonte': Number(est.paragrafo.fontSize.replace('%',''))/100}}>
+                             style={{...est.paragrafo, 
+                                     '--tamanho-fonte': Number(est.paragrafo.fontSize.replace('%',''))/100,
+                                     '--altura-linha': est.paragrafo.lineHeight}}>
                             <div style={this.realcarElemento('paragrafo')} 
                                  className={'realce-paragrafo ' + (est.paragrafo.duasColunas ? 'dividido-colunas' : '')}>
                                 <Estrofes slidePreview={slidePreview} onInput={this.editarTexto} ativarRealce={this.ativarRealce} editavel={editavel}

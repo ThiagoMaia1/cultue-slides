@@ -45,7 +45,9 @@ export function getNumeroVersiculo(texto) {
     return {textoAntes: palavras.slice(0, Math.max(n,0)).join(' '), numero: verso, textoDepois: palavras.slice(n+1).join(' ')};
 }
 
-export const getTextoVersiculo = (verso, versoAnterior = {}, versoTem = {}, sup = true) => {
+export const getTextoVersiculo = (verso, versoAnterior = {}, versoTem = {}, sup, primeiro) => {
+    
+    if (!verso.vers) return verso;
     let v = [{...versoAnterior}, {...verso}]
     
     let funcaoSuperscrito = sup 
@@ -69,12 +71,15 @@ export const getTextoVersiculo = (verso, versoAnterior = {}, versoTem = {}, sup 
         .reduce((resultado, k) => 
             resultado.concat(tem(k))
         , []);
-    final.push(' ' + v[1].texto + (v[1].texto ? ' ' : ''));
+    final.push(espaco);
+    final.push(v[1].texto);
     final = final.filter(t => !!t);
+    if(!primeiro) final.unshift(' ');
     return sup 
            ? final
-           : final.join(' ');
+           : final.map(t => t === ' ' ? '' : t).join(' ');
 }
+
 // export function formatarVersiculosSlide(versiculos) {
 //     return versiculos.map((v, i) => {
 //         var r = numSuperscrito(v.vers) + ' ' + v.texto + ' ';

@@ -20,6 +20,7 @@ const funcoes = {
     estiloSemReplace: complementarEstilo,
     textoArray: editarTextoArray,
     insetImagem: editarInsetImagem,
+    repeticoes: ({valor, s, numero}) => s.textoArray[numero].repeticoes = valor
 }
 
 function complementarEstilo({estilo, s}) {
@@ -33,7 +34,7 @@ function editarTextoArray({valor, s, numero}) {
     if (valor.texto === '') {
         s.textoArray.splice(numero, 1);
     } else {
-        var quebra = valor.texto.split(/(?<=\n\n)/)
+        var quebra = valor.texto.split(/\n\n/)
                           .map(texto =>({...valor, texto}));
         if (quebra.length > 1) {
             s.textoArray.splice(numero, 1, quebra.filter(({texto}) => /\S/.test(texto)));
@@ -109,6 +110,7 @@ export default function reducerEditarSlide ({elementos, sel, action, ratio}) {
             est.tampao.eBasico = false; 
     }
     elementos[sel.elemento] = e;
-    if (redividir) elementos = redividirSlides(elementos, sel, ratio);
-    return {elementos: [...elementos], selecionado: sel};
+    let redividido = {elementos, selecionado: sel}
+    if (redividir) redividido = redividirSlides(elementos, sel, ratio);
+    return {...redividido};
 }

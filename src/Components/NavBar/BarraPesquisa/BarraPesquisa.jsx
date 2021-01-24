@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import './BarraPesquisa.css';
 
 const htmlHighlight = ['<span class="highlight">', '</span>'];
-export const limparHighlights = (texto) => texto.replaceAll(htmlHighlight[0],'').replaceAll(htmlHighlight[1], '')
+// export const limparHighlights = (texto) => texto.replaceAll(htmlHighlight[0],'').replaceAll(htmlHighlight[1], '')
 
 class BarraPesquisa extends React.Component {
 
@@ -16,21 +16,21 @@ class BarraPesquisa extends React.Component {
     }
     
     onChange = e => {
-        var termo = e.target.value;
+        let termo = e.target.value;
         this.setState({termoPesquisa: termo})
         this.pesquisar(termo);
     }
 
     pesquisar = termo => {
         this.arrayResultados = [];
-        var elementos = this.props.elementos;
-        for (var i = 0; i < elementos.length; i++) {
-            var slides = elementos[i].slides;
-            for (var j = 0; j < slides.length; j++) {
+        let elementos = this.props.elementos;
+        for (let i = 0; i < elementos.length; i++) {
+            let slides = elementos[i].slides;
+            for (let j = 0; j < slides.length; j++) {
                 if (slides[j].eMestre) continue;
-                var estrofes = [...slides[j].textoArray.map(({texto}) => texto), elementos[i].titulo];
-                for (var k = 0; k < estrofes.length; k++) {
-                    var sel = this.contemTermo(estrofes[k], termo)
+                let estrofes = [elementos[i].titulo, ...slides[j].textoArray.map(t => t.texto)];
+                for (let k = 0; k < estrofes.length; k++) {
+                    let sel = this.contemTermo(estrofes[k], termo)
                               ? {elemento: i, slide: j, estrofe: k} 
                               : null;
                     if(sel) this.arrayResultados.push(sel);
@@ -46,10 +46,10 @@ class BarraPesquisa extends React.Component {
     }
 
     offsetResultado = passo => {
-        var len = this.arrayResultados.length - 1;
+        let len = this.arrayResultados.length - 1;
         if (len < 0) return;
-        var i = this.state.indiceResultadoSelecionado;
-        var novoI = i + passo;
+        let i = this.state.indiceResultadoSelecionado;
+        let novoI = i + passo;
         if (novoI > len) {
             novoI = 0;
         } else if(novoI < 0) {
@@ -59,33 +59,36 @@ class BarraPesquisa extends React.Component {
     }
 
     definirSelecao = indice => {
-        console.log(this.state.termoPesquisa);
         this.setState({indiceResultadoSelecionado: indice});
         this.props.dispatch({type: 'definir-selecao', selecionado: this.arrayResultados[indice]})
-        setTimeout(this.highlightSlides, 0);
+        this.timeoutHighlight();
     }
 
+    timeoutHighlight = () => setTimeout(this.highlightSlides, 0);
+
     highlightSlides = () => {
-        var spansConteudo = document.querySelectorAll('.texto-preview span');
+        let spansConteudo = document.querySelectorAll('#borda-slide-mestre #textoTitulo, #borda-slide-mestre .estrofe-editavel');
         const classeMarcada = 'estrofe-marcada';
-        var marcadoAnterior = document.getElementsByClassName(classeMarcada)[0];
+        let marcadoAnterior = document.getElementsByClassName(classeMarcada)[0];
         if(marcadoAnterior) marcadoAnterior.classList.remove(classeMarcada);
-        var sel = this.arrayResultados[this.state.indiceResultadoSelecionado];
-        var idElemento = sel.estrofe === this.props.elementos[sel.elemento].slides[sel.slide].textoArray.length 
-                         ? 'textoTitulo' 
-                         : 'textoArray-' + sel.estrofe;
-        var elemento = document.getElementById(idElemento)
-        if (elemento) elemento.classList.add(classeMarcada);
-        for (var s of spansConteudo) {
-            var reg = new RegExp('(' + this.state.termoPesquisa + ')', 'gi');
-            s.innerHTML = limparHighlights(s.innerHTML);
+        let sel = this.arrayResultados[this.state.indiceResultadoSelecionado] || {};
+        if (sel.estrofe !== undefined) {
+            let idElemento = sel.estrofe === 0 
+                             ? 'textoTitulo' 
+                             : 'textoArray-' + (sel.estrofe - 1);
+            let elemento = document.getElementById(idElemento)
+            if (elemento) elemento.classList.add(classeMarcada);
+        }
+        for (let s of spansConteudo) {
+            let reg = new RegExp('(' + this.state.termoPesquisa + ')', 'gi');
+            s.innerHTML = s.innerText;
             s.innerHTML = s.innerHTML.replace(reg, resultado => htmlHighlight.join(resultado));
         }
     }
 
     componentDidUpdate = prevProps => {
         const ativado = this.props.searchAtivo;
-        var novoState;
+        let novoState;
         if (ativado !== prevProps.searchAtivo) {
             if (ativado) {
                 novoState = {top: this.topExibir};
@@ -95,6 +98,7 @@ class BarraPesquisa extends React.Component {
                 novoState = {top: this.topOcultar, termoPesquisa: '', lenArray: 0};
             }
             this.setState(novoState);
+            if(!ativado) this.timeoutHighlight();
         }
         if (this.props.elementos.length !== prevProps.elementos.length && this.state.termoPesquisa)
             this.pesquisar(this.state.termoPesquisa);
@@ -120,9 +124,10 @@ class BarraPesquisa extends React.Component {
     }
 };
 
-const mapState = state => (
-    {elementos: state.present.elementos, searchAtivo: state.searchAtivo}
-)
+const mapState = state => ({
+    elementos: state.present.elementos, 
+    searchAtivo: state.searchAtivo
+})
   
 export default connect(mapState)(BarraPesquisa);
   

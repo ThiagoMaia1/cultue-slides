@@ -66,6 +66,25 @@ button, input[type="submit"], input[type="reset"], [contentEditable="true"]:focu
   text-align: left;
 }
 
+::-moz-selection { /* Code for Firefox */
+  color: white;
+  background: var(--azul-oxford);
+}
+
+::selection {
+  color: white;
+  background: var(--azul-oxford);
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+   -webkit-appearance: none;
+   margin: 0;
+}
+input[type="number"] {
+   -moz-appearance: textfield;
+}
+
 .quadriculado-imitando-transparente{
   object-fit: cover;
   /* background: -webkit-linear-gradient(45deg, rgba(0, 0, 0, 0.0980392) 25%, transparent 25%, transparent 75%, rgba(0, 0, 0, 0.0980392) 75%, rgba(0, 0, 0, 0.0980392) 0), -webkit-linear-gradient(45deg, rgba(0, 0, 0, 0.0980392) 25%, transparent 25%, transparent 75%, rgba(0, 0, 0, 0.0980392) 75%, rgba(0, 0, 0, 0.0980392) 0), white;

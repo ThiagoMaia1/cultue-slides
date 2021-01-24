@@ -1,33 +1,75 @@
+.container-estrofes {
+    position: relative;
+    padding-top: 3px;
+    overflow: hidden;
+}
 
-.texto-preview [contentEditable="true"]:focus {
+#textoTitulo:focus, *:not(.estrofe-area) > .estrofe-editavel:focus, .estrofe-area:focus-within, .marcador-estrofe > input:focus {
+    border-radius: calc(var(--tamanho-fonte)*var(--font-size-geral)*0.2);
+    cursor: text;
     background-color: white;
-    border-radius: var(--round-border-medio);
+}
+
+.container-estrofe:not(.estrofe-area) .estrofe-editavel:focus, .estrofe-area:focus-within, .marcador-estrofe > input:focus {
+    box-shadow: 0px 0px 2px black;
+}
+
+*:not(.estrofe-area) > .estrofe-editavel:focus, .marcador-estrofe:focus {
+    padding: calc(var(--tamanho-fonte)*var(--font-size-geral)*var(--altura-linha)*0.05) 0;
+}
+
+.estrofe-editavel, .estrofe-editavel:focus {
+    cursor: text;
+    vertical-align: calc(var(--tamanho-fonte)*var(--font-size-geral)*var(--altura-linha)*0.075);
+    line-height: 0;
     transition: 0ms;
-    margin-left: 0;
-    cursor: pointer;
-}
-
-.container-estrofe [contentEditable="true"]:focus {
-    filter: drop-shadow(0px 0px 1px gray);
-}
-
-.esquerda[contentEditable="true"]:focus {
-    margin-left: calc(var(--tamanho-fonte)*var(--font-size-geral)*0.03*(-1));;
-}
-
-.nao-direita[contentEditable="true"]:focus {
-    margin-right: calc(var(--tamanho-fonte)*var(--font-size-geral)*0.10);
 }
  
 .letra-clara [contentEditable="true"]:focus {
     background-color: rgb(202, 202, 202);
 }
 
-sup {
+.container-estrofe sup {
+    line-height: 0;
     font-size: 80%;
 }
 
-.numero-verso {
-    padding: 0;
-    margin: 0;
+.wraper-estrofe {
+    vertical-align: top;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-width: 48%;
+}
+
+.marcador-estrofe {
+    font-size: 140%;
+    margin-left: 2vh;
+    font-weight: 500;
+    opacity: 0.9;
+    display: flex;
+}
+
+.marcador-estrofe > input {
+    background-color: transparent;
+    outline: none;
+    display: inline;
+    border: none;
+}
+
+.dividido-colunas {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    height: 100%;
+    overflow: hidden;
+}
+
+.dividido-colunas > div {
+    max-width: 48%;
+    margin-right: 4%;
+}
+
+.dividido-colunas .wraper-estrofe {
+    width: auto;
 }

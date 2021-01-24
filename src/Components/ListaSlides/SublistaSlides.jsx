@@ -31,13 +31,14 @@ class SublistaSlides extends Component {
     getRotuloSlide = (elemento, slide) => {
         let t0 = slide.textoArray[0];
         if(slide.eTitulo) return 'Título';
+        if(!t0) return elemento.titulo;
         switch (elemento.tipo) {
             case 'Imagem':
                 return elemento.titulo || slide.imagem.alt;
             case 'TextoBíblico':
                 return 'v. ' + String(t0.vers).padStart(2, 0);
             default:
-                return t0.substr(0, 50);
+                return t0.texto.substr(0, 50);
         }
     }
 

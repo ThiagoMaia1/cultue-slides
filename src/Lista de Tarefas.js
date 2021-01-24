@@ -112,20 +112,21 @@
 //   ✔️ Clonar estilo está uma bosta
 //   ✔️ Soltar click do Redimensionavel
 //   ✔️ Alguns cálculos do "Redimensionavel" estão errados
+//   ✔️ Salvar nº do versículo, repetições de estrofe de música indice de objeto
+//   ✔️ Corrigir redivisão: redividir quando o texto de um slide é todo deletado, algumas vezes passa um pouco
+//   ✔️ Edição do conteúdo do parágrafo dando alguns erros (falha ao perder foco, não exibe cursor, markup aparecendo)
 //   ✔️ Carrossel do Input Imagem não vai até o final.*/
 // Errinhos:
 //   ✔️ Click fora tutorial
 //   Drag do Input Imagem falha (raramente) (?)
 //   Redimensionavel distorcendo ao aproximar do tamanho do quadro (?)
 //   Padding dando NaN
-//   Salvar nº do versículo, repetições de estrofe de música indice de objeto
-//   Corrigir redivisão: redividir quando o texto de um slide é todo deletado, algumas vezes passa um pouco, quebrar estrofes grandes de músicas/textos-livres, melhorar número de iterações
-//   Edição do conteúdo do parágrafo dando alguns erros (falha ao perder foco, não exibe cursor, markup aparecendo)
-//   Exportação PowerPoint: Tamanho fonte e lineHeight, round border/espelhar imagens, titulos abaixo/invisíveis
-//   Corrigir envio automático do github
+//   Quebrar estrofes grandes de músicas/textos-livres, 
+//   Exportação PowerPoint: Tamanho fonte e lineHeight, round border/espelhar imagens, titulos abaixo/invisíveis, repetidor de estrofes
 //   Branquear menu de configurações ao ativar tutorial
 //   Link para download exibindo a apresentação antes de ir pra página de download
 //   Posição do loading no ItemListaMusica
+//   Título slides de imagem do firebase
 
 /*// Features essenciais:
 //   ✔️ Envio de imagens
@@ -194,6 +195,8 @@
 //   Atalhos funcionarem mesmo com foco nos inputs
 
 /*/ Features dispensáveis:
+//   Corrigir envio automático do github
+//   Redivisao: melhorar número de iterações
 //   Numeração na lista de slides incluir capítulos e livros
 //   Contador de slides (baixar html)
 //   Selecionar/Arrastar múltiplos grupos
