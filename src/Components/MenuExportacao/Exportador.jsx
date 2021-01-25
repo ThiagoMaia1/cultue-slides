@@ -4,14 +4,17 @@ import { getNomeInterfaceTipo } from '../../principais/Element';
 import { capitalize, getImgBase64, parseCorToRgb, rgbObjToStr } from '../../principais/FuncoesGerais';
 import SlideFormatado from '../Preview/SlideFormatado'; 
 
-export function getBase64Image(imagem, total, ratio, callback, radius) {
+export function getBase64Image(imagem, total, ratio, callback) {
   const img = new Image();
+  let est = imagem.estilo;
   img.crossOrigin = 'Anonymous';
   img.onload = () => {
     getImgBase64(
       img, ratio.width, ratio.height, 
       dataURL => callback(dataURL, imagem, total),
-      radius
+      Number(est.borderRadius.replace('px','')),
+      est.espelhadoHorizontal,
+      est.espelhadoVertical
     )
   };
 
@@ -90,8 +93,11 @@ export function getSlidePreview ({elementos, selecionado}) {
   }
 
   var estiloTexto = estiloAplicavel('texto');
-  var estiloParagrafo = {...estiloTexto, ...estiloAplicavel('paragrafo')};
   var estiloTitulo = {...estiloTexto, ...estiloAplicavel('titulo')};
+  var estiloParagrafo = {...estiloTexto, ...estiloAplicavel('paragrafo')};
+  if(estiloTitulo.abaixo) {
+    [estiloParagrafo.paddingTop, estiloParagrafo.paddingBottom] = [estiloParagrafo.paddingBottom, estiloParagrafo.paddingTop];
+  }
   var { tipo } = el;
   var tituloSlide = s.titulo;
   var titulo = tituloSlide !== undefined ? tituloSlide : el.titulo;
@@ -180,7 +186,7 @@ class Exportador extends Component {
   getImagensBase64 = (previews, imagensBase64, copiaDOM, ratio, callbackMeio, callbackFormato) => {
     var [ uniques, imgsUnique] = [{}, []];
     var nClasses = 0;
-    for (var p of previews) {
+    for (let p of previews) {
       let id = '#preview-fake' + p.indice;
       let imgs = [...copiaDOM.querySelectorAll(id + ' .imagem-fundo-preview, ' + id + ' .div-imagem-slide')]
                   .reduce((resultado, i) => {
@@ -199,6 +205,7 @@ class Exportador extends Component {
         imgs[i].classList.add(classe);
         imgs[i].classe = classe;
         imgs[i].style.removeProperty('background-image');
+        imgs[i].estilo = p.estilo.imagem;
         if (imgs[i].eFundo) p.classeImagemFundo = classe;
         else p.classeImagem = classe;
       }
@@ -216,8 +223,7 @@ class Exportador extends Component {
           imagensBase64.push({data, classe});
           if (total === imagensBase64.length)
             chamarCallback(imagensBase64, previews, nomeArquivo);
-        },
-        imgsUnique[j].eFundo ? null : Number(p.estilo.imagem.borderRadius.replace('px',''))
+        }
       );
     }
   }

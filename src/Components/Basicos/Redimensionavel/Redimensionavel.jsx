@@ -229,7 +229,8 @@ class Redimensionavel extends Component {
             <div id='container-quadro-redimensionar' onMouseMove={this.onMouseMove} style={{cursor}}>
                 <div id='quadro-redimensionar' 
                     className={classEspelhado}
-                    style={{...estilo, ...this.state.insetImagem, outline: (cursor && redimensionamentoAtivo) ? 'solid gray 1px' : ''}} 
+                    style={{...estilo, ...this.state.insetImagem, 
+                            ...(cursor && redimensionamentoAtivo ? {outline: 'dashed rgba(150, 150, 150, 1) 2px', outlineOffset: '2px'} : {})}} 
                     onDragStart={this.onDragStart}>
                         {this.props.children}
                 </div>

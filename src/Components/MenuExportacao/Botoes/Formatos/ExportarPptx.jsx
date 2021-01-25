@@ -37,24 +37,19 @@ class ExportarPptx extends Component {
       let slide = pptx.addSlide();
       substituirPorcentagensPreview(p.estilo);
       slide.background = ({data: imagens[p.classeImagemFundo], ...getDimensoesInches(ratio)});
-      if (p.classeImagem)
-        slide.addImage({
-          data: imagens[p.classeImagem], 
-          sizing: {type: 'contain'}, 
-          ...getDimensaoImagem(p.estilo.imagem)
-        });
-      slide.addShape(pptx.ShapeType.rect, 
-                     {fill: {
-                        color: parseCor(p.estilo.tampao.backgroundColor).replace('#',''), 
-                        transparency: (1-Number(p.estilo.tampao.opacityFundo))*100
-                     }, x: 0, y: 0, w: '100%', h: '100%'}
-      );
-      let opcoesTitulo = {...getDimensaoTitulo(p.estilo.titulo), ...getAtributos(p.estilo.titulo)};
-      slide.addText(p.titulo, opcoesTitulo);
-      
+      this.inserirTampao(slide, pptx, p);
+      this.inserirImagem(p, slide, imagens);
+      if (!p.estilo.titulo.display) {
+        let opcoesTitulo = {...getDimensaoTitulo(p.estilo.titulo), ...getAtributos(p.estilo.titulo)};
+        slide.addText(p.titulo, opcoesTitulo);
+      } 
       let separador = p.tipo === 'TextoBíblico' ? ' ' : '\n\n';
       let texto = p.textoArray.map(({texto}) => texto).join(separador);
-      let opcoesTexto = {...getDimensaoTexto(p.estilo, this.taxaPadTop), ...getAtributos(p.estilo.paragrafo)};
+      let opcoesTexto = {
+        valign: p.estilo.titulo.abaixo ? 'bottom' : 'top', 
+        ...getDimensaoTexto(p.estilo, this.taxaPadTop), 
+        ...getAtributos(p.estilo.paragrafo)
+      };
       slide.addText(texto, opcoesTexto);
     }
     return {nomeArquivo: nomeArquivo + this.formato, arquivo: pptx, formato: this.formato}
@@ -79,6 +74,26 @@ class ExportarPptx extends Component {
     })
   }
 
+  inserirTampao(slide, pptx, p) {
+    slide.addShape(pptx.ShapeType.rect,
+      {
+        fill: {
+          color: parseCor(p.estilo.tampao.backgroundColor).replace('#', ''),
+          transparency: (1 - Number(p.estilo.tampao.opacityFundo)) * 100
+        }, x: 0, y: 0, w: '100%', h: '100%'
+      }
+    );
+  }
+
+  inserirImagem(p, slide, imagens) {
+    if (p.classeImagem)
+      slide.addImage({
+        data: imagens[p.classeImagem],
+        sizing: { type: 'contain' },
+        ...getDimensaoImagem(p.estilo.imagem)
+      });
+  }
+
   render() {
       return (
         <BotaoExportador formato={this.formato} onClick={this.onClick} 
@@ -90,7 +105,7 @@ class ExportarPptx extends Component {
 
 function getDimensaoTitulo(titulo) {
   let x = titulo.paddingRight + '%';
-  let y = 0;
+  let y = titulo.abaixo ? 100 - titulo.height + '%': 0;
   let w = (100 - titulo.paddingRight*2) + '%';
   let h = titulo.height + '%';
   return {x, y, w, h, valign: 'center'};
@@ -98,12 +113,13 @@ function getDimensaoTitulo(titulo) {
 
 function getDimensaoTexto(estilo, taxaPadTop) {
   let titulo = estilo.titulo;
+  let alturaTitulo = titulo.display ? 0 : titulo.height;
   let paragrafo = estilo.paragrafo;
   let padTop = paragrafo.paddingTop*taxaPadTop;
   let x = paragrafo.paddingRight + '%';
-  let y = (titulo.height + padTop) + '%';
+  let y = (titulo.abaixo ? 0 : alturaTitulo + padTop) + '%';
   let w = (100 - paragrafo.paddingRight*2) + '%';
-  let h = (100 - titulo.height - padTop) + '%';
+  let h = (100 - alturaTitulo - padTop) + '%';
   return {x, y, w, h, valign: 'top'};
 }
 
@@ -141,7 +157,7 @@ const atributosHtmlPptx = {textAlign: v => {
                            fontStyle: v => {if (v === 'italic') return{italic: true}},
                            textDecorationLine: v => {if (v === 'underline') return {underline: true}},
                            fontFamily: v => ({fontFace: v}),
-                           fontSize: v => ({fontSize: correcaoPixels*getFonteBase().numero*v/100}) 
+                           fontSize: v => ({fontSize: correcaoPixels*getFonteBase().numero*v/100})
 }
 
 function converterAtributosPptx(atributoHTML, valor) {

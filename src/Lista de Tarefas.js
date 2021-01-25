@@ -115,15 +115,16 @@
 //   ✔️ Salvar nº do versículo, repetições de estrofe de música indice de objeto
 //   ✔️ Corrigir redivisão: redividir quando o texto de um slide é todo deletado, algumas vezes passa um pouco
 //   ✔️ Edição do conteúdo do parágrafo dando alguns erros (falha ao perder foco, não exibe cursor, markup aparecendo)
+//   ✔️ Exportação PowerPoint: round border/espelhar imagens, titulos abaixo/invisíveis
 //   ✔️ Carrossel do Input Imagem não vai até o final.*/
 // Errinhos:
 //   ✔️ Click fora tutorial
+//   Branquear menu de configurações ao ativar tutorial
 //   Drag do Input Imagem falha (raramente) (?)
 //   Redimensionavel distorcendo ao aproximar do tamanho do quadro (?)
 //   Padding dando NaN
-//   Quebrar estrofes grandes de músicas/textos-livres, 
-//   Exportação PowerPoint: Tamanho fonte e lineHeight, round border/espelhar imagens, titulos abaixo/invisíveis, repetidor de estrofes
-//   Branquear menu de configurações ao ativar tutorial
+//   Quebrar estrofes grandes de músicas/textos-livres, reexibir paragrafos repetidos
+//   Exportação PowerPoint: Tamanho fonte e lineHeight, repetidor de estrofes
 //   Link para download exibindo a apresentação antes de ir pra página de download
 //   Posição do loading no ItemListaMusica
 //   Título slides de imagem do firebase
@@ -193,6 +194,7 @@
 //   ✔️ Lista de atalhos do modo apresentação.*/
 //   Criar popup para reupload de imagem
 //   Atalhos funcionarem mesmo com foco nos inputs
+//   Round border em porcentagem
 
 /*/ Features dispensáveis:
 //   Corrigir envio automático do github
@@ -250,6 +252,7 @@
 //   Reenquadrar imagem
 //   Tentar de novo/Avisar se upload da imagem não pôde ser feito
 //   Tela de descanso
+//   Imagem poder ser girada
 //   Logo no e-mail de forma que possa ser lida offline*/
 //
 // Negócio:
@@ -265,3 +268,4 @@
 //   Versão em inglês
 //   Criar termos de uso
 //   Criar uma imagem de logo para aparecer nas pesquisas do google
+//   Criar página de apresentaçãofun

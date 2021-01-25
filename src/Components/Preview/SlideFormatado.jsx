@@ -107,7 +107,7 @@ class SlideFormatado extends Component {
                              style={{...est.paragrafo, 
                                      '--tamanho-fonte': Number(est.paragrafo.fontSize.replace('%',''))/100,
                                      '--altura-linha': est.paragrafo.lineHeight}}>
-                            <div style={this.realcarElemento('paragrafo')} 
+                            <div style={{...this.realcarElemento('paragrafo'), justifyContent: est.titulo.abaixo ? 'flex-end' : ''}} 
                                  className={'realce-paragrafo ' + (est.paragrafo.duasColunas ? 'dividido-colunas' : '')}>
                                 <Estrofes slidePreview={slidePreview} onInput={this.editarTexto} ativarRealce={this.ativarRealce} editavel={editavel}
                                            selecionado={selecionado}/>

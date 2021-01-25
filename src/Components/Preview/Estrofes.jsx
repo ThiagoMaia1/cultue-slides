@@ -59,15 +59,15 @@ export default function Estrofes(props) {
     let sel = s.selecionado;
     let key = sel.elemento + '.' + sel.slide + '.';
     
-    const getConteudoWraper = (t, i, array) => (
+    const getConteudoWraper = (t, i) => (
         <Fragment key={i}>
+            {i ? divBreak : null}
             <div className='wraper-estrofe'>
                 <SpanEstrofe key={key + i} t={t} i={i} texto={t.texto} {...props}/>
                 {!s.estilo.paragrafo.multiplicadores || (t.repeticoes || 1) < 2 ? null :
                     <Repetidor repeticoes={t.repeticoes} i={i}/>
                 }
             </div>
-            {i < array.length && t.texto.substr(0,4) !== '\n\n' ? divBreak : null}
         </Fragment>
     )
 

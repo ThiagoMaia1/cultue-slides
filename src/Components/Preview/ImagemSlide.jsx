@@ -39,14 +39,14 @@ class ImagemSlide extends Component {
         let {borderRadius, proporcaoNatural, espelhadoVertical, espelhadoHorizontal} = estiloImagem;
         return (
             <Redimensionavel callback={this.callback} 
-                             estilo={{...estiloRealce, borderRadius}} 
+                             estilo={{borderRadius}} 
                              redimensionamentoAtivo={editavel} 
                              proporcao={proporcaoNatural || 1}
                              insetInicial={inset}
                              espelhadoVertical={espelhadoVertical}
                              espelhadoHorizontal={espelhadoHorizontal}>
                 <div className='div-imagem-slide'
-                         style={{backgroundImage: 'url(' + imagem.src + ')'}}>
+                     style={{backgroundImage: 'url(' + imagem.src + ')'}}>
                     <BotaoReupload callbackReupload={this.reupload} src={imagem.src} inativo={!editavel || imagem.idUpload}/>
                 </div>
             </Redimensionavel>

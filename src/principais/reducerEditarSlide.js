@@ -86,7 +86,7 @@ function editarInsetImagem({est, alinhamento, ratio}) {
         objRetorno[d] = getNovo(d);
     }
     est.imagem = {...est.imagem, ...objRetorno};
-    setTimeout(() => el.style.transition = null, 1500);
+    setTimeout(() => el.style.transition = null, 550);
 }
 
 export default function reducerEditarSlide ({elementos, sel, action, ratio}) {
