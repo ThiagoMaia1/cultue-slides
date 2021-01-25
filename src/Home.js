@@ -15,8 +15,10 @@ import history from './principais/history';
 import { PersistGate } from 'redux-persist/integration/react';
 import OnlineGate from './Components/Basicos/OnlineGate/OnlineGate';
 import { adicionarFontesPagina } from './Components/MenuExportacao/ModulosFontes';
+import FrontPage from './Components/FrontPage/FrontPage';
 
 const paginas = [{nome: 'main', componente: App},
+                 {nome: 'home', componente: FrontPage},
                  {nome: 'login', componente: PaginaLogin},
                  {nome: 'perfil', componente: Perfil, exigeLogin: true},
                  {nome: 'splash', componente: Splash, semSplash: true},

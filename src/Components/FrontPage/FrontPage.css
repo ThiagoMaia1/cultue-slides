@@ -1,0 +1,137 @@
+#fundo-front-page {
+    overflow-x: auto;
+    width: 100vw;
+    height: 100vh;
+    background: black;
+}
+
+.cabecalho-front {
+    height: 90vh;
+}
+
+.secao-front-page {
+    width: 100%;
+    height: 80vh;
+    font-family: 'Varela Round';
+    font-family: 'PT Sans'; 
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    font-size: 4vh;
+    padding: 0 2vw;
+    box-shadow: 0 -8px 6px rgba(0,0,0,0.3);
+}
+
+.secao-front-page.azul-forte {
+    background: var(--azul-forte);
+    color: white;
+}
+
+.secao-front-page.azul-claro {
+    background: var(--azul-fraco);
+    color: black;
+}
+
+.secao-front-page.cinza {
+    background: var(--platinum);
+    color: var(--azul-oxford);
+}
+
+.conteudo-secao {
+    border-radius: 10%;
+    height: 80%;
+    width: 30vw;
+    position: relative;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    object-fit: cover;
+    /* top: 10%; */
+}
+
+.img-conteudo-secao {
+    position: fixed;
+    border-radius: 10%;
+    width: 30vw;
+    height: 60vh;
+    pointer-events: none;
+    top: calc(10vh + (var(--scroll))*(-30%));
+    box-shadow: var(--box-shadow);
+    animation: flip 0.2s alternate infinite, zigzag 0.2s alternate infinite, imagens 1s linear infinite;
+    animation-play-state: paused, paused, paused;
+    animation-delay: calc(var(--scroll)*1s), calc(var(--scroll)*1s), calc((var(--scroll)*1.25)*1s);
+    /* animation-iteration-count: 1; */
+    animation-fill-mode: both, both, both;
+    /* background-color: red; */
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+}
+
+@keyframes zigzag {
+    from {
+        left: 20vw;
+    }
+    to {
+        left: 50vw;
+    }
+}
+
+@keyframes flip {
+    0% {
+        transform: rotate3d(0, 1, 0, 0deg) scale(1);
+    }
+    25% {
+        transform: rotate3d(0, 1, 0, 30deg) scale(0.8);
+    }
+    75% {
+        transform: rotate3d(0, 1, 0, 150deg) scale(0.8);
+    }
+    100% {
+        transform: rotate3d(0, 1, 0, 180deg) scale(1);
+    }
+  }
+
+  
+@keyframes imagens {
+    0% {
+        background-image: url('./Deserto.jpg');
+    }
+    19% {
+        background-image: url('./Deserto.jpg');
+    }
+    20% {
+        background-image: url('./Aquarela.jpg');
+    }
+    39% {
+        background-image: url('./Aquarela.jpg');
+    }
+    40% {
+        background-image: url('./Bíblia.jpg');
+
+    }
+    59% {
+        background-image: url('./Bíblia.jpg');
+    }
+    60% {
+        background-image: url('./Céu\ Lilás.jpg');
+    }
+    79% {
+        background-image: url('./Céu\ Lilás.jpg');
+    }
+    80% {
+        background-image: url('./Céu\ Floresta.jpg');
+    }
+    100% {
+        background-image: url('./Céu\ Floresta.jpg');
+    }
+}
+  
+
+/* .img-front.esquerda {
+    left: 4vw;
+}
+
+.img-front.direita {
+    left: 56vw; 
+} */

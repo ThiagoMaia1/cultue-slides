@@ -135,7 +135,6 @@ export const getImgBase64 = (img, frameW = null, frameH = null, callback = null,
     let [x, y] = [(iw - wScaled)/2, (ih - hScaled)/2];
     inverterCtx(ctx, flipH, flipV, canvas);
     arredondarCtx(ctx, radius, canvas.width, canvas.height, x, y);
-    document.body.appendChild(canvas);
     ctx.drawImage(img, x, y, wScaled, hScaled, 0, 0, frameW, frameH);
     var dataURL = canvas.toDataURL('image/png');
     if (callback) callback(dataURL);
