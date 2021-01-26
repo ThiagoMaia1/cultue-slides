@@ -18,7 +18,7 @@ import { adicionarFontesPagina } from './Components/MenuExportacao/ModulosFontes
 import FrontPage from './Components/FrontPage/FrontPage';
 
 const paginas = [{nome: 'main', componente: App},
-                 {nome: 'home', componente: FrontPage},
+                 {nome: 'home', componente: FrontPage, semSplash: true},
                  {nome: 'login', componente: PaginaLogin},
                  {nome: 'perfil', componente: Perfil, exigeLogin: true},
                  {nome: 'splash', componente: Splash, semSplash: true},
@@ -69,14 +69,3 @@ const Home = () => {
 }
 
 export default Home;
-
-// copiarLinkAreaDeTransferencia = idPermissao => {
-//   var inputTemporario = document.createElement('input');
-//   inputTemporario.type = 'text';
-//   inputTemporario.value =  this.getLinkPermissao(idPermissao);
-//   document.body.appendChild(inputTemporario);
-//   inputTemporario.select();
-//   document.execCommand('Copy');
-//   document.body.removeChild(inputTemporario);
-//   this.props.dispatch({type: 'inserir-notificacao', conteudo: 'Link copiado para a área de transferência'});
-// }

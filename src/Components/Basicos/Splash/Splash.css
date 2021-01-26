@@ -20,7 +20,7 @@
     height: calc(var(--altura-logo));
 }
 
-#logo-splash, .quadrado-logo {
+#logo-splash.animado, .animado .quadrado-logo {
     transition: transform 700ms ease-in-out;
 }
 
@@ -35,11 +35,11 @@
     position: absolute;
 }
 
-.quadrado-logo.azul-forte {
+.quadrado-logo.azul-forte, #fundo-animacao-3d.azul-forte {
     background-color: var(--azul-forte);
 }
 
-.quadrado-logo.azul-claro {
+.quadrado-logo.azul-claro, #fundo-animacao-3d.azul-claro {
     background-color: #879acb;
 }
 
@@ -53,6 +53,10 @@
     bottom: 0;
     left: 0;
     right: 0;
+    transition: background-color 0.6s linear;
+}
+
+#fundo-animacao-3d.branco {
     background-color: white;
 }
 
@@ -61,5 +65,5 @@
 }
 
 .wraper-loading-splash {
-    margin:20px;
+    margin: 20px;
 }

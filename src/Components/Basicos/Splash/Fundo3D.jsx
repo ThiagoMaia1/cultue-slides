@@ -4,6 +4,7 @@ import { multiplicarArray, inteiroAleatorio } from '../../../principais/FuncoesG
 import Background from './QuadradoC.svg';
 
 const coresQuadrados = ['azul-forte', Array(2).fill('azul-claro'), Array(2).fill('cinza')].flat();
+const coresFundo = ['branco', 'azul-forte', 'azul-claro'];
 const proporcaoWidth = 1.2614;
 const larguraBaseVw = 10;
 const numeroQuadrados = 60;
@@ -81,6 +82,7 @@ class Fundo3D extends React.Component {
     }
 
     mudarFundo = () => {
+        this.setState({iCorFundo: ((this.state.iCorFundo || 0) + 1) % 3})
         this.setState({coordenadasMouseLoucas: multiplicarArray(this.props.coordenadas, 0.05)})
         this.animacaoLouca = setInterval(() => {
             this.setState({coordenadasMouseLoucas: multiplicarArray(this.state.coordenadasMouseLoucas, 1.8)});
@@ -100,7 +102,7 @@ class Fundo3D extends React.Component {
 
     render() {
         return (
-            <div id='fundo-animacao-3d' className='animacao-3d' onClick={this.mudarFundo}>
+            <div id='fundo-animacao-3d' className={'animacao-3d ' + coresFundo[this.state.iCorFundo || 0]} onClick={this.mudarFundo}>
                 {this.state.quadrados.map((q, i) => {
                     var Componente = q;
                     return <Componente key={i} coordenadasMouse={this.state.coordenadasMouseLoucas || this.props.coordenadas}/>;

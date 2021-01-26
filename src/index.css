@@ -52,7 +52,8 @@ textarea {
 }
 
 textarea, input, button, select { 
-  font-family: inherit; font-size: inherit; 
+  font-family: inherit; 
+  font-size: inherit; 
 }
 
 button, input[type="submit"], input[type="reset"], [contentEditable="true"]:focus {

@@ -31,7 +31,7 @@ class ImagemSlide extends Component {
     }
 
     render () {
-        let { imagem, editavel, estiloRealce, estiloImagem } = this.props;
+        let { imagem, editavel, estiloImagem } = this.props;
         let inset = listaDirecoes.reduce((resultado, l) => {
             resultado[l] = estiloImagem[l];
             return resultado;            

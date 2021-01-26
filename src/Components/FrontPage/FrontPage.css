@@ -2,24 +2,53 @@
     overflow-x: auto;
     width: 100vw;
     height: 100vh;
-    background: black;
+    --altura-cabecalho: 85vh;
+    --altura-sessao: 80vh;
+    --altura-imagem: 50vh;
 }
 
-.cabecalho-front {
-    height: 90vh;
+#cabecalho-front {
+    height: var(--altura-cabecalho);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#cabecalho-front .linha-flex {
+    width: 80%;
+    justify-content: space-between;
+}
+
+.botao-inicial {
+    color: white;
+    border-radius: 2vh;
+    font-size: 300%;
+    padding: 3vh;
+    margin: 3vh;
+    min-width: 30vw;
+    text-align: center;
+    transition: transform 0.2s ease-in-out, color 0.2s ease-in-out;
+    background-color: black;
+    box-shadow: var(--box-shadow);
+}
+
+.botao-inicial:hover {
+    transform: scale(1.08);
 }
 
 .secao-front-page {
     width: 100%;
     height: 80vh;
-    font-family: 'Varela Round';
-    font-family: 'PT Sans'; 
+    font-family: 'Montserrat';
     display: flex;
     justify-content: space-evenly;
     align-items: center;
     font-size: 4vh;
-    padding: 0 2vw;
-    box-shadow: 0 -8px 6px rgba(0,0,0,0.3);
+    padding: 0 4vw;
+    box-shadow: 0 -8px 6px rgba(0,0,0,0.3) inset;
+    overflow: hidden;
+    position: relative;
 }
 
 .secao-front-page.azul-forte {
@@ -38,100 +67,34 @@
 }
 
 .conteudo-secao {
-    border-radius: 10%;
-    height: 80%;
     width: 30vw;
     position: relative;
     text-align: center;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    object-fit: cover;
-    /* top: 10%; */
+}
+
+.conteudo-secao.vazio {
+    width: 36vw;
+    height: 100%;
 }
 
 .img-conteudo-secao {
-    position: fixed;
-    border-radius: 10%;
-    width: 30vw;
-    height: 60vh;
+    position: absolute;
+    border-radius: 3vh;
+    width: 100%;
+    height: var(--altura-imagem);
     pointer-events: none;
-    top: calc(10vh + (var(--scroll))*(-30%));
     box-shadow: var(--box-shadow);
-    animation: flip 0.2s alternate infinite, zigzag 0.2s alternate infinite, imagens 1s linear infinite;
-    animation-play-state: paused, paused, paused;
-    animation-delay: calc(var(--scroll)*1s), calc(var(--scroll)*1s), calc((var(--scroll)*1.25)*1s);
-    /* animation-iteration-count: 1; */
-    animation-fill-mode: both, both, both;
-    /* background-color: red; */
-    background-size: 100% 100%;
-    background-repeat: no-repeat;
+    object-fit: cover;
+    top: calc(5vh + var(--altura-cabecalho) + var(--posicao)*var(--altura-sessao) + var(--scroll)*(-1px));
+    object-fit: cover;
 }
-
-@keyframes zigzag {
-    from {
-        left: 20vw;
-    }
-    to {
-        left: 50vw;
-    }
-}
-
-@keyframes flip {
-    0% {
-        transform: rotate3d(0, 1, 0, 0deg) scale(1);
-    }
-    25% {
-        transform: rotate3d(0, 1, 0, 30deg) scale(0.8);
-    }
-    75% {
-        transform: rotate3d(0, 1, 0, 150deg) scale(0.8);
-    }
-    100% {
-        transform: rotate3d(0, 1, 0, 180deg) scale(1);
-    }
-  }
-
-  
-@keyframes imagens {
-    0% {
-        background-image: url('./Deserto.jpg');
-    }
-    19% {
-        background-image: url('./Deserto.jpg');
-    }
-    20% {
-        background-image: url('./Aquarela.jpg');
-    }
-    39% {
-        background-image: url('./Aquarela.jpg');
-    }
-    40% {
-        background-image: url('./Bíblia.jpg');
-
-    }
-    59% {
-        background-image: url('./Bíblia.jpg');
-    }
-    60% {
-        background-image: url('./Céu\ Lilás.jpg');
-    }
-    79% {
-        background-image: url('./Céu\ Lilás.jpg');
-    }
-    80% {
-        background-image: url('./Céu\ Floresta.jpg');
-    }
-    100% {
-        background-image: url('./Céu\ Floresta.jpg');
-    }
-}
-  
-
-/* .img-front.esquerda {
-    left: 4vw;
-}
-
-.img-front.direita {
-    left: 56vw; 
+/* 
+.secao-front-page img{
+    width: 100%;
+    top: calc(-60vh + var(--altura-cabecalho) + var(--posicao)*var(--altura-sessao) + var(--scroll)*(-1px));
+    position: absolute;
+    object-fit: cover;
 } */

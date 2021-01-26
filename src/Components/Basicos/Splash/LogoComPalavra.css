@@ -1,0 +1,38 @@
+.container-logo-com-nome {
+    position: relative;
+    width: 75%;
+    margin: 3% 0 18% 7%;
+}
+
+.container-logo-com-nome #logo-splash{
+    position: absolute;
+    margin: 0;
+}
+
+.container-quadrados-logo {
+    position: relative;
+}
+
+.ultue {
+    font-family: 'Kanit';
+    font-size: 22vh;
+    position: absolute;
+    line-height: 95%;
+    margin-left: 2.5vw;
+}
+
+.ultue .branco {
+    color: white;
+}
+
+.ultue .pontinho {
+    font-size: 130%;
+    line-height: 0;
+    font-family: 'Times New Roman';
+    filter: drop-shadow(var(--box-shadow));
+}
+
+.caret {
+    width: 2px;
+    border-right: black solid 2px;
+}
