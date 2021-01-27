@@ -174,3 +174,9 @@
     width: min-content;
     justify-content: center !important;
 }
+
+.fundo-captura-mouse {
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+}

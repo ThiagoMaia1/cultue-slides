@@ -2,12 +2,14 @@ import React from 'react';
 import { zerarApresentacao } from '../../principais/firestore/apresentacoesBD';
 import { QuadroOpcoes } from '../Basicos/MenuBotaoDireito/MenuBotaoDireito';
 import store from '../../index';
+import { sairDoIframe } from '../FrontPage/IframeAplicacao';
 
 const QuadroNovaApresentacao = props => {
+
+    if (sairDoIframe('main')) return null;
     
     let {usuario, apresentacao, callback} = props;
     const novaVazia = () => zerarApresentacao({uid: 0}, apresentacao);
-    
     let opcoes;
     if (usuario.uid) 
         opcoes = [

@@ -1,12 +1,12 @@
 .container-logo-com-nome {
     position: relative;
-    width: 75%;
-    margin: 3% 0 18% 7%;
+    margin: 5% 0 20% 0;
 }
 
 .container-logo-com-nome #logo-splash{
     position: absolute;
     margin: 0;
+    margin-left: -2.5vw;
 }
 
 .container-quadrados-logo {
@@ -18,7 +18,7 @@
     font-size: 22vh;
     position: absolute;
     line-height: 95%;
-    margin-left: 2.5vw;
+    white-space: nowrap;
 }
 
 .ultue .branco {

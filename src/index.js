@@ -16,6 +16,7 @@ import { persistStore, persistReducer, createTransform } from 'redux-persist';
 import storage from 'redux-persist/lib/storage'; // defaults to localStorage for web
 import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2';
 import reducerEditarSlide from './principais/reducerEditarSlide';
+import { sairDoIframe } from './Components/FrontPage/IframeAplicacao';
 
 const numeroAcoesPropaganda = 20000;
 const abaAtivaPadrao = 'texto';
@@ -156,6 +157,7 @@ export const reducerElementos = function (state = defaultList, action, usuario) 
       } else if(abaAtiva === 'imagem') abaAtiva = abaAtivaPadrao;
       return {...state, selecionado: sel, abaAtiva};
     case 'definir-modo-apresentacao':
+      if (sairDoIframe('main')) return state;
       var novoModo = action.modoApresentacao || !state.modoApresentacao;
       toggleFullscreen(novoModo ? document.getElementById('borda-slide-mestre') : null);
       novoModo

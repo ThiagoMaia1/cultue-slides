@@ -8,6 +8,7 @@ import ExportarOnline from './Botoes/Formatos/ExportarOnline';
 import ExportarEmail from './Botoes/Meios/ExportarEmail';
 import ExportarLink from './Botoes/Meios/ExportarLink';
 import ExportarDownload from './Botoes/Meios/ExportarDownload';
+import { sairDoIframe } from '../FrontPage/IframeAplicacao';
 
 const getChamada = () => new Date().getTime();
 
@@ -67,6 +68,7 @@ class MenuExportacao extends Component {
     )
 
     abrirMenu = bool => {
+        if (sairDoIframe('main')) return;
         if (this.state.menuVisivel !== bool)
             this.setState({menuVisivel: bool, menuFormatos: false, posicaoArrow: null, 
                            callbackMeio: null, callbackFormato: null, callback: null})

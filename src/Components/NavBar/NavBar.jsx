@@ -6,6 +6,7 @@ import QuadroDefinirPadrao from './QuadroDefinirPadrao';
 import QuadroAjuda from './QuadroAjuda';
 // import QuadroExpress from './QuadroExpress';
 import Login from '../Login/Login';
+import { sairDoIframe } from '../FrontPage/IframeAplicacao';
 
 const listaBotoesQuadros = [
   {nome: 'Nova Apresentação', componente: QuadroNovaApresentacao},
@@ -77,7 +78,11 @@ class NavBar extends React.Component {
                   : ''
             }
           </div>
-          <div id='info-usuario' onClick={() => this.toggleQuadroLogin(true)}>
+          <div id='info-usuario' 
+            onClick={() => {
+              if (sairDoIframe('login')) return;
+              this.toggleQuadroLogin(true)
+            }}>
             {u.uid
               ? <img className='foto-usuario pequena' src={u.photoURL || require('./Usuário Padrão.png')} alt='Foto Usuário'></img>
               : null
