@@ -54,11 +54,13 @@
     padding: 0 4vw;
     overflow: hidden;
     position: relative;
-}
-
-.secao-front-page, #cabecalho-front {
     box-shadow: 0 -8px 9px rgba(0,0,0,0.2) inset;
 }
+
+#wraper-front-page .secao-front-page:nth-child(2) {
+    box-shadow: 0 -8px 9px rgba(0,0,0,0.2);
+}
+
 .secao-front-page.azul-forte {
     background: var(--azul-forte);
     color: white;
@@ -140,12 +142,25 @@
     cursor: pointer;
 }
 
-.print-site {
+iframe {
+    transition: width 0.3s ease-in-out, height 0.3s ease-in-out, transform 1.2s ease-in-out, box-shadow 0.5s ease-in-out, border-radius 0.6s;
+}
+
+.wraper-iframe > iframe.print-site {
     width: var(--largura-iframe);
     height: calc(var(--largura-iframe)/(16/9)*0.92);
-    object-fit: cover;
     box-shadow: 2px 2px 15px rgba(0,0,0,0.4);
     border-radius: var(--round-border-grande);
     transform-origin: left top;
     transform: scale(0.54) translate(0, -3%);
+}
+
+.container-iframe-tela-cheia > iframe.print-site {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 2500;
+    transform: scale(1) translate(0, 0);
 }

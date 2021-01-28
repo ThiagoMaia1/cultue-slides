@@ -20,6 +20,7 @@ import { sairDoIframe } from './Components/FrontPage/IframeAplicacao';
 
 const numeroAcoesPropaganda = 20000;
 const abaAtivaPadrao = 'texto';
+const filtroHotkeys = hotkeys.filter;
 
 const defaultList = {...getApresentacaoPadraoBasica(), 
   abaAtiva: abaAtivaPadrao,
@@ -157,7 +158,7 @@ export const reducerElementos = function (state = defaultList, action, usuario) 
       } else if(abaAtiva === 'imagem') abaAtiva = abaAtivaPadrao;
       return {...state, selecionado: sel, abaAtiva};
     case 'definir-modo-apresentacao':
-      if (sairDoIframe('main')) return state;
+      sairDoIframe();
       var novoModo = action.modoApresentacao || !state.modoApresentacao;
       toggleFullscreen(novoModo ? document.getElementById('borda-slide-mestre') : null);
       novoModo
@@ -270,7 +271,10 @@ export function undoable(reducer) {
         atualizarDadosUsuario(usuario.uid, {imagens});
         return {...state, usuario: {...usuario, imagens }};
       case 'toggle-search':
-        return {...state, searchAtivo: !searchAtivo};
+        searchAtivo = !searchAtivo;
+        if(searchAtivo) hotkeys.filter = () => true;
+        else hotkeys.filter = filtroHotkeys;
+        return {...state, searchAtivo};
       case 'ativar-popup-confirmacao':
         return {...state, popupConfirmacao: action.popupConfirmacao};
       case 'UNDO':

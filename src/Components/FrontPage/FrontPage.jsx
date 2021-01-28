@@ -4,6 +4,7 @@ import './FrontPage.css';
 import '../BarraInferior/BarraInferior';
 import BarraInferior from '../BarraInferior/BarraInferior';
 import IframeAplicacao from './IframeAplicacao';
+import { useHotkeysFilter } from '../../principais/atalhos';
 
 const coresQuadrados = ['azul-forte', 'cinza', 'azul-claro'];
 const secoes = [
@@ -23,7 +24,7 @@ const botoes = [
 const BotaoEntrar = ({history, botao, animacao = true}) => (
     <button className={'botao-inicial' + (animacao ? ' animado' : '')}
             onClick={() => history.push('/' + botao.path)}>
-        <span>{botao.apelido}</span>
+        {botao.apelido}
     </button>
 )
 
@@ -33,6 +34,8 @@ const FrontPage = ({history}) => {
     
     let [scroll, setScroll] = useState(0);
     let ref = useRef();
+    useHotkeysFilter(() => false);
+
     return (
         <div id='fundo-front-page' 
              onScroll={e => setScroll(Math.min(e.target.scrollTop, ref.current.offsetTop - window.innerHeight + 80))}
@@ -65,7 +68,7 @@ const FrontPage = ({history}) => {
                     <div className='diagonal'/>
                     <div id='descricao-front'>
                         <div>
-                            <IframeAplicacao acessarApp={acessarApp}/> 
+                            <IframeAplicacao/> 
                         </div>
                         <div className='conteudo-secao'>
                             <h5>Cultue - Apresentações de Slides para Igrejas</h5>

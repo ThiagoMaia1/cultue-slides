@@ -195,6 +195,7 @@
 //   ✔️ Lista de atalhos do modo apresentação.*/
 //   Criar popup para reupload de imagem
 //   Atalhos funcionarem mesmo com foco nos inputs
+//   Compartilhamento de links para usuários sem login
 
 /*/ Features dispensáveis:
 //   Round border em porcentagem

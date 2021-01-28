@@ -80,7 +80,7 @@ class NavBar extends React.Component {
           </div>
           <div id='info-usuario' 
             onClick={() => {
-              if (sairDoIframe('login')) return;
+              sairDoIframe();
               this.toggleQuadroLogin(true)
             }}>
             {u.uid

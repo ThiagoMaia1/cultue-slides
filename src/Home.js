@@ -36,9 +36,13 @@ const paginas = [{nome: 'main', componente: App},
 
 const Home = () => {
 
-  useEffect(()=> {
+  useEffect(() => {
     adicionarFontesPagina();
   }, [])
+
+  // useEffect(() => {
+  //   window.addEventListener('hash')
+  // })
 
   return (
     <Provider store={store}>

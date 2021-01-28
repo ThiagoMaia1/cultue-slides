@@ -62,9 +62,13 @@ button, input[type="submit"], input[type="reset"], [contentEditable="true"]:focu
 	border: none;
 	padding: 0;
 	font: inherit;
-	cursor: text;
+	cursor: pointer;
   outline: inherit;
   text-align: left;
+}
+
+[contentEditable="true"] {
+  cursor: text;
 }
 
 ::-moz-selection { /* Code for Firefox */
@@ -125,4 +129,15 @@ input:-webkit-autofill:active  {
   outline: none;
   display: inline;
   border: none;
+}
+
+
+.container-iframe-tela-cheia > iframe {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 2500;
+  transform: none;
 }

@@ -68,7 +68,7 @@ class MenuExportacao extends Component {
     )
 
     abrirMenu = bool => {
-        if (sairDoIframe('main')) return;
+        sairDoIframe()
         if (this.state.menuVisivel !== bool)
             this.setState({menuVisivel: bool, menuFormatos: false, posicaoArrow: null, 
                            callbackMeio: null, callbackFormato: null, callback: null})

@@ -96,6 +96,7 @@ class BarraPesquisa extends React.Component {
             } else {
                 this.arrayResultados = [];
                 novoState = {top: this.topOcultar, termoPesquisa: '', lenArray: 0};
+                this.ref.current.nextSibling.focus();
             }
             this.setState(novoState);
             if(!ativado) this.timeoutHighlight();

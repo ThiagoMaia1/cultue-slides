@@ -309,16 +309,15 @@ const marcarEstrofesRepetidas = texto => {
   return texto;
 }
 
-const multiplicarEstrofes = (texto, multiplicar) => {
-  if (!multiplicar) return texto;
-  return texto.reduce((resultado, t) => {
+const multiplicarEstrofes = texto => 
+  texto.reduce((resultado, t) => {
     let rep = t.repeticoes || 1;
     let flated = Array(rep);
     flated.fill({...t, repeticoes: 1});
     resultado = [...resultado, ...flated];
     return resultado;
   }, [])
-}
+
 
 export function getLinhas(texto, fontStyle, larguraLinha, caseTexto, widthInicial = 0) {
   

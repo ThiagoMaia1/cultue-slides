@@ -42,24 +42,24 @@ const useMousePosition = (el, iframe) => {
     
     useEffect(() => {
         if (!iframe) return void 0;
-        var elIframe = document.getElementsByTagName('iframe')[0] || null;
-        const bubbleIframe = (event) => {
-            var boundingClientRect = elIframe.getBoundingClientRect();
-    
-            var evt = new CustomEvent('mousemove', {bubbles: true, cancelable: false})
-            evt.clientX = event.clientX*0.54 + boundingClientRect.left;
-            evt.clientY = event.clientY*0.54 + boundingClientRect.top;
-    
-            onMouseMove(evt);
-        }
+        var bubbleIframe;
+        var elIframe;
+        var alvo;
         setTimeout(() => {
-            elIframe = document.getElementsByTagName('iframe')[0];
-            let alvo = elIframe.contentWindow;
+            elIframe = document.getElementsByTagName('iframe')[0] || null;
+            bubbleIframe = (event) => {
+                var boundingClientRect = elIframe.getBoundingClientRect();
+        
+                var evt = new CustomEvent('mousemove', {bubbles: true, cancelable: false})
+                evt.clientX = event.clientX*0.54 + boundingClientRect.left;
+                evt.clientY = event.clientY*0.54 + boundingClientRect.top;
+        
+                onMouseMove(evt);
+            }
+            alvo = elIframe.contentWindow;
             alvo.addEventListener('mousemove', bubbleIframe);
         }, 1000);
         return () => {
-            elIframe = document.getElementsByTagName('iframe')[0];
-            let alvo = elIframe.contentWindow;
             alvo.removeEventListener('mousemove', bubbleIframe);
         }
     }, [])

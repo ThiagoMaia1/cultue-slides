@@ -6,7 +6,7 @@ import { sairDoIframe } from '../FrontPage/IframeAplicacao';
 
 const QuadroNovaApresentacao = props => {
 
-    if (sairDoIframe('main')) return null;
+    sairDoIframe();
     
     let {usuario, apresentacao, callback} = props;
     const novaVazia = () => zerarApresentacao({uid: 0}, apresentacao);

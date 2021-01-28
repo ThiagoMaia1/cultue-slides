@@ -21,7 +21,7 @@ const LogoComPalavra = ({rotate}) => {
                 setLetras(palavra.substr(0, letras.length + (frente ? 1 : -1)));
             else 
                 setFrente(false);
-    }, frente ? (letras ? 80 : 500) : 40)}, [letras, frente]);
+    }, frente ? 80 : 40)}, [letras, frente]);
 
     useEffect(definirLargura)
 

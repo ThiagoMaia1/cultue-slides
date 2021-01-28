@@ -49,6 +49,10 @@
     display: flex;
 }
 
+.marcador-estrofe:empty:before {
+    content: '    ';
+}
+
 .dividido-colunas {
     display: flex;
     flex-direction: column;

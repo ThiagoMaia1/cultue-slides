@@ -1,4 +1,5 @@
 import hotkeys from 'hotkeys-js';
+import { useEffect } from 'react';
 import { tiposElemento } from './Element.js';
 import store from '../index';
 import { zerarApresentacao } from './firestore/apresentacoesBD';
@@ -8,6 +9,27 @@ const atalhosAdicionar = {ctrlm: 0, ctrlb: 1, ctrll: 2, ctrli: 3, ctrle: 4};
 export const arrowsHotkeys = '';
 
 export const atalhoOffset = offset => store.dispatch({type: 'definir-selecao', offset});
+
+const filtroInicial = hotkeys.filter;
+
+// hotkeys.filter = function (event) {
+//     console.log(event);
+//     var target = event.target || event.srcElement;
+//     var tagName = target.tagName;
+//     var flag = true; // ignore: isContentEditable === 'true', <input> and <textarea> when readOnly state is false, <select>
+    
+//     if (target.isContentEditable || (tagName === 'INPUT' || tagName === 'TEXTAREA' || tagName === 'SELECT') && !target.readOnly) {
+//       flag = false;
+//     }
+  
+//     return flag;
+//   }
+  
+export const useHotkeysFilter = filtro => useEffect(() => {
+        hotkeys.filter = filtro;
+        return () => hotkeys.filter = filtroInicial
+    }
+)
 
 const inicializarHotkeys = () => {
     hotkeys('ctrl+d,ctrl+z,ctrl+shift+z,ctrl+y,f5', (e, handler) => {
