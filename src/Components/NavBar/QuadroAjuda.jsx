@@ -4,6 +4,8 @@ import QuadroAtalhos from './QuadroAtalhos';
 import QuadroEnviar from './QuadroEnviar';
 import { QuadroOpcoes } from '../Basicos/MenuBotaoDireito/MenuBotaoDireito';
 import { listaTutoriais, keysTutoriais } from '../Tutorial/ListaTutorial';
+import { ativarPopupConfirmacao } from '../Popup/PopupConfirmacao';
+import history from '../../principais/history';
 
 const refazerTutorial = itemTutorial => store.dispatch({type: 'definir-item-tutorial', refazer: true, itemTutorial})
 
@@ -17,6 +19,16 @@ const QuadroAjuda = props => {
     
     let { callback } = props;
     let opcoes = [
+        {rotulo: 'Página Inicial', callback: () => (
+            ativarPopupConfirmacao(
+                'simNao',
+                'Confirmar Saída',
+                'Deseja sair da página atual?',
+                fazer => {
+                    if(fazer) history.push('/home')
+                }
+            )
+        )},
         {rotulo: 'Atalhos Gerais', submenu: {children: <QuadroAtalhos lista={'listaGeral'}/>}},
         {rotulo: 'Atalhos Modo de Apresentação', submenu: {children: <QuadroAtalhos lista={'listaApresentacao'}/>}},
         {rotulo: 'Fale Conosco', submenu: {children: 

@@ -43,7 +43,8 @@ const Repetidor = ({repeticoes, i}) => {
     return (
         <span className='marcador-estrofe'>
             <span>✕</span>
-            <input style={{width: String(repeticoes).split('').length*2 + 'vw'}}
+            <input className='input-puro'
+                   style={{width: String(repeticoes).split('').length*2 + 'vw'}}
                    value={repeticoes}
                    type='number'
                    onChange={e => store.dispatch({type: 'editar-slide', objeto: 'repeticoes', numero: i, valor: e.target.value})}/>

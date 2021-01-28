@@ -111,3 +111,39 @@ input[type=range]::-ms-track {
   background-color: white;
   padding: 0.5vh;
 }
+
+.input-texto-slider:empty:before {
+  content: '    ';
+  white-space: pre;
+}
+
+.input-texto-slider:focus {
+  border-radius: var(--round-border-muito-pequeno);
+}
+
+.input-texto-slider:focus {
+  box-shadow: 0px 0px 3px black;
+}
+.erro .input-texto-slider:focus {
+  box-shadow: 0px 0px 3px red;
+}
+
+.valor-flutuante.erro {
+  animation: shake 1s ease-in-out infinite;
+  animation-iteration-count: 1;
+}
+
+@keyframes shake {
+  0% {
+    transform: translateX(-5%);
+  }
+  5%{
+    transform: translateX(10%);
+  }
+  10% {
+    transform: none;
+  }
+  100% {
+    transform: none;
+  }
+}

@@ -62,7 +62,7 @@ button, input[type="submit"], input[type="reset"], [contentEditable="true"]:focu
 	border: none;
 	padding: 0;
 	font: inherit;
-	cursor: pointer;
+	cursor: text;
   outline: inherit;
   text-align: left;
 }
@@ -118,4 +118,11 @@ input:-webkit-autofill:focus,
 input:-webkit-autofill:active  {
     -webkit-box-shadow: 0 0 0 30px white inset !important;
     box-shadow: 0 0 0 30px white inset !important;
+}
+
+.input-puro {
+  background-color: transparent;
+  outline: none;
+  display: inline;
+  border: none;
 }

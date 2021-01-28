@@ -548,3 +548,9 @@ export const maximoDivisorComum = (a, b) => {
     if (b === 0) return a;
     return maximoDivisorComum (b, a % b)
 }
+
+export const arredondar = (num, base) => Math.round((num + Number.EPSILON) * base) / base;
+
+export const arredondarFixo = (num, n) => arredondar(num, 10**n);
+
+export const arredondarStep = (num, step) => arredondar(num, 1/step);

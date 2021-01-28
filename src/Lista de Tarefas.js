@@ -191,12 +191,13 @@
 //   ✔️ Fullscreen com double click
 //   ✔️ Alterar rótulos do ratio para o formato: "16:9"
 //   ✔️ Indicar que há estilização nos slides/grupos
+//   ✔️ Input por texto nos sliders
 //   ✔️ Lista de atalhos do modo apresentação.*/
 //   Criar popup para reupload de imagem
 //   Atalhos funcionarem mesmo com foco nos inputs
-//   Round border em porcentagem
 
 /*/ Features dispensáveis:
+//   Round border em porcentagem
 //   Corrigir envio automático do github
 //   Redivisao: melhorar número de iterações
 //   Numeração na lista de slides incluir capítulos e livros
@@ -228,7 +229,6 @@
 //   Nomear apresentacao
 //   Opção de inserir texto bíblico/imagem como grupo ou separado. 
 //   Tela assinaturas/compras
-//   Input por texto nos sliders
 //   Fotos de perfil
 //   Compartilhar layouts
 //   Lista de slides no arquivo html
@@ -259,6 +259,7 @@
 //   ✔️ Criar logo
 //   ✔️ Configurar site para ser encontrado pelo google
 //   ✔️ Criar canal do youtube
+//   ✔️ Criar página de apresentação
 //   Cadastrar google ads
 //   Buscar parceria com ultimato
 //   Pedir amigos para compartilharem
@@ -267,5 +268,4 @@
 //   Gravar tutoriais em vídeo
 //   Versão em inglês
 //   Criar termos de uso
-//   Criar uma imagem de logo para aparecer nas pesquisas do google
-//   Criar página de apresentaçãofun
+//   Incluir na página uma imagem de logo para aparecer nas pesquisas do google imagens

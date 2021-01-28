@@ -1,7 +1,6 @@
 .container-estrofes {
     position: relative;
     padding-top: 3px;
-    overflow: hidden;
 }
 
 #textoTitulo:focus, *:not(.estrofe-area) > .estrofe-editavel:focus, .estrofe-area:focus-within, .marcador-estrofe > input:focus {
@@ -48,13 +47,6 @@
     font-weight: 500;
     opacity: 0.9;
     display: flex;
-}
-
-.marcador-estrofe > input {
-    background-color: transparent;
-    outline: none;
-    display: inline;
-    border: none;
 }
 
 .dividido-colunas {

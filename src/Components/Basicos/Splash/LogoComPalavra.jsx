@@ -32,7 +32,7 @@ const LogoComPalavra = ({rotate}) => {
                 {letras === palavra ? null :
                     <span className='caret'></span>
                 }
-            <span className='pontinho branco'>.</span>
+            <span className='pontinho branco'>{'.'}</span>
         </>
     )
 

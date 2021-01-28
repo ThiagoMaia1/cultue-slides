@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import './Adicionar.css';
 import { connect } from 'react-redux';
 import { tiposElemento, getNomeInterfaceTipo } from '../../principais/Element';
@@ -8,10 +8,11 @@ const tipos = Object.keys(tiposElemento);
 
 const BotoesAdicionar = props => {
 
+    let refContainer = useRef();
     const [ref, estilo, fecharQuadro] = useAnimationOutsideClick(
         props.onClick,
         {height: 0},
-        {height: '20.5vh'},
+        {height: 1},
         255
     );
 
@@ -22,10 +23,13 @@ const BotoesAdicionar = props => {
         });
     }
 
+    let height = (refContainer.current
+                 ? refContainer.current.getBoundingClientRect().height
+                 : 0)*estilo.height + 'px'; 
     return (
         <div id='div-botoes' ref={ref} onClick={() => fecharQuadro()}>
-            <div id='movedor-botoes-adicionar' style={estilo}>
-                <div id='container-botoes-adicionar'>
+            <div id='movedor-botoes-adicionar' style={{...estilo, height}}>
+                <div id='container-botoes-adicionar' ref={refContainer}>
                     {tipos.map(t =>
                         <button key={t} 
                                 className="botao-azul itens" 

@@ -28,30 +28,16 @@
     color: white;
     min-width: 30vw;
     font-size: 6vh;
-    height: 12vh;
-    transition: transform 0.2s ease-in-out, color 0.2s ease-in-out;
     position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.fundo-botao-inicial {
+    transition: transform 0.2s ease-in-out, color 0.2s ease-in-out;
     border-radius: 2vh;
     background-color: black;
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    box-shadow: var(--box-shadow);
-    z-index: -1;
+    padding: 2vh;
+    text-align: center;
 }
 
 .botao-inicial.animado {
-    top: calc(0.2vh*var(--scroll));
-}
-
-.botao-inicial > span {
-    position: absolute;
+    top: min(calc(0.2vh*var(--scroll)), var(--altura-sessao));
 }
 
 .botao-inicial:hover {
@@ -66,11 +52,13 @@
     justify-content: space-evenly;
     align-items: center;
     padding: 0 4vw;
-    box-shadow: 0 -8px 6px rgba(0,0,0,0.3) inset, 0 -8px 6px rgba(0,0,0,0.3);
     overflow: hidden;
     position: relative;
 }
 
+.secao-front-page, #cabecalho-front {
+    box-shadow: 0 -8px 9px rgba(0,0,0,0.2) inset;
+}
 .secao-front-page.azul-forte {
     background: var(--azul-forte);
     color: white;
@@ -142,6 +130,7 @@
     background-color: black;
     height: 25vh;
     position: relative;
+    box-shadow: 5px 5px 8px rgba(0,0,0,0.4);
 }
 
 .wraper-iframe {

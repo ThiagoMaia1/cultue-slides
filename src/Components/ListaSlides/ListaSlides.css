@@ -212,5 +212,5 @@ ol {
 }
 
 .fade-estilizado {
-  transition: background-color 0.2s;
+  transition: background-color 0.2s ease-in-out, transform 80ms ease-in-out, max-height 0.2s ease-in-out, padding 0.2s ease-in-out, margin 0.2s ease-in-out;;
 }

@@ -23,7 +23,6 @@ const botoes = [
 const BotaoEntrar = ({history, botao, animacao = true}) => (
     <button className={'botao-inicial' + (animacao ? ' animado' : '')}
             onClick={() => history.push('/' + botao.path)}>
-        <div className='fundo-botao-inicial'></div>
         <span>{botao.apelido}</span>
     </button>
 )
@@ -72,7 +71,7 @@ const FrontPage = ({history}) => {
                             <h5>Cultue - Apresentações de Slides para Igrejas</h5>
                             O Cultue Slides é um sistema gratuito e online, voltado para a criação de apresentações para cultos cristãos. 
                             É uma aplicação de fácil uso, que não requer qualquer instalação ou cadastro. Clique e comece a usar agora!
-                            <BotaoEntrar botao={botoes[1]} animacao={false}/>
+                            <BotaoEntrar history={history} botao={botoes[1]} animacao={false}/>
                         </div>
                     </div>
                     <BarraInferior/>

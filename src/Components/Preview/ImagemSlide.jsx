@@ -3,6 +3,7 @@ import store from '../../index';
 import Redimensionavel from '../Basicos/Redimensionavel/Redimensionavel';
 import { listaDirecoes } from '../../principais/Constantes';
 import BotaoReupload from './BotaoReupload';
+// import { removerPorcentagem } from '../../principais/FuncoesGerais';
 
 const despachar = valor => store.dispatch({type: 'editar-slide', objeto: 'imagem', valor});
 
@@ -18,8 +19,16 @@ class ImagemSlide extends Component {
     setProporcaoNatural = img => despachar({proporcaoNatural: img.naturalWidth/img.naturalHeight});
 
     callback = estiloState => {
+        let {estiloImagem} = this.props;
+
+        // const getWidth = rect => 1 - removerPorcentagem(rect.left) - removerPorcentagem(rect.right);
+        // let proporcao = getWidth(estiloState)/getWidth(estiloImagem);
+        // let borderRadius = Number(estiloImagem.borderRadius.replace('px',''))
+        // borderRadius = Math.ceil(borderRadius*proporcao) + 'px';
+        // despachar({borderRadius});
+
         for (var l of listaDirecoes) {
-            if (estiloState[l] !== this.props.estiloImagem[l]) {
+            if (estiloState[l] !== estiloImagem[l]) {
                 despachar(estiloState);
                 return;
             }
