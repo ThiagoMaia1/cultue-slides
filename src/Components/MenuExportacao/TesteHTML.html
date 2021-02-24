@@ -1,34 +1,88 @@
 <div
-    id="paragrafo-slide"
-    class="slide-paragrafo"
-    style="
-        font-family: Oswald;
-        font-size: 260%;
-        line-height: 1.9;
-        padding: 0.5% 12% 6.95312%;
-        text-decoration-line: underline;
-        --tamanho-fonte: 2.6;
-        --altura-linha: 1.9;
-    "
+    id="preview-fake6"
+    class="preview-fake slide-ativo"
+    style="width: 1920px; height: 1080px"
 >
-    <div class="realce-paragrafo">
+    <div class="imagem-fundo-preview">
         <div
-            class="container-estrofes"
+            class="tampao"
+            style="background-color: rgba(255, 255, 255, 0.2)"
+        ></div>
+    </div>
+    <div class="texto-preview" style="font-size: 27px">
+        <div
+            class="slide-titulo"
             style="
-                display: flex;
-                width: 100%;
-                flex-direction: column;
-                align-items: flex-start;
+                font-family: 'Noto Sans';
+                text-align: center;
+                padding: 0% 8%;
+                font-size: 300%;
+                height: 25%;
             "
         >
-            <span class="container-estrofe estrofe-area"
-                ><span
-                    class="estrofe-editavel"
-                    id="textoArray-0"
-                    contenteditable="false"
-                    >Sejam bem-vindos à nossa Igreja!</span
-                ></span
-            >
+            <div>
+                <span id="textoTitulo" contenteditable="false"
+                    >Jesus em Tua Presença</span
+                >
+            </div>
+        </div>
+        <div
+            id="paragrafo-slide"
+            class="slide-paragrafo"
+            style="
+                font-family: 'Noto Sans';
+                line-height: 1.9;
+                padding: 0.5% 8% 5.61719%;
+                font-size: 150%;
+                --tamanho-fonte: 1.5;
+                --altura-linha: 1.9;
+            "
+        >
+            <div class="realce-paragrafo">
+                <div
+                    class="container-estrofes"
+                    style="
+                        display: flex;
+                        width: 100%;
+                        flex-direction: column;
+                        align-items: flex-start;
+                    "
+                >
+                    <div class="wraper-estrofe">
+                        <span class="container-estrofe estrofe-area"
+                            ><span
+                                class="estrofe-editavel"
+                                id="textoArray-0"
+                                contenteditable="false"
+                                >Jesus em tua presença reunimo-nos aqui
+                                Contemplamos tua face e rendemos nos a ti Pois
+                                um dia tua morte trouxe vida a todos nós E nos
+                                deu completo acesso ao coração do pai</span
+                            ></span
+                        ><span class="marcador-estrofe"
+                            ><span>✕</span
+                            ><input
+                                class="input-puro"
+                                type="number"
+                                value="2"
+                                style="width: 2vw"
+                        /></span>
+                    </div>
+                    <div><br /></div>
+                    <div class="wraper-estrofe">
+                        <span class="container-estrofe estrofe-area"
+                            ><span
+                                class="estrofe-editavel"
+                                id="textoArray-1"
+                                contenteditable="false"
+                                >O véu que separava já não separa mais A luz que
+                                outrora apagada Agora brilha e cada dia brilha
+                                mais</span
+                            ></span
+                        >
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
