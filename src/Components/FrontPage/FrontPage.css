@@ -11,17 +11,17 @@
     height: var(--altura-cabecalho);
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: space-evenly;
     align-items: center;
 }
 
-#cabecalho-front .container-logo-com-nome {
-    transform: translateY(calc(0.12vh*var(--scroll))) scale(max(0.4, calc(1 - var(--scroll)/2000)));
+#cabecalho-front .container-logo-front {
+    transform: translateY(min(calc(0.12vh*var(--scroll)), 1000px)) scale(max(0.4, calc(1 - var(--scroll)/2000)));
 }
 
 #cabecalho-front .linha-flex {
-    width: 80%;
-    justify-content: space-between;
+    width: 100%;
+    justify-content: space-evenly;
 }
 
 .botao-inicial {
@@ -34,6 +34,7 @@
     background-color: black;
     padding: 2vh;
     text-align: center;
+    box-shadow: 4px 5px 8px black;
 }
 
 .botao-inicial.animado {

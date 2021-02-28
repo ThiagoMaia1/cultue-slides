@@ -43,19 +43,15 @@ class ItemListaSlides extends Component {
         ativarPopupConfirmacao('simNao', 'Atenção', pergunta, callback);         
     }
 
-    botaoEditarElemento = e => {
-        e.stopPropagation();
-        this.editarElemento();
-    }
-
-    editarElemento = (e) => {
+    editarElemento = () => {
         var elemento = this.props.elemento;
+        this.selecionar();
         this.props.dispatch({type: 'ativar-popup-adicionar',
                              popupAdicionar: {
                                 tipo: elemento.tipo,
                                 input1: elemento.input1,
                                 input2: elemento.input2,
-                                elementoASubstituir: this.props.selecionado.elemento
+                                elementoASubstituir: this.props.ordem
                              }
         })
     }
@@ -89,10 +85,14 @@ class ItemListaSlides extends Component {
         return opcoes;
     }
 
+    selecionar = () => this.props.marcarSelecionado(this.props.ordem, (this.eEditavel() ? 0 : 0 + (this.props.elemento.slides.length > 1)))
+
+    eEditavel = () => this.props.autorizacao === 'editar';
+
     render () {
         var elemento = this.props.elemento;
         var i = this.props.ordem;
-        var editavel = this.props.autorizacao === 'editar';
+        var editavel = this.eEditavel();
         return (            
             <MenuBotaoDireito opcoes={this.getOpcoesMenu()}>
                 <li 
@@ -110,11 +110,11 @@ class ItemListaSlides extends Component {
                             : (this.eSelecionado(i) ? this.getMargin(elemento) + (this.props.ultimo ? -2 : 0.4) + 'vh' : (this.props.ultimo ? '-1.5vh': ''))}}>
                     <div data-id={i} 
                          className={'itens lista-slides fade-estilizado ' + (!eEstiloVazio(elemento.slides[0].estilo) ? 'elemento-slide-estilizado' : '')} 
-                         onClick={() => this.props.marcarSelecionado(i, (editavel ? 0 : 0 + (elemento.slides.length > 1)))} ref={this.props.selecionado.slide ? null : this.props.objRef.slide}>
+                         onClick={this.selecionar} ref={this.props.selecionado.slide ? null : this.props.objRef.slide}>
                         {editavel
                             ? <div className='quadradinho-canto'>
                                   <div data-id={i} className='botao-quadradinho' onClick={e => this.botaoExcluirElemento(e)}>✕</div>
-                                  <div data-id={i} className='botao-quadradinho' onClick={e => this.botaoEditarElemento(e)}>
+                                  <div data-id={i} className='botao-quadradinho' onClick={e => this.editarElemento()}>
                                       <MdEdit size={this.state.tamanhoIcone*0.5}/>
                                   </div>
                               </div>

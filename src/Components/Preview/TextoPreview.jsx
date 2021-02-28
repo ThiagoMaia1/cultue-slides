@@ -1,11 +1,12 @@
 import React from 'react';
-import { RefInvalida } from "../Popup/PopupsAdicionar/TextoBiblico/referenciaBiblica"
+import { RefInvalida } from "../Popup/PopupsAdicionar/TextoBiblico/referenciaBiblica";
+import {listaSuperscritos} from '../../principais/Constantes';
 
 function numSuperscrito(num) {
     var lista = String(num).split('');
     var sup = [];
     for (var n of lista) {
-        sup.push("⁰¹²³⁴⁵⁶⁷⁸⁹"[Number(n)]);
+        sup.push(listaSuperscritos[Number(n)]);
     }
     return sup.join('');
 }
@@ -25,7 +26,7 @@ export function reverterSuperscrito(sup) {
     var lista = String(sup).split('');
     var num = [];
     for (var n of lista) {
-        var i = "⁰¹²³⁴⁵⁶⁷⁸⁹".indexOf(n)
+        var i = listaSuperscritos.indexOf(n)
         if (i > -1) {
             num.push(i);
         } 
@@ -77,7 +78,7 @@ export const getTextoVersiculo = (verso, versoAnterior = {}, versoTem = {}, sup,
     if(!primeiro) final.unshift(' ');
     return sup 
            ? final
-           : final.map(t => t === ' ' ? '' : t).join(' ');
+           : final.join('');
 }
 
 // export function formatarVersiculosSlide(versiculos) {

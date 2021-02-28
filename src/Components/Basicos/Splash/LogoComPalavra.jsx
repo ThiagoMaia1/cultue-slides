@@ -11,7 +11,7 @@ const LogoComPalavra = ({rotate}) => {
     let [largura, setLargura] = useState(0);
     const definirLargura = () => setLargura(
         ref.current 
-        ? ref.current.offsetWidth*0.9 + 'px'
+        ? ref.current.offsetWidth + 'px'
         : 0
     )
     let ref = useRef();
@@ -21,7 +21,7 @@ const LogoComPalavra = ({rotate}) => {
                 setLetras(palavra.substr(0, letras.length + (frente ? 1 : -1)));
             else 
                 setFrente(false);
-    }, frente ? 80 : 40)}, [letras, frente]);
+    }, frente ? (letras ? 80 : 300) : 40)}, [letras, frente]);
 
     useEffect(definirLargura)
 

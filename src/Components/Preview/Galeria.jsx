@@ -9,7 +9,7 @@ import Popup from '../Popup/Popup';
 import { getMetadata } from '../../principais/firestore/imagemFirebase';
 import { mudancasArrays, objetosSaoIguais } from '../../principais/FuncoesGerais';
 import { imagemEstaNoBD } from '../../principais/Element';
-import { ativarPopupConfirmacao } from '../Popup/PopupConfirmacao';
+import { ativarPopupConfirmacao, ativarPopupLoginNecessario } from '../Popup/PopupConfirmacao';
 
 const fundosFixos = listaFundos.imagens.map(i => ({
     fundo: {path: i.path, src: null}, 
@@ -40,6 +40,10 @@ class Galeria extends Component {
     ];
 
     abrirPopup = () => {
+        if(!this.props.usuario.uid) {
+            ativarPopupLoginNecessario('adicionar fundos personalizados')
+            return;
+        }
         this.setState({popupCompleto:
             <Popup ocultarPopup={() => this.setState({popupCompleto: null})}>
                 <h4>Enviar Fundo Personalizado</h4>
@@ -124,11 +128,10 @@ class Galeria extends Component {
     }
 }
  
-const mapState = state => (
-    {
-        fundos: (state.usuario.imagens || {}).fundos || [],
-        autorizacao: state.present.apresentacao.autorizacao, 
-    }
-)
+const mapState = state => ({
+    usuario: state.usuario,
+    fundos: (state.usuario.imagens || {}).fundos || [],
+    autorizacao: state.present.apresentacao.autorizacao, 
+})
 
 export default connect(mapState)(Galeria);

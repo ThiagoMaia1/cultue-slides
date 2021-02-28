@@ -27,8 +27,9 @@ const Adicionar = props => {
     )
 }
 
-const mapState = state => (
-    {tutorialAtivo: state.itensTutorial.includes('painelAdicionar')}
-)
+const mapState = state => ({
+    usuario: state.usuario,
+    tutorialAtivo: state.itensTutorial.includes('painelAdicionar')
+})
 
 export default connect(mapState)(Adicionar);

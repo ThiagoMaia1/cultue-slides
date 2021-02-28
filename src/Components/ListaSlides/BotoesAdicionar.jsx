@@ -3,6 +3,8 @@ import './Adicionar.css';
 import { connect } from 'react-redux';
 import { tiposElemento, getNomeInterfaceTipo } from '../../principais/Element';
 import useAnimationOutsideClick from '../../principais/Hooks/useAnimationOutsideClick'; 
+import store from '../../index';
+import { ativarPopupLoginNecessario } from '../Popup/PopupConfirmacao';
 
 const tipos = Object.keys(tiposElemento);
 
@@ -17,6 +19,10 @@ const BotoesAdicionar = props => {
     );
 
     const abrirPopup = tipo => {
+        if (tipo === 'Imagem' && !store.getState().usuario.uid) {
+            ativarPopupLoginNecessario('adicionar slides de imagem')
+            return;
+        }
         props.dispatch({
             type: 'ativar-popup-adicionar', 
             popupAdicionar: {tipo}
@@ -30,7 +36,7 @@ const BotoesAdicionar = props => {
         <div id='div-botoes' ref={ref} onClick={() => fecharQuadro()}>
             <div id='movedor-botoes-adicionar' style={{...estilo, height}}>
                 <div id='container-botoes-adicionar' ref={refContainer}>
-                    {tipos.map(t =>
+                    {tipos.map(t => 
                         <button key={t} 
                                 className="botao-azul itens" 
                                 onClick={() => abrirPopup(t)}>

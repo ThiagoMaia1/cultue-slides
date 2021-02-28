@@ -8,10 +8,7 @@ const funcoes = {
     srcImagem: ({s, valor}) => s.imagem = { ...valor },
     fundo: ({est, valor}) => est.fundo = {...valor},
     input2: ({e, valor}) => e.input2 = valor,
-    textoTitulo: ({sel, e, valor}) => {
-        if (!sel.slide && e.tipo !== 'Imagem' && e.tipo !== 'Vídeo') 
-        e.titulo = valor
-    },
+    textoTitulo: ({e, valor}) => e.titulo = valor,
     versoTem: ({est, subObjeto}) => {
         let obj = {};
         obj[subObjeto] = !est.paragrafo.versoTem[subObjeto];

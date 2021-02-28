@@ -30,7 +30,7 @@ const paginas = [{nome: 'main', componente: App},
                  },
                  {nome: '', componente: props => {
                     if (props.location.hash) {return <App history={history}/>}
-                    else {return <Redirect to='/login'/>}
+                    else {return <Redirect to='/home'/>}
                  }}
 ]
 

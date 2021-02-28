@@ -1,15 +1,19 @@
 <div
-    id="preview-fake6"
-    class="preview-fake slide-ativo"
-    style="width: 1920px; height: 1080px"
+    id="preview"
+    class="preview"
+    style="
+        width: 641.707px;
+        height: 360.96px;
+        border-radius: var(--round-border-grande);
+    "
 >
-    <div class="imagem-fundo-preview">
+    <div class="imagem-fundo-preview" style="">
         <div
             class="tampao"
             style="background-color: rgba(255, 255, 255, 0.2)"
         ></div>
     </div>
-    <div class="texto-preview" style="font-size: 27px">
+    <div class="texto-preview" style="font-size: 9.024px; cursor: text">
         <div
             class="slide-titulo"
             style="
@@ -21,7 +25,10 @@
             "
         >
             <div>
-                <span id="textoTitulo" contenteditable="false"
+                <span
+                    id="textoTitulo"
+                    contenteditable="true"
+                    style="border-radius: var(--round-border-medio)"
                     >Jesus em Tua Presença</span
                 >
             </div>
@@ -38,7 +45,14 @@
                 --altura-linha: 1.9;
             "
         >
-            <div class="realce-paragrafo">
+            <div
+                class="realce-paragrafo"
+                style="
+                    border-radius: var(--round-border-medio);
+                    box-shadow: 0px 0px 9px var(--azul-forte);
+                    transition: font-size 0.1s ease 0s;
+                "
+            >
                 <div
                     class="container-estrofes"
                     style="
@@ -53,7 +67,7 @@
                             ><span
                                 class="estrofe-editavel"
                                 id="textoArray-0"
-                                contenteditable="false"
+                                contenteditable="true"
                                 >Jesus em tua presença reunimo-nos aqui
                                 Contemplamos tua face e rendemos nos a ti Pois
                                 um dia tua morte trouxe vida a todos nós E nos
@@ -74,7 +88,7 @@
                             ><span
                                 class="estrofe-editavel"
                                 id="textoArray-1"
-                                contenteditable="false"
+                                contenteditable="true"
                                 >O véu que separava já não separa mais A luz que
                                 outrora apagada Agora brilha e cada dia brilha
                                 mais</span
@@ -85,4 +99,24 @@
             </div>
         </div>
     </div>
+    <button
+        id="ativar-tela-cheia"
+        style="opacity: 0.3; right: 1vh; bottom: 0.5vh"
+    >
+        <svg
+            stroke="currentColor"
+            fill="currentColor"
+            stroke-width="0"
+            viewBox="0 0 24 24"
+            class="icone-botao"
+            size="50"
+            height="50"
+            width="50"
+            xmlns="http://www.w3.org/2000/svg"
+        >
+            <path
+                d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"
+            ></path>
+        </svg>
+    </button>
 </div>

@@ -8,7 +8,9 @@ const styleSheet = '.preview-fake {background-color: white; position: absolute; 
                    '#bloqueador-preto {background-color: black;}' +
                    '#bloqueador-branco {background-color: white;}' +
                    '.bloqueador-apresentacao {z-index: 0;}' +
-                   '.bloqueador-ativo {z-index: 50;}';
+                   '.bloqueador-ativo {z-index: 50;}' +
+                   '.estrofe-editavel {vertical-align: 0; line-height: inherit;}' + 
+                   '#quadro-redimensionar#quadro-redimensionar {transform: none; filter: none; -ms-filter: none;}';
 
 
 export default function TratarDadosHTML(copiaDOM) {

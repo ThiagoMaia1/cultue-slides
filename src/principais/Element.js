@@ -5,6 +5,7 @@ import AdicionarTexto from '../Components/Popup/PopupsAdicionar/AdicionarTexto';
 import AdicionarImagem from '../Components/Popup/PopupsAdicionar/AdicionarImagem/AdicionarImagem';
 import AdicionarVideo from '../Components/Popup/PopupsAdicionar/AdicionarVideo/AdicionarVideo';
 import { capitalize, canvasTextWidth, retiraAcentos } from './FuncoesGerais';
+import {listaSuperscritos} from './Constantes';
 import store from '../index';
 
 export const tiposElemento = {
@@ -154,7 +155,16 @@ export default class Element {
       arrayTexto.push(thisP.slides[nSlide].textoArray);
       nSlide++;
     }
-    return arrayTexto.flat();
+    arrayTexto = arrayTexto.flat(); 
+    let separador = thisP.tipo === 'Música' ? '\n' : ' ';
+    return arrayTexto.reduce((res, t) => {
+      if (t.continuacao) {
+        res[res.length - 1].texto += separador + t.texto;
+      } else {
+        res.push(t);
+      }
+      return res;
+    }, []).map(t => ({...t, continuacao: false}))
   }
 
   dividirImagens = (thisP = this, imagens) => {
@@ -176,6 +186,7 @@ export default class Element {
       thisP.slides.splice(nSlide, 1000);
       return;
     }
+    texto = [...texto];
     if (nSlide === thisP.slides.length) {
       thisP.slides.push({estilo: {...newEstilo()}, textoArray: []});
     } else if (nSlide > thisP.slides.length) {
@@ -203,57 +214,77 @@ export default class Element {
     var alturaSecaoTitulo = ratio.height*alturaTitulo;
     var alturaSecaoParagrafo = ratio.height-alturaSecaoTitulo;
     var alturaParagrafo = alturaSecaoParagrafo*(1-padV);
-    var nLinhas = alturaParagrafo/alturaLinha;
+    var nMaxLinhas = alturaParagrafo/alturaLinha;
   
-    if (nLinhas % 1 > 0.7) {
-      nLinhas = Math.ceil(nLinhas);
+    if (nMaxLinhas % 1 > 0.7) {
+      nMaxLinhas = Math.ceil(nMaxLinhas);
     } else {
-      nLinhas = Math.floor(nLinhas);
+      nMaxLinhas = Math.floor(nMaxLinhas);
     }
-    slide.estilo.paragrafo.paddingBottom = ((alturaSecaoParagrafo-nLinhas*alturaLinha)/ratio.width)-Number(estP.paddingTop); 
+    slide.estilo.paragrafo.paddingBottom = ((alturaSecaoParagrafo-nMaxLinhas*alturaLinha)/ratio.width)-Number(estP.paddingTop); 
     
-    var duasColunas = false;
-    if (estP.duasColunas) {
-      larguraLinha = larguraLinha*0.48;
-      if (thisP.tipo === 'Música') {
-        duasColunas = true;       
-      } else {
-        nLinhas = nLinhas*2;
-      }
-    }
+    // var duasColunas = false;
+    // if (estP.duasColunas) {
+    //   larguraLinha = larguraLinha*0.48;
+    //   if (thisP.tipo === 'Música') {
+    //     duasColunas = true;       
+    //   } else {
+    //     nMaxLinhas = nMaxLinhas*2;
+    //   }
+    // }
 
-    if (thisP.tipo === 'Música') {
+    const eBiblia = thisP.tipo === 'TextoBíblico';
+    const eMusica = thisP.tipo === 'Música';
+    if (eMusica) {
       if(estP.omitirRepeticoes) texto = marcarEstrofesRepetidas(texto);
       else texto = multiplicarEstrofes(texto);
     }
 
-    var estiloFonte = [(estP.fontStyle || ''), (estP.fontWeight || ''), estP.fontSize*fonteBase.numero + fonteBase.unidade, "'" + estP.fontFamily + "'"];
+    var estiloFonte = [(estP.estiloFonte || ''), (estP.fontWeight || ''), estP.fontSize*fonteBase.numero + fonteBase.unidade, "'" + estP.fontFamily + "'"];
     estiloFonte = estiloFonte.filter(a => a !== '').join(' ');
     var caseTexto = estP.caseTexto || estP.caseTexto;
-    const eBiblia = thisP.tipo === 'TextoBíblico';
-    var separador = eBiblia ? '' : '\n\n';
+    var separador = eBiblia ? '' : '\n';
     let {temVers, temCap, temLivro} = estP;
 
     const getVersiculo = (verso, anterior, primeiro) => {
-      if(eBiblia) return getTextoVersiculo(verso, anterior || {}, {temVers, temCap, temLivro}, false, primeiro);
+      if(eBiblia) return getTextoVersiculo(verso, anterior, {temVers, temCap, temLivro}, false, primeiro);
       return verso.texto; 
     }
 
-    var { contLinhas, widthResto } = getLinhas(getVersiculo(texto[0], versoAnterior, true), estiloFonte, larguraLinha, caseTexto);
     var i;
+    
+    const callDividir = indice =>
+      thisP.dividirTexto(texto.slice(indice+1), nSlide+1, estElemento, estGlobal, ratio, thisP, texto[indice]);
 
-    for (i = 0; i < texto.length; i++) {
-      if (i+1 >= texto.length) {
-        thisP.slides.splice(nSlide + 1, 1000);
-        break;
+    let dadosEstilo = {estiloFonte, larguraLinha, caseTexto}
+    var { contLinhas, widthResto, quebrado } = getNumeroLinhas(getVersiculo(texto[0], versoAnterior, true), dadosEstilo, undefined, nMaxLinhas, eMusica, true);
+    if (quebrado) {
+      if (eBiblia) {
+        let re = new RegExp('[' + listaSuperscritos + '] ', 'g');
+        let intro = (temLivro ? texto[0].livro + ' ': '') + (temCap ? texto[0].cap + ' ' : '')
+        quebrado = quebrado.map(t => t.replace(intro, '').replace(re, ''));
       }
-      var linhas = getLinhas(separador + getVersiculo(texto[i+1], texto[i], false), estiloFonte, larguraLinha, caseTexto, widthResto)
-      contLinhas += linhas.contLinhas;
-      widthResto = /\n/.test(separador) ? 0 : linhas.widthResto;        
-      if ((contLinhas + (widthResto > 0 ? 1 : 0)) > nLinhas) { //Se próximo versículo vai ultrapassar o slide, conclui slide atual.
-        if (duasColunas) [ contLinhas, widthResto, duasColunas ] = [ 0, 0, false ]; 
-        thisP.dividirTexto(texto.slice(i+1), nSlide+1, estElemento, estGlobal, ratio, thisP, texto[i]);
-        break;
+      texto[0] = quebrado.map((t, l) => (
+        {...texto[0], texto: t, continuacao: texto[0].continuacao || !!l}
+      ))
+      texto = texto.flat();
+      i = 0;
+      callDividir(i);
+    } else {
+      for (i = 0; i < texto.length; i++) {
+        if (i+1 >= texto.length) {
+          thisP.slides.splice(nSlide + 1, 1000);
+          break;
+        }
+        var linhas = getNumeroLinhas(separador + getVersiculo(texto[i+1], texto[i], false), dadosEstilo, widthResto, nMaxLinhas, thisP.tipo)
+        contLinhas += linhas.contLinhas;
+        if (/\n/.test(separador)) widthResto = linhas.widthResto;
+        else contLinhas += 1;        
+        if (getNumLinhas(contLinhas, widthResto) > nMaxLinhas) { //Se próximo versículo vai ultrapassar o slide, conclui slide atual.
+          // if (duasColunas) [ contLinhas, widthResto, duasColunas ] = [ 0, 0, false ]; 
+          callDividir(i);
+          break;
+        }
       }
     }
     thisP.slides[nSlide].textoArray = texto.slice(0, i+1);
@@ -290,7 +321,6 @@ export default class Element {
       let { fundo } = s.estilo;
       if (!fundo.path && !imagemEstaNoBD(fundo.src)) zerarSrc(fundo);
     }
-
   }
 }
 
@@ -319,38 +349,60 @@ const multiplicarEstrofes = texto =>
   }, [])
 
 
-export function getLinhas(texto, fontStyle, larguraLinha, caseTexto, widthInicial = 0) {
+export function getNumeroLinhas(texto, dadosEstilo, widthInicial = 0, nMaxLinhas, eMusica, quebrar = false) {
   
+  let {caseTexto} = dadosEstilo;
   texto = capitalize(texto, caseTexto);
   var widthResto = widthInicial;
-  var trechos = texto.split('\n');
-  var linhas;
-  var contLinhas = trechos.length-1;
-  for (var t of trechos) {
-    if (!t) continue;
-    linhas = linhasTrecho(t, fontStyle, larguraLinha, widthResto);
-    contLinhas += linhas.length-1;
+  let separador = '\n';
+  var trechos = texto.split(separador);
+  var contLinhas = 0;
+  var quebrado;
+  for (let k = 0; k < trechos.length; k++) {
+    let t = trechos[k];
+    var {linhasTotal, widthParcial, quebrado} = getNumeroLinhasTrecho(t, dadosEstilo, widthResto, nMaxLinhas, quebrar && !eMusica);
+    contLinhas += getNumLinhas(linhasTotal, widthParcial);
     widthResto = 0;
+    if(quebrar && eMusica) quebrado = getParagrafoQuebrado(trechos, nMaxLinhas, contLinhas, widthResto, k, separador);
+    if(quebrado) return {contLinhas: nMaxLinhas, widthResto: 0, quebrado};
   }
   if (trechos[trechos.length-1] !== '')
-    widthResto = linhas[linhas.length-1];
-  return {contLinhas: contLinhas, widthResto: widthResto};
+    widthResto = widthParcial;
+  return {contLinhas, widthResto};
 }
 
-function linhasTrecho(texto, fontStyle, larguraLinha, widthInicial = 0) {
-  var palavras = texto.split(' ');
-  var arrayP = [];
-  var widthParcial = 0;
-  for (var i = 0; i < palavras.length; i++) {
-    arrayP.push(palavras[i]);
-    widthParcial += canvasTextWidth(' ' + palavras[i+1], fontStyle);
-    if (widthInicial + widthParcial > larguraLinha) {
-      return [1, ...linhasTrecho(palavras.slice(i+1).join(' '), fontStyle, larguraLinha)];
+function getNumeroLinhasTrecho(texto, dadosEstilo, widthInicial = 0, nMaxLinhas, quebrar, linhasParcial = 0, textoParcial = []) {
+  let separador = ' ';
+  let palavras;
+  if(typeof texto === 'string') palavras = texto.split(separador)
+  else palavras = texto;
+  if (linhasParcial >= nMaxLinhas && quebrar && palavras.join('')) 
+    return {linhasTotal: linhasParcial, widthParcial: 0, quebrado: [textoParcial.join(separador), palavras.join(separador)]}
+  let {estiloFonte, larguraLinha} = dadosEstilo;
+  let widthPalavras = 0;
+  for (let i = 0; i < palavras.length; i++) {
+    widthPalavras += canvasTextWidth(separador + palavras[i+1], estiloFonte);
+    if (widthInicial + widthPalavras > larguraLinha) {
+      return getNumeroLinhasTrecho(
+        palavras.slice(i+1), 
+        dadosEstilo, 
+        0, 
+        nMaxLinhas,
+        quebrar,
+        linhasParcial + 1, 
+        [textoParcial, palavras.slice(0, i+1)].flat()
+      );
     }
   }
-  return [widthParcial];
+  return {linhasTotal: linhasParcial, widthParcial: widthPalavras, quebrado: null};
 }
 
-export const eEstiloLimpo = slide => {
-  
+const getParagrafoQuebrado = (trechos, nMaxLinhas, contLinhas, widthResto, indice, separador) => {
+  if(contLinhas + (widthResto ? 1 : 0) > nMaxLinhas)
+    return [
+      trechos.slice(0, indice).join(separador),
+      trechos.slice(indice).join(separador)
+    ];
 }
+
+const getNumLinhas = (contLinhas, widthResto) => contLinhas + (widthResto > 0 ? 1 : 0);

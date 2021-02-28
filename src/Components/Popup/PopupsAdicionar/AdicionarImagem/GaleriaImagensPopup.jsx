@@ -31,12 +31,14 @@ const GaleriaImagensPopup = ({imagens, onClickGaleria, onClickImagem, apagar, me
     let [finalCarrossel, setFinalCarrossel] = useState(null);
 
     const getObjetoImagem = img => {
-        if(typeof img === 'string')
+        if(typeof img === 'string') {
+            let alt = decodeURI(img.split(/images%2F/)[1].split('.')[0])
             img = {
                 src: img,
-                alt: img,
+                alt,
                 eLinkFirebase: true
             };
+        }
         return img;
     }
 

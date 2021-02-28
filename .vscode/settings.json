@@ -1,0 +1,26 @@
+{
+    "git.autofetch": true,
+    "editor.multiCursorModifier": "alt",
+    "prettier.arrowParens": "avoid",
+    "prettier.jsxBracketSameLine": true,
+    "prettier.jsxSingleQuote": true,
+    "prettier.tabWidth": 4,
+    "explorer.confirmDragAndDrop": false,
+    "git.enableSmartCommit": true,
+    "editor.minimap.enabled": false,
+    "workbench.statusBar.visible": true,
+    "window.zoomLevel": 0,
+    "restoreTerminals.terminals": [
+    
+        {
+          "splitTerminals": [
+            {
+              "name": "app",
+              "commands": ["yarn start"]
+            }
+          ]
+        }
+    ],
+    "javascript.updateImportsOnFileMove.enabled": "always",
+    "explorer.confirmDelete": false
+}

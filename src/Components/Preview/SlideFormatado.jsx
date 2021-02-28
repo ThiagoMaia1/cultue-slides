@@ -28,7 +28,6 @@ class SlideFormatado extends Component {
         this.props.dispatch(objAction);
     }
 
-    
     ativarRealce = aba => this.props.dispatch({type: 'ativar-realce', abaAtiva: aba});
 
     getClasseLetraClara = nomeObjeto => {

@@ -116,18 +116,19 @@
 //   ✔️ Corrigir redivisão: redividir quando o texto de um slide é todo deletado, algumas vezes passa um pouco
 //   ✔️ Edição do conteúdo do parágrafo dando alguns erros (falha ao perder foco, não exibe cursor, markup aparecendo)
 //   ✔️ Exportação PowerPoint: round border/espelhar imagens, titulos abaixo/invisíveis
+//   ✔️ Link para download exibindo a apresentação antes de ir pra página de download
+//   ✔️ Posição do loading no ItemListaMusica
+//   ✔️ Título slides de imagem do firebase
+//   ✔️ Click fora tutorial
 //   ✔️ Carrossel do Input Imagem não vai até o final.*/
 // Errinhos:
-//   ✔️ Click fora tutorial
-//   Branquear menu de configurações ao ativar tutorial
 //   Drag do Input Imagem falha (raramente) (?)
 //   Redimensionavel distorcendo ao aproximar do tamanho do quadro (?)
-//   Padding dando NaN
-//   Quebrar estrofes grandes de músicas/textos-livres, reexibir paragrafos repetidos
+//   Padding dando NaN (?)
+//   Entrar sem login não funciona após logoff (fica preso no splash) (?)
+//   Branquear menu de configurações ao ativar tutorial
+//   Quebrar estrofes grandes de músicas/textos-livres, reexibir paragrafos repetidos (Só tá faltando corrigir uma linha de espaço que tá sobrando nos não Bíblia)
 //   Exportação PowerPoint: Tamanho fonte e lineHeight, repetidor de estrofes
-//   Link para download exibindo a apresentação antes de ir pra página de download
-//   Posição do loading no ItemListaMusica
-//   Título slides de imagem do firebase
 
 /*// Features essenciais:
 //   ✔️ Envio de imagens
@@ -193,11 +194,13 @@
 //   ✔️ Indicar que há estilização nos slides/grupos
 //   ✔️ Input por texto nos sliders
 //   ✔️ Lista de atalhos do modo apresentação.*/
-//   Criar popup para reupload de imagem
-//   Atalhos funcionarem mesmo com foco nos inputs
-//   Compartilhamento de links para usuários sem login
 
 /*/ Features dispensáveis:
+//   Margem quando não houve título
+//   Atalhos funcionarem mesmo com foco nos inputs
+//   Criar popup para reupload de imagem
+//   Permitir que imagens fiquem maiores que quadrado
+//   Compartilhamento de links para usuários sem login
 //   Round border em porcentagem
 //   Corrigir envio automático do github
 //   Redivisao: melhorar número de iterações

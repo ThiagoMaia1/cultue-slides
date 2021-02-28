@@ -12,7 +12,7 @@ export function getBase64Image(imagem, total, ratio, callback) {
     getImgBase64(
       img, ratio.width, ratio.height, 
       dataURL => callback(dataURL, imagem, total),
-      Number(est.borderRadius.replace('px','')),
+      est.borderRadius ? Number(est.borderRadius.replace('px','')) : undefined,
       est.espelhadoHorizontal,
       est.espelhadoVertical
     )
@@ -205,9 +205,15 @@ class Exportador extends Component {
         imgs[i].classList.add(classe);
         imgs[i].classe = classe;
         imgs[i].style.removeProperty('background-image');
-        imgs[i].estilo = p.estilo.imagem;
-        if (imgs[i].eFundo) p.classeImagemFundo = classe;
-        else p.classeImagem = classe;
+        let estilo;
+        if (imgs[i].eFundo) {
+          p.classeImagemFundo = classe;
+          estilo = {};
+        } else {
+          p.classeImagem = classe;
+          estilo = p.estilo.imagem;
+        }
+        imgs[i].estilo = estilo;
       }
     }
 

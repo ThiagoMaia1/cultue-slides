@@ -91,8 +91,7 @@ export default function Estrofes(props) {
     } else {
         estiloDivEstrofe = {display: 'flex', width: '100%', flexDirection: 'column'};
         estiloDivEstrofe.alignItems = getAlinhamento(s.estilo.paragrafo.textAlign);
-        if (s.tipo === 'Música') spans = tA.map(getConteudoWraper)
-        else spans = tA.map((t, i) => <SpanEstrofe t={t} key={key + i} i={i} texto={t.texto} {...props}/>)
+        spans = tA.map(getConteudoWraper);
     }
     return (
         <div className='container-estrofes' style={estiloDivEstrofe}>

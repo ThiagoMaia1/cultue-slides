@@ -133,15 +133,15 @@ export const getImgBase64 = (img, frameW = null, frameH = null, callback = null,
     canvas.width = frameW;
     canvas.height = frameH;
     let [x, y] = [(iw - wScaled)/2, (ih - hScaled)/2];
+    arredondarCtx(ctx, radius, canvas.width, canvas.height, 0, 0);
     inverterCtx(ctx, flipH, flipV, canvas);
-    arredondarCtx(ctx, radius, canvas.width, canvas.height, x, y);
     ctx.drawImage(img, x, y, wScaled, hScaled, 0, 0, frameW, frameH);
     var dataURL = canvas.toDataURL('image/png');
     if (callback) callback(dataURL);
     return dataURL;
 }
 
-const arredondarCtx = (ctx, radius, width, height, x, y) => {
+const arredondarCtx = (ctx, radius = 0, width, height, x, y) => {
     radius = Math.min(radius*2, Math.min(width, height)/2);
     ctx.beginPath();
     ctx.moveTo(x + radius, y);

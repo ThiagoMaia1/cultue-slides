@@ -39,8 +39,8 @@ export default function IframeAplicacao () {
             return;
         }
         if(!telaCheia) setTelaCheia(true);
-        else if (eHistory) {
-            history.push(e.data.pathname);
+        else if (eHistory && pathname !== window.location.pathname) {
+            history.push(pathname);
             window.removeEventListener('message', setTelaCheiaTrue);
         }
     }

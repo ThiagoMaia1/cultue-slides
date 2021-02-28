@@ -38,7 +38,8 @@ const getAutorizacao = (autorizacao, idUsuario, idUsuarioAtivo) => {
 
 export const redividirSlides = (elementos, sel, ratio) => {
   if (elementos.length !== 1) {
-      var [ i, slide, repetir ] = (sel.elemento === 0 ? [ 1, 0, 1 ] : [ sel.elemento, sel.slide, 0]);
+    let slide = 0;
+    let [ i, repetir ] = (sel.elemento === 0 ? [ 1, 1 ] : [ sel.elemento, 0]);
     do {
       var e = elementos[i];
       if (!e.getArrayTexto) e = getElementosDesconvertidos([e])[0];
@@ -94,7 +95,8 @@ export const reducerElementos = function (state = defaultList, action, usuario) 
       var excluido = el.splice(Number(action.elemento), 1);
       dadosMensagem = getDadosMensagem(excluido[0]);
       notificacao = dadosMensagem.elemento + ' Excluíd' + dadosMensagem.genero;
-      var novaSelecao = {elemento: state.selecionado.elemento, slide: 0};
+      let novoElementoSelecionado = sel.elemento - (sel.elemento > action.elemento ? 1 : 0);
+      var novaSelecao = {elemento: novoElementoSelecionado, slide: 0};
       if (state.selecionado.elemento >= el.length) novaSelecao.elemento = state.selecionado.elemento-1 
       return {...state, elementos: el, selecionado: {...novaSelecao}, notificacao };
     case 'duplicar-slide':

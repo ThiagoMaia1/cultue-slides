@@ -56,7 +56,11 @@ class AdicionarTexto extends Component {
                              elemento: new Element(
                                  "TextoLivre", 
                                  this.state.titulo, 
-                                 [...this.state.textoSlide.split('\n\n').map(texto => ({texto}))]
+                                 [...this.state.textoSlide
+                                    .replace(/(?:\r\n|\r|\n)/g, '\n\n')
+                                    .split('\n\n')
+                                    .filter(t => t.replace(/\s/g, ''))
+                                    .map(texto => ({texto}))]
                              ),
                              popupAdicionar: popupAdicionar,
                              elementoASubstituir: this.props.elementoASubstituir

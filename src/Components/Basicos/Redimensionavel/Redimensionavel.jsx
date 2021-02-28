@@ -8,7 +8,6 @@ class Redimensionavel extends Component {
 
     constructor (props) {
         super(props);
-        this.relativoAoRatio = {width: 1, height: 1};
         this.state = {
             cursor: 'initial', 
             insetImagem: getInset(props.insetInicial), 
@@ -23,9 +22,6 @@ class Redimensionavel extends Component {
         filho = {left: filho.left - pai.left, top: filho.top - pai.top, width: filho.width, height: filho.height}
         let proporcaoPai = pai.width/pai.height;
         this.proporcaoRelativa = this.props.proporcao/proporcaoPai;
-        this.relativoAoRatio = this.props.proporcao > proporcaoPai
-                                ? {width: 1, height: 1/this.proporcaoRelativa}
-                                : {width: this.proporcaoRelativa, height: 1};
         return {x: e.nativeEvent.clientX - pai.left, y: e.nativeEvent.clientY - pai.top, pai, filho}
     }
 
@@ -122,32 +118,31 @@ class Redimensionavel extends Component {
     getDiferenca = (inset, direcao1, direcao2) => {
         let valor = 1 - (inset[direcao1] + inset[direcao2]);
         let prop = this.proporcaoRelativa;
+        if (prop < 1) prop = 1/prop;
         if (direcao1 === 'right') return 1 - valor/prop;
         return 1 - valor*prop;
     }
 
     corrigirProporcao = novoInset => {
         if (!this.props.proporcao) return novoInset;
+        let insetRetorno = {...novoInset};
         if (this.bordaDireita || this.bordaEsquerda) {
             let bottomMaisTop = this.getDiferenca(novoInset, 'right', 'left');
-            if(this.bordaSuperior) novoInset.top = bottomMaisTop - novoInset.bottom;
-            else if (this.bordaInferior) novoInset.bottom = bottomMaisTop - novoInset.top;
-            else {
-                let alturaInicial = 1 - novoInset.top - novoInset.bottom;
-                let novaAltura = 1 - bottomMaisTop;
-                let diferencaAlturaDividida = (novaAltura - alturaInicial)/2;
-                novoInset.top -= diferencaAlturaDividida;
-                novoInset.bottom -= diferencaAlturaDividida;
-            }
-        } else {
+            let alturaInicial = 1 - novoInset.top - novoInset.bottom;
+            let novaAltura = 1 - bottomMaisTop;
+            let diferencaAlturaDividida = (novaAltura - alturaInicial)/2;
+            insetRetorno.top -= diferencaAlturaDividida;
+            insetRetorno.bottom -= diferencaAlturaDividida;
+        } 
+        if (this.bordaInferior || this.bordaSuperior) {
             let leftMaisRight = this.getDiferenca(novoInset, 'bottom', 'top');
             let larguraInicial = 1 - novoInset.left - novoInset.right;
             let novaLargura = 1 - leftMaisRight;
             let diferencaLarguraDividida = (novaLargura - larguraInicial)/2;
-            novoInset.left -= diferencaLarguraDividida;
-            novoInset.right -= diferencaLarguraDividida;
+            insetRetorno.left -= diferencaLarguraDividida;
+            insetRetorno.right -= diferencaLarguraDividida;
         }
-        return novoInset;
+        return insetRetorno;
     }
 
     inverterHorizontal = inset => {

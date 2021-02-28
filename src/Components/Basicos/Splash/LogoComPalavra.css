@@ -1,12 +1,12 @@
 .container-logo-com-nome {
     position: relative;
-    margin: 5% 0 20% 0;
+    --altura-letra: 22vh;
+    height: var(--altura-letra);
 }
 
 .container-logo-com-nome #logo-splash{
     position: absolute;
     margin: 0;
-    margin-left: -2.5vw;
 }
 
 .container-quadrados-logo {
@@ -15,10 +15,11 @@
 
 .ultue {
     font-family: 'Kanit';
-    font-size: 22vh;
+    font-size: var(--altura-letra);
     position: absolute;
     line-height: 95%;
     white-space: nowrap;
+    margin-left: 2.5vw;
 }
 
 .ultue .branco {

@@ -18,9 +18,7 @@ class AdicionarImagem extends Component {
                              popupAdicionar, elementoASubstituir: this.props.elementoASubstituir})
     }
 
-    onChange = e => {
-        this.setState({titulo: e.target.value});
-    }
+    onChange = e => this.setState({titulo: e.target.value});
 
     render () {
         return (
@@ -28,7 +26,9 @@ class AdicionarImagem extends Component {
                 <h4 className='titulo-popup'>Adicionar Imagem</h4>
                 <input className='combo-popup' type='text' placeholder='Digite um título para o slide (Opcional)'
                     defaultValue={this.props.input1} onChange={this.onChange}/>
-                <InputImagem callback={this.adicionarSlideImagem} imagens={this.props.input2} titulo={this.props.input1}/>
+                <InputImagem callback={this.adicionarSlideImagem} 
+                             imagens={this.props.input2} 
+                             titulo={this.props.input1}/>
             </div>
         )
     }

@@ -25,8 +25,10 @@ const filtroInicial = hotkeys.filter;
 //     return flag;
 //   }
   
-export const useHotkeysFilter = filtro => useEffect(() => {
-        hotkeys.filter = filtro;
+export const useHotkeysFilter = filtroPersonalizado => useEffect(() => {
+        hotkeys.filter = e => (
+            filtroPersonalizado(e, filtroInicial(e))
+        )
         return () => hotkeys.filter = filtroInicial
     }
 )
@@ -55,7 +57,9 @@ const inicializarHotkeys = () => {
         const state = store.getState();
         switch (handler.key) {
             case 'esc':
-                store.dispatch({type: 'ativar-popup-adicionar', popupAdicionar: null});
+                console.log('esc')
+                desativarPopup('confirmacao');
+                desativarPopup('adicionar');
                 break;
             case 'right':
             case 'down':
@@ -81,5 +85,8 @@ const inicializarHotkeys = () => {
         }
     });
 }
+
+const desativarPopup = tipo => 
+    store.dispatch({type: 'ativar-popup-' + tipo, popupAdicionar: null});
 
 export default inicializarHotkeys;

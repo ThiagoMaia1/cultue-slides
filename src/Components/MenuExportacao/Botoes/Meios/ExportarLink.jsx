@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import BotaoExportador from '../BotaoExportador';
 import { BsLink45Deg } from 'react-icons/bs';
-import { ativarPopupConfirmacao } from '../../../Popup/PopupConfirmacao';
+import { ativarPopupConfirmacao, ativarPopupLoginNecessario } from '../../../Popup/PopupConfirmacao';
 import { BiCopy } from 'react-icons/bi';
 import { gerarNovaPermissao, getLinkPermissao } from '../../../../principais/firestore/apresentacoesBD';
 
@@ -69,17 +69,24 @@ class ExportarLink extends Component {
   }
 
   render() {
-    const meio = 'link'
+    const meio = 'link';
+    const usuario = this.props.usuario;
     return (
-      <BotaoExportador formato={meio} onClick={() => this.props.definirMeioExportacao(this.exportarLink, this.props.posicao, meio)} 
+      <BotaoExportador formato={meio} onClick={() => {
+        if (!usuario.uid)
+          ativarPopupLoginNecessario('utilizar o compartilhamento por link')
+        else 
+          this.props.definirMeioExportacao(this.exportarLink, this.props.posicao, meio)
+      }} 
         arrow={this.props.posicaoArrow === this.props.posicao} logo={<BsLink45Deg size={this.props.tamIcones}/>} rotulo='Link'/>
     )
   }
 }
 
-const mapState = state => (
-  {apresentacao: state.present.apresentacao}
-)
+const mapState = state => ({
+  usuario: state.usuario,
+  apresentacao: state.present.apresentacao
+})
 
 export default connect(mapState)(ExportarLink);
 

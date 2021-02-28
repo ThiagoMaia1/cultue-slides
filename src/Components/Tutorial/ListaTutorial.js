@@ -23,7 +23,7 @@ const listaBoxes = {
       evento: {listener: 'redux', alvo: '.present.popupAdicionar'}
     }]},
     slides: {rotulo: 'Lista de Slides', listaEtapas: [
-      {texto: 'As configurações do Slide-Mestre se aplicam aos demais slides. Cada grupso de slides também possui seu próprio slide-mestre.', 
+      {texto: 'As configurações do Slide-Mestre se aplicam aos demais slides. Cada grupo de slides também possui seu próprio slide-mestre.', 
        coordenadas: [15, 25], 
        arrow: {posicao: 'centerRight', posicaoChildren: 'bottom'},
        selectorElemento: '#slide-mestre',

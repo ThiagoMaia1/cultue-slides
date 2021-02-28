@@ -42,7 +42,9 @@ const FrontPage = ({history}) => {
              style={{'--scroll': scroll}}>
             <div id='wraper-front-page'>
                 <div id='cabecalho-front'>
-                    <LogoComPalavra rotate={-15 + scroll/9}/>
+                    <button onClick={acessarApp} class='container-logo-front'>
+                        <LogoComPalavra rotate={-15 + scroll/9}/>
+                    </button>
                     <div className='linha-flex'>
                         {botoes.map(b => <BotaoEntrar history={history} botao={b}/>)}
                     </div>

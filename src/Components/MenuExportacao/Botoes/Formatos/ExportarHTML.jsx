@@ -94,9 +94,10 @@ function scriptHTML () {
     let sheets = document.styleSheets;
     let rule;
     for (let i = sheets.length -1; i >= 0; i--) {
-      rule = sheets[i].cssRules[0];
-      if (rule.selectorText === '.preview-fake')
-        break;
+      if(sheets[i].cssRules.length) {
+        rule = sheets[i].cssRules[0];
+        if (rule.selectorText === '.preview-fake') break;
+      }
     }
     let slide = document.getElementById('preview-fake0');
     let quadro = document.getElementById('container-apresentacao');

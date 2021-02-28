@@ -87,7 +87,9 @@ class NavBar extends React.Component {
               ? <img className='foto-usuario pequena' src={u.photoURL || require('./Usuário Padrão.png')} alt='Foto Usuário'></img>
               : null
             }   
-            <div id='nome-usuario'>{u.uid ? u.nomeCompleto : 'Entre ou Cadastre-se'}</div>
+            <div id='nome-usuario' style={u.uid ? null : {userSelect: 'none'}}>
+              {u.uid ? u.nomeCompleto : 'Entre ou Cadastre-se'}
+            </div>
           </div>
           {this.state.quadroLogin 
               ? <div className='container-quadro-login'>
