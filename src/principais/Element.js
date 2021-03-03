@@ -59,7 +59,7 @@ export const getFonteBase = (ratio = {}) => ({numero: 0.025*(ratio.height || sto
 export const estiloPadrao = {
   texto: {fontFamily: fontePadrao, eBasico: true}, 
   titulo: {fontSize: 3, height: 0.25, paddingRight: 0.08, textAlign: 'center'}, 
-  paragrafo: {fontSize: 1.5, paddingRight: 0.08, lineHeight: 1.9, temVers: true, temLivro: true, temCap: true}, 
+  paragrafo: {fontSize: 1.5, paddingRight: 0.08, paddingBottom: 0.08, paddingTop: 0.005, lineHeight: 1.9, temVers: true, temLivro: true, temCap: true}, 
   fundo: {path: ''}, 
   tampao: {backgroundColor: '#ffffff', opacityFundo: 0.2, eBasico: true},
   imagem: {
@@ -69,8 +69,6 @@ export const estiloPadrao = {
   }
 };
 
-const proporcaoPadTop = 0;
-
 export const getEstiloPadrao = () => {
   var estilo = {...estiloPadrao};
   estilo.paragrafo = getPadding(estilo, 'paragrafo');
@@ -79,12 +77,16 @@ export const getEstiloPadrao = () => {
 }
 
 export function getPadding (estilo, objeto) {
-  var pad = estilo[objeto].paddingRight;
+  let pad = estilo[objeto].paddingRight;
+  let {paddingBottom} = estilo[objeto];
+  if (objeto !== 'paragrafo') paddingBottom = 0;
+  else if (paddingBottom === undefined) paddingBottom = pad;
   if (!pad) return {...estilo[objeto]};
   return {...estilo[objeto],
-          paddingTop: objeto === 'paragrafo' ? (pad*proporcaoPadTop || 0.005): 0, 
-          paddingBottom: objeto === 'paragrafo' ? pad : 0,
-          paddingLeft: pad
+          paddingRight: pad,
+          paddingLeft: pad,
+          paddingBottom,
+          paddingTop: 0.005
   };
 }
 
@@ -143,7 +145,7 @@ export default class Element {
   getSlideTitulo = (estiloMestre) => {
     return {
       textoArray: [],
-      estilo: {...estiloMestre, titulo: {...estiloMestre.titulo, height: 1, display: null}},
+      estilo: {...estiloMestre, titulo: {...estiloMestre.titulo, height: 1, visibility: null}},
       eTitulo: true
     }
   }
@@ -204,24 +206,22 @@ export default class Element {
     var estP = {...estT, ...estGlobal.paragrafo, ...estElemento.paragrafo , ...estSlide.paragrafo};
     var estTitulo = {...estT, ...estGlobal.titulo, ...estElemento.titulo, ...estSlide.titulo};
     // Variáveis relacionadas ao tamanho do slide.
-    var padV = Number(estP.paddingTop) + Number(estP.paddingRight); //Right é a base de cálculo, bottom varia.
+    var padV = Number(estP.paddingTop) + Number(estP.paddingBottom);
     var padH = Number(estP.paddingRight) + Number(estP.paddingLeft);
     var larguraLinha = ratio.width*(1-padH);
     var alturaLinha = estP.lineHeight*estP.fontSize*fonteBase.numero;
-    var alturaTitulo = estTitulo.display === 'none'
-                        ? 0 
-                        : estTitulo.height;
+    var alturaTitulo = estTitulo.height;
     var alturaSecaoTitulo = ratio.height*alturaTitulo;
     var alturaSecaoParagrafo = ratio.height-alturaSecaoTitulo;
-    var alturaParagrafo = alturaSecaoParagrafo*(1-padV);
+    var alturaParagrafo = alturaSecaoParagrafo-padV*ratio.width;
     var nMaxLinhas = alturaParagrafo/alturaLinha;
   
-    if (nMaxLinhas % 1 > 0.7) {
-      nMaxLinhas = Math.ceil(nMaxLinhas);
-    } else {
-      nMaxLinhas = Math.floor(nMaxLinhas);
-    }
-    slide.estilo.paragrafo.paddingBottom = ((alturaSecaoParagrafo-nMaxLinhas*alturaLinha)/ratio.width)-Number(estP.paddingTop); 
+    // if (nMaxLinhas % 1 > 0.7) {
+    //   nMaxLinhas = Math.ceil(nMaxLinhas);
+    // } else {
+    //   nMaxLinhas = Math.floor(nMaxLinhas);
+    // }
+    // slide.estilo.paragrafo.paddingBottom = ((alturaSecaoParagrafo-nMaxLinhas*alturaLinha)/ratio.width)-Number(estP.paddingTop); 
     
     // var duasColunas = false;
     // if (estP.duasColunas) {
@@ -357,7 +357,6 @@ export function getNumeroLinhas(texto, dadosEstilo, widthInicial = 0, nMaxLinhas
   let separador = '\n';
   var trechos = texto.split(separador);
   var contLinhas = 0;
-  var quebrado;
   for (let k = 0; k < trechos.length; k++) {
     let t = trechos[k];
     var {linhasTotal, widthParcial, quebrado} = getNumeroLinhasTrecho(t, dadosEstilo, widthResto, nMaxLinhas, quebrar && !eMusica);

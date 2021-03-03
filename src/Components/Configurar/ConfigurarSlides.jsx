@@ -11,7 +11,7 @@ import Slider from '../Basicos/Slider/Slider';
 import Select from '../Basicos/Select/Select';
 import BotaoInfo from '../Basicos/BotaoInfo/BotaoInfo';
 import ColorPicker from '../Basicos/ColorPicker/ColorPicker';
-import { rgbObjToStr, parseCorToRgb } from '../../principais/FuncoesGerais';
+import { rgbObjToStr, parseCorToRgb, invertColor, rgbToHex } from '../../principais/FuncoesGerais';
 import { listaPartesEstilo } from '../../principais/Element';
 import { lerImagem } from '../Preview/Img';
 import { fontes } from '../MenuExportacao/ModulosFontes';
@@ -58,7 +58,8 @@ const listaBotoesAlinhamento = [{direcao: 'left', titulo: 'Alinhado à Esquerda'
 ];
 
 const listaSliders = [{rotulo: 'Fonte', aba: 'paragrafo', atributo: 'fontSize', min: 1, max: 3.5, step: 0.01,  redividir: true},
-                      {rotulo: 'Margem', aba: 'paragrafo', atributo: 'paddingRight', min: 0, max: 0.3, step: 0.01,  redividir: true},
+                      {rotulo: 'Margens Laterais', aba: 'paragrafo', atributo: 'paddingRight', min: 0.02, max: 0.3, step: 0.01,  redividir: true},
+                      {rotulo: 'Margem Inferior', aba: 'paragrafo', atributo: 'paddingBottom', min: 0.02, max: 0.3, step: 0.01,  redividir: true},
                       {rotulo: 'Espaça-\nmento', aba: 'paragrafo', atributo: 'lineHeight', min: 0.5, max: 3, step: 0.1,  redividir: true},
                       {rotulo: 'Fonte', aba: 'titulo', atributo: 'fontSize', min: 1, max: 7, step: 0.01,  redividir: true},
                       {rotulo: 'Margem', aba: 'titulo', atributo: 'paddingRight', min: 0, max: 0.4, step: 0.01,  redividir: true},
@@ -123,15 +124,15 @@ class ConfigurarSlides extends Component {
                                 simbolo: <AiOutlineRotateLeft size={this.state.tamIcones}/>, objeto: 'titulo', exigeMestre: true,
                                 callback: () => {
                                   let t = this.props.slidePreview.estilo.titulo;
-                                  if(!t.isolar && !t.display) this.toggleEstiloTexto(this.listaEstilosTexto[8]);
+                                  if(!t.isolar && !t.visibility) this.toggleEstiloTexto(this.listaEstilosTexto[8]);
                                 }},
                               {apelido: 'Posição Título', nomeAtributo: 'abaixo', valorNormal: false, valorAlterado: true, 
                                 simbolo: <div className='icone-posicao-titulo'><BsFileBreak size={this.state.tamIcones}/></div>, 
                                 objeto: 'titulo', exigeNaoTitulo: true, callback: () => {
                                   let t = this.props.slidePreview.estilo.titulo;
-                                  if(t.display === 'none') this.toggleEstiloTexto(this.listaEstilosTexto[8]);
+                                  if(t.visibility === 'hidden') this.toggleEstiloTexto(this.listaEstilosTexto[8]);
                                 }},
-                              {apelido: 'Ocultar Título', nomeAtributo: 'display', valorNormal: null, valorAlterado: 'none', 
+                              {apelido: 'Ocultar Título', nomeAtributo: 'visibility', valorNormal: null, valorAlterado: 'hidden', 
                                 exigeNaoTitulo: true, naoAplicarEstilo: true, objeto: 'titulo', 
                                 simbolo: <><div className='risco-olho'/><CgEye size={this.state.tamIcones}/></>
                               },
@@ -359,6 +360,7 @@ class ConfigurarSlides extends Component {
     let { fundo } = slidePreview.estilo;
     let semFundo = !fundo.path && !fundo.src;
     const corFonte = rgbObjToStr(parseCorToRgb(slideSelecionado.estilo[aba].color || '#000000'));
+    const corFonteParagrafo = rgbToHex(slideSelecionado.estilo.paragrafo.color)  || '#000000';
     const botoesDireita = (
       <>
         <BotaoClonarEstilo visivel={sel.elemento || this.props.tutorialAtivo} 
@@ -449,10 +451,11 @@ class ConfigurarSlides extends Component {
                     onMouseEnterOpcao={o => this.atualizarEstiloPreview(aba, {mixBlendMode: o.style.mixBlendMode})}
                     onMouseLeaveOpcao={() => this.atualizarEstiloPreview(undefined, true)}
                     style={{fontSize: '90%'}}
-                    estiloBloco={{...estiloBloco, fontSize: '90%', backgroundImage: this.getBackgroundImage(), 
+                    estiloBloco={{...estiloBloco, '--cor-sombra-select-filtro': invertColor(corFonteParagrafo, true), 
+                                  fontSize: '90%', backgroundImage: this.getBackgroundImage(), 
                                   backgroundPosition: 'center', backgroundSize: semFundo ? '' : 'auto 100%',  
                                   backgroundRepeat: semFundo ? '' : 'no-repeat',
-                                  boxShadow: 'var(--box-shadow)', color: slidePreview.estilo.paragrafo.color}}/>
+                                  boxShadow: 'var(--box-shadow)', color: corFonteParagrafo}}/>
           </div>
           {aba !== 'imagem' ? null :
             this.gerarBotoesEstiloTexto(aba, 7)}

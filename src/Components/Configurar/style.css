@@ -148,6 +148,8 @@
 
 .div-sliders {
     display: flex;
+    flex-wrap: wrap;
+    width: 110%;
 }
 
 .botao-configuracao.bool {
@@ -418,4 +420,9 @@
     align-items: center;
     font-size: 95%;
     border-bottom: 1px solid darkgray;
+}
+#selecionar-filtro-fundo.isolar-spans-filhos span {
+    text-shadow: 0px 0px 3px var(--cor-sombra-select-filtro), 
+                 0px 0px 3px var(--cor-sombra-select-filtro),
+                 0px 0px 3px var(--cor-sombra-select-filtro);
 }

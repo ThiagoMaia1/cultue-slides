@@ -58,6 +58,11 @@
     box-shadow: 0 -8px 9px rgba(0,0,0,0.2) inset;
 }
 
+#wraper-front-page {
+    width: 100%;
+    overflow: hidden;
+}
+
 #wraper-front-page .secao-front-page:nth-child(2) {
     box-shadow: 0 -8px 9px rgba(0,0,0,0.2);
 }

@@ -148,7 +148,7 @@ class BlocoOpcoes extends Component {
                          key={o.valor}>
                         <span>{o.textoSpan}</span>
                         <div key={o.valor} 
-                             className={'opcao-select ' + o.className || ''} 
+                             className={'opcao-select ' + (o.className || '')} 
                              style={{height: (this.tamanhoOpcao || 4) + 'vh', ...(o.style || {}), ...(this.props.estiloOpcao || {})}}>
                                 <span>{o.rotulo}</span>
                         </div>

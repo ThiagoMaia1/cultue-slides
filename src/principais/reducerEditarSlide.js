@@ -96,15 +96,18 @@ export default function reducerEditarSlide ({elementos, sel, action, ratio}) {
     let funcao = funcoes[objeto];
     if (funcao) {
         funcao({e, s, est, ...action, ratio});
-    } else if (Object.keys(action.valor)[0] === 'paddingRight') {
-            est[objeto].paddingRight = valor.paddingRight;
-            est[objeto] = getPadding(est, objeto);
     } else {
-        est[objeto] = {...est[objeto], ...valor};
-        if (['paragrafo', 'texto', 'titulo'].includes(objeto) && Object.keys(valor).includes('color')) 
-            est.texto.eBasico = false;
-        if (objeto === 'tampao') 
-            est.tampao.eBasico = false; 
+        let k = Object.keys(action.valor)[0];
+        if (/padding/.test(k)) {
+            est[objeto][k] = valor[k];
+            est[objeto] = getPadding(est, objeto);
+        } else {
+            est[objeto] = {...est[objeto], ...valor};
+            if (['paragrafo', 'texto', 'titulo'].includes(objeto) && Object.keys(valor).includes('color')) 
+                est.texto.eBasico = false;
+            if (objeto === 'tampao') 
+                est.tampao.eBasico = false; 
+        }
     }
     elementos[sel.elemento] = e;
     let redividido = {elementos, selecionado: sel}
