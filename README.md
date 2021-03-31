@@ -1,68 +1,15 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+### Cultue - Apresentações de Slides para Igrejas
 
-## Available Scripts
+Acesse em https://cultue.web.app/
 
-In the project directory, you can run:
+Um aplicativo gratuito e online para criar slides para o culto. 
 
-### `yarn start`
+Nunca foi tão fácil e rápido criar apresentações de slides para sua igreja. Com o Cultue, você só precisa digitar o que quer incluir, e pode montar sua apresentação de slides em poucos minutos. O acesso é totalmente gratuito e online, não é preciso instalar nada. 
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Suas apresentações ficam salvas na nuvem, e podem ser acessadas de qualquer lugar. Pesquise letras de música, insira textos bíblicos, imagens, vídeo, salve estruturas personalizadas para sua apresentação. Após salvar suas preferências fica ainda mais fácil criar a apresentação. Além disso, com o Cultue Premium, você pode criar a apresentação com apenas um clique, basta colar a lista de conteúdos que você quer na apresentação, e sua apresentação pronta aparecerá na tela. Você pode exibir a apresentação online, ou baixar para usar offline em HTML ou PowerPoint. Também pode compartilhar a apresentação por link. 
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+Nós sabemos que a igreja tem várias necessidades, então queremos te ajudar a economizar tempo. Você faz os slides bem mais rápido e tem mais tempo para servir à igreja. Encontre qualquer letra de música com nossa pesquisa vagalume. As letras das músicas gospel estão a apenas um clique! 
 
-### `yarn test`
+Cansado de gastar tempo cortando e colando vários pedacinhos do texto bíblico pra dividir entre os slides? O cultue divide automaticamente o conteúdo dos slides pra se encaixar perfeitamente na sua formatação. Altere a fonte, e os slides se redividem automaticamente.
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `yarn build`
-
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `yarn eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `yarn build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+App criado utilizando React.js. Backend em Firebase.
