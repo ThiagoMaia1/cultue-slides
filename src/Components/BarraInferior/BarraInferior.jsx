@@ -1,6 +1,6 @@
 import React from 'react';
 import './BarraInferior.css';
-import { AiFillYoutube, AiOutlineGithub } from 'react-icons/ai'
+import { AiFillYoutube, AiOutlineGithub, AiFillLinkedin } from 'react-icons/ai'
 import { IoLogoFacebook, IoLogoInstagram } from 'react-icons/io';
 import { MdEmail } from 'react-icons/md';
 import { enderecoEmail, enderecoEmailThiago } from '../../principais/Constantes';
@@ -16,7 +16,7 @@ const links = [
 
 const linksThiago = [
     {Logo: AiOutlineGithub, apelido: 'GitHub', url: 'https://github.com/ThiagoMaia1'},
-    {Logo: IoLogoFacebook, apelido: 'Facebook', url: 'https://www.facebook.com/thiago.p.maia/'},
+    {Logo: AiFillLinkedin, apelido: 'LinkedIn', url: 'https://www.linkedin.com/in/thiago-pereira-maia-75b825199/'},
     {Logo: MdEmail, apelido: enderecoEmailThiago, url: 'mailto:' + enderecoEmailThiago}
 ]
 

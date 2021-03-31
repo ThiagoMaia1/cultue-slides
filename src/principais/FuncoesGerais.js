@@ -390,7 +390,7 @@ export function hexToRgb(hex) {
     } : null;
 }
 
-export function componentToHex(c) {
+export function componentToHex(c = 0) {
     var hex = c.toString(16);
     return hex.length === 1 ? "0" + hex : hex;
   }

@@ -360,7 +360,7 @@ class ConfigurarSlides extends Component {
     let { fundo } = slidePreview.estilo;
     let semFundo = !fundo.path && !fundo.src;
     const corFonte = rgbObjToStr(parseCorToRgb(slideSelecionado.estilo[aba].color || '#000000'));
-    const corFonteParagrafo = rgbToHex(slideSelecionado.estilo.paragrafo.color)  || '#000000';
+    const corFonteParagrafo = rgbToHex(slideSelecionado.estilo.paragrafo.color || {})  || '#000000';
     const botoesDireita = (
       <>
         <BotaoClonarEstilo visivel={sel.elemento || this.props.tutorialAtivo} 

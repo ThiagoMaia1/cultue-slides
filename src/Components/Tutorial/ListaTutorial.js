@@ -19,7 +19,7 @@ const listaBoxes = {
     painelAdicionar: {rotulo: 'Adicionar um Slide', listaEtapas: [{
       texto: 'Clique para criar um slide', 
       arrow: {posicao: 'bottomCenter', posicaoChildren: 'right'},
-      selectorElemento: '#container-botoes-adicionar',
+      selectorElemento: '.container-adicionar',
       evento: {listener: 'redux', alvo: '.present.popupAdicionar'}
     }]},
     slides: {rotulo: 'Lista de Slides', listaEtapas: [
