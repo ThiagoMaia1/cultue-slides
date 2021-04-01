@@ -1,4 +1,5 @@
 'use strict';
+const { REACT_APP_SENDGRID_TOKEN } = process.env;
 const functions  = require('firebase-functions');
 const nodemailer = require('nodemailer');
 // const cors = require('cors')({origin: true});
@@ -9,7 +10,7 @@ var transporter = nodemailer.createTransport({
   port: 587,
   auth: {
       user: 'apikey',
-      pass: '***REMOVED***'
+      pass: REACT_APP_SENDGRID_TOKEN,
   }
 });
 
