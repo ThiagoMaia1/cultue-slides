@@ -1,16 +1,15 @@
 'use strict';
-const { REACT_APP_SENDGRID_TOKEN } = process.env;
 const functions  = require('firebase-functions');
 const nodemailer = require('nodemailer');
 // const cors = require('cors')({origin: true});
-const enderecoEmail = 'cultue.slides@gmail.com';
+const enderecoEmail = functions.config().sendgrid.emailaddress;
 
 var transporter = nodemailer.createTransport({
   host: 'smtp.sendgrid.net',
   port: 587,
   auth: {
       user: 'apikey',
-      pass: REACT_APP_SENDGRID_TOKEN,
+      pass: functions.config().sendgrid.key,
   }
 });
 
