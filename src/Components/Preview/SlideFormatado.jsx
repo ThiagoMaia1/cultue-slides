@@ -140,7 +140,7 @@ export const Img = ({imagem, proporcao, tampao, botaoInativo, selecionado}) => {
         var pixeis = [[null, 0.65], [600, 0.3], [300, 0]];
         strBackground += pixeis.reduce((resultado, px) => {
             if(px[1] < proporcao) {
-                var strUrl = 'url("' + require('' + getPathImagem(imagem.path, px[0])) + '")';
+                var strUrl = 'url("' + require('' + getPathImagem(imagem.path, px[0])) + '").default';
                 if (!strPrincipal) strPrincipal = strUrl;
                 resultado.push(strUrl)
             }

@@ -39,7 +39,7 @@ class Propaganda extends React.Component {
         if(!this.props.propagandaAtiva) return null;    
         return (
             <div id="fundo-propaganda">
-                <img alt='Anúncio' src={require('./Oração nas Crises.png')} onClick={this.clickImagem} onAuxClick={this.clickImagem}></img>
+                <img alt='Anúncio' src={require('./Oração nas Crises.png').default} onClick={this.clickImagem} onAuxClick={this.clickImagem}></img>
                 <button id='pular-propaganda' onClick={this.clickBotao} style={!this.state.segundos ? {cursor: 'pointer'} : null}>{this.state.mensagem.join(this.state.segundos)}</button>
             </div>
         );

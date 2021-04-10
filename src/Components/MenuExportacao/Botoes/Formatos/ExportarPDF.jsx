@@ -11,7 +11,7 @@ class ExportadorPDF extends Component {
     this.state = {slidePreviewFake: true, previews: []};
     this.formato = 'pdf';
     this.logo = (
-      <img id='logo-pdf' src={require('../../Logos/Logo PDF.png')} alt='Logo PDF'></img>
+      <img id='logo-pdf' src={require('../../Logos/Logo PDF.png').default} alt='Logo PDF'></img>
     )
   }
 

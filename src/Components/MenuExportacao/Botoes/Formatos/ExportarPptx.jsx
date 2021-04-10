@@ -15,7 +15,7 @@ class ExportarPptx extends Component {
     this.formato = 'pptx';
     this.logo = (
       <div className='container-logo-pptx'>
-        <img id='logo-pptx' className='logo-exportacao' src={require('../../Logos/Logo PowerPoint.svg')} alt='Logo PowerPoint'/>
+        <img id='logo-pptx' className='logo-exportacao' src={require('../../Logos/Logo PowerPoint.svg').default} alt='Logo PowerPoint'/>
         <div id='exportar-pptx' className='botao-exportar'></div>
       </div>
     )

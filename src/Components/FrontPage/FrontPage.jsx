@@ -52,7 +52,7 @@ const FrontPage = ({history}) => {
                 {secoes.map(({titulo, texto, imagem}, i) => {
                     let esquerda = i % 2 === 0;
                     let vazio = <div className='conteudo-secao vazio'>
-                        <img className='img-conteudo-secao' src={'' + require('./Imagens/' + imagem + '.jpg')} alt={imagem}
+                        <img className='img-conteudo-secao' src={'' + require('./Imagens/' + imagem + '.jpg').default} alt={imagem}
                              onClick={acessarApp}/>
                     </div>;
                     return (

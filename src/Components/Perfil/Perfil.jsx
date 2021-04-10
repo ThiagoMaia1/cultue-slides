@@ -37,7 +37,7 @@ class Perfil extends React.Component {
                     </div>
                     <div id='organizador-perfil'>
                         <div id='cabecalho-perfil'>
-                            <img className='foto-usuario grande' src={u.photoURL || require('./Usuário Padrão.png')} alt='Foto Usuário'></img>
+                            <img className='foto-usuario grande' src={u.photoURL || require('./Usuário Padrão.png').default} alt='Foto Usuário'></img>
                             {u.nomeCompleto}
                         </div>
                         <Switch>

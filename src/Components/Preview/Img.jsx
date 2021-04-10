@@ -16,7 +16,7 @@ export const lerImagem = (fundo, px = null) => (
     fundo.src
         ? fundo.src
         : fundo.path 
-            ? require('' + getPathImagem(fundo.path, px))
+            ? require('' + getPathImagem(fundo.path, px)).default
             : ''
 );  
 

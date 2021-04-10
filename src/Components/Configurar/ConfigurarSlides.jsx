@@ -341,7 +341,7 @@ class ConfigurarSlides extends Component {
     );
   }
   
-  getQuadriculado = () => require('./Quadriculado PNG.png');
+  getQuadriculado = () => require('./Quadriculado PNG.png').default;
 
   getBackgroundImage = () => {
     let { fundo } = this.props.slidePreview.estilo;

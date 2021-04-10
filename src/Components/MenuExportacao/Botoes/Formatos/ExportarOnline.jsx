@@ -9,7 +9,7 @@ class ExportadorOnline extends Component {
     this.state = {slidePreviewFake: true, previews: []};
     this.formato = 'online';
     this.logo = (
-      <img id='logo-cultue-redondo' src={require('../../Logos/Logo Cultue.svg')} alt='Logo Cultue'></img>
+      <img id='logo-cultue-redondo' src={require('../../Logos/Logo Cultue.svg').default} alt='Logo Cultue'></img>
     )
   }
 

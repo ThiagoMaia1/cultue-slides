@@ -84,7 +84,7 @@ class NavBar extends React.Component {
               this.toggleQuadroLogin(true)
             }}>
             {u.uid
-              ? <img className='foto-usuario pequena' src={u.photoURL || require('./Usuário Padrão.png')} alt='Foto Usuário'></img>
+              ? <img className='foto-usuario pequena' src={u.photoURL || require('./Usuário Padrão.png').default} alt='Foto Usuário'></img>
               : null
             }   
             <div id='nome-usuario' style={u.uid ? null : {userSelect: 'none'}}>

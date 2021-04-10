@@ -42,7 +42,7 @@ class LogoCultue extends React.Component {
         <div className='quadrado-logo azul-claro' style={{transform: 'rotate(' + rotate + 'deg)'}}></div>
         {this.props.semC 
           ? <div className='quadrado-logo azul-forte'/> 
-          : <img className='quadrado-logo azul-forte' src={require('./QuadradoC.svg')} alt='Logo Cultue'/>
+          : <img className='quadrado-logo azul-forte' src={require('./QuadradoC.svg').default} alt='Logo Cultue'/>
         }
       </div>
     );
