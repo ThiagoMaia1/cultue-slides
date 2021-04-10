@@ -19,5 +19,5 @@ jobs:
           channelId: live
           projectId: cultue
         env:
-          CI: false
+          CI: ''
           FIREBASE_CLI_PREVIEWS: hostingchannels
